@@ -556,6 +556,33 @@ GLOBAL _UBYTE *F_Path_Append(_UBYTE *path, CONST _UBYTE *name)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/*
+ * Directory the executable lives in, with an optional subdirectory appended.
+ * Declared in file_io.h since 1999 but never implemented.
+ *
+ * Needed because F_Path_Get() answers with the current working directory,
+ * which for an installed copy started from a shortcut is wherever the shell
+ * happened to be, not where the data files are.
+ */
+GLOBAL _VOID F_Path_Get_Program(_UBYTE *path, CONST _UBYTE *name)
+{
+	_UBYTE *p;
+
+	*path = '\0';
+	if (GetModuleFileName(NULL, path, PATH_MAX) == 0)
+		return;
+	if ((p = strrchr(path, '\\')) == NULL)
+	{
+		*path = '\0';
+		return;
+	}
+	p[1] = '\0';
+	if (name != NULL && *name != '\0')
+		strcat(path, name);
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 GLOBAL _BOOL F_Path_Get(_UBYTE *pfad)
 {
 #if defined(__WIN32__) || defined(__CYGWIN32__)

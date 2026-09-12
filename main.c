@@ -128,6 +128,29 @@ GLOBAL _BOOL error_abort(CONST char *str, ...)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/*
+ * Point a path at a directory beside the executable.
+ *
+ * Called before Profile_ReadPath(), which passes the current value as the
+ * default to GetPrivateProfileString (see the PtrSize macro), so a profile
+ * entry still wins and only a fresh installation gets these. Without it the
+ * paths default to the working directory, so the program finds its quest
+ * tables only when started from its own folder.
+ */
+LOCAL _VOID default_program_dir(PATH *p, CONST _UBYTE *sub)
+{
+	_UBYTE dir[PATH_MAX];
+
+	F_Path_Get_Program(dir, sub);
+	if (*dir != '\0')
+	{
+		strBcpy(p->path, dir);
+		strBcpy(p->pathname, dir);
+	}
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 LOCAL _VOID Profile_ReadPath(PATH *p, CONST _UBYTE *section)
 {
 	Profile_ReadString(section, "path", p->path, PtrSize(p->path));
@@ -184,6 +207,10 @@ LOCAL _VOID read_profile(_VOID)
 	init_path(&AHQ_para.zeigdatei, "*.*", "Show file");
 	init_path(&AHQ_para.editor, "*.exe", "Set editor path");
 	init_path(&AHQ_para.editpath, "*.txt", "Edit file");
+	default_program_dir(&AHQ_para.karte, "maps");
+	default_program_dir(&AHQ_para.tabelle, "tables");
+	default_program_dir(&AHQ_para.fensterdatei, "maps");
+	default_program_dir(&AHQ_para.editpath, "tables");
 	Profile_ReadPath(&AHQ_para.karte, "Karte");
 	Profile_ReadPath(&AHQ_para.tabelle, "Tabelle");
 	Profile_ReadPath(&AHQ_para.fensterdatei, "Fenster");
