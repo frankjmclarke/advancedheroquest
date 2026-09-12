@@ -1,0 +1,183 @@
+# HQ-Map — Advanced HeroQuest Map Generator
+
+A random dungeon map generator for Games Workshop's *Advanced HeroQuest*, written
+in C for Windows. It rolls up a dungeon from user-selectable quest tables, draws
+it with the tile artwork in `rsh/`, and can export the map and its monster list.
+
+Copyright © Jürgen Albuschies, 1999. Source version `1.0` (`version.h`);
+the resource `VERSIONINFO` block carries product version `2.0.5.0`.
+
+Screenshots of the workflow are in [`doc/`](doc/), numbered in the order you'd
+use them — table selection, generation, monster display, saving.
+
+---
+
+## What gets built
+
+Two executables, both from the same object set:
+
+| Binary | Built from | Notes |
+| --- | --- | --- |
+| `bin/hq_map.exe` | `main.c` + `wind.c` | Full version |
+| `bin/hq_mapdm.exe` | `maindm.c` + `winddm.c` | Demo version |
+
+The demo is not a separate program. `maindm.c` and `winddm.c` are two lines
+each — they `#define DEMO 1` and then `#include "main.c"` / `#include "wind.c"`.
+`demo.h` defaults `DEMO` to `0`, so the same sources compile both ways.
+
+Everything else (`makemap.c`, `table.c`, `rolldice.c`, the `my_lib` layer, …) is
+compiled once and linked into both.
+
+## Toolchain
+
+The build predates anything you likely have installed. The original toolchain is
+**Borland C++ 4.52** — not Turbo C++, which never shipped a 4.52. The makefile
+declares it at line 15 and the resource compiler is invoked with
+`-D__BORLANDC__=0x452`.
+
+The build is driven by **Borland MAKE**, not GNU make: `makefile` uses `!if` /
+`!ifdef` / `!error` directives and `<<` inline response files, neither of which
+GNU make understands.
+
+Three toolchains are selectable via `COMPILER=`, but only one is complete:
+
+- `BORLANDC` (default) — `bcc32`, `tlink32`, `brc32`. **The only one that links.**
+- `MSVC20` / `MSVC40` — tool paths and flags are defined (makefile lines 140-212),
+  but the rules that actually link `hq_map.exe` and compile the `.res` files are
+  wrapped in `!if "$(COMPILER)"=="BORLANDC"` (lines 890, 910, 931, 940). Selecting
+  MSVC compiles objects and then silently produces no executable.
+
+A separate `makefile.gcc` targets gcc/MinGW with `windres` for resources. It is
+GNU make syntax and builds `hq_map` only — there is no `hq_mapdm` target in it.
+
+## Before you build: fix the hardcoded paths
+
+Every makefile hardcodes absolute paths from the author's machine. Nothing will
+build until these are pointed at your own installation.
+
+`makefile`:
+
+| Line | Variable | Value to change |
+| --- | --- | --- |
+| 8 | `TOP` | `P:\hero` → this source tree |
+| 79 | `BC_DIR` | `p:\bc\bc45` → your Borland C++ 4.52 install |
+| 95 | `TLINK32` | `p:\bc\bc\bin\tlink32` → note this points *outside* `BC_DIR` |
+
+`makefile.bcc` is the same file with a different set of hardcoded paths
+(`TOP=h:\src\hq_mapw`, `BC_DIR=f:\bc45`, `TLINK32=c:\bc\bin\tlink32`) — it differs
+from `makefile` in exactly those three lines. Use whichever is the closer starting
+point. `makefile.gcc` has its own at line 8 (`TOP=//h/src/hq_mapw`).
+
+`bccw32.cfg` — the checked-in 32-bit compiler config — also carries absolute
+include paths on line 1: `-IP:\hero\my_lib`, `-IP:\hero\my_lib\windows`,
+`-Ip:\bc\bc45\include`.
+
+Note that the makefile has rules to *generate* `bccw16.cfg`, `bccw32.cfg`,
+`bccdos.cfg`, `bccd16.cfg` and `bccd32.cfg` from the `INCLUDES`/`DEFINES`
+variables (makefile line 387 onward). Only `bccw32.cfg` is checked in. If you
+delete it after fixing `TOP`, make will regenerate it with correct paths — that is
+easier than editing it by hand.
+
+## Building
+
+From the source root, with Borland's `make` on `PATH`:
+
+```
+make                        # SYSTEM=WIN32, COMPILER=BORLANDC, both exes
+make SYSTEM=WIN16           # 16-bit Windows
+make SYSTEM=DOS             # 16-bit DOS
+make hq_map                 # full version only
+make hq_mapdm               # demo version only
+make dirs                   # create obj/{win16,win32} and bin/
+make clean                  # delete objects and .res files
+make strip                  # run tdstrp32 over the built exes
+```
+
+`SYSTEM` accepts `WIN16`, `WIN32`, `DOS`, `DLL16`, `DLL32`; it defaults to `WIN32`
+(makefile line 52). An unrecognised value trips `!error ... system not supported`.
+`MODEL` defaults to `l` (large) and only affects the 16-bit targets.
+
+`make dirs` runs as a dependency of the `hq_map` targets, so you don't normally
+need to call it yourself. Objects land in `obj/win32\` (or the matching
+per-system directory) and executables in `bin\`.
+
+For gcc instead: `make -f makefile.gcc`.
+
+### How the link works
+
+Worth knowing, because it's unusual and makes link failures confusing to read.
+The link rule (makefile line 891) does `cd` into the object directory, then feeds
+`tlink32` an inline response file containing, in order: link flags, the C0 startup
+object, the object list, output name, map name, libraries, the `.def` file, and
+the compiled resources. So:
+
+- **Module definition** — `hq_map32.def` for 32-bit, `hq_map.def` for 16-bit. Both
+  set `NAME HQ_MAP`, a 4 KB heap and a ~20 KB stack, and list explicit `IMPORTS`
+  (`KERNEL32.*` and `KERNEL.*` respectively). `hq_mapdm.exe` links against the
+  *same* `.def` (line 920), so it also reports itself as `HQ_MAP`.
+- **Libraries** — `import32.lib`, `ole2w32.lib`, `cw32.lib` for Win32/Borland.
+- **Resources** — `menu.res` and `grafic.res`, built by `brc32 -R` from
+  `rsh/menu.rc` and `rsh/grafic.rc`. Both depend on `version.h`, so bumping the
+  version string forces a resource rebuild.
+
+## Repository layout
+
+```
+*.c, *.h            Generator core: makemap, map, pice, stairs, features,
+                    rolldice, table, set, queue — plus the Win32 GUI
+                    (wind, icon, image, bmp, pcx, text)
+my_lib/             Portability layer (headers + generic .c)
+my_lib/windows/     Its Windows backend: window, w_draw, w_dialog, w_mouse,
+                    w_print, file_io, filesel, memory, mfdb, profile
+rsh/                Resources: menu.rc/.rh, grafic.rc/.rh, ja.ico,
+                    ~200 map tile .bmp files, and two .RWS files
+tables/             Quest tables (.tab) — standard, sonne, dark, terror,
+                    faces, ritual, priests, oath, amulett, eyes, rivers
+maps/               Sample generated maps (.bmp + .mon monster lists)
+doc/                Usage screenshots
+bin/ahq_map.ini     Runtime settings
+```
+
+Build output (`obj/`, `*.exe`) is excluded by `.gitignore`.
+
+## Running it
+
+`bin/ahq_map.ini` stores window positions, generation parameters and — the part
+that matters — absolute paths to the data directories. It ships pointing at the
+author's drive:
+
+```ini
+[Karte]
+path=P:\hero\maps
+[Tabelle]
+path=P:\hero\tables
+[Editor]
+path=P:\hero\bin\
+```
+
+Point `[Karte]`, `[Tabelle]`, `[Fenster]`, `[Editor]` and `[Editpath]` at your own
+checkout, or the file selectors will open on a drive that doesn't exist. The INI
+keys and the UI are in German (`Karte` = map, `Tabelle` = table, `Fenster` =
+window, `Treppe` = stairs).
+
+Only the 32-bit build is worth targeting on a modern machine — 64-bit Windows
+dropped the 16-bit subsystem, so the `WIN16` and `DOS` targets need DOSBox or a
+VM to run.
+
+## A note on the code's history
+
+This was ported from **Atari ST GEM**, which explains several things that look odd
+in a Windows codebase:
+
+- `my_lib/portab.h` line 342 still carries an `#if defined(__TOS__) || defined(atarist)`
+  branch, with Pure C (`__PUREC__`) support alongside it.
+- `my_lib/mfdb.h` is the GEM VDI *Memory Form Definition Block* — an Atari bitmap
+  descriptor, reimplemented on top of Windows GDI in `my_lib/windows/mfdb.c`.
+- `rsh/grafic.rc` line 2 announces itself as *"GEM resource RC output of grafic,
+  created by ORCS 2.09"* — the `.rc` files were machine-converted from GEM
+  resource files.
+- The `.RWS` files in `rsh/` are Borland Resource Workshop projects, the one part
+  of the workflow that used a Borland GUI tool rather than the command line.
+
+`my_lib/` as a whole is the abstraction layer from that port, which is why the
+GUI code calls `w_draw`/`w_dialog` rather than Win32 APIs directly.
