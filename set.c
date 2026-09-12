@@ -58,7 +58,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("Ende 'Left Turn' konnte nicht gesetzt werden\n(set_end)"))
+			if (!error_abort("Could not place end 'Left Turn'\n(set_end)"))
 				return FALSE;
 		}
 		break;
@@ -73,7 +73,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("Ende 'Right Turn' konnte nicht gesetzt werden\n(set_end)"))
+			if (!error_abort("Could not place end 'Right Turn'\n(set_end)"))
 				return FALSE;
 		}
 		break;
@@ -90,7 +90,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("Ende 'T Junction' konnte nicht gesetzt werden\n(set_end)"))
+			if (!error_abort("Could not place end 'T Junction'\n(set_end)"))
 				return FALSE;
 		}
 		break;
@@ -109,7 +109,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("Ende 'Corner' konnte nicht gesetzt werden\n(set_end)"))
+			if (!error_abort("Could not place end 'Corner'\n(set_end)"))
 				return FALSE;
 		}
 		break;
@@ -120,7 +120,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 			return FALSE;
 		if (!insert_pice(&end))
 		{
-			if (!error_abort("Ende 'Stairs Down' konnte nicht gesetzt werden\n(set_end)"))
+			if (!error_abort("Could not place end 'Stairs Down'\n(set_end)"))
 				return FALSE;
 		}
 		break;
@@ -131,7 +131,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 			return FALSE;
 		if (!insert_pice(&end))
 		{
-			if (!error_abort("Ende 'Stairs Out' konnte nicht gesetzt werden\n(set_end)"))
+			if (!error_abort("Could not place end 'Stairs Out'\n(set_end)"))
 				return FALSE;
 		}
 		break;
@@ -142,7 +142,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 			return FALSE;
 		if (!insert_pice(&end))
 		{
-			if (!error_abort("Ende 'Dead End' konnte nicht gesetzt werden\n(set_end)"))
+			if (!error_abort("Could not place end 'Dead End'\n(set_end)"))
 				return FALSE;
 		}
 		break;
@@ -191,7 +191,7 @@ GLOBAL _BOOL set_passage(PICE *from, SECTIONS len, FEATURES feature)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("Passage konnte nicht gesetzt werden\n(set_passage)"))
+			if (!error_abort("Could not place passage\n(set_passage)"))
 				return FALSE;
 		}
 	}
@@ -213,7 +213,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("'Small' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Small' room\n(set_room)"))
 				return FALSE;
 		}
 		break;
@@ -226,7 +226,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("'Normal' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Normal' room\n(set_room)"))
 				return FALSE;
 		}
 		break;
@@ -242,7 +242,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 			}
 		} else
 		{
-			if (!error_abort("'Hazard' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Hazard' room\n(set_room)"))
 				return FALSE;
 		}
 		break;
@@ -255,7 +255,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("'Large' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Large' room\n(set_room)"))
 				return FALSE;
 		}
 		break;
@@ -268,7 +268,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("'Lair' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Lair' room\n(set_room)"))
 				return FALSE;
 		}
 		break;
@@ -281,7 +281,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("'Quest' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Quest' room\n(set_room)"))
 				return FALSE;
 		}
 		break;
@@ -294,7 +294,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("'Big' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Big' room\n(set_room)"))
 				return FALSE;
 		}
 		break;
@@ -307,7 +307,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 				return FALSE;
 		} else
 		{
-			if (!error_abort("'Merscha' Raum konnte nicht gesetzt werden\n(set_room)"))
+			if (!error_abort("Could not place 'Merscha' room\n(set_room)"))
 				return FALSE;
 		}
 		break;

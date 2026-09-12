@@ -93,19 +93,19 @@ LOCAL _VOID size_error(_WORD imin, _WORD imax)
 	{
 		if (imax < 0)
 		{
-			sprintf(str, "Bereich fehlerhaft!");
+			sprintf(str, "Value out of range!");
 		} else
 		{
-			sprintf(str, "Bereich fehlerhaft!\n(max. %d)", imax);
+			sprintf(str, "Value out of range!\n(max. %d)", imax);
 		}
 	} else
 	{
 		if (imax < 0)
 		{
-			sprintf(str, "Bereich fehlerhaft!\n(min. %d)", imin);
+			sprintf(str, "Value out of range!\n(min. %d)", imin);
 		} else
 		{
-			sprintf(str, "Bereich fehlerhaft!\n(min. %d, max. %d)", imin, imax);
+			sprintf(str, "Value out of range!\n(min. %d, max. %d)", imin, imax);
 		}
 	}
 	abbruch(str);
@@ -173,12 +173,12 @@ LOCAL _VOID read_profile(_VOID)
 	Profile_ReadInt("Params", "MaxY", DEF_MAXY, &AHQ_para.max_y);
 	Profile_ReadInt("Params", "MaxPice", DEF_MAXPICE, &AHQ_para.max_pice);
 	Profile_ReadInt("Params", "MaxMem", DEF_MAXX, &AHQ_para.max_mem);
-	init_path(&AHQ_para.karte, "*.*", "Karte abspeichern");
-	init_path(&AHQ_para.tabelle, "*.tab", "Referenz Tabelle laden");
-	init_path(&AHQ_para.fensterdatei, "*.*", "Fensterinhalt abspeichern");
-	init_path(&AHQ_para.zeigdatei, "*.*", "Datei anzeigen");
-	init_path(&AHQ_para.editor, "*.exe", "Editor-Pfad einstellen");
-	init_path(&AHQ_para.editpath, "*.txt", "Datei editieren");
+	init_path(&AHQ_para.karte, "*.*", "Save map");
+	init_path(&AHQ_para.tabelle, "*.tab", "Load reference table");
+	init_path(&AHQ_para.fensterdatei, "*.*", "Save window contents");
+	init_path(&AHQ_para.zeigdatei, "*.*", "Show file");
+	init_path(&AHQ_para.editor, "*.exe", "Set editor path");
+	init_path(&AHQ_para.editpath, "*.txt", "Edit file");
 	Profile_ReadPath(&AHQ_para.karte, "Karte");
 	Profile_ReadPath(&AHQ_para.tabelle, "Tabelle");
 	Profile_ReadPath(&AHQ_para.fensterdatei, "Fenster");
@@ -279,7 +279,7 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init)
 	
 	if (init && !F_File_Exists(file->pathname))
 	{
-		abbruch("Referenz-Tabellen nicht vorhanden!");
+		abbruch("Reference tables not available!");
 		ok = FALSE;
 	} else
 	{
@@ -287,11 +287,11 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init)
 		get_path(&old);
 		if (F_Path_Set(file->path) == FALSE)
 		{
-			abbruch("Das Verzeichnis existiert nicht!");
+			abbruch("The directory does not exist!");
 			ok = FALSE;
 		} else
 		{	
-			ptr = show_string("Lese Referenztabelle");
+			ptr = show_string("Reading reference table");
 			ok = read_table(file->filename, "errors.txt");
 			hide_string(ptr);
 			
@@ -303,7 +303,7 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init)
 			} else
 			{
 				Wind_Menu_Enable(MKARTE, FALSE);
-				abbruch("Referenztabelle konnte nicht erzeugt werden!");
+				abbruch("Could not create reference table!");
 				if (F_File_Exists("errors.txt"))
 				{
 					show_text_file("errors.txt");
@@ -426,7 +426,7 @@ LOCAL _BOOL do_para(_VOID)
 	   	{
 	   		if (!mem_init(MIN_X, MIN_Y, MIN_PICE, MIN_MEM))
 	   		{
-	   			abbruch("Fataler Fehler!\nZu wenig Speicherplatz!");
+	   			abbruch("Fatal error!\nNot enough memory!");
 				exit(-1);
 	   		}
 	   	}
@@ -676,9 +676,9 @@ LOCAL _WORD try_makemap(_BOOL weiter)
 
 	new_rand(AHQ_para.rnd);
 	if (weiter)
-		sprintf(str, "Generiere Karte (#%u), Abbruch mit Taste", AHQ_para.rnd);
+		sprintf(str, "Generating map (#%u), press a key to cancel", AHQ_para.rnd);
 	else
-		sprintf(str, "Generiere Karte (#%u)", AHQ_para.rnd);
+		sprintf(str, "Generating map (#%u)", AHQ_para.rnd);
 	ptr = show_string(str);
 	ret = makemap(AHQ_para.x, AHQ_para.y, AHQ_para.von_x, AHQ_para.von_y, AHQ_para.eingang);
 	hide_string(ptr);
@@ -800,7 +800,7 @@ LOCAL _BOOL test_editor(_BOOL warn)
 	}
 	Wind_Menu_Enable(MEDITOR, FALSE);
 	if (warn)
-		abbruch("Editor nicht gefunden!");
+		abbruch("Editor not found!");
 	return FALSE;
 }
 
@@ -1150,9 +1150,9 @@ _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 					free_icons();
 					return -1;
 				}
-				ok("Die minimale Speicherkonfiguration wurde installiert!");
+				ok("The minimum memory configuration has been installed!");
 			}
-			ok("Die Standard-Speicherkonfiguration wurde installiert!");
+			ok("The default memory configuration has been installed!");
 		}
 	
 		if (Wind_Hide_Show_Init(WindPos_Read_Write, WindPos_Save_Restore))

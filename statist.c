@@ -25,7 +25,7 @@ GLOBAL _BOOL make_statistik(_BOOL questroom)
 			default:
 				break;
 			}
-			error_abort("Unbekanntes Room-Feature\n(pice_icon)");
+			error_abort("Unknown room feature\n(pice_icon)");
 			return normal;
 		case HAZARD:
 			switch (pice->feature)
@@ -79,7 +79,7 @@ GLOBAL _BOOL make_statistik(_BOOL questroom)
 			default:
 				break;
 			}
-			error_abort("Unbekanntes Hazard-Feature\n(make_statistik)");
+			error_abort("Unknown hazard feature\n(make_statistik)");
 			return hazard;
 		case LAIR:
 			switch (pice->feature)
@@ -92,7 +92,7 @@ GLOBAL _BOOL make_statistik(_BOOL questroom)
 			default:
 				break;
 			}
-			error_abort("Unbekanntes Lair-Feature\n(make_statistik)");
+			error_abort("Unknown lair feature\n(make_statistik)");
 			return large;
 		case QUEST:
 			switch (pice->feature)
@@ -107,7 +107,7 @@ GLOBAL _BOOL make_statistik(_BOOL questroom)
 			default:
 				break;
 			}
-			error_abort("Unbekanntes Lair-Feature\n(make_statistik)");
+			error_abort("Unknown lair feature\n(make_statistik)");
 			return large;
 		case MERSCHA:
 			return merscha;

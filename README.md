@@ -202,9 +202,12 @@ path=P:\hero\bin\
 ```
 
 Point `[Karte]`, `[Tabelle]`, `[Fenster]`, `[Editor]` and `[Editpath]` at your own
-checkout, or the file selectors will open on a drive that doesn't exist. The INI
-keys and the UI are in German (`Karte` = map, `Tabelle` = table, `Fenster` =
-window, `Treppe` = stairs).
+checkout, or the file selectors will open on a drive that doesn't exist.
+
+The **UI is English**; the **INI keys are still German** (`Karte` = map, `Tabelle`
+= table, `Fenster` = window, `Treppe` = stairs, `Eingang` = entrance). That split
+is deliberate: renaming the keys would silently reset every setting in an
+existing `ahq_map.ini`, since the old names would no longer be read.
 
 Only the 32-bit build is worth targeting on a modern machine — 64-bit Windows
 dropped the 16-bit subsystem, so the `WIN16` and `DOS` targets need DOSBox or a

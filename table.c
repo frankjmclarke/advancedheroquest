@@ -85,7 +85,7 @@ LOCAL _VOID scan_error(size_t pos, CONST _UBYTE *str, _UBYTE *ptr)
 	Errors++;
 	if (ErrorOut != NULL)
 	{
-		fprintf(ErrorOut, "%s\n%*s^ '%s' Zeile: %lu  %s\n", str, (int)pos, "", Datei, Zeile, ptr);
+		fprintf(ErrorOut, "%s\n%*s^ '%s' line: %lu  %s\n", str, (int)pos, "", Datei, Zeile, ptr);
 	}
 }
 
@@ -96,7 +96,7 @@ LOCAL _VOID *store_ptr(_VOID *ptr)
 {
 	if ((ptr = heap_store(&ptr, sizeof(ptr))) == NULL)
 	{
-		scan_error(0, "", "Abbruch wegen Speichermangel");
+		scan_error(0, "", "Aborted, out of memory");
 		abbruch("Speicherplatz für Referenz-Tabellen reicht nicht");
 	}
 	return ptr;
@@ -111,7 +111,7 @@ LOCAL _VOID *do_store(_VOID *ptr, size_t len)
 	
 	if ((mem = stack_store(ptr, len)) == NULL)
 	{
-		scan_error(0, "", "Abbruch wegen Speichermagel");
+		scan_error(0, "", "Aborted, out of memory");
 		abbruch("Speicherplatz für Referenz-Tabellen reicht nicht");
 	}
 	return mem;
@@ -353,7 +353,7 @@ LOCAL _WORD scan_string(size_t *pos, _UBYTE *str, _UBYTE *name, size_t maxlen)
 	*pos += len;
 	if (str[*pos] != c[0])
 	{
-		scan_error(*pos, str, "Zeichenkette nicht abgeschlossen");
+		scan_error(*pos, str, "Unterminated string");
 		return FALSE;
 	}
 	(*pos)++;
@@ -381,7 +381,7 @@ LOCAL _BOOL scan_name(size_t *pos, _UBYTE *str, _UBYTE *name, size_t maxlen)
 	{
 		strncpy(name, str + *pos, maxlen-1);
 		name[maxlen-1] = '\0';
-		scan_error(*pos + maxlen, str, "Name ist zu lang (wird abgeschnitten)");
+		scan_error(*pos + maxlen, str, "Name is too long (will be truncated)");
 	}
 	*pos += len;
 	return TRUE;
@@ -582,7 +582,7 @@ LOCAL _BOOL scan_table(size_t *pos, _UBYTE *str, size_t maxstr, TABLE *table)
 	
 	if (comment(pos, str) && !next_line(pos, str, maxstr))
 	{
-		scan_error(0, "", "Tabellen-Anfang fehlt (Datei zu ende)");
+		scan_error(0, "", "Missing start of table (end of file)");
 		return FALSE;
 	}
 	
@@ -611,7 +611,7 @@ LOCAL _BOOL scan_table(size_t *pos, _UBYTE *str, size_t maxstr, TABLE *table)
 				(*pos)++;
 				if (table->entry == NULL)
 				{
-					scan_error(0, "", "Tabellen-Inhalt fehlt");
+					scan_error(0, "", "Missing table contents");
 					return FALSE;
 				}
 				if (min <= max)
@@ -641,7 +641,7 @@ LOCAL _BOOL scan_table(size_t *pos, _UBYTE *str, size_t maxstr, TABLE *table)
 		}
 	} while (next_line(pos, str, maxstr));
 
-	scan_error(0, "", "Tabellen-Ende fehlt (Datei zu ende)");
+	scan_error(0, "", "Missing end of table (end of file)");
 	return FALSE;
 }
 
@@ -694,7 +694,7 @@ LOCAL _BOOL cmd_scan(size_t *pos, _UBYTE *str, size_t maxstr)
 			skip_end(pos, str);
 			if (!scan_table(pos, str, maxstr, &table))
 			{
-				scan_error(0, name, "Tabelle nicht erzeugt, weil fehlerhaft");
+				scan_error(0, name, "Table not created because it is invalid");
 			} else
 			{
 				skip_end(pos, str);
@@ -705,7 +705,7 @@ LOCAL _BOOL cmd_scan(size_t *pos, _UBYTE *str, size_t maxstr)
 				{
 					if (ptr->entry != NULL)
 					{
-						scan_error(0, name, "Tabellenname existiert schon");
+						scan_error(0, name, "Table name already exists");
 					} else
 					{
 						ptr->entry = table.entry;
@@ -866,7 +866,7 @@ LOCAL _BOOL cmd_include(size_t *pos, _UBYTE *str, size_t maxstr)
 		skip_chr(pos, str, SPACE_CHARS);
 		if (str[*pos] == '\0')
 		{
-			scan_error(*pos, str, "Include-Dateiname fehlt");
+			scan_error(*pos, str, "Missing include file name");
 		} else
 		{
 			if ((old_datei = strpbrk(str+(*pos), SPACE_CHARS)) != NULL)
@@ -917,7 +917,7 @@ LOCAL _BOOL cmd_define(size_t *pos, _UBYTE *str, size_t maxstr)
 		{
 			if (find_symbol(name) != NULL)
 			{
-				scan_error(*pos, str, "Symbol existiert schon");
+				scan_error(*pos, str, "Symbol already exists");
 			} else
 			{
 				if ((new.name = store_string(name)) != NULL)
@@ -940,7 +940,7 @@ LOCAL _BOOL cmd_error(size_t *pos, _UBYTE *str, size_t maxstr)
 {
 	UNUSED(maxstr);
 	skip_chr(pos, str, SPACE_CHARS);
-	scan_error(*pos, str, "Benutzer definierter Fehler");
+	scan_error(*pos, str, "User defined error");
 	return TRUE;
 }
 
@@ -1067,7 +1067,7 @@ LOCAL _BOOL no_endif(size_t *pos, _UBYTE *str, size_t maxstr)
 {
 	UNUSED(maxstr);
 	skip_end(pos, str);
-	scan_error(*pos, str, "'endif' ohne 'if'");
+	scan_error(*pos, str, "'endif' without 'if'");
 	return TRUE;
 }
 
@@ -1077,7 +1077,7 @@ LOCAL _BOOL no_else(size_t *pos, _UBYTE *str, size_t maxstr)
 {
 	UNUSED(maxstr);
 	skip_end(pos, str);
-	scan_error(*pos, str, "'else' ohne 'if'");
+	scan_error(*pos, str, "'else' without 'if'");
 	return TRUE;
 }
 
@@ -1231,7 +1231,7 @@ LOCAL _BOOL init_table_names(_VOID)
 	{
 		if ((*(ptr->table) = find_table(ptr->name)) == NULL)
 		{
-			scan_error(0, ptr->name, "Referenz-Tabelle nicht vorhanden");
+			scan_error(0, ptr->name, "Reference table not available");
 			ret = FALSE;
 		} else
 		{
@@ -1274,7 +1274,7 @@ LOCAL _BOOL check_tables(_VOID)
 	{
 		if (ptr->entry == NULL)
 		{
-			scan_error(0, ptr->name, "Tabelle nicht vorhanden");
+			scan_error(0, ptr->name, "Table not available");
 			ret = FALSE;
 		} else
 		{
@@ -1319,7 +1319,7 @@ GLOBAL _BOOL read_table(_UBYTE *inpath, _UBYTE *outpath)
 		do_lines(Do_cmd);
 		if (If_Level != 0)
 		{
-			scan_error(0, "", "'endif' fehlt (Datei zu ende)");
+			scan_error(0, "", "Missing 'endif' (end of file)");
 		}
 		
 		if (!check_tables())

@@ -683,10 +683,10 @@ LOCAL _WORD _Form_Alert(_WORD def, CONST _UBYTE *str)
 		title = _T("Info");
 		break;
 	case 1:
-		title = _T("Fehler");
+		title = _T("Error");
 		break;
 	case 2:
-		title = _T("Frage");
+		title = _T("Question");
 		break;
 	case 3:
 		title = _T("Halt");
@@ -864,77 +864,77 @@ GLOBAL _VOID ok(CONST _UCHAR *str)
 
 GLOBAL _VOID abbruch(CONST _UCHAR *str)
 {
-	Form_Alert(1, _T("[1][|%s|][:[Abbruch]"), str);
+	Form_Alert(1, _T("[1][|%s|][:[Cancel]"), str);
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _VOID ende(CONST _UCHAR *str)
 {
-	Form_Alert(1, _T("[1][|%s|][:[Abbruch]"), str);
+	Form_Alert(1, _T("[1][|%s|][:[Cancel]"), str);
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _VOID schreibfehler(_VOID)
 {
-	abbruch(_T("Schreibfehler!"));
+	abbruch(_T("Write error!"));
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _VOID lesefehler(_VOID)
 {
-	abbruch(_T("Lesefehler!"));
+	abbruch(_T("Read error!"));
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _VOID nichtgefunden(CONST _UCHAR *str)
 {
-	Form_Alert(1, _T("[1][|Datei '%s' nicht gefunden!|][:[Abbruch]"), str);
+	Form_Alert(1, _T("[1][|File '%s' not found!|][:[Cancel]"), str);
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _VOID nichtangelegt(CONST _UCHAR *str)
 {
-	Form_Alert(1, _T("[1][|Kann Datei '%s' nicht anlegen!|][:[Abbruch]"), str);
+	Form_Alert(1, _T("[1][|Cannot create file '%s'!|][:[Cancel]"), str);
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _BOOL ok_abbruch(CONST _UCHAR *str)
 {
-	return Form_Alert(1, _T("[2][|%s|][.[Ok|:[Abbruch]"), str) == 1;
+	return Form_Alert(1, _T("[2][|%s|][.[OK|:[Cancel]"), str) == 1;
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _BOOL abbruch_ok(CONST _UCHAR *str)
 {
-	return Form_Alert(2, _T("[2][|%s|][[Ok|:[Abbruch]"), str) == 1;
+	return Form_Alert(2, _T("[2][|%s|][[OK|:[Cancel]"), str) == 1;
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _BOOL weiter_abbruch(CONST _UCHAR *str)
 {
-	return Form_Alert(1, _T("[2][|%s|][.[Weiter|:[Abbruch]"), str) == 1;
+	return Form_Alert(1, _T("[2][|%s|][.[Continue|:[Cancel]"), str) == 1;
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _BOOL abbruch_weiter(CONST _UCHAR *str)
 {
-	return Form_Alert(2, _T("[2][|%s|][[Weiter|:[Abbruch]"), str) == 1;
+	return Form_Alert(2, _T("[2][|%s|][[Continue|:[Cancel]"), str) == 1;
 }
 
 /*** ---------------------------------------------------------------------- ***/
 
 GLOBAL _WORD ok_retry_cancel(CONST _UCHAR *str)
 {
-	return Form_Alert(1, _T("[1][%s][.[OK|[Nochmal|:[Abbruch]"), str);
+	return Form_Alert(1, _T("[1][%s][.[OK|[Retry|:[Cancel]"), str);
 }
 
 /*** ---------------------------------------------------------------------- ***/

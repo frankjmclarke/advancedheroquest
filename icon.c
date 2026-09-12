@@ -154,7 +154,7 @@ LOCAL ICON *pice_icon(PICE *pice)
 		default:
 			break;
 		}
-		if (!error_abort("Unbekanntes Small-Feature\n(pice_icon)"))
+		if (!error_abort("Unknown small feature\n(pice_icon)"))
 			return NULL;
 		return hazard;
 	case LARGE_ROOM:
@@ -173,7 +173,7 @@ LOCAL ICON *pice_icon(PICE *pice)
 		default:
 			break;
 		}
-		if (!error_abort("Unbekanntes Large-Feature\n(pice_icon)"))
+		if (!error_abort("Unknown large feature\n(pice_icon)"))
 			return NULL;
 		return large;
 	case BIG:
@@ -645,7 +645,7 @@ LOCAL _BOOL init_mfdb(MFDB **mfdb, _WORD formular, _WORD images)
 		mfdb[i] = get_mfdb_from_bitmap(formular + i);
 		if (mfdb[i] == NULL)
 		{
-			ende("RSC-Fehler (init_mfdb)");
+			ende("RSC error (init_mfdb)");
 			return FALSE;
 		}
 	}

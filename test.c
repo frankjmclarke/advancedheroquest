@@ -326,7 +326,7 @@ LOCAL _WORD find_passage_rooms(PICE *from, SECTIONS len, PICE *room, _WORD count
 
 	if (count)
 	{
-		if (!error_abort("Fataler Fehler!\n(find_passage_room)"))
+		if (!error_abort("Fatal error!\n(find_passage_room)"))
 			return 0;
 	}
 	
@@ -557,7 +557,7 @@ LOCAL _WORD find_room_rooms(PICE *from, PICE *room, _WORD count)
 
 	if (count)
 	{
-		if (!error_abort("Fataler Fehler!\n(find_room_room)"))
+		if (!error_abort("Fatal error!\n(find_room_room)"))
 			return 0;
 		return 0;
 	}
@@ -753,7 +753,7 @@ LOCAL _WORD find_room_passages(PICE *from, _WORD count)
 
 	if (count)
 	{
-		if (!error_abort("Fataler Fehler!\n(find_room_passages)"))
+		if (!error_abort("Fatal error!\n(find_room_passages)"))
 			return 0;
 		return 0;
 	}
@@ -875,7 +875,7 @@ LOCAL _WORD find_room_doors(PICE *from, _WORD count)
 
 	if (count)
 	{
-		if (!error_abort("Fataler Fehler!\n(find_room_doors)"))
+		if (!error_abort("Fatal error!\n(find_room_doors)"))
 			return 0;
 		return 0;
 	}
@@ -972,7 +972,7 @@ LOCAL _WORD find_passage_doors(PICE *from, SECTIONS len, _WORD count)
 	
 	if (count)
 	{
-		if (!error_abort("Fataler Fehler!\n(find_passage_door)"))
+		if (!error_abort("Fatal error!\n(find_passage_door)"))
 			return 0;
 		return 0;
 	}

@@ -137,7 +137,7 @@ GLOBAL _BOOL save_grafic(PATH *p, _BOOL compress, _WORD zoom, IMG_TYPE type)
 			abbruch("Ungültiges Grafikformat!");
 			return FALSE;
 		}
-		ptr = show_string("Speichere Grafik-Karte");
+		ptr = show_string("Saving graphic map");
 		set_ext(p, ext);
 		if (writeopen(&fd, p->pathname, "wb"))
 		{
@@ -184,8 +184,8 @@ GLOBAL _BOOL print_grafic(_WORD zoom)
 		WINDOW_PROC proc;
 
 		UNUSED(zoom); /* TODO */
-		ptr = show_string("Drucke Grafik-Karte");
-		if ((printer = Printer_Open("Drucke Grafik-Karte", TRUE)) != NULL)
+		ptr = show_string("Printing graphic map");
+		if ((printer = Printer_Open("Printing graphic map", TRUE)) != NULL)
 		{
 			proc = Wind_Proc_Ptr(Grafik_Karte);
 			retV = proc(WMY_PRINT, Grafik_Karte, printer);
@@ -296,7 +296,7 @@ GLOBAL _VOID show_grafic(_UBYTE *name)
 #endif
 		if (img != NULL)
 		{
-			ptr = show_string("Erzeuge Grafik-Karte");
+			ptr = show_string("Creating graphic map");
 			draw_img_map(img);
 			hide_string(ptr);
 			sprintf(str, "Grafik: %s", name);
@@ -339,7 +339,7 @@ GLOBAL _BOOL save_text(PATH *p)
 		WINDOW_PROC proc;
 		
 		set_ext(p, "txt");
-		ptr = show_string("Speichere Text-Karte");
+		ptr = show_string("Saving text map");
 		if (writeopen(&fd, p->pathname, "w"))
 		{
 			proc = Wind_Proc_Ptr(Text_Karte);
@@ -391,7 +391,7 @@ LOCAL _BOOL print_text_file(WINDOW_DEF *wr, CONST _UBYTE *title)
 
 GLOBAL _BOOL print_text(_VOID)
 {
-	return print_text_file(Text_Karte, "Drucke Text-Karte");
+	return print_text_file(Text_Karte, "Printing text map");
 }
 
 /*** ---------------------------------------------------------------------- ***/
@@ -695,7 +695,7 @@ GLOBAL _VOID show_text(_UBYTE *name)
 			}
 			buf->fontsize = FONT_SIZE_SMALL;
 			buf->window = &Text_Karte;
-			ptr = show_string("Erzeuge Text-Karte");
+			ptr = show_string("Creating text map");
 			draw_text_map(buf->ptr);
 			hide_string(ptr);
 			
@@ -762,7 +762,7 @@ GLOBAL _BOOL save_liste(PATH *p)
 		WINDOW_PROC proc;
 		
 		set_ext(p, "mon");
-		ptr = show_string("Speichere Monster-Liste");
+		ptr = show_string("Saving monster list");
 		if (writeopen(&fd, p->pathname, "w"))
 		{
 			proc = Wind_Proc_Ptr(Monster_Liste);
@@ -789,7 +789,7 @@ GLOBAL _BOOL print_liste(_VOID)
 
 GLOBAL _BOOL print_file(WINDOW_DEF *wr)
 {
-	return print_text_file(wr, "Drcuke Datei");
+	return print_text_file(wr, "Printing file");
 }
 
 /*** ---------------------------------------------------------------------- ***/
@@ -934,7 +934,7 @@ GLOBAL _BOOL save_statistik(PATH *p)
 		WINDOW_PROC proc;
 		
 		set_ext(p, "sta");
-		ptr = show_string("Speichere Statistik");
+		ptr = show_string("Saving statistics");
 		if (writeopen(&fd, p->pathname, "w"))
 		{
 			proc = Wind_Proc_Ptr(Statistik);

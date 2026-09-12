@@ -20,7 +20,7 @@ LOCAL FEATURES referenz_table(TABLE *table)
 	
 	if (table == NULL)
 	{
-		if (!error_abort("Tabelle existiert nicht (referenz_table)"))
+		if (!error_abort("Table does not exist (referenz_table)"))
 			return Illegal_Feature;
 	} else
 	{
@@ -141,7 +141,7 @@ LOCAL _BOOL make_features(PICE *ptr, TABLE *table)
 			}
 			entry = entry->next;
 		}
-		if (!error_abort("Kein passender Tabelleneintrag vorhanden"))
+		if (!error_abort("No matching table entry found"))
 			return FALSE;
 	}
 	ptr->feature = Nothing;

@@ -257,7 +257,7 @@ LOCAL _BOOL do_room_room(PICE *from, ROOMORPASSAGE door, TYPE doortype)
 				return TRUE;
 			} else
 			{
-				if (!error_abort("Passage konnte nicht gesetzt werden\n(do_room_room)"))
+				if (!error_abort("Could not place passage\n(do_room_room)"))
 					return FALSE;
 			}
 		}
@@ -334,7 +334,7 @@ LOCAL _BOOL do_start(PICE *from)
 			}
 		} else
 		{
-			if (!error_abort("Start 'Stairs Up' konnte nicht gesetzt werden\n(do_start)"))
+			if (!error_abort("Could not place start 'Stairs Up'\n(do_start)"))
 				return FALSE;
 		}
 	}
