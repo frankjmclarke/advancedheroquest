@@ -1162,8 +1162,30 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 			karte_ok(FALSE);
 			if (do_table(&AHQ_para.tabelle, TRUE))
 			{
+				_WORD tries;
+				_WORD res = RETRY;
+
 				SetMouse(MOUSE_BUSY);
-				if (try_makemap(FALSE) == TRUE)
+				/*
+				 * Roll again with a fresh seed while the map comes out with
+				 * no stairs down, which try_makemap() reports as RETRY. This
+				 * used to make a single attempt and treat RETRY as failure,
+				 * so a startup whose seed happened to roll badly showed no
+				 * map and gave no reason; some quests only produce a usable
+				 * map about half the time.
+				 *
+				 * Bounded, unlike Next Map, because this runs before the
+				 * event loop: an endless loop here would hang the program on
+				 * a quest that can never satisfy the current settings.
+				 */
+				for (tries = 0; tries < 50; tries++)
+				{
+					res = try_makemap(AHQ_para.weiter);
+					if (res != RETRY)
+						break;
+					++AHQ_para.rnd;
+				}
+				if (res == TRUE)
 				{	
 					karte_ok(TRUE);
 					/*
