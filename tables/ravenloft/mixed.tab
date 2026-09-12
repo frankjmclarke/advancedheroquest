@@ -1,0 +1,53 @@
+Wandering-Monsters
+(   1D12
+    1-2     "1 Beastman (10 Gold Crowns)"
+    3-4     "2 Goblins, 2 Goblin Archers (20 Gold Crowns)"
+    5-6     "3 Zombies (10 Gold Crowns)"
+    7-8     "3 Skaven Warriors (20 Gold Crowns)"
+    9-9     "2 Skeletons (20 Gold Crowns)"
+    10-10   "2 Ghouls (20 Gold Crowns)"
+    11-11   "1 Night Runner, 2 Skaven Warriors (50 Gold Crowns)"
+    12-12   "3 Orc Champions (60 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "2 Beastmen (30 Gold Crowns)"
+    2-2     "3 Orcs, 2 Goblins (40 Gold Crowns)"
+    3-3     "2 Skaven Champions, 1 Skaven Warrior (40 Gold Crowns)"
+    4-4     "1 Beastman Champion, 2 Goblins (50 Gold Crowns)"
+    5-5     "1 Chaos Champion, 2 Chaos Thugs (50 Gold Crowns)"
+    6-6     "3 Skeletons (50 Gold Crowns)"
+    7-7     "3 Beastmen (60 Gold Crowns)"
+    8-8     "3 Gutter Runners (60 Gold Crowns)"
+    9-9     "4 Ghouls (60 Gold Crowns)" & Specialist-Monster()
+    10-10   "1 Ogre (80 Gold Crowns)" & Specialist-Monster()
+    11-11   "1 Wight (100 Gold Crowns)" & Specialist-Monster()
+    12-12   "1 Ogre Chieftain (100 Gold Crowns)" & Specialist-Monster()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "1 Ogre Chieftain (80 Gold Crowns)"
+    2-2     "1 Wight, 2 Zombies (100 Gold Crowns)"
+    3-3     "1 Beastman Warlord, 2 Beastmen (120 Gold Crowns)"
+    4-4     "1 Deamonette (90 Gold Crowns)"
+    5-5     "1 Booldthirster (100 Gold Crowns)"
+    6-6     "1 Skaven Warlord, 3 Skaven Champions (120 Gold Crowns)"
+    7-7     "1 Liche (140 Gold Crowns)"
+    8-8     "1 Vampire (100 Gold Crowns)"
+    9-9     "1 Minotaur Lord, 3 Orcs (120 Gold Crowns)" & Specialist-Monster()
+    10-10   "2 Chaos Champions (150 Gold Crowns)" & Specialist-Monster()
+    11-11   "1 Mummy, 3 Ghouls (180 Gold Crowns)" & Specialist-Monster()
+    12-12   "1 Greather Deamon of Tzeentch (200 Gold Crowns)" & Specialist-Monster()
+)
+
+Specialist-Monster
+(   1D12
+    1-7     None
+    8-8     Vampire()
+    9-9     Chaos-Sorcerer()
+    10-10   Minotaur-Lord()
+    11-11   Chaos-Lord()
+    12-12   Daemonette()
+)

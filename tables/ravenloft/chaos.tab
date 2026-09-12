@@ -1,0 +1,53 @@
+Wandering-Monsters
+(   1D12
+    1-2     "1 Beastman (10 Gold Crowns)"
+    3-4     "1 Beastman Sentry (20 Gold Crowns)"
+    5-6     "3 Orcs (20 Gold Crowns)"
+    7-8     "1 Orc Champion, 1 Orc (30 Gold Crowns)"
+    9-9     "1 Chaos Warrior (30 Gold Crowns)"
+    10-10   "2 Beastmen (30 Gold Crowns)"
+    11-11   "1 Chaos Warrior, 1 Orc (40 Gold Crowns)"
+    12-12   "1 Chaos Warrior, 1 Beastman Sentry (50 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "1 Chaos Warrior (20 Gold Crowns)"
+    2-2     "2 Beastmen (30 Gold Crowns)"
+    3-3     "1 Chaos Warrior, 1 Orc (40 Gold Crowns)"
+    4-4     "1 Chaos Warrior, 1 Beastman (40 Gold Crowns)"
+    5-5     "1 Chaos Warrior, 1 Beastman (50 Gold Crowns)"
+    6-6     "1 Chaos Warrior, 1 Beastman Sentry (40 Gold Crowns)"
+    7-7     "1 Chaos Warrior, 2 Orcs (50 Gold Crowns)"
+    8-8     "1 Chaos Warrior, 2 Orc Champions (60 Gold Crowns)"
+    9-9     "1 Chaos Champion (60 Gold Crowns)" & Specialist-Monster()
+    10-10   "2 Chaos Warriors (80 Gold Crowns)" & Specialist-Monster()
+    11-11   "1 Chaos Warrior, 4 Orcs (100 Gold Crowns)" & Specialist-Monster()
+    12-12   "1 Chaos Champion, 1 Beastman (100 Gold Crowns)" & Specialist-Monster()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "2 Chaos Warriors, 1 Beastman (80 Gold Crowns)"
+    2-2     "1 Chaos Warrior, 3 Beastmen (100 Gold Crowns)"
+    3-3     "1 Chaos Champion, 1 Beastman (120 Gold Crowns)"
+    4-4     "1 Chaos Champion, 1 Chaos Warrior (100 Gold Crowns)"
+    5-5     "3 Chaos Warriors (120 Gold Crowns)"
+    6-6     "2 Chaos Warriors, 2 Beastmen (120 Gold Crowns)"
+    7-7     "2 Chaos Warriors, 4 Orcs (140 Gold Crowns)"
+    8-8     "1 Chaos Champion, 3 Beastmen (100 Gold Crowns)"
+    9-9     "2 Chaos Warriors, 3 Beastmen (120 Gold Crowns)" & Specialist-Monster()
+    10-10   "3 Chaos Warriors, 1 Beastman (140 Gold Crowns)" & Specialist-Monster()
+    11-11   "1 Chaos Champion, 1 Chaos Warrior, 1 Beastman (160 Gold Crowns)" & Specialist-Monster()
+    12-12   "4 Chaos Warriors (160 Gold Crowns)" & Specialist-Monster()
+)
+
+Specialist-Monster
+(   1D12
+    1-7     None
+    8-8     Chaos-Champion()
+    9-9     Chaos-Champion()
+    10-10   Chaos-Sorcerer()
+    11-11   Chaos-Sorcerer()
+    12-12   Chaos-Sorcerer()
+)

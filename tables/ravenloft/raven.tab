@@ -1,0 +1,63 @@
+Wandering-Monsters
+(   1D12
+    1-2     "3 Wolves (25 Gold Crowns)"
+    3-4     "3 Ghouls (25 Gold Crowns)"
+    5-6     "3 Kobold Skirmishers (35 Gold Crowns)"
+    7-8     "3 Rat Swarms (20 Gold Crowns)"
+    9-9     "3 Skeletons (20 Gold Crowns)"
+    10-10   "3 Blazing Skeletons (25 Gold Crowns)"
+    11-11   "3 Wraith (30 Gold Crowns)"
+    12-12   "3 Zombies (25 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "3 Zombies (25 Gold Crowns)"
+    2-2     "3 Wraith (30 Gold Crowns)"
+    3-3     "3 Blazing Skeletons (25 Gold Crowns)"
+    4-4     "3 Rat Swarms, 1 Wolf (25 Gold Crowns)"
+    5-5     "3 Kobold Skirmishers (35 Gold Crowns)"
+    6-6     "3 Ghouls, 3 Zombies(50 Gold Crowns)"
+    7-7     "2 Zombies, 2 Skeletons (60 Gold Crowns)" & Specialist-Monster()
+    8-8     "3 Ghouls (70 Gold Crowns)" & Specialist-Monster()
+    9-9     "1 Wraith, 2 Zombies (60 Gold Crowns)" & Specialist-Monster()
+    10-10   "3 Skeletons, 1 Blazing Skeleton (80 Gold Crowns)" & Specialist-Monster()
+    11-11   "3 Ghouls, 2 Gargoyles (100 Gold Crowns)" & Specialist-Monster()
+    12-12   "2 Wraith, 3 Zombies (100 Gold Crowns)" & Specialist-Monster()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "3 Skeletons, 4 Zombies (70 Gold Crowns)" & Specialist-Monster()
+    2-2     "3 Ghouls, 4 Zombies (80 Gold Crowns)" & Specialist-Monster()
+    3-3     "2 Skeletons, 3 Ghouls (100 Gold Crowns)" & Specialist-Monster()
+    4-4     "3 Gargoyles, 3 Zombies (80 Gold Crowns)" & Specialist-Monster()
+    5-5     "2 Gargoyles, 2 Skeletons, 2 Zombies (90 Gold Crowns)" & Specialist-Monster()
+    6-6     "1 Wraith, 4 Zombies (100 Gold Crowns)" & Specialist-Monster()
+    7-7     "1 Wraith, 2 Zombies, 1 Skeleton (160 Gold Crowns)" & Specialist-Monster-Double()
+    8-8     "1 Gargoyles, 4 Skeletons (140 Gold Crowns)" & Specialist-Monster-Double()
+    9-9     "1 Gargoyles, 4 Zombies, 2 Ghouls (160 Gold Crowns)" & Specialist-Monster-Double()
+    10-10   "1 Wraith, 3 Skeletons (180 Gold Crowns)" & Specialist-Monster-Double()
+    11-11   "3 Gargoyles, 3 Skeletons, 3 Zombies (190 Gold Crowns)" & Specialist-Monster-Double()
+    12-12   "3 Skeletons, 3 Ghouls, 3 Kobold Skirmishers (200 Gold Crowns)" & Specialist-Monster-Double()
+)
+
+Specialist-Monster
+(   1D12
+    1-2     Undead-Champion-Monster()
+    3-4     Undead-Champion-Monster()
+    5-6     Undead-Champion-Monster()
+    7-8     Undead-Champion()
+    9-9     Undead-Champion()
+    10-12   Undead-Champion()	
+)
+
+Specialist-Monster-Double
+(   1D12
+    1-2     Undead-Champion-Monster() & Undead-Champion()
+    3-4     Undead-Champion-Monster() & Undead-Champion()
+    5-6     Undead-Champion-Monster() & Undead-Champion()
+    7-8     Undead-Champion-Monster() & Undead-Champion()
+    9-9     Undead-Champion-Monster() & Undead-Champion()
+    10-12   Undead-Champion-Monster() & Undead-Champion()
+)
