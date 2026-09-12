@@ -7,6 +7,11 @@ it with the tile artwork in `rsh/`, and can export the map and its monster list.
 Copyright © Jürgen Albuschies, 1999. Source version `1.0` (`version.h`);
 the resource `VERSIONINFO` block carries product version `2.0.5.0`.
 
+> **Provenance:** this is a preservation mirror of someone else's work. No
+> license has been granted by the copyright holder and all rights remain
+> reserved — see [NOTICE.md](NOTICE.md). If you are the author or rights
+> holder, open an issue and any request will be honoured.
+
 Screenshots of the workflow are in [`doc/`](doc/), numbered in the order you'd
 use them — table selection, generation, monster display, saving.
 
