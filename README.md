@@ -213,6 +213,34 @@ Only the 32-bit build is worth targeting on a modern machine — 64-bit Windows
 dropped the 16-bit subsystem, so the `WIN16` and `DOS` targets need DOSBox or a
 VM to run.
 
+### Zoom
+
+The map opens magnified and can be rescaled live from the **View** menu:
+
+| Action | Shortcut |
+| --- | --- |
+| Zoom In | `Ctrl` `+` |
+| Zoom Out | `Ctrl` `-` |
+| Actual Size | `Ctrl` `0` |
+| Fit to Window | `Ctrl` `9` |
+
+The setting persists as `[Config] Zoom` and is clamped to 1-16.
+
+Why this is needed: at 1:1 a dungeon cell is **8 screen pixels**, so a full
+52x26 map is only about 416x208 - sized for a 640x400 Atari ST. On a 2560-wide
+display that is roughly a sixth of the screen. The default is now 3, and *Fit to
+Window* picks the largest whole-number zoom at which the whole map still fits.
+
+No artwork was resized to achieve this. The map is rendered once at 1:1 into an
+offscreen bitmap and scaled by `StretchBlt` when painted (`mfdb.c:247`), so zoom
+costs no extra memory. Because the tiles are 1-bit line art, whole-number
+scaling is exact pixel replication and stays sharp; a fractional factor would
+drop or double rows unevenly, which is why the zoom is integer only.
+
+`ZOOM_MAX` is a safety bound rather than a display one: `draw_grafic()` in
+`wind.c` multiplies the bitmap width by the zoom into a `_WORD` (16-bit), so an
+unclamped profile value would overflow and corrupt the layout.
+
 ### Fullscreen
 
 The app opens maximized, and opens its map windows maximized inside it. Turn it

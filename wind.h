@@ -20,6 +20,22 @@ extern WINDOW_DEF *Text_Karte;
 extern WINDOW_DEF *Monster_Liste;
 extern WINDOW_DEF *Statistik;
 extern _WORD display_zoom;
+
+/*
+ * On-screen magnification of the graphic map. The map is rendered once at
+ * 1:1 into an offscreen bitmap and scaled by StretchBlt when painted, so
+ * zooming costs no extra memory.
+ *
+ * ZOOM_MAX is a safety limit, not a display one: draw_grafic() multiplies
+ * the bitmap width by the zoom into a _WORD (16-bit), so an unbounded value
+ * from the profile would overflow and corrupt the layout.
+ */
+#define ZOOM_MIN 1
+#define ZOOM_MAX 16
+
+_WORD Grafik_Zoom_Get(_VOID);
+_VOID Grafik_Zoom_Set(_WORD zoom);
+_VOID Grafik_Zoom_Fit(_VOID);
 extern _WORD print_zoom;
 
 enum { W_DATEI=1, W_TEXT, W_GRAFIK, W_LISTE, W_STATISTIK };

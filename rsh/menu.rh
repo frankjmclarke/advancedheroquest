@@ -33,6 +33,10 @@
 #define MEPFAD           141
 #define MEDITOR          142
 #define MSAVEOPT         143
+#define MZOOMIN          144
+#define MZOOMOUT         145
+#define MZOOM100         146
+#define MZOOMFIT         147
 
 #define FKARTE             2
 #define KNAME            102

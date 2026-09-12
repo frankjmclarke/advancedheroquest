@@ -202,6 +202,79 @@ GLOBAL _BOOL print_grafic(_WORD zoom)
 
 /*** ---------------------------------------------------------------------- ***/
 
+GLOBAL _WORD Grafik_Zoom_Get(_VOID)
+{
+	return display_zoom;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+/*
+ * Change the on-screen magnification. Clamped, so a bad profile value cannot
+ * overflow the _WORD arithmetic in draw_grafic(). Takes effect immediately:
+ * the scroll document is resized and the window repainted, no restart.
+ */
+GLOBAL _VOID Grafik_Zoom_Set(_WORD zoom)
+{
+	L_GRECT show;
+	MFDB *ptr;
+	_WORD w, h;
+
+	if (zoom < ZOOM_MIN)
+		zoom = ZOOM_MIN;
+	if (zoom > ZOOM_MAX)
+		zoom = ZOOM_MAX;
+	if (zoom == display_zoom)
+		return;
+	display_zoom = zoom;
+
+	if (Grafik_Karte != NULL)
+	{
+		ptr = Wind_Buf_Ptr(Grafik_Karte);
+		if (ptr != NULL)
+		{
+			get_mfdb_info(ptr, &w, &h, NULL);
+			Wind_GetDoc(Grafik_Karte, &show);
+			show.xx = 0;
+			show.yy = 0;
+			show.ww = (_LONG)w * zoom;
+			show.hh = (_LONG)h * zoom;
+			Wind_SetDoc(Grafik_Karte, &show);
+		}
+		Wind_Redraw(Grafik_Karte);
+	}
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+/*
+ * Pick the largest whole-number zoom at which the whole map still fits the
+ * window. Integer only: the tiles are 1 bit deep, so whole-number scaling is
+ * exact pixel replication and stays crisp, where a fractional factor would
+ * drop or double rows unevenly.
+ */
+GLOBAL _VOID Grafik_Zoom_Fit(_VOID)
+{
+	GRECT work;
+	MFDB *ptr;
+	_WORD w, h, zx, zy;
+
+	if (Grafik_Karte == NULL)
+		return;
+	ptr = Wind_Buf_Ptr(Grafik_Karte);
+	if (ptr == NULL)
+		return;
+	get_mfdb_info(ptr, &w, &h, NULL);
+	if (w <= 0 || h <= 0)
+		return;
+	Wind_GetWork(Grafik_Karte, &work);
+	zx = (_WORD)(work.g_w / w);
+	zy = (_WORD)(work.g_h / h);
+	Grafik_Zoom_Set(zx < zy ? zx : zy);
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 LOCAL _VOID draw_grafic(WINDOW_DEF *window, MFDB *mfdb, CONST GRECT *area)
 {
 	L_GRECT show;

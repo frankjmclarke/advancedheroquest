@@ -186,7 +186,8 @@ LOCAL _VOID read_profile(_VOID)
 	Profile_ReadPath(&AHQ_para.editpath, "Editpath");
 	Profile_ReadBool("Config", "Autosave", TRUE, &AHQ_para.autosave);
 	Profile_ReadBool("Config", "AskExit", TRUE, &AHQ_para.ask_exit);
-	Profile_ReadInt("Config", "Zoom", 1, &display_zoom);
+	Profile_ReadInt("Config", "Zoom", 3, &display_zoom);
+	Grafik_Zoom_Set(display_zoom);		/* clamps a bad profile value */
 	Profile_ReadBool("Config", "Fullscreen", TRUE, &AHQ_para.fullscreen);
 	Profile_ReadInt("Print", "Zoom", 0, &print_zoom);
 }
@@ -986,6 +987,22 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 	
 	case MSAVEOPT:
 		write_profile();
+		break;
+
+	case MZOOMIN:
+		Grafik_Zoom_Set(Grafik_Zoom_Get() + 1);
+		break;
+
+	case MZOOMOUT:
+		Grafik_Zoom_Set(Grafik_Zoom_Get() - 1);
+		break;
+
+	case MZOOM100:
+		Grafik_Zoom_Set(1);
+		break;
+
+	case MZOOMFIT:
+		Grafik_Zoom_Fit();
 		break;
 	}
 	return retV;
