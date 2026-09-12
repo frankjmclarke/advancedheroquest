@@ -210,6 +210,27 @@ Only the 32-bit build is worth targeting on a modern machine — 64-bit Windows
 dropped the 16-bit subsystem, so the `WIN16` and `DOS` targets need DOSBox or a
 VM to run.
 
+### Fullscreen
+
+The app opens maximized, and opens its map windows maximized inside it. Turn it
+off to get the original behaviour back:
+
+```ini
+[Config]
+Fullscreen=0
+```
+
+The 1999 default was a fixed 768×537 window, stored under `[Windows]` as
+`0=0, 1, {132, 132, 768, 537}, 0` — sized for the screens of the day. That
+rectangle is still read and written as before; fullscreen just ignores it when
+placing the main window, so switching back to `Fullscreen=0` restores the exact
+old geometry rather than a lost one.
+
+Note this shows **more of the map, not a bigger map**. On-screen tiles are drawn
+at a fixed size — the `zoom` in `bmp.c` and `image.c` applies only when *saving*
+an image, never to the display — so a larger window fits more of the dungeon in
+view at the same tile size.
+
 ## A note on the code's history
 
 This was ported from **Atari ST GEM**, which explains several things that look odd

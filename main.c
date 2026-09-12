@@ -61,6 +61,7 @@ struct ahq_para
 	_WORD max_mem;
 	_BOOL autosave;
 	_BOOL ask_exit;
+	_BOOL fullscreen;			/* open maximized, ignoring the saved window rects */
 };
 
 
@@ -186,6 +187,7 @@ LOCAL _VOID read_profile(_VOID)
 	Profile_ReadBool("Config", "Autosave", TRUE, &AHQ_para.autosave);
 	Profile_ReadBool("Config", "AskExit", TRUE, &AHQ_para.ask_exit);
 	Profile_ReadInt("Config", "Zoom", 1, &display_zoom);
+	Profile_ReadBool("Config", "Fullscreen", TRUE, &AHQ_para.fullscreen);
 	Profile_ReadInt("Print", "Zoom", 0, &print_zoom);
 }
 
@@ -236,6 +238,7 @@ LOCAL _VOID write_profile(_VOID)
 	Profile_WriteBool("Config", "Autosave", AHQ_para.autosave);
 	Profile_WriteBool("Config", "AskExit", AHQ_para.ask_exit);
 	Profile_WriteInt("Config", "Zoom", display_zoom);
+	Profile_WriteBool("Config", "Fullscreen", AHQ_para.fullscreen);
 	Profile_WriteInt("Print", "Zoom", print_zoom);
 }
 
@@ -1131,6 +1134,9 @@ _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 	UNUSED(argv);
 	
 	read_profile();
+	
+	/* must happen before the main window is shown by Wind_Hide_Show_Init */
+	Wind_Set_Fullscreen(AHQ_para.fullscreen);
 	
 	if (init_icons())
 	{

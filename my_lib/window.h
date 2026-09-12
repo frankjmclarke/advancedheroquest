@@ -128,6 +128,14 @@ _BOOL Wind_Scroll_Area(WINDOW_DEF *wr, _WORD dir, _LONG amount, _BOOL scroll, CO
 typedef size_t (*WH_READWRITE)(_BOOL save, WIND_RESTORE *buf, size_t numElems);
 typedef _BOOL (*WH_SAVERESTORE)(_BOOL save, _WORD group, _LONG *var_bez);
 
+/*
+ * Open the application maximized, and open windows maximized within it,
+ * instead of restoring the saved rectangles. Call before the main window
+ * is shown, i.e. before Wind_Hide_Show_Init.
+ */
+_VOID Wind_Set_Fullscreen(_BOOL fullscreen);
+_BOOL Wind_Get_Fullscreen(_VOID);
+
 _BOOL Wind_Hide_Show_Init(WH_READWRITE readwrite, WH_SAVERESTORE saverestore);
 _BOOL Wind_Hide_Show_Windows(_BOOL hide);
 _BOOL Wind_Pexec(_UBYTE *name, _UBYTE *para);

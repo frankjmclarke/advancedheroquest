@@ -82,6 +82,14 @@ struct _window_def
 GLOBAL HWND GlMainHwnd;
 GLOBAL HWND MdiClientHwnd;
 
+/*
+ * When set, the application opens maximized and its windows open
+ * maximized inside it, ignoring the rectangles saved in the profile.
+ * The saved rectangles are left untouched, so clearing the flag
+ * restores the old behaviour on the next run.
+ */
+LOCAL _BOOL GlFullscreen = FALSE;
+
 LOCAL WH_READWRITE fu_Wind_Read_Write;
 LOCAL WH_SAVERESTORE fu_Wind_Save_Restore;
 LOCAL MENU_FUNC gl_event_menu;
@@ -369,7 +377,13 @@ GLOBAL _BOOL Wind_Hide_Show_Windows(_BOOL hide)
 			{
 				MemSetZero(wr, ii * sizeof(*wr));
 				ii = fu_Wind_Read_Write(FALSE, wr, ii);
-				if (GlMainHwnd != NO_WINDOW && ii > 0 && wr[0].reOpen)
+				/*
+				 * In fullscreen mode the saved rectangle is deliberately not
+				 * applied: ShowWindow(SW_SHOWMAXIMIZED) below would override it
+				 * anyway, and moving the window first makes the restored-down
+				 * size jump to the old 768x537 on an ancient-screen profile.
+				 */
+				if (GlMainHwnd != NO_WINDOW && ii > 0 && wr[0].reOpen && !GlFullscreen)
 				{
 					GrectToRect(&r, &wr[0].pos);
 					MoveWindow(GlMainHwnd, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);
@@ -1563,6 +1577,16 @@ WINDOW_DEF *Wind_Open(_WORD type, _UWORD flags, WINDOW_PROC windowProc, _UBYTE *
 	if (wr->wr_open_size.g_h == 0)
 		gr.g_h = GR_USEDEFAULT; /* CW_USEDEFAULT */
 
+	/*
+	 * Fullscreen: open every window maximized inside the MDI client by
+	 * falling into the negative-rectangle case just below, which is the
+	 * path this code already used for a maximized window.
+	 */
+	if (GlFullscreen)
+	{
+		gr.g_x = gr.g_y = -1;
+	}
+
 	if (gr.g_x < 0 && gr.g_y < 0 && gr.g_x != GR_USEDEFAULT)
 	{
 		gr.g_x = gr.g_y = 0;
@@ -2076,6 +2100,22 @@ LOCAL LRESULT CALLBACK mainWndProc(HWND hwnd, unsigned int message, WPARAM wPara
 	if (MdiClientHwnd != NO_WINDOW)
 		return DefFrameProc(hwnd, MdiClientHwnd, message, wParam, lParam);
 	return DefWindowProc(hwnd, message, wParam, lParam);
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+GLOBAL _VOID Wind_Set_Fullscreen(_BOOL fullscreen)
+{
+	GlFullscreen = fullscreen;
+	if (fullscreen)
+		GlCmdShow = SW_SHOWMAXIMIZED;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+GLOBAL _BOOL Wind_Get_Fullscreen(_VOID)
+{
+	return GlFullscreen;
 }
 
 /*** ---------------------------------------------------------------------- ***/
