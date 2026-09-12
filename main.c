@@ -885,6 +885,10 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 
 	switch (eintrag)
 	{
+	case MHELP:
+		Dialog_Select(FHELP, FUNK_NULL, NULL);
+		break;
+
 	case MINFO:
 		Dialog_Select(FINFO, FUNK_NULL, NULL);
 		break;

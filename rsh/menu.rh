@@ -37,6 +37,7 @@
 #define MZOOMOUT         145
 #define MZOOM100         146
 #define MZOOMFIT         147
+#define MHELP            148
 
 #define FKARTE             2
 #define KNAME            102
@@ -89,4 +90,5 @@
 #define ITABELLE         112
 
 #define FDEMO              7
+#define FHELP              8
 
