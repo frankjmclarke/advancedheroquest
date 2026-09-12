@@ -141,10 +141,27 @@ GLOBAL _BOOL save_grafic(PATH *p, _BOOL compress, _WORD zoom, IMG_TYPE type)
 		set_ext(p, ext);
 		if (writeopen(&fd, p->pathname, "wb"))
 		{
-			if (!mfdb_to_pic(fd, Wind_Buf_Ptr(Grafik_Karte), compress, zoom))
+			/*
+			 * The window holds a colour bitmap, and the writers below are
+			 * monochrome (see the "TODO: color formats" in bmp.c). Render the
+			 * map again into a 1 bit deep bitmap and save that, so the output
+			 * files are byte for byte what they were before colour existed.
+			 */
+			MFDB *mono = get_mfdb((Xsize + 2) * ICON_SCALE, (Ysize + 2) * ICON_SCALE, 1, NULL);
+
+			if (mono == NULL)
 			{
-				schreibfehler();
+				abbruch("Not enough memory for graphic map");
 				retV = FALSE;
+			} else
+			{
+				draw_img_map(mono);
+				if (!mfdb_to_pic(fd, mono, compress, zoom))
+				{
+					schreibfehler();
+					retV = FALSE;
+				}
+				free_mfdb(mono);
 			}
 			fileclose(fd);
 		}
@@ -362,11 +379,18 @@ GLOBAL _VOID show_grafic(_UBYTE *name)
 
 	if (Grafik_Karte == NULL)
 	{
-#if 0
-		img = get_mfdb((Xsize + 2) * ICON_SCALE, (Ysize + 2) * ICON_SCALE, GetScreenPlanes(), NULL);
-#else
-		img = get_mfdb((Xsize + 2) * ICON_SCALE, (Ysize + 2) * ICON_SCALE, 1, NULL);
-#endif
+		/*
+		 * The on-screen map is drawn into a colour bitmap so each piece can be
+		 * tinted (see pice_colors() in icon.c). Saving renders a fresh 1 bit
+		 * deep copy instead, so the written files are unchanged.
+		 *
+		 * The original here called GetScreenPlanes(), which does not exist in
+		 * this tree; the function is GetNumPlanes(). That is presumably why the
+		 * block was left switched off.
+		 */
+		img = get_mfdb((Xsize + 2) * ICON_SCALE, (Ysize + 2) * ICON_SCALE, GetNumPlanes(), NULL);
+		if (img == NULL)
+			img = get_mfdb((Xsize + 2) * ICON_SCALE, (Ysize + 2) * ICON_SCALE, 1, NULL);
 		if (img != NULL)
 		{
 			ptr = show_string("Creating graphic map");

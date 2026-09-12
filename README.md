@@ -213,6 +213,43 @@ Only the 32-bit build is worth targeting on a modern machine — 64-bit Windows
 dropped the 16-bit subsystem, so the `WIN16` and `DOS` targets need DOSBox or a
 VM to run.
 
+### Colour
+
+The map is drawn in colour on screen, keyed to what each piece is:
+
+| | |
+| --- | --- |
+| corridors | cool slate grey |
+| rooms / hazards | amber |
+| water, wells, bridges, chasms | blue |
+| growth, slime, cess pits | green |
+| chests and treasure | gold |
+| tombs, apparitions, wights | violet |
+| occupants (monsters, NPCs) | crimson |
+| furnishings, stairs, doors | brown |
+| magic circles | magenta |
+| lairs | green |
+| quest rooms | purple |
+
+**No artwork was redrawn.** The tiles are still the original 1-bit bitmaps.
+`draw_mfdb` blits them with GDI, and blitting a 1-bit source into a colour
+destination makes GDI expand it — clear bits take the ink colour, set bits take
+the paper colour. So each tile acts as a stencil that `pice_colors()` in
+`icon.c` tints per feature. Room numbers are reset to black so they stay
+legible.
+
+This finishes work the original author started and abandoned; there were three
+colour `TODO`s left in the tree (`mfdb.c`, `wind.c`, `bmp.c`). The disabled
+block in `wind.c` called `GetScreenPlanes()`, which does not exist anywhere in
+the source — the function is `GetNumPlanes()` — so it could never have
+compiled, which is presumably why it was switched off.
+
+**Saved and printed maps are still monochrome.** The image writers are 1-bit
+only (`planes = 1; /* TODO: color formats */` in `bmp.c`), so rather than feed
+them a colour bitmap and get garbage, `save_grafic()` renders the map again
+into a fresh 1-bit bitmap and saves that. Output files are unchanged: a saved
+BMP is still 368x224, 1 bpp, 2 colours, exactly as before.
+
 ### Zoom
 
 The map opens magnified and can be rescaled live from the **View** menu:

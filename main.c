@@ -135,7 +135,12 @@ LOCAL _VOID Profile_ReadPath(PATH *p, CONST _UBYTE *section)
 	strBcpy(p->pathname, p->path);
 	F_Path_Append(p->pathname, p->filename);
 	Profile_ReadString(section, "select", p->select, PtrSize(p->select));
-	Profile_ReadString(section, "text", p->text, PtrSize(p->text));
+	/*
+	 * "text" is the file dialog caption, which is user interface text rather
+	 * than user configuration. It used to be stored in and read back from the
+	 * profile, so an INI written by an older build would keep overriding the
+	 * caption with the original German. Keep the value set by init_path().
+	 */
 }
 
 /*** ---------------------------------------------------------------------- ***/
@@ -199,7 +204,6 @@ LOCAL _VOID Profile_WritePath(PATH *p, CONST _UBYTE *section)
 	Profile_WriteString(section, "path", p->path);
 	Profile_WriteString(section, "filename", p->filename);
 	Profile_WriteString(section, "select", p->select);
-	Profile_WriteString(section, "text", p->text);
 }
 
 /*** ---------------------------------------------------------------------- ***/

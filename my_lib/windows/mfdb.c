@@ -21,6 +21,31 @@ struct _mfdb {
 /*** ---------------------------------------------------------------------- ***/
 /******************************************************************************/
 
+/*
+ * Ink and paper for the next blit. Defaults reproduce the original
+ * black-on-white rendering exactly.
+ */
+LOCAL COLORREF gl_ink = W_PAL_BLACK;
+LOCAL COLORREF gl_paper = W_PAL_WHITE;
+
+/*** ---------------------------------------------------------------------- ***/
+
+GLOBAL _VOID set_mfdb_colors(_LONG ink, _LONG paper)
+{
+	gl_ink = (COLORREF)ink;
+	gl_paper = (COLORREF)paper;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+GLOBAL _VOID reset_mfdb_colors(_VOID)
+{
+	gl_ink = W_PAL_BLACK;
+	gl_paper = W_PAL_WHITE;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 GLOBAL _VOID draw_mfdb(MFDB *src, _WORD x, _WORD y, _WORD w, _WORD h, MFDB *dest, _WORD dx, _WORD dy, _WORD mode)
 {
 	COLORREF oldColor;
@@ -45,8 +70,8 @@ GLOBAL _VOID draw_mfdb(MFDB *src, _WORD x, _WORD y, _WORD w, _WORD h, MFDB *dest
 		case MD_XOR: /* NOT IMPLEMENTED */
 		default: return;
 	}
-	oldColor = SetTextColor(dest->hDC, W_PAL_BLACK);
-	oldBk = SetBkColor(dest->hDC, W_PAL_WHITE);
+	oldColor = SetTextColor(dest->hDC, gl_ink);
+	oldBk = SetBkColor(dest->hDC, gl_paper);
 	
 	hdcMem = CreateCompatibleDC(dest->hDC);
 	SelectObject(hdcMem, src->bmp);
@@ -132,9 +157,43 @@ GLOBAL MFDB *get_mfdb(_WORD w, _WORD h, _WORD planes, _VOID *data)
 			else
 				MemSet(mfdb->ic.bmBits, 0xff, mfdb->size);
 			if (planes == 1)
+			{
 				mfdb->bmp = CreateBitmapIndirect(&mfdb->ic);
-			/* else
-				mfdb->bmp = CreateDiBitmap() TODO */
+			} else
+			{
+				/*
+				 * Colour: a screen-compatible bitmap, cleared to white so the
+				 * unused margin matches the paper colour of the tiles. The
+				 * bmBits buffer is not kept in step for colour bitmaps, which
+				 * is why callers that need the pixels (saving, printing)
+				 * render into a 1 bit deep bitmap of their own instead.
+				 */
+				HDC screen = GetDC(HWND_DESKTOP);
+
+				if (screen != NO_DC)
+				{
+					mfdb->bmp = CreateCompatibleBitmap(screen, w, h);
+					if (mfdb->bmp != NO_BITMAP)
+					{
+						HDC mem = CreateCompatibleDC(screen);
+
+						if (mem != NO_DC)
+						{
+							HBITMAP old = SelectObject(mem, mfdb->bmp);
+							RECT r;
+
+							r.left = 0;
+							r.top = 0;
+							r.right = w;
+							r.bottom = h;
+							FillRect(mem, &r, GetStockObject(WHITE_BRUSH));
+							SelectObject(mem, old);
+							DeleteDC(mem);
+						}
+					}
+					ReleaseDC(HWND_DESKTOP, screen);
+				}
+			}
 			if (mfdb->bmp == NO_BITMAP)
 			{
 				free_mfdb(mfdb);

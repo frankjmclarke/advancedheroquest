@@ -212,6 +212,133 @@ LOCAL ICON *pice_icon(PICE *pice)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/*
+ * Ink and paper for a map piece.
+ *
+ * The tiles are 1 bit deep, so nothing here changes the artwork: GDI expands
+ * the bitmap while blitting, giving the clear bits the ink colour and the set
+ * bits the paper colour. Feature wins over type, because the feature is what
+ * a reader is usually looking for; type only decides the colour of plain
+ * structure such as corridors and stairs.
+ *
+ * Paper stays very light so the hatched floor reads as a tint rather than a
+ * block of colour, and so the room numbers drawn on top stay legible.
+ */
+LOCAL _VOID pice_colors(PICE *pice, _LONG *ink, _LONG *paper)
+{
+	*ink = W_RGB( 60,  64,  74);		/* dark slate, the default */
+	*paper = W_RGB(255, 255, 255);
+
+	switch (pice->feature)
+	{
+	case Pool:
+	case Well:
+	case Bridge:
+	case Chasm:
+		*ink = W_RGB( 30,  90, 170);	/* water and voids: blue */
+		*paper = W_RGB(232, 241, 250);
+		return;
+	case Fireplace:
+		*ink = W_RGB(190,  60,  20);	/* fire: orange red */
+		*paper = W_RGB(253, 237, 228);
+		return;
+	case Slime:
+	case Mould:
+	case Mushrooms:
+	case Cess_Pit:
+		*ink = W_RGB( 40, 120,  50);	/* growth and filth: green */
+		*paper = W_RGB(233, 244, 233);
+		return;
+	case Chest:
+	case Stairs_and_Chest:
+		*ink = W_RGB(168, 128,  20);	/* treasure: gold */
+		*paper = W_RGB(252, 246, 226);
+		return;
+	case Tomb:
+	case Apparition:
+	case Wight:
+		*ink = W_RGB(110,  60, 160);	/* undead: violet */
+		*paper = W_RGB(243, 237, 250);
+		return;
+	case Magic_Circle:
+		*ink = W_RGB(160,  40, 140);	/* magic: magenta */
+		*paper = W_RGB(250, 235, 247);
+		return;
+	case Rats:
+	case Bats:
+	case Moths:
+		*ink = W_RGB(120,  80,  40);	/* vermin: brown */
+		*paper = W_RGB(248, 243, 235);
+		return;
+	case Wandering_Monsters:
+	case Maiden:
+	case Witch:
+	case Man_at_Arms:
+	case Rogue:
+		*ink = W_RGB(170,  30,  50);	/* occupants: crimson */
+		*paper = W_RGB(252, 234, 237);
+		return;
+	case Throne:
+	case Statue:
+	case Weapons_Rack:
+	case Rack:
+	case Table:
+	case Cupboard:
+	case Bookcase:
+		*ink = W_RGB(130,  90,  50);	/* furnishings: wood */
+		*paper = W_RGB(250, 246, 239);
+		return;
+	case Trapdoor:
+	case Rockfall:
+	case Grate:
+		*ink = W_RGB( 90,  92,  98);	/* hazards: grey */
+		*paper = W_RGB(242, 242, 244);
+		return;
+	default:
+		break;
+	}
+
+	switch (pice->type)
+	{
+	case PASSAGE:
+	case DEAD_END:
+	case LEFT_TURN:
+	case RIGHT_TURN:
+	case T_JUNCTION:
+	case CORNER:
+		*ink = W_RGB( 70,  80,  95);	/* corridors: cool grey */
+		*paper = W_RGB(246, 247, 249);
+		break;
+	case STAIRS_DOWN:
+	case STAIRS_OUT:
+		*ink = W_RGB(140,  90,  30);	/* stairs: brown */
+		*paper = W_RGB(251, 245, 234);
+		break;
+	case DOOR:
+		*ink = W_RGB(110,  70,  35);
+		break;
+	case SECRET:
+		*ink = W_RGB(150,  40,  40);	/* secret doors: red */
+		break;
+	case LAIR:
+		*ink = W_RGB( 45, 110,  55);
+		*paper = W_RGB(235, 245, 236);
+		break;
+	case QUEST:
+		*ink = W_RGB(120,  50, 150);
+		*paper = W_RGB(245, 238, 251);
+		break;
+	case HAZARD:
+		*ink = W_RGB(175, 110,  20);
+		*paper = W_RGB(253, 247, 232);
+		break;
+	default:
+		break;
+	}
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 LOCAL _VOID copy_icon(MFDB *dest, MFDB *icon, _WORD x, _WORD y, _WORD w, _WORD h)
 {
 	draw_mfdb(icon, 0, 0, w, h, dest, x, y, MD_REPLACE);
@@ -263,7 +390,14 @@ LOCAL _BOOL draw_pice(MFDB *image, PICE *pice)
 				return FALSE;
 		}
 		
-		copy_icon(image, icon->mfdb[dir], x, (Ysize + 2) * ICON_SCALE - y - h, w, h);
+		{
+			_LONG ink, paper;
+
+			pice_colors(pice, &ink, &paper);
+			set_mfdb_colors(ink, paper);
+			copy_icon(image, icon->mfdb[dir], x, (Ysize + 2) * ICON_SCALE - y - h, w, h);
+			reset_mfdb_colors();		/* room numbers stay black */
+		}
 		
 		if (pice->text != NULL && icon->number != FUNK_NULL)
 		{
