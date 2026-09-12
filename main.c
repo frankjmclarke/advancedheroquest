@@ -1137,6 +1137,23 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 				if (try_makemap(FALSE) == TRUE)
 				{	
 					karte_ok(TRUE);
+					/*
+					 * Show the map that was just generated. Without this the
+					 * program starts on an empty grey window: the map exists
+					 * but nothing displays it, and the user has to know to
+					 * press Ctrl+K. It used to appear only because the
+					 * profile's [Windows] section happened to reopen the
+					 * graphic window, so a fresh profile showed nothing.
+					 *
+					 * Same order as Next Map, so whichever windows the Show
+					 * settings ask for are opened and the map ends up on top.
+					 * Each do_show() checks its own menu flag, so this only
+					 * opens what the user has enabled.
+					 */
+					do_show(MSTATIST);
+					do_show(MMONSTER);
+					do_show(MTEXT);
+					do_show(MGRAFIK);
 				}
 				SetMouse(MOUSE_RESTORE);
 			}

@@ -69,6 +69,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "  if ($key -eq 'path') { continue };" ^
   "  if ($key -eq 'text' -and $pathSections -contains $sec) { continue };" ^
   "  if ($key -eq 'zoom' -and $sec -eq 'config') { continue };" ^
+  "  if ($sec -eq 'show') { if ($key -eq 'grafik') { $out.Add('Grafik=1') } else { $out.Add(($t -split '=')[0] + '=0') }; continue };" ^
   "  $out.Add($line);" ^
   "};" ^
   "[System.IO.File]::WriteAllText('%STAGE%\ahq_map.ini', ($out -join $crlf) + $crlf, [System.Text.Encoding]::GetEncoding(1252));"
