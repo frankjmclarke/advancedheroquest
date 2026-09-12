@@ -87,8 +87,31 @@ if errorlevel 1 (
     exit /b 1
 )
 
+rem --- installer (optional: only if Inno Setup is present) --------------------
+rem  ISCC is looked for where winget puts a per-user Inno Setup install first,
+rem  then the usual machine-wide locations.
+set "ISCC="
+if exist "%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe" set "ISCC=%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe"
+if not defined ISCC if exist "%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" set "ISCC=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
+if not defined ISCC if exist "%ProgramFiles%\Inno Setup 6\ISCC.exe" set "ISCC=%ProgramFiles%\Inno Setup 6\ISCC.exe"
+
+if defined ISCC (
+    echo.
+    echo Building installer...
+    "%ISCC%" /Q /DMyAppVersion=%VER% "%ROOT%\HQ-Map.iss"
+    if errorlevel 1 (
+        echo ERROR: ISCC failed
+        exit /b 1
+    )
+) else (
+    echo.
+    echo Inno Setup not found, skipping the installer.
+    echo   winget install --id JRSoftware.InnoSetup
+)
+
 echo.
 echo Package ready:
 for %%F in ("%ZIP%") do echo    %%~fF  (%%~zF bytes)
+if defined ISCC for %%F in ("%DIST%\HQ-Map-%VER%-setup.exe") do echo    %%~fF  (%%~zF bytes)
 echo    %STAGE%
 exit /b 0
