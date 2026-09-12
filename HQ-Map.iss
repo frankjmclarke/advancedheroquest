@@ -29,8 +29,13 @@ VersionInfoDescription=Advanced HeroQuest Map Generator
 
 DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
+
+; Aimed at people who just want to run the thing: no folder choice, no
+; component list, no confirmation page. Double-click, it installs, it starts.
+DisableWelcomePage=yes
+DisableDirPage=yes
 DisableProgramGroupPage=yes
-DisableDirPage=no
+DisableReadyPage=yes
 
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
@@ -41,16 +46,22 @@ Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
 
-LicenseFile=dist\HQ-Map\NOTICE.txt
-InfoAfterFile=dist\HQ-Map\README.txt
+; NOTICE.txt is installed alongside the program rather than shown as a
+; licence page: it is a provenance notice, not terms to accept, and an
+; accept/decline gate would be one more thing to read past.
 UninstallDisplayName={#MyAppName} {#MyAppVersion}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[Messages]
+FinishedHeadingLabel=HQ-Map is ready
+FinishedLabel=To make your first dungeon: open HQ-Map, press Ctrl+K, then click OK.%n%nCtrl+N rolls another one.
+FinishedLabelNoIcons=To make your first dungeon: open HQ-Map, press Ctrl+K, then click OK.%n%nCtrl+N rolls another one.
+
 [Tasks]
-Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription: "Additional shortcuts:"; Flags: unchecked
+Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription: "Additional shortcuts:"
 
 [Files]
 Source: "dist\HQ-Map\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
@@ -72,4 +83,4 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingD
 Name: "{autodesktop}\{#MyAppName}";  Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; WorkingDir: "{app}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Open HQ-Map now"; WorkingDir: "{app}"; Flags: nowait postinstall skipifsilent
