@@ -1,0 +1,263 @@
+/*
+ * resource set indices for grafic
+ *
+ * created by ORCS 2.09
+ */
+
+
+#define PASSAGEN           1 
+#define PASSAGES           2 
+#define PASSAGEE           3 
+#define PASSAGEW           4 
+
+#define DEADENDN           5 
+#define DEADENDS           6 
+#define DEADENDE           7 
+#define DEADENDW           8 
+
+#define LARGEN             9 
+#define LARGES            10 
+#define LARGEE            11 
+#define LARGEW            12 
+
+#define QUESTN            13 
+#define QUESTS            14 
+#define QUESTE            15 
+#define QUESTW            16 
+
+#define LAIRN             17 
+#define LAIRS             18 
+#define LAIRE             19 
+#define LAIRW             20 
+
+#define NORMALN           21 
+#define NORMALS           22 
+#define NORMALE           23 
+#define NORMALW           24 
+
+#define HAZARDN           25 
+#define HAZARDS           26 
+#define HAZARDE           27 
+#define HAZARDW           28 
+
+#define CORNERN           29 
+#define CORNERS           30 
+#define CORNERE           31 
+#define CORNERW           32 
+
+#define TJUNCTN           33 
+#define TJUNCTS           34 
+#define TJUNCTE           35 
+#define TJUNCTW           36 
+
+#define LTURNN            37 
+#define LTURNS            38 
+#define LTURNE            39 
+#define LTURNW            40 
+
+#define RTURNN            41 
+#define RTURNS            42 
+#define RTURNE            43 
+#define RTURNW            44 
+
+#define STOUTN            45 
+#define STOUTS            46 
+#define STOUTE            47 
+#define STOUTW            48 
+
+#define STDOWNN           49 
+#define STDOWNS           50 
+#define STDOWNE           51 
+#define STDOWMW           52 
+
+#define DOORN             53 
+#define DOORS             54 
+#define DOORE             55 
+#define DOORW             56 
+
+#define SECRETN           57 
+#define SECRETS           58 
+#define SECRETE           59 
+#define SECRETW           60 
+
+#define TESTN             61 
+#define TESTS             62 
+#define TESTE             63 
+#define TESTW             64 
+
+#define MERSCHAN          65 
+#define MERSCHAS          66 
+#define MERSCHAW          67 
+#define MERSCHAE          68 
+
+#define BRIDGEN           69 
+#define BRIDGES           70 
+#define BRIDGEE           71 
+#define BRIDGEW           72 
+
+#define CHASMN            73 
+#define CHASMS            74 
+#define CHASME            75 
+#define CHASMW            76 
+
+#define POOLN             77 
+#define POOLS             78 
+#define POOLE             79 
+#define POOLW             80 
+
+#define GRATEN            81 
+#define GRATES            82 
+#define GRATEE            83 
+#define GRATEW            84 
+
+#define CIRCLEN           85 
+#define CIRCLES           86 
+#define CIRCLEE           87 
+#define CIRCLEW           88 
+
+#define BBLACK            89 
+#define BWHITE            90 
+#define BGRAY             91 
+#define BSQUARE           92 
+
+#define TRAPN             93 
+#define TRAPS             94 
+#define TRAPE             95 
+#define TRAPW             96 
+
+#define THRONEN           97 
+#define THRONES           98 
+#define THRONEE           99 
+#define THRONEW          100 
+
+#define MUSHN            101 
+#define MUSHS            102 
+#define MUSHE            103 
+#define MUSHW            104 
+
+#define MOULDN           105 
+#define MOULDS           106 
+#define MOULDE           107 
+#define MOULDW           108 
+
+#define RATN             109 
+#define RATS             110 
+#define RATE             111 
+#define RATW             112 
+
+#define BATN             113 
+#define BATS             114 
+#define BATE             115 
+#define BATW             116 
+
+#define STATUEN          117 
+#define STATUES          118 
+#define STATUEE          119 
+#define STATUEW          120 
+
+#define ROCKN            121 
+#define ROCKS            122 
+#define ROCKE            123 
+#define ROCKW            124 
+
+#define SLIMEN           125 
+#define SLIMEE           126 
+#define SLIMEW           127 
+#define SLIMES           128 
+
+#define CESSPITN         129 
+#define CESSPITS         130 
+#define CESSPITE         131 
+#define CESSPITW         132 
+
+#define WELLN            133 
+#define WELLS            134 
+#define WELLE            135 
+#define WELLW            136 
+
+#define MOTHN            137 
+#define MOTHS            138 
+#define MOTHE            139 
+#define MOTHW            140 
+
+#define APPARIN          141 
+#define APPARIS          142 
+#define APPARIE          143 
+#define APPARIW          144 
+
+#define CHESTN           145 
+#define CHESTS           146 
+#define CHESTE           147 
+#define CHESTW           148 
+
+#define STCHESTN         149 
+#define STCHESTS         150 
+#define STCHESTE         151 
+#define STCHESTW         152 
+
+#define WEAPONSN         153 
+#define WEAPONSS         154 
+#define WEAPONSE         155 
+#define WEAPONSW         156 
+
+#define BOARDN           157 
+#define BORADS           158 
+#define BOARDE           159 
+#define BOARDW           160 
+
+#define TABLEN           161 
+#define TABLES           162 
+#define TABLEE           163 
+#define TABLEW           164 
+
+#define FIREN            165 
+#define FIRES            166 
+#define FIREE            167 
+#define FIREW            168 
+
+#define CASEN            169 
+#define CASES            170 
+#define CASEE            171 
+#define CASEW            172 
+
+#define RACKN            173 
+#define RACKS            174 
+#define RACKE            175 
+#define RACKW            176 
+
+#define BIGN             177 
+#define BIGS             178 
+#define BIGE             179 
+#define BIGW             180 
+
+#define TOMBN            181 
+#define TOMBS            182 
+#define TOMBE            183 
+#define TOMBW            184 
+
+#define BIGTOMBN         185 
+#define BIGTOMBS         186 
+#define BIGTOMBE         187 
+#define BIGTOMBW         188 
+
+#define Z0               189 
+#define Z1               190 
+#define Z2               191 
+#define Z3               192 
+#define Z4               193 
+#define Z5               194 
+#define Z6               195 
+#define Z7               196 
+#define Z8               197 
+#define Z9               198 
+
+#define QUEST3N          199 
+#define QUEST3S          200 
+#define QUEST3E          201 
+#define QUEST3W          202 
+
+#define FBOOKN           203 
+#define FBOOKS           204 
+#define FBOOKE           205 
+#define FBOOKW           206 
+

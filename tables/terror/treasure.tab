@@ -1,0 +1,403 @@
+Hidden-Treasure
+(   2D12
+    2-6     "Hidden Treasure:" & "1 Dungeon-Counter"
+    7-16    Nothing
+   17-23    "Hidden Treasure:" & Gold-Treasure()
+   24-24    "Hidden Treasure:" & Magic-Treasure()
+)
+
+Gold-Treasure
+(   1D12
+    1-1     "5 Gold Crowns"
+    2-2     "10 Gold Crowns"
+    3-3     "15 Gold Crowns"
+    4-4     "20 Gold Crowns"
+    5-5     "25 Gold Crowns"
+    6-6     "30 Gold Crowns"
+    7-7     "35 Gold Crowns"
+    8-8     "40 Gold Crowns"
+    9-9     "45 Gold Crowns"
+    10-10   "50 Gold Crowns"
+    11-11   "55 Gold Crowns"
+    12-12   "60 Gold Crowns"
+)
+
+Magic-Treasure
+(   2D12
+    2-2     Dawnstone()
+    3-3     Amulet()
+    4-4     Magic-Bag()
+    5-6     Magic-Wand()
+    7-7     Magic-Ring()
+    8-8     Shield-or-Helm()
+   9-9      Magic-Weapon()
+   10-11    Magical-Scroll()
+   12-12    Jewel()
+   13-14    Magic-Potion()
+   15-15    Arrows-or-Bolts()
+   16-17    Magic-Bow() & Special-Ability()
+   18-19    Magic-Sword()
+   20-21    Magic-Armour()
+   22-23    Rope-or-Cloak()
+   24-24    Talisman()
+)
+
+Dawnstone
+(   1D12
+    1-1     "Dawnstone (1 Fate Point)"
+    2-2     "Dawnstone (2 Fate Points)"
+    3-3     "Dawnstone (3 Fate Points)"
+    4-4     "Dawnstone (4 Fate Points)"
+    5-5     "Dawnstone (5 Fate Points)"
+    6-6     "Dawnstone (6 Fate Points)"
+    7-7     "Dawnstone (7 Fate Points)"
+    8-8     "Dawnstone (8 Fate Points)"
+    9-9     "Dawnstone (9 Fate Points)"
+    10-10   "Dawnstone (10 Fate Points)"
+    11-11   "Dawnstone (11 Fate Points)"
+    12-12   "Dawnstone (12 Fate Points)"
+)
+
+Amulet
+(   1D12
+    1-2     "Amulet of Iron"
+    3-5     "Amulet of Protection"
+    6-7     "Amulet of Courage"
+    8-10    & ;Amulet of Warding
+            (   1D12
+                1-1     "Amulet of Warding (Protection from Chaos Warriors)"
+                2-3     "Amulet of Warding (Protection from Chaos Creatures)"
+                4-5     "Amulet of Warding (Protection from Orcs, Goblins)"
+                6-7     "Amulet of Warding (Protection from Ogres, Trolls)"
+                8-9     "Amulet of Warding (Protection from Skaven)"
+                10-10   "Amulet of Warding (Protection from Undead)"
+                11-11   "Amulet of Warding (Protection from Fimir)"
+                12-12   "Amulet of Warding (Protection from Daemons)"
+            )
+    11-12   "Amulet of Health"
+)
+
+Magic-Bag
+(   1D12
+    1-3     "Bag of Lightness"
+    4-6     "Bag of Treasure"
+    7-9     & ;Bag of Wizardry
+            (   1D12
+                1-1     "Bag of Wizardry (1 Spell Component)"
+                2-2     "Bag of Wizardry (2 Spell Component)"
+                3-3     "Bag of Wizardry (3 Spell Component)"
+                4-4     "Bag of Wizardry (4 Spell Component)"
+                5-5     "Bag of Wizardry (5 Spell Component)"
+                6-6     "Bag of Wizardry (6 Spell Component)"
+                7-7     "Bag of Wizardry (7 Spell Component)"
+                8-8     "Bag of Wizardry (8 Spell Component)"
+                9-9     "Bag of Wizardry (9 Spell Component)"
+                10-10   "Bag of Wizardry (10 Spell Component)"
+                11-11   "Bag of Wizardry (11 Spell Component)"
+                12-12   "Bag of Wizardry (12 Spell Component)"
+            )
+    10-12   "Rat Bag"
+)
+
+Magic-Wand
+(   1D12
+    1-6    "Bright Wand:" & Bright-Spell() & Charges()
+    7-12   "Light Wand:" & Light-Spell() & Charges()
+)
+
+Magic-Ring
+(   1D12
+    1-1     "Magic Ring of Protection (Level 1)"
+    2-2     "Magic Ring of Protection (Level 2)"
+    3-3     "Magic Ring of Protection (Level 3)"
+    4-4     "Magic Ring of Magic Protection (Level 1)"
+    5-5     "Magic Ring of Magic Protection (Level 2)"
+    6-6     "Magic Ring of Magic Protection (Level 3)"
+    7-7     & ;Ring of Fate
+            (   1D12
+                1-6     "Magic Ring of Fate (2 Fate-Points)"
+                7-12    "Magic Ring of Fate (3 Fate-Points)"
+            )
+    8-9     "Magic Ring of Speed (Level 1)"
+    10-11   "Magic Ring of Speed (Level 2)"
+    12-12   "Magic Ring of Greatness"
+)
+
+Shield-or-Helm
+(   1D12
+    1-3     "Simple Magic Shield (Sp 0, BS -1, T +1)"
+    4-4     "Magical Greatshield (Sp -1, BS -2, T +2)"
+    5-5     "Simple Magic Helm (Sp 0, BS 0, T +1)"
+    6-6     "Dwarven Helm (Sp 0, BS -1, T +2)"
+    7-8     "Shield of Spell Refection"
+    9-11    "Shield, Arrow Catcher"
+    12-12   "Magic Helm, Fearsome Rune (SP 0, BS -1, T +2)"
+)
+
+Magic-Weapon
+(   2D12
+    2-2     "Magic Dagger (DD +1"
+    3-4     "Magic Dagger (DD +3)"
+    5-5     "Magic Dagger of Trowing (R 6, DD 4)"
+    6-6     "Magic Spear (DD +1)"
+    7-7     "Magic Spear of Returning (R 8, DD 4)"
+    8-8     "Magic Axe of Cleaving (Critical Hit on 10-12)"
+    9-9     "Magic Axe (DD +1)"
+    10-10   "Magic Warhammer (DD +1)"
+    11-11   "Magic Warhammer (DD +2)"
+    12-12   "Magic Flying Hammer (R 10, DD 6)"
+    13-13   "Magic Halberd (DD +1)"
+    14-14   "Magic Halberd (DD +2)"
+    15-15   "Magic Halberd of Cleaving (Critical Hit on 10-12)"
+    16-16   "Magic Halberd of Skill (No Fumble)"
+    17-17   "Magic Double-Handed Sword of Cleaving (Critical Hit on 10-12)"
+    18-19   "Magic Double-Handed Sword of Skill (No Fumble)"
+    20-20   "Magic Double-Handed Sword (DD +1)"
+    21-22   "Magic Double-Handed Axe of Cleaving (Critical Hit on 10-12)"
+    23-23   "Magic Double-Handed Axe of Skill (No Fumble)"
+    24-24   "Magic Double-Handed Axe (DD +1)"
+)
+
+Magical-Scroll
+(   1D12
+    1-2     "Bright Wizard's Spellbook" & Bright-Spell()
+    3-4     "Bright Wizard's Spellbook" & Bright-Spell() & Bright-Spell()
+    5-5     "Bright Wizard's Spellbook" & Bright-Spell() & Bright-Spell() & Bright-Spell()
+    6-6     "Bright Wizard's Spellbook" & Bright-Spell() & Bright-Spell() & Bright-Spell() & Bright-Spell()
+    7-8     "Light Wizard's Spellbook" & Light-Spell()
+    9-10    "Light Wizard's Spellbook" & Light-Spell() & Light-Spell()
+    11-11   "Light Wizard's Spellbook" & Light-Spell() & Light-Spell() & Light-Spell()
+    12-12   "Light Wizard's Spellbook" & Light-Spell() & Light-Spell() & Light-Spell() & Light-Spell()
+)
+
+Arrows-or-Bolts
+(   2D12
+    2-2     "3 Magic Bolts of Death (DD +1)"
+    3-4     "6 Magic Arrows of Death (DD +1)"
+    5-5     "1 Magic Bolt of Sure Striking (WS +2)"
+    6-7     "2 Magic Arrows of Sure Striking (WS +2)"
+    8-8     "1 Magic Bolt of Assassin (Critical Hit on 10-12)"
+    9-11    "2 Magic Arrows of Assassin (Critical Hit on 10-12)"
+    12-14   "4 Magic Arrows of Flame (DD +2)"
+    15-15   "2 Magic Bolts of Flame (DD +2)"
+    16-19   "4 Magic Arrows of More (Destroy Undead)"
+    20-20   "2 Magic Bolts of More (Destroy Undead)"
+    21-22   "Magic Arrow of True Flight (never miss)"
+    23-24   "Magic Bolts of True Flight (never miss)"
+)
+        
+Magic-Bow
+(   1D12
+    1-4     "Magic Short Bow (R 28, DD 4)" 
+    5-7     "Magic Bow (R 40, DD 4)"
+    8-9     "Magic Long Bow (R 48, DD 5)"
+    10-11   "Magic Cross Bow (R 48, DD 5)"
+    12-12   "Elven Power Bow (R 48, DD 6)"
+)
+
+Special-Ability
+(   1D12
+    1-7     "No Special Ability"
+    8-8     "Deadly Aim (Hit Roll +1)"
+    9-9     "Mighty Striking (DD +1)"
+    10-10   "Repeating (2 Shots)"
+    11-11   "Swiftness (Move and Fire)"
+    12-12   "Deadly Power (DD +1, one Shot with 10 DD)"
+)
+
+Magic-Sword
+(   2D12
+    2-2     "Magic Rune Sword (WS +2, DD +2)"
+    3-4     "Magic Sword Lomb Lopper (WS +2, DD +2)"
+    5-6     "Magic Sword Rip Cleaver (WS +1, DD +2)"
+    7-9     "Magic Sword Skull Splitter (WS +1, DD +1)"
+    10-10   "Magic Sword Gut Ripper(WS +2, DD +1)"
+    11-12   "Magic Sword Death Bringer (DD +1)"
+    13-13   "Magic Sword Soul Reaver (WS +1)"
+    14-15   "Magic Sword of Smiting (WS +1, DD +1, Critical Hit on 11-12)"
+    16-16   "Magic Sword of Skill (WS 1, DD +1, never Fumble)"
+    17-18   "Magic Sword of Courage (WS +2, BR +2)"
+    19-19   "Magic Sword of Defence (Parry one Attack)"
+    20-20   "Magic Sword of the Flaming Heart (DD +1, W +1)"
+    21-21   "Magic Sword of Glory (WS +1, Fearsome Monster)"
+    22-23   &   ;Bane-Sword
+            (   1D12
+                1-1     "Magic Bane Sword (Rune Sword) (WS +1, Chaos Warriors: WS +2, DD +2, W +2)"
+                2-3     "Magic Bane Sword (Rune Sword) (WS +1, Chaos Creatures: WS +2, DD +2, W +2)"
+                4-5     "Magic Bane Sword (Rune Sword) (WS +1, Orcs, Goblins: WS +2, DD +2, W +2)"
+                6-7     "Magic Bane Sword (Rune Sword) (WS +1, Ogres, Trolls: WS +2, DD +2, W +2)"
+                8-9     "Magic Bane Sword (Rune Sword) (WS +1, Skaven: WS +2, DD +2, W +2)"
+                10-10   "Magic Bane Sword (Rune Sword) (WS +1, Undead: WS +2, DD +2, W +2)"
+                11-11   "Magic Bane Sword (Rune Sword) (WS +1, Fimir: WS +2, DD +2, W +2)"
+                12-12   "Magic Bane Sword (Rune Sword) (WS +1, Daemons: WS +2, DD +2, W +2)"
+            )
+    24-24   "Magic Sword of Stealing (Rune Sword) (Restore Wounds on Critical Hits)"
+)
+    
+Magic-Armour
+(   2D12
+    2-3     "Magic Elven Armour (T +4)"
+    4-4     "Magic Dwarven Armour (Sp -2, BS -2, T +5)"
+    5-6     "Magic Enchanted Mithril Armour (T +5)"
+    7-8     "Magic Plate Armour (Sp -2, BS -2, T +4)"
+    9-11    "Magic Chain Armour (Sp -2, BS -1, T +3)"
+    12-14   "Magic Leather Armour (BS -1, T +2)"
+    15-17   "Magic Chain Armour (Sp -2, BS -1, T +3, Protection from Non-Magical Missiles)"
+    18-19   "Magic Chain Armour of Speed (BS -1, T +3)"
+    20-21   "Magic Chain Armour (Sp -2, BS -1, T +3, Protection from Fire W -2)"
+    22-23   "Magic Enchanted Leather Armour (T +1, Wizards allowed to wear)"
+    24-24   "Magic Plate Armour (Sp -2, BS -2, T +4, once all Wounds lost and WS +1 for next Combat)"
+)
+
+Rope-or-Cloak
+(   1D12
+    1-2      "Magic Robe of Toughness (Level 1)"
+    3-4      "Magic Robe of Toughness (Level +2)"
+    5-5      "Magic Rope of Toughness (Level +3)"
+    6-8      "Magic Cloak of Pockets"
+    9-10     "Magic Cloak of Invulnerability"
+    11-11    "Magic Rope of Speed (SP +2)"
+    12-12    "Magic Rope of the Sagacious Sorceror (I +1, BR +1, SP +1, 1 Fate Point, extra 50 Gold Crowns for each Spell"
+)
+            
+Talisman
+(   1D12
+    1-4     "Talisman of Toughness (T +1)"
+    5-8     "Talisman of Wizardry: " & Charges()
+    9-12    "Talisman of Fortune (1 Fate Point, Spot Traps +1)"
+)
+
+Treasure-Chest
+(   2D12
+    2-5     "Treasure Map"
+    6-6     "6 Bolts (for crossbow) and 20 Gold Crowns"
+    7-7     "6 arrows and 20 Gold Crowns"
+    8-8     "10 feet rope and 30 Gold Crowns"
+    9-9     "2 flasks Greek Fire" & Jewel()
+    10-10   "50 Gold Crowns"
+    11-11   "100 Gold Crowns"
+    12-12   "50 Gold Crowns" & Jewel()
+    13-13   "100 Gold Crowns" & Jewel()
+    14-14   "Bow, 6 Arrows" & Jewel()
+    15-15   "Shield, 6 Arrows, 50 Gold Crowns"
+    16-16   "Screech Bug and 50 Gold Crowns"
+    17-17   "Rat Poison and 50 Gold Crowns"
+    18-19   Blade-Venom() & "50 Gold Crowns" & Jewel()
+    20-21   Magic-Treasure()
+    22-23   Magic-Treasure() & Magic-Potion()
+    24-24   Magic-Treasure() & Magic-Treasure() & Magic-Potion() & Jewel()
+)
+
+Blade-Venom
+(   1D12
+     1-2     "Blade Venom Graveroot (Undead: W +1)"
+     3-3     "Blade Venom Elfbane(Elves, Drak Elves: W +1)"
+     4-5     "Blade Venom Blackroot (Orcs, Goblins: W +1)"
+     6-7     "Blade Venom Stonebane (Ogre, Trolls: W +1)"
+     8-9     "Blade Venom Lawfoil (Chaos Warriors: W +1)"
+     10-12   "Blade Venom True Lawfoil (Chaos Creatures: W +1)"
+)
+
+Bright-Spell
+(   1D12
+    1-1     "Open Window"
+    2-2     "Inferno of Doom"
+    3-3     "Courage"
+    4-4     "Still Air"
+    5-5     "Power of the Phoenix"
+    6-6     "Swift Wind"
+    7-7     "Flight"
+    8-8     "Flaming Hand of Destruction"
+    9-9     "The Bright Key"
+    10-10   "Flames of the Phoenix"
+    11-11   "Flames of Death"
+    12-12   "Dragon Armour"
+)
+
+Light-Spell
+(   1D12
+    1-1     "Power of Life"
+    2-2     "Strenght of Life"
+    3-3     "Cloak of Protection"
+    4-4     "Blinding Light"
+    5-5     "Escape"
+    6-6     "Restore Life"
+    7-7     "Regeneration"
+    8-8     "Remove of Venom"
+    9-9     "Dagger of Banishment"
+    10-10   "Sleep og Ages"
+    11-11   "Light of Learning"
+    12-12   "Banish Fear"
+)
+
+Jewel
+(   1D12
+    1-3     "Jewel (50 Gold Crowns)"
+    4-5     "Jewel (80 Gold Crowns)"
+    6-7     "Jewel (100 Gold Crowns)"
+    8-9     "Jewel (150 Gold Crowns)"
+    10-12   Magic-Jewel()
+)
+
+Magic-Jewel
+(   1D12
+    1-2     "Magic Cleargem (Spot Traps +1)"
+    3-4     &   ;Fate Jewel
+            (   1D12
+                1-6     "Magic Fate Jewel (2 Fate Points)"
+                7-12    "Magic Fate Jewel (2 Fate Points)"
+            )
+    5-6     &   "Fire Ruby:" & "Flaming Hand of Destruction" & Charges()
+    7-8     "Magic Jewel of Shattering (R 8, DD 8)"
+    9-10    "Magic Soul Jewel"
+    11-12   &   ;Spell Jewel
+            (   1D12
+                1-6     "Magic Bright Spell Jewel:" & Bright-Spell() & Charges()
+                7-12    "Magic Light Spell Jewel:" & Light-Spell() & Charges()
+            )
+)
+
+Magic-Potion
+(   1D12
+    1-2     "Magic Potion of Healing"
+    5-7     "Magic Potion of Strenght"
+    8-8     "Magic Potion of Prowess"
+    9-9     "Magic Potion of Invulnerability"
+    10-10   "Magic Potion of Regeneration"
+    11-11   & ;Cursed Potion
+            (   1D12
+                1-2     "Cursed Potion (Weapon Skill -1)"
+                3-4     "Cursed Potion (Bow Skill -1)"
+                5-5     "Cursed Potion (Strenght -1)"
+                6-6     "Cursed Potion (Toughtness -1)"
+                7-8     "Cursed Potion (Speed -1)"
+                9-10    "Cursed Potion (Bravery -1)"
+                11-11   "Cursed Potion (Intelligence -1)"
+                12-12   "Cursed Potion (Wounds -1)"
+            )
+    12-12   "Magic Sublime Potion of the Supreme Alchemist"
+)
+
+Spell
+(   1D12
+    1-6     "Bright Spell:" & Bright-Spell()
+    7-12    "Light Spell:" & Light-Spell()
+)
+
+Charges
+(   1D12
+    1-1     "(1 Charge)"
+    2-2     "(2 Charges)"
+    3-3     "(3 Charges)"
+    4-4     "(4 Charges)"
+    5-5     "(5 Charges)"
+    6-6     "(6 Charges)"
+    7-7     "(7 Charges)"
+    8-8     "(8 Charges)"
+    9-9     "(9 Charges)"
+    10-10   "(10 Charges)"
+    11-11   "(11 Charges)"
+    12-12   "(12 Charges)"
+)
+
+

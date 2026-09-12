@@ -1,0 +1,12 @@
+#The Dark Beneath the World (Level 3)
+#------------------------------------
+#
+
+define ROOM-FURNISH
+
+include dark\room3.tab
+include standard\furnish.tab
+include dark\hazard.tab
+include standard\treasure.tab
+include standard\trap.tab
+include dark\orc3.tab

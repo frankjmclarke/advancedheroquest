@@ -1,0 +1,14 @@
+# Stop the Ritual 3
+#-----------------------------------------
+#
+
+define ROOM-FURNISH
+
+include ritual\room3.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include terror\treasure.tab
+include standard\trap.tab
+include terror\monster.tab
+include ritual\undead.tab
+

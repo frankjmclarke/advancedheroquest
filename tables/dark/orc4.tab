@@ -1,0 +1,45 @@
+Wandering-Monsters
+(   1D12
+    1-2     "10 Orcs (90 Gold Crowns)"
+    3-4     "5 Skaven Gutter Runners (90 Gold Crowns)"
+    5-6     "11 Orcs (100 Gold Crowns)"
+    7-8     "1 Skaven Warpfire-Thrower Team (100 Gold Crowns)"
+    9-9     "12 Orcs (110 Gold Crowns)"
+    10-10   "3 Chaos Warriors (110 Gold Crowns)"
+    11-11   "13 Orcs (120 Gold Crowns)"
+    12-12   "8 Goblins, 8 Goblin Archers, 1 Orc Warlord (130 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "5 Orcs, 1 Orc Champion, 1 Orc Warlord (110 Gold Crowns)"
+    2-2     "3 Orcs, 2 Orc Champions, 1 Orc Warlord (110 Gold Crowns)"
+    3-3     "4 Orcs, 2 Orc Champions, 1 Orc Warlord (120 Gold Crowns)"
+    4-4     "4 Orc Champions, 1 Orc Warlord (120 Gold Crowns)"
+    5-5     "5 Orcs, 2 Orc Champions, 1 Orc Warlord (130 Gold Crowns)"
+    6-6     "3 Orcs, 3 Orc Champions, 1 Orc Warlord (130 Gold Crowns)"
+    7-7     "4 Orc Champions, 1 Orc Warlord (130 Gold Crowns)"
+    8-8     "9 Orcs, 1 Orc Warlord (130 Gold Crowns)"
+    9-9     "11 Orcs, 1 Orc Warlord (150 Gold Crowns)"
+    10-10   "5 Orcs, 3 Orc Champions, 1 Orc Warlord (150 Gold Crowns)"
+    11-11   "3 Orcs, 4 Orc Champions, 1 Orc Warlord (150 Gold Crowns)"
+    12-12   "13 Orcs, 1 Orc Warlord (170 Gold Crowns)"
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "13 Orc Champion, 1 Orc Warlord (170 Gold Crowns)"
+    2-2     "11 Orcs, 1 Orc Champion, 1 Orc Warlord (170 Gold Crowns)"
+    3-3     "9 Orcs, 2 Orc Champions, 1 Orc Warlord (170 Gold Crowns)"
+    4-4     "15 Orc Champions, 1 Orc Warlord (190 Gold Crowns)"
+    5-5     "13 Orcs, 1 Orc Champion, 1 Orc Warlord (190 Gold Crowns)"
+    6-6     "11 Orcs, 2 Orc Champions, 1 Orc Warlord (190 Gold Crowns)"
+    7-7     "9 Orcs, 2 Orc Warlords (190 Gold Crowns)"
+    8-8     "11 Orcs, 2 Orc Warlords (210 Gold Crowns)"
+    9-9     "7 Orcs, 2 Orc Champions, 2 Orc Warlords (210 Gold Crowns)"
+    10-10   "11 Orcs, 2 Orc Warlords (210 Gold Crowns)"
+    11-11   "7 Orcs, 5 Orc Champions, 1 Orc Warlord (210 Gold Crowns)"
+    12-12   "13 Orcs, 2 Orc Warlord (230 Gold Crowns)"
+)
+
+

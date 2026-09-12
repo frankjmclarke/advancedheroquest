@@ -1,0 +1,88 @@
+/*
+ * resource set indices for menue
+ *
+ * created by ORCS 2.09
+ */
+#ifndef IDOK
+#  define IDOK 1
+#endif
+#ifndef IDCANCEL
+#  define IDCANCEL 2
+#endif
+
+#define MENUE              1
+#define TINFO            103
+#define TDATEI           104
+#define TKARTE           105
+#define MINFO            109
+#define MSPEICH          119
+#define MDRUCK           120
+#define MSCHLIES         121
+#define MALLESCH         122
+#define MWECHSEL         123
+#define MENDE            125
+#define MKARTE           127
+#define MWEITER          128
+#define MABSPEIC         129
+#define MGRAFIK          132
+#define MTEXT            133
+#define MMONSTER         134
+#define MSTATIST         135
+#define MTABELLE         137
+#define MPARA            139
+#define MEPFAD           141
+#define MEDITOR          142
+#define MSAVEOPT         143
+
+#define FKARTE             2
+#define KNAME            102
+#define KX               103
+#define KY               105
+#define KXCM             106
+#define KYCM             108
+#define KPOS             111
+#define KEX              112
+#define KEY              114
+#define KZUFALL          115
+#define KIMMER           116
+#define KNUREINE         117
+#define KWEITER          118
+#define KNAECHST         119
+#define KOK              IDOK
+#define KABBR            IDCANCEL
+
+#define FSPEICH            3
+#define SNAME            103
+#define SGRAFIK          104
+#define SKOMP            105
+#define SZOOM            106
+#define STEXTK           107
+#define SMONSTER         108
+#define SSTATIST         109
+#define SOK              IDOK
+#define SABBR            IDCANCEL
+#define SGTYPE           112
+
+#define FSTRING            4
+#define STEXT            101
+
+#define FPARA              5
+#define PMAXX            103
+#define PMAXY            104
+#define PXCM             105
+#define PYCM             107
+#define PMAXPICE         109
+#define PMAXMEM          111
+#define PDEFAULT         112
+#define POK              113
+#define PABBRUCH         IDCANCEL
+#define PASK             IDOK
+#define PAUTOSAVE        116
+
+#define FINFO              6
+#define ITEILE           107
+#define ISTRING          109
+#define ITABELLE         112
+
+#define FDEMO              7
+

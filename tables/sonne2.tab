@@ -1,0 +1,13 @@
+#The Quest for Sonneklinge
+#Prince Karad's Tomb
+#-------------------------
+#
+
+define ROOM-FURNISH
+
+include sonne\room2.tab
+include standard\furnish.tab
+include sonne\hazard2.tab
+include standard\treasure.tab
+include sonne\trap.tab
+include sonne\undead.tab

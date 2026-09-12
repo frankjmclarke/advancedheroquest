@@ -1,0 +1,14 @@
+Passage-Length
+^ 'WMONSTER.TAB' Zeile: 12  Referenz-Tabelle nicht vorhanden
+Passage-End
+^ 'WMONSTER.TAB' Zeile: 12  Referenz-Tabelle nicht vorhanden
+Passage-Feature
+^ 'WMONSTER.TAB' Zeile: 12  Referenz-Tabelle nicht vorhanden
+Room-Type
+^ 'WMONSTER.TAB' Zeile: 12  Referenz-Tabelle nicht vorhanden
+Room-Doors
+^ 'WMONSTER.TAB' Zeile: 12  Referenz-Tabelle nicht vorhanden
+Room-or-Passage
+^ 'WMONSTER.TAB' Zeile: 12  Referenz-Tabelle nicht vorhanden
+Secret-Doors
+^ 'WMONSTER.TAB' Zeile: 12  Referenz-Tabelle nicht vorhanden

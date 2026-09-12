@@ -1,0 +1,1 @@
+#define AHQ_MAP_VERSION "1.0"

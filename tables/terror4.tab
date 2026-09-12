@@ -1,0 +1,14 @@
+#The Quest For The Lichemaster (Dungeon 4)
+#-----------------------------------------
+#
+
+define ROOM-FURNISH
+
+include terror\room.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include terror\treasure.tab
+include standard\trap.tab
+include terror\monster.tab
+include terror\mixed.tab
+

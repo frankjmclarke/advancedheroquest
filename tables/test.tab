@@ -1,0 +1,132 @@
+#Test
+
+error Errortest
+
+define nix
+
+if nix
+	error nix ist da
+endif
+
+if nix
+	error nochmal nix ist da
+endif
+
+if !nix
+	error not nix ist fehler
+else
+	error not nix ist ok
+endif
+
+error test1 + test2
+test1
+(	1D12
+	1-12	"test1" & test2()
+}
+
+define ok
+
+if test1()
+	error test1 ok
+else
+	error test1 fehler
+endif
+
+if test2()
+	error test2 ok
+else
+	error test2 fehler
+endif
+
+if test3()
+	error test3 fehler
+else
+	error test3 ok
+endif
+
+if ok
+	if ok
+		error if if ok
+	else
+		error if if Fehler1
+	endif
+else
+	error if if Fehler2
+endif
+
+if !ok
+	error else else Fehler1
+else
+	if !ok
+		error else else Fehler1
+	else
+		error else else ok
+	endif
+endif
+
+if ok
+	if ok
+		error if if ok
+	endif
+else
+	if !ok
+		error if if Fehler1
+	else
+		error if if Fehler2
+	endif
+endif
+
+define not
+
+if !not
+	error if else !not Fehler
+	if not
+		error if if else not Fehler
+	else
+		error if if else !not Fehler
+	endif
+else
+	error if else not ok 1
+	if !not
+		error else if else !not Fehler
+	else
+		error else if else not ok 2
+	endif
+endif
+
+error if else endif
+if
+else
+endif
+
+error if else else endif
+if
+else
+else
+endif
+
+if ok
+if ok
+if ok
+if ok
+if ok
+if ok
+if ok
+if ok
+if ok xxx
+endif xxx
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+
+else
+
+endif
+
+if
+

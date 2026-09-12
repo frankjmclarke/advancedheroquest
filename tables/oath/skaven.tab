@@ -1,0 +1,79 @@
+Wandering-Monsters
+(   1D12
+    1-2     "1 Skaven Sentry (30 Gold Crowns)"
+    3-4     "1 Skaven Gutter Runner (30 Gold Crowns)"
+    5-6     "4 Skaven Warriors (40 Gold Crowns)"
+    7-8     "1 Skaven Slavemaster, 2 Skaven Slaves (40 Gold Crowns)"
+    9-9     "5 Skaven Warriors (50 Gold Crowns)"
+    10-10   "3 Skaven Warriors, 1 Skaven Champion (50 Gold Crowns)"
+    11-11   "1 Skaven Slavemaster, 6 Skaven Slaves (60 Gold Crowns)"
+    12-12   "2 Skaven Gutter Runner, 2 Skaven Warriors (80 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "4 Skaven Warriors (40 Gold Crowns)"
+    2-2     "2 Skaven Warriors, 1 Skaven Champion (40 Gold Crowns)"
+    3-3     "5 Skaven Warriors (50 Gold Crowns)"
+    4-4     "3 Skaven Warriors, 1 Skaven Sentry (50 Gold Crowns)"
+    5-5     "6 Skaven Warriors (60 Gold Crowns)"
+    6-6     "6 Skaven Warriors (60 Gold Crowns)"
+    7-7     "2 Skaven Warriors, 1 Skaven Champion (60 Gold Crowns)"
+    8-8     "1 Skaven Slavemaster, 8 Skaven Slaves (80 Gold Crowns)"
+    9-9     "6 Skaven Warriors, 1 Skaven Champion (80 Gold Crowns)" & Specialist-Lair-Skaven()
+    10-10   "2 Skaven Gutter Runners, 1 Skaven Champion (80 Gold Crowns)" & Specialist-Lair-Skaven()
+    11-11   "4 Skaven Warriors, 1 Skaven Warlord (100 Gold Crowns)" & Specialist-Lair-Skaven()
+    12-12   "2 Skaven Champions, 1 Skaven Warlord (100 Gold Crowns)" & Specialist-Lair-Skaven()
+)
+
+Specialist-Lair-Skaven
+(   1D12
+    1-6     None
+    7-7     "1 Skaven Slavemaster, 6 Skaven Slaves"
+    8-8     "1 Skaven Gutter Runner"
+    10-10   "1 Skaven Warpfire Thrower Team"
+    11-11   "1 Skaven Jezzail Team"
+    12-12   "1 Skaven Beastmaster, 1 Rat Ogre"
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "3 Skaven Champions, 1 Skaven Warlord (120 Gold Crowns)"
+    2-2     "6 Skaven Warriors, 3 Skaven Champions (120 Gold Crowns)"
+    3-3     "6 Skaven Warriors, 1 Skaven Warlord (120 Gold Crowns)"
+    4-4     "4 Skaven Gutter Runners, 1 Skaven Champion (140 Gold Crowns)"
+    5-5     "4 Skaven Champions, 1 Skaven Warlord (140 Gold Crowns)"
+    6-6     "8 Skaven Warriors, 3 Skaven Champions (150 Gold Crowns)"
+    7-7     "3 Skaven Warriors, 3 Skaven Champions, 1 Skaven Warlord (150 Gold Crowns)"
+    8-8     "8 Skaven Warriors, 4 Skaven Champions (160 Gold Crowns)"
+    9-9     "3 Skaven Gutter Runners, 1 Skaven Beastmaster, 1 Rat Ogre (160 Gold Crowns)"
+    10-10   "8 Skaven Warriors, 1 Skaven Beastmaster, 1 Rat Ogre (180 Gold Crowns)" & Specialist-Quest-Skaven()
+    11-11   "3 Skaven Champions, 1 Skaven Beastmaster, 1 Cave Troll (180 Gold Crowns)" & Specialist-Quest-Skaven()
+    12-12   "8 Skaven Warriors, 1 Skaven Beastmaster, 1 Cave Troll (200 Gold Crowns)" & Specialist-Quest-Skaven()
+)
+
+Specialist-Quest-Skaven
+(   1D12
+    1-6     None
+    7-7     &
+            (   1D12
+                1-1     "1 Skaven Slavemaster, 1 Skaven Slave"
+                2-2     "1 Skaven Slavemaster, 2 Skaven Slaves"
+                3-3     "1 Skaven Slavemaster, 3 Skaven Slaves"
+                4-4     "1 Skaven Slavemaster, 4 Skaven Slaves"
+                5-5     "1 Skaven Slavemaster, 5 Skaven Slaves"
+                6-6     "1 Skaven Slavemaster, 6 Skaven Slaves"
+                7-7     "1 Skaven Slavemaster, 7 Skaven Slaves"
+                8-8     "1 Skaven Slavemaster, 8 Skaven Slaves"
+                9-9     "1 Skaven Slavemaster, 9 Skaven Slaves"
+                10-10   "1 Skaven Slavemaster, 10 Skaven Slaves"
+                11-11   "1 Skaven Slavemaster, 11 Skaven Slaves"
+                12-12   "1 Skaven Slavemaster, 12 Skaven Slaves"
+            )
+    8-8     "1 Skaven Warpfire Thrower Team"
+    9-9     "1 Skaven Jezzail Team"
+    10-10   "1 Rat Ogre"
+    11-11   "3 Skaven Gutter Runners"
+    12-12   "1 Cave Troll"
+)
+

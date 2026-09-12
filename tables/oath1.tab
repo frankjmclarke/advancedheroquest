@@ -1,0 +1,12 @@
+#The Trollslayers's Oaht (Level 1)
+#---------------------------------
+#
+
+define ROOM-FURNISH
+
+include oath\room1.tab
+include standard\furnish.tab
+include oath\hazard.tab
+include standard\treasure.tab
+include standard\trap.tab
+include oath\skaven.tab

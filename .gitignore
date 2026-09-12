@@ -1,0 +1,18 @@
+# Build intermediates
+obj/
+*.obj
+*.res
+*.o
+MAKE*.@@@
+
+# Compiled binaries
+bin/*.exe
+*.exe
+
+# Local tooling
+.claude/settings.local.json
+
+# Editor / tool backups
+makefile.$$$
+*.bak
+*.~*

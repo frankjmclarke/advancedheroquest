@@ -1,0 +1,29 @@
+Wandering-Monsters
+(   1D12
+    1-2     "2 Orcs (10 Gold Crowns)"
+    3-4     "1 Skeleton (5 Gold Crowns)"
+    5-6     "1 Skeleton, 1 Zombie (10 Gold Crowns)"
+    7-8     "3 Zombies (15 Gold Crowns)"
+    9-9     "2 Orcs, 4 Goblin Archers (40 Gold Crowns)"
+    10-10   "1 Orc Champion, 1 Orc, 2 Goblins (40 Gold Crowns)"
+    11-11   "1 Undead Champion (50 Gold Crowns)"
+    12-12   "1 Undead Champion, 2 Zombies (60 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "1 Chaos Warrior, 1 Orc (40 Gold Crowns)"
+    2-2     "2 Orcs, 2 Goblins (30 Gold Crowns)"
+    3-3     "2 Skaven Champions, 1 Skaven Warrior (40 Gold Crowns)"
+    4-4     "4 Zombies (20 Gold Crowns)"
+    5-5     "1 Skeleton, 3 Zombies (25 Gold Crowns)"
+    6-6     "3 Skaven Gutter Runners (60 Gold Crowns)"
+    7-7     "4 Goblins, 4 Goblin Archers (60 Gold Crowns)"
+    8-8     "3 Orc Champions (70 Gold Crowns)"
+    9-9     "2 Skeletons, 4 Zombies (40 Gold Crowns)"
+    10-10   "1 Undead Champion, 2 Zombies (100 Gold Crowns)"
+    11-11   "1 Mummy, 2 Zombies (100 Gold Crowns)"
+    12-12   "1 Mummy, 2 Skeletons, 2 Zombies (150 Gold Crowns)"
+)
+
+

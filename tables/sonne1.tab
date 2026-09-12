@@ -1,0 +1,13 @@
+#The Quest for Sonneklinge
+#The Ogre Chieftain's Stronghold (Level 1 +2)
+#--------------------------------------------
+#
+
+define ROOM-FURNISH
+
+include sonne\room1.tab
+include standard\furnish.tab
+include sonne\hazard1.tab
+include standard\treasure.tab
+include sonne\trap.tab
+include sonne\orc.tab

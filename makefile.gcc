@@ -1,0 +1,316 @@
+#
+# makefile.gcc - top level makefile for Windows/GNU C
+#
+
+#
+# TOP directory of source tree
+#
+TOP=		//h/src/hq_mapw
+CURDIR=		$(shell pwd)
+
+#
+# Directories
+#
+
+# where to put objects
+OBJ_WIN16_DIR=	$(CURDIR)/obj/win16
+OBJ_WIN32_DIR=	$(CURDIR)/obj/win32
+OBJ_DOS_DIR=	$(CURDIR)/obj/dos
+
+# where to put objects
+BIN_DIR=	$(TOP)/bin
+
+
+#----------------------------------------------------------------------------
+#
+# Tools
+#
+CC=		gcc
+CC16=		$(CC) $(CFLAGS) -c -mno-cygwin -o $@
+CC32=		$(CC) $(CFLAGS) -c -mno-cygwin -o $@
+CCDOS=		$(CC) $(CFLAGS) -c -o $@
+CCDLL16=	$(CC16) -mdll
+CCDLL32=	$(CC32) -mdll
+TLINK16=	$(CC)
+TLINK32=	$(CC)
+TLIB=		ar rcs $@
+STRIP16=	strip
+STRIP32=	strip
+IMPLIB=		implib
+BRC32=		$(CC) $(INCLUDES) $(RC_DEFINES) -E -x c 
+HC31=		hc31
+
+CC_DEFINES=	-D__STDC__=1
+
+TLIBFLAGS=	
+LFLAGS0=	
+LFLAGS16=	$(LFLAGS0) -mno-cygwin -mwindows
+LFLAGSDLL16=	$(LFLAGS0) -mno-cygwin -mwindows -mdll
+LFLAGS32=	$(LFLAGS0) -mno-cygwin -mwindows
+LFLAGSDLL32=	$(LFLAGS0) -mno-cygwin -mwindows -mdll
+LFLAGSDOS=	$(LFLAGS0) -Wl,-subsystem,console -mwindows
+
+
+UDO=		c:/bin/udo.exe
+RM=		rm -f
+CP=		cp -f
+MV=		mv -f
+MD=		mkdir
+
+SRC_DIR=	$(TOP)
+RSH_DIR=	$(SRC_DIR)/rsh
+
+MYLIB_DIR=	$(TOP)/my_lib
+SYSPORTAB_DIR=	$(MYLIB_DIR)/windows
+
+#
+#Options
+#
+
+INCLUDES=	-I. -I$(MYLIB_DIR) -I$(SYSPORTAB_DIR)
+
+DEFINES=	$(CC_DEFINES) \
+		-DSTDC_HEADERS=1 \
+		-DHAVE_DIRENT_H=1 \
+		-DSTRICT=1
+
+SMALL=		
+
+CCFLAGS=	-O2 -g -Wall -Wmissing-prototypes -Wstrict-prototypes -fomit-frame-pointer
+LDEBUGFLAGS=	-g
+
+CFLAGS=		$(CCFLAGS) $(DEFINES) $(EXTRA_DEFINES) $(INCLUDES) $(EXTRA_INCLUDES) $(XCFLAGS)
+
+####################################################################
+
+####################################################################
+
+SYSTEM=WIN32
+
+ifeq ($(SYSTEM),DOS)
+CCC=		$(CCDOS)
+OBJ_DIR=	$(OBJ_DOS_DIR)/
+TLINK=		$(TLINK16)
+LFLAGS=		$(LFLAGSDOS)
+TARGET=		
+STRIP=		$(STRIP16)
+LIBS=		
+DEP_LIBS=	$(GEMLIB)
+
+else
+ifeq ($(SYSTEM),WIN32)
+CCC=		$(CC32)
+OBJ_DIR=	$(OBJ_WIN32_DIR)/
+TLINK=		$(TLINK32)
+LFLAGS=		$(LFLAGS32)
+TARGET=		32
+STRIP=		$(STRIP32)
+DEP_LIBS=	$(GEMLIB)
+LIBS=		-lole32
+BRC=		$(BRC32)
+
+else
+ifeq ($(SYSTEM),DLL32)
+CCC=		$(CCDLL32)
+OBJ_DIR=	$(OBJ_DLL32_DIR)/
+TLINK=		$(TLINK32)
+LFLAGS=		$(LFLAGSDLL32)
+TARGET=		32
+STRIP=		$(STRIP32)
+DEP_LIBS=	$(GEMLIB)
+LIBS=		
+BRC=		$(BRC32)
+
+else
+ error $(SYSTEM) system not supported
+endif
+endif
+endif
+
+LFLAGS := $(LFLAGS) -L$(OBJ_DIR) $(LDEBUGFLAGS)
+
+RC_INCLUDES=$(shell echo $(INCLUDES) $(EXTRA_INCLUDES) | sed -e 's/-I/--include-dir /g')
+RC_DEFINES=-D__WIN32__ -DRC_INVOKED $(DEFINES)
+
+#
+# command for recursive makes
+#
+RUNMAKE=	$(MAKE) TOP=$(TOP) CURDIR=$(CURDIR)
+RMAKE=		$(RUNMAKE) SYSTEM=$(SYSTEM) COMPILER=$(COMPILER)
+
+####################################################################
+
+all::
+		@
+
+DEFAWK=$(CURDIR)/obj/def.awk
+AWK=awk
+$(DEFAWK):
+	$(RM) $@
+	echo '#! $(AWK) -f' >> $@
+	echo '/STACKSIZE/ { printf("-Wl,--stack,%s\n", $$2); }' >> $@
+	echo '/HEAPSIZE/ { printf("-Wl,--heap,%s\n", $$2); }' >> $@
+
+clean::
+	$(RM) $(DEFAWK)
+
+####################################################################
+
+delreg::	$(DELREG)
+
+
+$(DELREG):	$(OBJ_DOS_DIR)/delreg.o
+		$(TLINK16) $(OBJ_DOS_DIR)/delreg.o -o $@
+
+$(OBJ_DOS_DIR)/delreg.o:	$(GENERIC_DIR)/delreg.c
+		$(CCDOS) $(GENERIC_DIR)/delreg.c
+
+####################################################################
+
+all::	hq_map
+
+HQ_MAP_OBJS=	$(OBJ_DIR)main.o \
+		$(OBJ_DIR)mem.o \
+		$(OBJ_DIR)pice.o \
+		$(OBJ_DIR)move.o \
+		$(OBJ_DIR)rolldice.o \
+		$(OBJ_DIR)table.o \
+		$(OBJ_DIR)features.o \
+		$(OBJ_DIR)random.o \
+		$(OBJ_DIR)stairs.o \
+		$(OBJ_DIR)test.o \
+		$(OBJ_DIR)queue.o \
+		$(OBJ_DIR)set.o \
+		$(OBJ_DIR)map.o \
+		$(OBJ_DIR)liste.o \
+		$(OBJ_DIR)text.o \
+		$(OBJ_DIR)makemap.o \
+		$(OBJ_DIR)icon.o \
+		$(OBJ_DIR)image.o \
+		$(OBJ_DIR)pcx.o \
+		$(OBJ_DIR)wind.o \
+		\
+		$(OBJ_DIR)path.o \
+		$(OBJ_DIR)termproc.o \
+		$(OBJ_DIR)grect.o \
+		$(OBJ_DIR)routine.o \
+		\
+		$(OBJ_DIR)w_mouse.o \
+		$(OBJ_DIR)w_dialog.o \
+		$(OBJ_DIR)memory.o \
+		$(OBJ_DIR)file_io.o \
+		$(OBJ_DIR)boxf.o \
+		$(OBJ_DIR)mfdb.o \
+		$(OBJ_DIR)filesel.o \
+		$(OBJ_DIR)openwork.o \
+		$(OBJ_DIR)window.o \
+		$(OBJ_DIR)ro_help.o \
+		$(OBJ_DIR)w_draw.o \
+		$(OBJ_DIR)profile.o
+
+HQ_MAP_DEP_OBJS=	$(HQ_MAP_OBJS)
+
+hq_map:		dirs $(BIN_DIR)/hq_map$(TARGET).exe
+
+$(BIN_DIR)/hq_map$(TARGET).exe: $(HQ_MAP_DEP_OBJS) $(OBJ_DIR)menu.res $(OBJ_DIR)grafic.res $(MAKEFILE)
+		cd $(OBJ_DIR) && $(TLINK) $(LFLAGS) $(HQ_MAP_OBJS) -o $@ $(LIBS) # $(SRC_DIR)/hq_map$(TARGET).def
+
+$(OBJ_DIR)menu.res:	$(RSH_DIR)/menu.rc $(SRC_DIR)/version.h
+		$(BRC) $(RSH_DIR)/menu.rc | windres $(RC_INCLUDES) --output-format coff -o $@
+
+$(OBJ_DIR)grafic.res:	$(RSH_DIR)/grafic.rc
+		$(BRC) $(RSH_DIR)/grafic.rc | windres $(RC_INCLUDES) --output-format coff -o $@
+
+####################################################################
+
+$(OBJ_DIR)main.o:	$(SRC_DIR)/main.c $(RSH_DIR)/menu.rh
+		$(CCC) $(EXTRA_DEFINES) -I$(SRC_DIR)//rsh $(SRC_DIR)/main.c
+$(OBJ_DIR)icon.o:	$(SRC_DIR)/icon.c $(RSH_DIR)/menu.rh
+		$(CCC) $(EXTRA_DEFINES) -I$(SRC_DIR)/rsh $(SRC_DIR)/icon.c
+$(OBJ_DIR)wind.o:	$(SRC_DIR)/wind.c $(RSH_DIR)/menu.rh
+		$(CCC) $(EXTRA_DEFINES) -I$(SRC_DIR)/rsh $(SRC_DIR)/wind.c
+$(OBJ_DIR)mem.o:	$(SRC_DIR)/mem.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/mem.c
+$(OBJ_DIR)pice.o:	$(SRC_DIR)/pice.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/pice.c
+$(OBJ_DIR)move.o:	$(SRC_DIR)/move.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/move.c
+$(OBJ_DIR)rolldice.o:	$(SRC_DIR)/rolldice.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/rolldice.c
+$(OBJ_DIR)table.o:	$(SRC_DIR)/table.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/table.c
+$(OBJ_DIR)features.o:	$(SRC_DIR)/features.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/features.c
+$(OBJ_DIR)random.o:	$(SRC_DIR)/random.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/random.c
+$(OBJ_DIR)stairs.o:	$(SRC_DIR)/stairs.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/stairs.c
+$(OBJ_DIR)test.o:	$(SRC_DIR)/test.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/test.c
+$(OBJ_DIR)text.o:	$(SRC_DIR)/text.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/text.c
+$(OBJ_DIR)map.o:	$(SRC_DIR)/map.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/map.c
+$(OBJ_DIR)queue.o:	$(SRC_DIR)/queue.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/queue.c
+$(OBJ_DIR)set.o:	$(SRC_DIR)/set.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/set.c
+$(OBJ_DIR)liste.o:	$(SRC_DIR)/liste.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/liste.c
+$(OBJ_DIR)makemap.o:	$(SRC_DIR)/makemap.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/makemap.c
+$(OBJ_DIR)image.o:	$(SRC_DIR)/image.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/image.c
+$(OBJ_DIR)pcx.o:	$(SRC_DIR)/pcx.c
+		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/pcx.c
+
+$(OBJ_DIR)grect.o:	$(MYLIB_DIR)/grect.c
+		$(CCC) $(EXTRA_DEFINES) $(MYLIB_DIR)/grect.c
+$(OBJ_DIR)path.o:	$(MYLIB_DIR)/path.c
+		$(CCC) $(EXTRA_DEFINES) $(MYLIB_DIR)/path.c
+$(OBJ_DIR)routine.o:	$(MYLIB_DIR)/routine.c
+		$(CCC) $(EXTRA_DEFINES) $(MYLIB_DIR)/routine.c
+$(OBJ_DIR)termproc.o:	$(MYLIB_DIR)/termproc.c
+		$(CCC) $(EXTRA_DEFINES) $(MYLIB_DIR)/termproc.c
+
+$(OBJ_DIR)w_mouse.o:	$(SYSPORTAB_DIR)/w_mouse.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/w_mouse.c
+$(OBJ_DIR)w_dialog.o:	$(SYSPORTAB_DIR)/w_dialog.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/w_dialog.c
+$(OBJ_DIR)memory.o:	$(SYSPORTAB_DIR)/memory.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/memory.c
+$(OBJ_DIR)file_io.o:	$(SYSPORTAB_DIR)/file_io.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/file_io.c
+$(OBJ_DIR)boxf.o:	$(SYSPORTAB_DIR)/boxf.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/boxf.c
+$(OBJ_DIR)mfdb.o:	$(SYSPORTAB_DIR)/mfdb.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/mfdb.c
+$(OBJ_DIR)openwork.o:	$(SYSPORTAB_DIR)/openwork.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/openwork.c
+$(OBJ_DIR)window.o:	$(SYSPORTAB_DIR)/window.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/window.c
+$(OBJ_DIR)ro_help.o:	$(SYSPORTAB_DIR)/ro_help.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/ro_help.c
+$(OBJ_DIR)w_draw.o:	$(SYSPORTAB_DIR)/w_draw.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/w_draw.c
+$(OBJ_DIR)profile.o:	$(SYSPORTAB_DIR)/profile.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/profile.c
+$(OBJ_DIR)filesel.o:	$(SYSPORTAB_DIR)/filesel.c
+		$(CCC) $(EXTRA_DEFINES) $(SYSPORTAB_DIR)/filesel.c
+
+
+
+
+dirs::
+		@-$(MD) $(BIN_DIR)
+		@-$(MD) $(CURDIR)/obj
+		@-$(MD) $(CURDIR)/obj/dos
+		@-$(MD) $(CURDIR)/obj/win16
+		@-$(MD) $(CURDIR)/obj/win32
+
+clean::
+		$(RM) $(CURDIR)/obj/dos/*.o
+		$(RM) $(CURDIR)/obj/win16/*.o
+		$(RM) $(CURDIR)/obj/win32/*.o
+		$(RM) $(CURDIR)/obj/win16/*.res
+		$(RM) $(CURDIR)/obj/win32/*.res
