@@ -16,3 +16,8 @@ bin/*.exe
 makefile.$$$
 *.bak
 *.~*
+
+# MSVC build artifacts (see build-msvc.bat)
+rsh/menu.msvc.rc
+bin/*.prebuild.exe
+bin/*.1999-original.exe

@@ -103,6 +103,46 @@ per-system directory) and executables in `bin\`.
 
 For gcc instead: `make -f makefile.gcc`.
 
+### Building with Visual Studio instead
+
+If you have Visual Studio rather than a Borland install, run `build-msvc.bat`.
+It bypasses `makefile` entirely — there is nothing to salvage there for MSVC, as
+noted above — and drives `cl` / `rc` / `link` directly:
+
+```
+build-msvc.bat          build bin\hq_map.exe and bin\hq_mapdm.exe
+build-msvc.bat clean    remove obj\msvc and the generated .rc
+```
+
+It locates the toolchain with `vswhere` (requiring the *Desktop development with
+C++* workload), builds 32-bit, and puts objects in `obj\msvc\`. `obj\win32\`,
+which holds the original 1999 Borland objects, is left alone.
+
+Verified against MSVC 14.44 (VS2022): **all 40 objects compile with zero errors
+and no changes to the 1999 sources.** `my_lib/portab.h` already carries `_MSC_VER`
+branches, which is why 27-year-old code builds on a modern compiler untouched.
+
+Two things the script has to work around:
+
+- **`rc` rejects one construct `brc` accepts.** `rsh/menu.rc` lines 189 and 208
+  use adjacent string-literal concatenation (`CAPTION "...V" AHQ_MAP_VERSION`).
+  Microsoft's resource compiler does not concatenate there, and reports it as
+  `RC2112: BEGIN expected in dialog` followed by `RC2135: file not found: MS Sans
+  Serif` — neither of which points at the real cause. The script generates
+  `rsh/menu.msvc.rc` with the version folded into a single literal (preserving
+  CP1252, so the umlauts survive) and leaves `menu.rc` untouched.
+- **The `.def` file is not reused.** `hq_map32.def`'s `IMPORTS` section is Borland
+  module-definition syntax that `link.exe` rejects, so the script passes
+  `/STACK:20480 /HEAP:4096` explicitly to match what the `.def` declares.
+
+Two `RC2182: duplicate dialog control ID 2` warnings are pre-existing in the 1999
+`menu.rc` and appear in both toolchains.
+
+Because `bin/*.exe` is gitignored, an original 1999 binary sitting in `bin/`
+cannot be restored from git once overwritten. The script therefore copies any
+pre-existing `hq_map.exe` / `hq_mapdm.exe` to `*.prebuild.exe` once before
+overwriting it.
+
 ### How the link works
 
 Worth knowing, because it's unusual and makes link failures confusing to read.
@@ -123,6 +163,7 @@ the compiled resources. So:
 ## Repository layout
 
 ```
+build-msvc.bat      Visual Studio build script (see above)
 *.c, *.h            Generator core: makemap, map, pice, stairs, features,
                     rolldice, table, set, queue — plus the Win32 GUI
                     (wind, icon, image, bmp, pcx, text)
