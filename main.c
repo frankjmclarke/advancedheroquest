@@ -879,6 +879,31 @@ LOCAL _BOOL wind_print(_VOID)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/*
+ * Close the dialog on OK, or on Escape, which arrives as IDCANCEL.
+ *
+ * The dialog framework only ends a dialog when its handler returns DLG_END.
+ * Passing FUNK_NULL as the handler means no button does anything at all --
+ * that is why the About box has no OK button and is closed with its X.
+ * Anything with a button of its own needs a handler like this one.
+ */
+LOCAL DLG_RETURN close_on_ok(DIALOG *ptr, _WORD button, _BOOL *ret, _VOID *para)
+{
+	UNUSED(ptr);
+	UNUSED(para);
+
+	switch (button)
+	{
+	case IDOK:
+	case IDCANCEL:
+		*ret = TRUE;
+		return DLG_END;
+	}
+	return DLG_CONTINUE;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 LOCAL _BOOL do_menu(_WORD eintrag)
 {
 	_BOOL retV = TRUE;
@@ -886,11 +911,11 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 	switch (eintrag)
 	{
 	case MHELP:
-		Dialog_Select(FHELP, FUNK_NULL, NULL);
+		Dialog_Select(FHELP, close_on_ok, NULL);
 		break;
 
 	case MINFO:
-		Dialog_Select(FINFO, FUNK_NULL, NULL);
+		Dialog_Select(FINFO, close_on_ok, NULL);
 		break;
 	
 	case MSPEICH:
