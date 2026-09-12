@@ -163,7 +163,7 @@ GLOBAL ENDS test_end(PICE *from, ENDS endtype)
 	case Illegal_End:
 		return Illegal_End;
 	default:
-		if (!error_abort("Ungültiges Ende\n(test_end)"))
+		if (!error_abort("Invalid end\n(test_end)"))
 			return Illegal_End;
 		return Dead_End;
 	}
@@ -270,7 +270,7 @@ LOCAL _BOOL test_pice_from(PICE *from, PICE *test, DIRECTION pos, _BOOL *abort)
 		*abort = TRUE;
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(test_pice_from)"))
+		if (!error_abort("Invalid direction\n(test_pice_from)"))
 		{
 			*abort = TRUE;
 			return FALSE;
@@ -408,7 +408,7 @@ GLOBAL ROOMS test_passage_room(PICE *from, SECTIONS len, ROOMS roomtype)
 	case Invalid:
 		return Invalid;
 	default:
-		if (!error_abort("Ungültiger Raumtype\n(test_passage_room)"))
+		if (!error_abort("Invalid roomtype\n(test_passage_room)"))
 			return Invalid;
 		return Invalid;
 	}
@@ -503,7 +503,7 @@ LOCAL _WORD find_room_rooms(PICE *from, PICE *room, _WORD count)
 			case Illegal_Dir:
 				return 0;
 			default:
-				if (!error_abort("Ungültige Richtungsangabe\n(find_room_room)"))
+				if (!error_abort("Invalid direction\n(find_room_room)"))
 					return 0;
 				return 0;
 			}
@@ -544,7 +544,7 @@ LOCAL _WORD find_room_rooms(PICE *from, PICE *room, _WORD count)
 				case Illegal_Dir:
 					return 0;
 				default:
-					if (!error_abort("Ungültige Richtungsangabe\n(find_room_room)"))
+					if (!error_abort("Invalid direction\n(find_room_room)"))
 						return FALSE;
 					return 0;
 				}
@@ -640,7 +640,7 @@ GLOBAL ROOMS test_room_room(PICE *from, ROOMS roomtype)
 	case Invalid:
 		return Invalid;
 	default:
-		if (!error_abort("Ungültiger Raumtype\n(test_room_room)"))
+		if (!error_abort("Invalid roomtype\n(test_room_room)"))
 			return Invalid;
 		return Invalid;
 	}
@@ -704,7 +704,7 @@ LOCAL _WORD find_room_passages(PICE *from, _WORD count)
 		case Illegal_Dir:
 			return 0;
 		default:
-			if (!error_abort("Ungültige Richtungsangabe\n(find_room_passages)"))
+			if (!error_abort("Invalid direction\n(find_room_passages)"))
 				return 0;
 			return 0;
 		}
@@ -744,7 +744,7 @@ LOCAL _WORD find_room_passages(PICE *from, _WORD count)
 			case Illegal_Dir:
 				return 0;
 			default:
-				if (!error_abort("Ungültige Richtungsangabe\n(find_room_passages)"))
+				if (!error_abort("Invalid direction\n(find_room_passages)"))
 					return 0;
 				return 0;
 			}
@@ -825,7 +825,7 @@ LOCAL _WORD find_room_doors(PICE *from, _WORD count)
 		case Illegal_Dir:
 			return 0;
 		default:
-			if (!error_abort("Ungültige Richtungsangabe\n(find_room_doors)"))
+			if (!error_abort("Invalid direction\n(find_room_doors)"))
 				return 0;
 			return 0;
 		}
@@ -866,7 +866,7 @@ LOCAL _WORD find_room_doors(PICE *from, _WORD count)
 			case Illegal_Dir:
 				return 0;
 			default:
-				if (!error_abort("Ungültige Richtungsangabe\n(find_room_doors)"))
+				if (!error_abort("Invalid direction\n(find_room_doors)"))
 					return 0;
 				return 0;
 			}
@@ -963,7 +963,7 @@ LOCAL _WORD find_passage_doors(PICE *from, SECTIONS len, _WORD count)
 			case Illegal_Dir:
 				return 0;
 			default:
-				if (!error_abort("Ungültige Richtungsangabe\n(find_passage_doors)"))
+				if (!error_abort("Invalid direction\n(find_passage_doors)"))
 					return 0;
 				return 0;
 			}
@@ -1038,7 +1038,7 @@ LOCAL _WORD find_doors(PICE *from, _WORD count)
 		case Illegal_Dir:
 			return 0;
 		default:
-			if (!error_abort("Ungültige Richtungsangabe\n(find_doors)"))
+			if (!error_abort("Invalid direction\n(find_doors)"))
 				return 0;
 			return 0;
 		}

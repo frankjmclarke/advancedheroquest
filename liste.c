@@ -69,7 +69,7 @@ GLOBAL size_t draw_monster_liste(_UBYTE **mem)
 			case EMPTY:
 				break;
 			default:
-				abbruch("Ungültiger Type\n(draw_monster_liste)");
+				abbruch("Invalid type\n(draw_monster_liste)");
 				return 0;
 			}
 		}

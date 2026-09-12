@@ -428,11 +428,11 @@ GLOBAL _VOID mem_free(_VOID *strPtr)
 		if (defect)
 		{
 #if DEBUG_ALLOC >= 2
-			ErrorOut(EO_FATAL, "MemStart defekt (%ld-%ld) (%s).", memUse, memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)");
+			ErrorOut(EO_FATAL, "MemStart corrupt (%ld-%ld) (%s).", memUse, memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)");
 #elif DEBUG_ALLOC
-			ErrorOut(EO_FATAL, "MemStart defekt (%ld-%ld).", memUse, memCntl->size);
+			ErrorOut(EO_FATAL, "MemStart corrupt (%ld-%ld).", memUse, memCntl->size);
 #else
-			ErrorOut(EO_FATAL, "MemStart defekt (%ld %p).", memUse, strPtr);
+			ErrorOut(EO_FATAL, "MemStart corrupt (%ld %p).", memUse, strPtr);
 #endif
 			return;
 		}
@@ -510,11 +510,11 @@ GLOBAL _BOOL mem_debug_check(_VOID *ptr, CONST _UBYTE *where)
 		if (defect & 1)
 		{
 #if DEBUG_ALLOC >= 2
-			ErrorOut(EO_FATAL, "MemStart defekt (%ld-%ld) (%s).", memUse, memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)");
+			ErrorOut(EO_FATAL, "MemStart corrupt (%ld-%ld) (%s).", memUse, memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)");
 #elif DEBUG_ALLOC
-			ErrorOut(EO_FATAL, "MemStart defekt (%ld-%ld).", memUse, memCntl->size);
+			ErrorOut(EO_FATAL, "MemStart corrupt (%ld-%ld).", memUse, memCntl->size);
 #else
-			ErrorOut(EO_FATAL, "MemStart defekt (%ld %p).", memUse, strPtr);
+			ErrorOut(EO_FATAL, "MemStart corrupt (%ld %p).", memUse, strPtr);
 #endif
 			return FALSE;
 		}

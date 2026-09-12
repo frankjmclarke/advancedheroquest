@@ -97,7 +97,7 @@ LOCAL _VOID *store_ptr(_VOID *ptr)
 	if ((ptr = heap_store(&ptr, sizeof(ptr))) == NULL)
 	{
 		scan_error(0, "", "Aborted, out of memory");
-		abbruch("Speicherplatz für Referenz-Tabellen reicht nicht");
+		abbruch("Not enough memory for reference tables");
 	}
 	return ptr;
 }
@@ -112,7 +112,7 @@ LOCAL _VOID *do_store(_VOID *ptr, size_t len)
 	if ((mem = stack_store(ptr, len)) == NULL)
 	{
 		scan_error(0, "", "Aborted, out of memory");
-		abbruch("Speicherplatz für Referenz-Tabellen reicht nicht");
+		abbruch("Not enough memory for reference tables");
 	}
 	return mem;
 }
@@ -306,7 +306,7 @@ LOCAL _VOID skip_end(size_t *pos, _UBYTE *str)
 {
 	if (!comment(pos, str))
 	{
-		scan_error(*pos, str, "Überflüssige Zeichen (werden ignoriert)");
+		scan_error(*pos, str, "Extra characters (ignored)");
 		*pos = strlen(str);
 	}
 }
@@ -348,7 +348,7 @@ LOCAL _WORD scan_string(size_t *pos, _UBYTE *str, _UBYTE *name, size_t maxlen)
 	{
 		strncpy(name, str + *pos, maxlen-1);
 		name[maxlen-1] = '\0';
-		scan_error(*pos + maxlen, str, "Zeichenkette zu lang (wird abgeschnitten)");
+		scan_error(*pos + maxlen, str, "String too long (will be truncated)");
 	}
 	*pos += len;
 	if (str[*pos] != c[0])
@@ -398,23 +398,23 @@ LOCAL _BOOL scan_roll(size_t *pos, _UBYTE *str, ENTRY *entry, _WORD min, _WORD m
 	
 	if ((entry->roll = (_WORD)atoi(str + (*pos))) <= 0)
 	{
-		scan_error(*pos, str, "Ungültiger Würfelwert");
+		scan_error(*pos, str, "Invalid dice value");
 		return FALSE;
 	}
 	if (min > entry->roll)
 	{
-		scan_error(*pos, str, "Würfelwert zu klein");
+		scan_error(*pos, str, "Dice value too small");
 	}
 	if (min < entry->roll && max < entry->roll)
 	{
-		scan_error(*pos, str, "Würfelwert zu groß");
+		scan_error(*pos, str, "Dice value too large");
 	}
 	
 	skip_chr(pos, str, DIGITS);
 	
 	if (!test_chr(pos, str, "-"))
 	{
-		scan_error(*pos, str, "Zeichen '-' fehlt");
+		scan_error(*pos, str, "Missing '-' character");
 		return FALSE;
 	}
 	(*pos)++;
@@ -422,17 +422,17 @@ LOCAL _BOOL scan_roll(size_t *pos, _UBYTE *str, ENTRY *entry, _WORD min, _WORD m
 	skip_chr(pos, str, SPACE_CHARS);
 	if ((entry->roll = (_WORD)atoi(str + (*pos))) <= 0)
 	{
-		scan_error(*pos, str, "Ungültiger Würfelwert");
+		scan_error(*pos, str, "Invalid dice value");
 		return FALSE;
 	}
 	if (min > entry->roll)
 	{
-		scan_error(*pos, str, "Würfelwert zu klein");
+		scan_error(*pos, str, "Dice value too small");
 		return FALSE;
 	}
 	if (max < entry->roll)
 	{
-		scan_error(*pos, str, "Würfelwert zu groß");
+		scan_error(*pos, str, "Dice value too large");
 		return FALSE;
 	}
 	
@@ -462,7 +462,7 @@ LOCAL _BOOL scan_feature(size_t *pos, _UBYTE *str, size_t maxstr, FEATURE **last
 			(*pos)++;
 			if (comment(pos, str) && !next_line(pos, str, maxstr))
 			{
-				scan_error(0, "", "Tabellen-Eintrag nicht vollständig (Datei zu ende)");
+				scan_error(0, "", "Incomplete table entry (end of file)");
 				return FALSE;
 			}
 		}
@@ -491,7 +491,7 @@ LOCAL _BOOL scan_feature(size_t *pos, _UBYTE *str, size_t maxstr, FEATURE **last
 			{
 				if (!scan_name(pos, str, name, sizeof(name)))
 				{
-					scan_error(*pos, str, "Ungültiger Eintrag");
+					scan_error(*pos, str, "Invalid entry");
 					return FALSE;
 				}
 				
@@ -515,7 +515,7 @@ LOCAL _BOOL scan_feature(size_t *pos, _UBYTE *str, size_t maxstr, FEATURE **last
 				{
 					if ((feature.ptr.room = find_feature(name)) == NULL)
 					{
-						scan_error(*pos, str, "Unbekannter Schlüssel-Name");
+						scan_error(*pos, str, "Unknown key name");
 						return FALSE;
 					}
 					feature.type = ROOMFEATURE;
@@ -541,13 +541,13 @@ LOCAL _BOOL scan_dice(size_t *pos, _UBYTE *str, TABLE *table)
 {
 	if (comment(pos, str))
 	{
-		scan_error(*pos, str, "Würfeltyp fehlt");
+		scan_error(*pos, str, "Missing dice type");
 		return FALSE;
 	}
 	
 	if ((table->n = (_WORD)atoi(str + *pos)) <= 0)
 	{
-		scan_error(*pos, str, "Ungültige Würfelanzahl");
+		scan_error(*pos, str, "Invalid number of dice");
 		return FALSE;
 	}
 	skip_chr(pos, str, DIGITS);
@@ -562,7 +562,7 @@ LOCAL _BOOL scan_dice(size_t *pos, _UBYTE *str, TABLE *table)
 	skip_chr(pos, str, SPACE_CHARS);
 	if ((table->dice = (_WORD)atoi(str + *pos)) <= 0)
 	{
-		scan_error(*pos, str, "Ungültiger Würfeltyp");
+		scan_error(*pos, str, "Invalid dice type");
 		return FALSE;
 	}
 	skip_chr(pos, str, DIGITS);
@@ -588,7 +588,7 @@ LOCAL _BOOL scan_table(size_t *pos, _UBYTE *str, size_t maxstr, TABLE *table)
 	
 	if (!test_chr(pos, str, TAB_START))
 	{
-		scan_error(*pos, str, "Ungültiger Tabellen-Anfang");
+		scan_error(*pos, str, "Invalid start of table");
 		return FALSE;
 	}
 	(*pos)++;
@@ -616,7 +616,7 @@ LOCAL _BOOL scan_table(size_t *pos, _UBYTE *str, size_t maxstr, TABLE *table)
 				}
 				if (min <= max)
 				{
-					scan_error(0, "", "Tabelle nicht vollständig (letzter Würfelwert zu klein)");
+					scan_error(0, "", "Table incomplete (last dice value too small)");
 					return FALSE;
 				}
 				return TRUE;
@@ -688,7 +688,7 @@ LOCAL _BOOL cmd_scan(size_t *pos, _UBYTE *str, size_t maxstr)
 	{
 		if (!scan_name(pos, str, name, sizeof(name)))
 		{
-			scan_error(*pos, str, "Ungültiger Tabellenname");
+			scan_error(*pos, str, "Invalid table name");
 		} else
 		{	
 			skip_end(pos, str);
@@ -879,7 +879,7 @@ LOCAL _BOOL cmd_include(size_t *pos, _UBYTE *str, size_t maxstr)
 			old_zeile = Zeile;
 			if ((Input = fopen(str + (*pos), "r")) == NULL)
 			{
-				scan_error(*pos, str, "Include-Datei läßt sich nicht öffnen");
+				scan_error(*pos, str, "Cannot open include file");
 			} else
 			{
 				Datei = str + (*pos);
@@ -912,7 +912,7 @@ LOCAL _BOOL cmd_define(size_t *pos, _UBYTE *str, size_t maxstr)
 	{
 		if (!scan_name(pos, str, name, sizeof(name)))
 		{
-			scan_error(*pos, str, "Ungültiger Symbolnname");
+			scan_error(*pos, str, "Invalid symbol name");
 		} else
 		{
 			if (find_symbol(name) != NULL)
@@ -959,12 +959,12 @@ LOCAL _BOOL test_symbol(size_t*pos, _UBYTE *str)
 	}
 	if (str[*pos] == '\0')
 	{
-		scan_error(*pos, str, "Symbolname fehlt (Bedingung nicht erfüllt)");
+		scan_error(*pos, str, "Missing symbol name (condition not met)");
 		return FALSE;
 	}
 	if (!scan_name(pos, str, name, sizeof(name)))
 	{
-		scan_error(*pos, str, "Ungültiger Symbolnname");
+		scan_error(*pos, str, "Invalid symbol name");
 		return FALSE;
 	}
 			
@@ -1021,7 +1021,7 @@ LOCAL _BOOL cmd_endif(size_t *pos, _UBYTE *str, size_t maxstr)
 		If_Level--;	
 		return FALSE;
 	}
-	scan_error(*pos, str, "Interner 'if'-Verschachtelungsfehler");
+	scan_error(*pos, str, "Internal 'if' nesting error");
 	return TRUE;
 }
 
@@ -1111,7 +1111,7 @@ LOCAL _BOOL deep_test(TABLE *table, _WORD deep)
 			case ROOMFEATURE:
 				break;
 			default:
-				abbruch("Ungültiger Inhalt (deep_test())");
+				abbruch("Invalid content (deep_test())");
 				return FALSE;
 			}
 			feature = feature->next;
@@ -1152,12 +1152,12 @@ LOCAL _BOOL feature_test(TABLE *table, _WORD *n_features)
 				(*n_features)++;
 				if ((*n_features) > 1)
 				{
-					scan_error(0, feature->ptr.room->name, "Zusätzlicher Schlüssel-Name");
+					scan_error(0, feature->ptr.room->name, "Extra key name");
 					ret = FALSE;
 				}
 				break;
 			default:
-				abbruch("Ungültiger Inhalt (feature_test())");
+				abbruch("Invalid content (feature_test())");
 				return FALSE;
 			}
 			feature = feature->next;
@@ -1204,12 +1204,12 @@ LOCAL _BOOL feature_valid(TABLE *table, FEATURE_PTR **valid_features)
 				
 				if (*ptr == NULL)
 				{
-					scan_error(0, feature->ptr.room->name, "Unzulässiger Schlüssel-Name");
+					scan_error(0, feature->ptr.room->name, "Invalid key name");
 					ret = FALSE;
 				}
 				break;
 			default:
-				abbruch("Ungültiger Inhalt (feature_ok())");
+				abbruch("Invalid content (feature_ok())");
 				return FALSE;;
 			}
 			feature = feature->next;
@@ -1238,12 +1238,12 @@ LOCAL _BOOL init_table_names(_VOID)
 			n_features = 0;
 			if (!feature_test(*(ptr->table), &n_features))
 			{
-				scan_error(0, ptr->name, "Referenz-Tabelle enthält mehrere Schlüssel-Namen pro Eintrag!");
+				scan_error(0, ptr->name, "Reference table contains multiple key names per entry!");
 				ret = FALSE;
 			}
 			if (!feature_valid(*(ptr->table), ptr->test))
 			{
-				scan_error(0, ptr->name, "Tabelle enthält einen nicht zugelassenen Schlüssel-Namen!");
+				scan_error(0, ptr->name, "Table contains a key name that is not allowed!");
 				ret = FALSE;
 			}
 		}
@@ -1255,7 +1255,7 @@ LOCAL _BOOL init_table_names(_VOID)
 		{
 			if (!feature_valid(*(ptr->table), ptr->test))
 			{
-				scan_error(0, ptr->name, "Tabelle enthält einen nicht zugelassenen Schlüssel-Namen!");
+				scan_error(0, ptr->name, "Table contains a key name that is not allowed!");
 				ret = FALSE;
 			}
 		}
@@ -1280,7 +1280,7 @@ LOCAL _BOOL check_tables(_VOID)
 		{
 			if (!deep_test(ptr, 0))
 			{
-				scan_error(0, ptr->name, "Tabelle enthält wahrscheinlich eine Rekursion!");
+				scan_error(0, ptr->name, "Table probably contains recursion!");
 				ret = FALSE;
 			}
 		}

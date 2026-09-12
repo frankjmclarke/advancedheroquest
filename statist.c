@@ -136,7 +136,7 @@ GLOBAL _BOOL make_statistik(_BOOL questroom)
 		default:
 			break;
 		}
-		error_abort("Ungültige Sektion\n(make_statistik)");
+		error_abort("Invalid section\n(make_statistik)");
 		return NULL;
 	}
 	return NULL;

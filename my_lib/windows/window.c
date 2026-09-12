@@ -139,7 +139,7 @@ BOOL WINAPI GetScrollInfo(HWND hwnd, long nbar, LPSCROLLINFO si);
 
 #define PROGRAM_EXIT 2
 
-#define MSG_NO_WINDOW "Kein Fenster mehr vefügbar!"
+#define MSG_NO_WINDOW "No more windows available!"
 
 /******************************************************************************/
 /*** ---------------------------------------------------------------------- ***/

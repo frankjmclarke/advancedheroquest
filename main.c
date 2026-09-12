@@ -68,7 +68,7 @@ struct ahq_para
 LOCAL struct ahq_para AHQ_para;
 
 LOCAL CONST _UBYTE *CONST Grafik_Format[] = { "IMG", "PCX", "BMP" };
-LOCAL CONST _UBYTE *CONST Eingang[] = { "Norden", "Süden", "Osten", "Westen" };
+LOCAL CONST _UBYTE *CONST Eingang[] = { "North", "South", "East", "West" };
 
 GLOBAL _UBYTE ProgramName[] = "HQ-Map";
 
@@ -720,12 +720,12 @@ LOCAL _BOOL do_makemap(_VOID)
 		{
 			if (W_Keypressed(NULL))
 			{
-				abbruch("Kartengenerierung abgebrochen!\nEs gibt keine Treppe abwärts!");
+				abbruch("Map generation cancelled!\nThere are no stairs down!");
 				return FALSE;
 			}
 		} else
 		{
-			button = Form_Alert(1, _T("[1][Es gibt keine Treppe abwärts!][.[Ok|[Nächste|:[Abbruch]"));
+			button = Form_Alert(1, _T("[1][There are no stairs down!][.[OK|[Next|:[Cancel]"));
 			switch (button)
 			{
 			case 1:
@@ -956,7 +956,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 	case MPARA:
 		if (!Wind_Menu_Enabled(MKARTE) || /* noch keine Tabelle gelesen */
 			!Wind_Menu_Enabled(MGRAFIK) || /* noch keine Karte erzeugt */
-			ok_abbruch("Durch verändern der Programmparameter\nwird die aktuelle Karte gelöscht!")
+			ok_abbruch("Changing the program parameters\nwill discard the current map!")
 		   )
 		{
 			if (do_para())
@@ -1146,7 +1146,7 @@ _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 			{
 				if (!mem_init(MIN_X, MIN_Y, MIN_PICE, MIN_MEM))
 				{
-					abbruch("Nicht genügend Speicher!");
+					abbruch("Not enough memory!");
 					free_icons();
 					return -1;
 				}

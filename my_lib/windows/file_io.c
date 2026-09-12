@@ -403,7 +403,7 @@ LOCAL F_ERROR FiBufClose(FILENO fd)
 
 	if (!VALID_FILENO(fd))
 	{
-		ErrorOut(EO_ERROR, "FiBufClose: falsche Dateinummer %ld", (_LONG) TO_HANDLE(fd));
+		ErrorOut(EO_ERROR, "FiBufClose: invalid file number %ld", (_LONG) TO_HANDLE(fd));
 		return GERR_BADF;
 	}
 	
@@ -459,7 +459,7 @@ LOCAL F_ERROR FiBufHandle(FILENO fd, DOSFNO *handle)
 	
 	if (!VALID_FILENO(fd))
 	{
-		ErrorOut(EO_ERROR, "FiBufHandle: falsche Dateinummer %ld", (_LONG) TO_HANDLE(fd));
+		ErrorOut(EO_ERROR, "FiBufHandle: invalid file number %ld", (_LONG) TO_HANDLE(fd));
 		return GERR_BADF;
 	}
 	

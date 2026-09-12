@@ -73,7 +73,7 @@ GLOBAL _BOOL init_pice(PICE *ptr, TYPE type, _WORD x, _WORD y, DIRECTION pos)
 		size = &Ultra_Room;
 		break;
 	default:
-		if (!error_abort("Ungültige Sektion | (init_pice)"))
+		if (!error_abort("Invalid section | (init_pice)"))
 			return FALSE;
 		break;
 	}
@@ -93,7 +93,7 @@ GLOBAL _BOOL init_pice(PICE *ptr, TYPE type, _WORD x, _WORD y, DIRECTION pos)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtungsangabe | (init_pice)"))
+		if (!error_abort("Invalid direction | (init_pice)"))
 			return FALSE;
 		break;
 	}

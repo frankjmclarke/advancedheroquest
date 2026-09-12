@@ -174,7 +174,7 @@ LOCAL _BOOL do_passage(PICE *from, SECTIONS len, ENDS end, FEATURES feature, _BO
 		*abort = TRUE;
 		return FALSE;
 	default:
-		if (!error_abort("Ungültiger Inhalt\n(do_passage)"))
+		if (!error_abort("Invalid content\n(do_passage)"))
 		{
 			*abort = TRUE;
 			return FALSE;
@@ -265,7 +265,7 @@ LOCAL _BOOL do_room_room(PICE *from, ROOMORPASSAGE door, TYPE doortype)
 	case Illegal_Passage:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültiger Türtype\n(do_room_room)"))
+		if (!error_abort("Invalid door type\n(do_room_room)"))
 			return FALSE;
 		return FALSE;
 	}
@@ -305,7 +305,7 @@ LOCAL _BOOL do_room(PICE *room, ROOMDOORS doors)
 	case Illegal_Room_Doors:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Türenanzahl\n(do_room)"))
+		if (!error_abort("Invalid number of doors\n(do_room)"))
 			return FALSE;
 		return FALSE;
 	}

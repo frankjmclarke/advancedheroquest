@@ -148,7 +148,7 @@ LOCAL _BOOL W_G_Open_Printer(PRINTER *printer, CONST _UBYTE *PrintJob, _BOOL gra
 				printer->printing = TRUE;
 				break;
 			}
-			button = ok_retry_cancel("Drucker nicht bereit");
+			button = ok_retry_cancel("Printer not ready");
 			if (button == 1) /* ignore/continue */
 			{
 				printer->printing = TRUE;

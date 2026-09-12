@@ -178,7 +178,7 @@ LOCAL _BOOL show_passage(_UBYTE *Text_map, PICE *ptr)
 			return FALSE;
 		break;
 	default:
-		if (!error_abort("Ungültige Richtung\n(show_passage)"))
+		if (!error_abort("Invalid direction\n(show_passage)"))
 			return FALSE;
 		break;
 	}
@@ -224,7 +224,7 @@ LOCAL _BOOL show_dead_end(_UBYTE *Text_map, PICE *ptr)
 			return FALSE;
 		break;
 	default:
-		if (!error_abort("Ungültige Richtung\n(show_dead_end)"))
+		if (!error_abort("Invalid direction\n(show_dead_end)"))
 			return FALSE;
 		break;
 	}
@@ -278,7 +278,7 @@ LOCAL _BOOL show_left_turn(_UBYTE *Text_map, PICE *ptr)
 			return FALSE;
 		break;
 	default:
-		if (!error_abort("Ungültige Richtung\n(show_left_turn)"))
+		if (!error_abort("Invalid direction\n(show_left_turn)"))
 			return FALSE;
 		break;
 	}
@@ -332,7 +332,7 @@ LOCAL _BOOL show_right_turn(_UBYTE *Text_map, PICE *ptr)
 			return FALSE;
 		break;
 	default:
-		if (!error_abort("Ungültige Richtung\n(show_right_turn)"))
+		if (!error_abort("Invalid direction\n(show_right_turn)"))
 			return FALSE;
 		break;
 	}
@@ -378,7 +378,7 @@ LOCAL _BOOL show_t_junction(_UBYTE *Text_map, PICE *ptr)
 			return FALSE;
 		break;
 	default:
-		if (!error_abort("Ungültige Richtung\n(show_t_junction)"))
+		if (!error_abort("Invalid direction\n(show_t_junction)"))
 			return FALSE;
 		break;
 	}
@@ -424,7 +424,7 @@ LOCAL _BOOL show_stairs_out(_UBYTE *Text_map, PICE *ptr)
 			return FALSE;
 		break;
 	default:
-		if (!error_abort("Ungültige Richtung\n(show_stairs_out)"))
+		if (!error_abort("Invalid direction\n(show_stairs_out)"))
 			return FALSE;
 		break;
 	}
@@ -470,7 +470,7 @@ LOCAL _BOOL show_stairs_down(_UBYTE *Text_map, PICE *ptr)
 			return FALSE;
 		break;
 	default:
-		if (!error_abort("Ungültige Richtung\n(show_stairs_out)"))
+		if (!error_abort("Invalid direction\n(show_stairs_out)"))
 			return FALSE;
 		break;
 	}
@@ -667,7 +667,7 @@ GLOBAL _BOOL draw_text_map(_UBYTE *Text_map)
 		case EMPTY:
 			break;
 		default:
-			retV = error_abort("Ungültiger Type\n(draw_text_map)");
+			retV = error_abort("Invalid type\n(draw_text_map)");
 			break;
 		}
 		ptr++;
@@ -691,7 +691,7 @@ GLOBAL _BOOL draw_text_map(_UBYTE *Text_map)
 				retV = show_x_number(Text_map, ptr);
 				break;
 			default:
-				retV = error_abort("Ungültige Richtung\n(draw_text_map)");
+				retV = error_abort("Invalid direction\n(draw_text_map)");
 				break;
 			}
 			break;
@@ -724,7 +724,7 @@ GLOBAL _BOOL draw_text_map(_UBYTE *Text_map)
 		case EMPTY:
 			break;
 		default:
-			retV = error_abort("Ungültiger Type\n(draw_text_map)");
+			retV = error_abort("Invalid type\n(draw_text_map)");
 			break;
 		}
 		ptr++;

@@ -41,19 +41,19 @@ LOCAL FEATURES referenz_table(TABLE *table)
 						return feature->ptr.room->feature;
 					case TEXTFEATURE:
 					default:
-						if (!error_abort("Ungültiger Tabellen-Inhalt (referenz_table)"))
+						if (!error_abort("Invalid table contents (referenz_table)"))
 							return Illegal_Feature;
 						break;
 					}
 					feature = feature->next;
 				}
-				if (!error_abort("Tabelle enthält kein Schlüssel-Wort (referenz_table)"))
+				if (!error_abort("Table contains no keyword (referenz_table)"))
 					return Illegal_Feature;
 				return Nothing;
 			}
 			entry = entry->next;
 		}
-		if (!error_abort("Tabelle enthält nicht genug Einträge (referenz_table)"))
+		if (!error_abort("Table does not contain enough entries (referenz_table)"))
 			return Illegal_Feature;
 	}
 	return Nothing;
@@ -71,7 +71,7 @@ LOCAL _VOID *store_nr(_WORD nr)
 	
 	if ((ptr = (_VOID *)heap_store(str, strlen(str)+1)) == NULL)
 	{
-		abbruch("Nicht genug Speicher für Monster-Liste");
+		abbruch("Not enough memory for monster list");
 	}
 	return ptr;
 }
@@ -82,7 +82,7 @@ LOCAL _VOID *store_ptr(_VOID *ptr)
 {
 	if ((ptr = heap_store(&ptr, sizeof(ptr))) == NULL)
 	{
-		abbruch("Nicht genug Speicher für Monster-Liste");
+		abbruch("Not enough memory for monster list");
 	}
 	return ptr;
 }
@@ -193,7 +193,7 @@ GLOBAL SECTIONS passage_length(_VOID)
 	case Illegal_Section:
 		return value;
 	}
-	if (!error_abort("Ungültiger Rückgabewert\n(passage_length)"))
+	if (!error_abort("Invalid return value\n(passage_length)"))
 		return Illegal_Section;
 	return Section0;
 }
@@ -218,7 +218,7 @@ GLOBAL ENDS passage_end(_VOID)
 	case Ok:
 		break;
 	}
-	if (!error_abort("Ungültiger Rückgabewert\n(passage_end)"))
+	if (!error_abort("Invalid return value\n(passage_end)"))
 		return Illegal_End;
 	return Dead_End;
 }
@@ -243,7 +243,7 @@ GLOBAL FEATURES passage_feature(_VOID)
 	case Stairs_Out:
 		break;
 	}
-	if (!error_abort("Ungültiger Rückgabewert\n(passage_features)"))
+	if (!error_abort("Invalid return value\n(passage_features)"))
 		return Illegal_Feature;
 	return Nothing;
 }
@@ -268,7 +268,7 @@ GLOBAL ROOMS room_type(_VOID)
 	case Big:
 		break;
 	}
-	if (!error_abort("Ungültiger Rückgabewert\n(room_type)"))
+	if (!error_abort("Invalid return value\n(room_type)"))
 		return Invalid;
 	return Normal;
 }
@@ -287,7 +287,7 @@ GLOBAL ROOMDOORS room_doors(_VOID)
 	case Illegal_Room_Doors:
 		return value;
 	}
-	if (!error_abort("Ungültiger Rückgabewert\n(room_doors)"))
+	if (!error_abort("Invalid return value\n(room_doors)"))
 		return Illegal_Room_Doors;
 	return None;
 }
@@ -305,7 +305,7 @@ GLOBAL ROOMORPASSAGE room_or_passage(_VOID)
 	case Illegal_Passage:
 		return value;
 	}
-	if (!error_abort("Ungültiger Rückgabewert\n(room_or_passage)"))
+	if (!error_abort("Invalid return value\n(room_or_passage)"))
 		return Illegal_Passage;
 	return Room;
 }
@@ -325,7 +325,7 @@ GLOBAL ROOMDOORS secret_door(_VOID)
 	case Room_Door2:
 		break;
 	}
-	if (!error_abort("Ungültiger Rückgabewert\n(secret_door)"))
+	if (!error_abort("Invalid return value\n(secret_door)"))
 		return Illegal_Room_Doors;
 	return None;
 }
@@ -344,7 +344,7 @@ GLOBAL _BOOL wandering_monsters(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(wandering_monsters)"))
+			if (!error_abort("Invalid return value\n(wandering_monsters)"))
 				return FALSE;
 			break;
 		}
@@ -366,7 +366,7 @@ GLOBAL _BOOL passage_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(passage_features)"))
+			if (!error_abort("Invalid return value\n(passage_features)"))
 				return FALSE;
 			break;
 		}
@@ -388,7 +388,7 @@ GLOBAL _BOOL dead_end_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(dead_end_features)"))
+			if (!error_abort("Invalid return value\n(dead_end_features)"))
 				return FALSE;
 			break;
 		}
@@ -410,7 +410,7 @@ GLOBAL _BOOL corner_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(corner_features)"))
+			if (!error_abort("Invalid return value\n(corner_features)"))
 				return FALSE;
 			break;
 		}
@@ -432,7 +432,7 @@ GLOBAL _BOOL t_junction_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(t_junction_features)"))
+			if (!error_abort("Invalid return value\n(t_junction_features)"))
 				return FALSE;
 			break;
 		}
@@ -454,7 +454,7 @@ GLOBAL _BOOL left_turn_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(left_turn_features)"))
+			if (!error_abort("Invalid return value\n(left_turn_features)"))
 				return FALSE;
 			break;
 		}
@@ -476,7 +476,7 @@ GLOBAL _BOOL right_turn_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(right_turn_features)"))
+			if (!error_abort("Invalid return value\n(right_turn_features)"))
 				return FALSE;
 			break;
 		}
@@ -498,7 +498,7 @@ GLOBAL _BOOL stairs_out_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(stairs_out_features)"))
+			if (!error_abort("Invalid return value\n(stairs_out_features)"))
 				return FALSE;
 			break;
 		}
@@ -520,7 +520,7 @@ GLOBAL _BOOL stairs_down_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(stairs_down_features)"))
+			if (!error_abort("Invalid return value\n(stairs_down_features)"))
 				return FALSE;
 			break;
 		}
@@ -575,7 +575,7 @@ GLOBAL _BOOL small_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(small_features)"))
+			if (!error_abort("Invalid return value\n(small_features)"))
 				return FALSE;
 			break;
 		}
@@ -630,7 +630,7 @@ GLOBAL _BOOL normal_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(normal_features)"))
+			if (!error_abort("Invalid return value\n(normal_features)"))
 				return FALSE;
 			break;
 		}
@@ -685,7 +685,7 @@ GLOBAL _BOOL hazard_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(hazard_features)"))
+			if (!error_abort("Invalid return value\n(hazard_features)"))
 				return FALSE;
 			break;
 		}
@@ -710,7 +710,7 @@ GLOBAL _BOOL large_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(large_features)"))
+			if (!error_abort("Invalid return value\n(large_features)"))
 				return FALSE;
 			break;
 		}
@@ -735,7 +735,7 @@ GLOBAL _BOOL lair_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(lair_features)"))
+			if (!error_abort("Invalid return value\n(lair_features)"))
 				return FALSE;
 			break;
 		}
@@ -762,7 +762,7 @@ GLOBAL _BOOL quest_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(quest_features)(%d)", feature))
+			if (!error_abort("Invalid return value\n(quest_features)(%d)", feature))
 				return FALSE;
 			break;
 		}
@@ -784,7 +784,7 @@ GLOBAL _BOOL big_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(big_features)"))
+			if (!error_abort("Invalid return value\n(big_features)"))
 				return FALSE;
 			break;
 		}
@@ -806,7 +806,7 @@ GLOBAL _BOOL merscha_features(PICE *ptr)
 			return FALSE;
 		default:
 			ptr->feature = Nothing;
-			if (!error_abort("Ungültiger Rückgabewert\n(merscha_features)"))
+			if (!error_abort("Invalid return value\n(merscha_features)"))
 				return FALSE;
 			break;
 		}

@@ -63,7 +63,7 @@ GLOBAL DIALOG *show_string(CONST _UBYTE *str)
 #if DEMO 
 LOCAL _VOID demo(_VOID)
 {
-	ok("Demo-Version!\nAbspeichern nicht möglich!");
+	ok("Demo version!\nSaving is not possible!");
 }
 
 /*** ---------------------------------------------------------------------- ***/
@@ -134,7 +134,7 @@ GLOBAL _BOOL save_grafic(PATH *p, _BOOL compress, _WORD zoom, IMG_TYPE type)
 			break;
 		
 		default:
-			abbruch("Ungültiges Grafikformat!");
+			abbruch("Invalid image format!");
 			return FALSE;
 		}
 		ptr = show_string("Saving graphic map");
@@ -303,7 +303,7 @@ GLOBAL _VOID show_grafic(_UBYTE *name)
 			Grafik_Karte = Wind_Open(W_GRAFIK, WINDOW_ATTRIBUTES, grafic_proc, str, img);
 		} else
 		{
-			abbruch("Nicht genügend Speicher für Grafik-Karte");
+			abbruch("Not enough memory for graphic map");
 		}
 	}
 }
@@ -782,7 +782,7 @@ GLOBAL _BOOL save_liste(PATH *p)
 
 GLOBAL _BOOL print_liste(_VOID)
 {
-	return print_text_file(Monster_Liste, "Drucke Monster-Liste");
+	return print_text_file(Monster_Liste, "Printing monster list");
 }
 
 /*** ---------------------------------------------------------------------- ***/
@@ -895,11 +895,11 @@ GLOBAL _VOID show_liste(_UBYTE *name)
 			buf->window = &Monster_Liste;
 			buf->ptr = NULL;
 			buf->tab = NULL;
-			ptr = show_string("Erzeuge Monster-Liste");
+			ptr = show_string("Creating monster list");
 			buf->zeilen = draw_monster_liste(NULL);
 			hide_string(ptr);
 			
-			sprintf(str, "Monster-Liste: %s", name);
+			sprintf(str, "Monster list: %s", name);
 			Monster_Liste = Wind_Open(W_LISTE, WINDOW_ATTRIBUTES, liste_proc, str, buf);
 		}
 	}

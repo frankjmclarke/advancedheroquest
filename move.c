@@ -21,7 +21,7 @@ GLOBAL DIRECTION straight(PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(straight)"))
+		if (!error_abort("Invalid direction\n(straight)"))
 			return Illegal_Dir;
 		break;
 	}
@@ -45,7 +45,7 @@ GLOBAL DIRECTION left(PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(left)"))
+		if (!error_abort("Invalid direction\n(left)"))
 			return Illegal_Dir;
 		break;
 	}
@@ -69,7 +69,7 @@ GLOBAL DIRECTION right(PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
- 		if (!error_abort("Ungültige Richtung\n(right)"))
+ 		if (!error_abort("Invalid direction\n(right)"))
  			return Illegal_Dir;
 		break;
 	}
@@ -93,7 +93,7 @@ GLOBAL DIRECTION back(PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(back)"))
+		if (!error_abort("Invalid direction\n(back)"))
 			return Illegal_Dir;
 		break;
 	}
@@ -179,7 +179,7 @@ GLOBAL _BOOL pos_straight(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(pos_straight)"))
+		if (!error_abort("Invalid direction\n(pos_straight)"))
 			return FALSE;
 		break;
 	}
@@ -211,7 +211,7 @@ GLOBAL _BOOL pos_back(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(pos_back)"))
+		if (!error_abort("Invalid direction\n(pos_back)"))
 			return FALSE;
 		break;
 	}
@@ -243,7 +243,7 @@ GLOBAL _BOOL pos_left(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(pos_left)"))
+		if (!error_abort("Invalid direction\n(pos_left)"))
 			return FALSE;
 		break;
 	}
@@ -275,7 +275,7 @@ GLOBAL _BOOL pos_right(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(pos_right)"))
+		if (!error_abort("Invalid direction\n(pos_right)"))
 			return FALSE;
 		break;
 	}
@@ -357,7 +357,7 @@ GLOBAL _BOOL xy_straight(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(xy_straight)"))
+		if (!error_abort("Invalid direction\n(xy_straight)"))
 			return FALSE;
 		break;
 	}
@@ -389,7 +389,7 @@ GLOBAL _BOOL xy_back(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(xy_back)"))
+		if (!error_abort("Invalid direction\n(xy_back)"))
 			return FALSE;
 		break;
 	}
@@ -421,7 +421,7 @@ GLOBAL _BOOL xy_left(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(xy_left)"))
+		if (!error_abort("Invalid direction\n(xy_left)"))
 			return FALSE;
 		break;
 	}
@@ -453,7 +453,7 @@ GLOBAL _BOOL xy_right(PICE *new, PICE *from)
 	case Illegal_Dir:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültige Richtung\n(xy_right)"))
+		if (!error_abort("Invalid direction\n(xy_right)"))
 			return FALSE;
 		break;
 	}
@@ -475,7 +475,7 @@ GLOBAL _WORD length(PICE *from)
 	case Illegal_Dir:
 		return 0;
 	}
-	if (!error_abort("Ungültige Richtungsangabe\n(length)"))
+	if (!error_abort("Invalid direction\n(length)"))
 		return 0;
 	return from->h;
 }
@@ -495,7 +495,7 @@ GLOBAL _WORD wide(PICE *from)
 	case Illegal_Dir:
 		return 0;
 	}
-	if (!error_abort("Ungültige Richtungsangabe\n(wide)"))
+	if (!error_abort("Invalid direction\n(wide)"))
 		return 0;
 	return from->w;
 }

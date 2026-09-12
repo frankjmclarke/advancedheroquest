@@ -205,7 +205,7 @@ LOCAL ICON *pice_icon(PICE *pice)
 	default:
 		break;
 	}
-	if (!error_abort("Ungültige Sektion\n(pice_image)"))
+	if (!error_abort("Invalid section\n(pice_image)"))
 		return NULL;
 	return NULL;
 }
@@ -313,7 +313,7 @@ LOCAL _BOOL draw_pice(MFDB *image, PICE *pice)
 				case DIR_NONE:
 					return FALSE;
 				default:
-					if (!error_abort("Ungültige Richtungsangabe\n(draw_pice)"))
+					if (!error_abort("Invalid direction\n(draw_pice)"))
 						return FALSE;
 					break;
 				}
@@ -365,7 +365,7 @@ GLOBAL _BOOL draw_img_map(MFDB *image)
 			case EMPTY:
 				break;
 			default:
-				if (!error_abort("Ungültiger Type\n(draw_img_map)"))
+				if (!error_abort("Invalid type\n(draw_img_map)"))
 					return FALSE;
 				break;
 			}
@@ -482,7 +482,7 @@ LOCAL _WORD top_nr(DIRECTION dir, _WORD *x, _WORD *y, _WORD w, _WORD h, _WORD wx
 	default:
 		break;
 	}
-	if (!error_abort("Ungültige Richtungsangabe\n(top_nr)"))
+	if (!error_abort("Invalid direction\n(top_nr)"))
 		return DIR_NONE;
 	center_mfdb(x, y, w, h, wx, hx);
 	return DIR_X;
@@ -505,7 +505,7 @@ LOCAL _WORD bottom_nr(DIRECTION dir, _WORD *x, _WORD *y, _WORD w, _WORD h, _WORD
 	default:
 		break;
 	}
-	if (!error_abort("Ungültige Richtungsangabe\n(bottom_nr)"))
+	if (!error_abort("Invalid direction\n(bottom_nr)"))
 		return DIR_NONE;
 	center_mfdb(x, y, w, h, wx, hx);
 	return DIR_X;
@@ -538,7 +538,7 @@ LOCAL DIRECTION room_pos(DIRECTION dir, _WORD *x, _WORD *y, _WORD w, _WORD h)
 	case Illegal_Dir:
 		break;
 	default:
-		if (!error_abort("Ungültige Richtungsangabe\n(room_pos)"))
+		if (!error_abort("Invalid direction\n(room_pos)"))
 			return Illegal_Dir;
 		break;
 	}
@@ -568,7 +568,7 @@ LOCAL DIRECTION door_pos(DIRECTION dir, _WORD *x, _WORD *y, _WORD w, _WORD h)
 	case Illegal_Dir:
 		break;
 	default:
-		if (!error_abort("Ungültige Richtungsangabe\n(door_pos)"))
+		if (!error_abort("Invalid direction\n(door_pos)"))
 			return Illegal_Dir;
 		break;
 	}

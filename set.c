@@ -151,7 +151,7 @@ GLOBAL _BOOL set_end(PICE *from, ENDS type)
 	case Illegal_End:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültiges Ende\n(set_end)"))
+		if (!error_abort("Invalid end\n(set_end)"))
 			return FALSE;
 		break;
 	}
@@ -314,7 +314,7 @@ GLOBAL _BOOL set_room(PICE *ptr, ROOMS roomtype)
 	case Invalid:
 		return FALSE;
 	default:
-		if (!error_abort("Ungültiger Raum\n(set_room)"))
+		if (!error_abort("Invalid room\n(set_room)"))
 			return FALSE;
 		break;
 	}
@@ -332,7 +332,7 @@ GLOBAL _BOOL set_door(PICE *ptr, TYPE doortype)
 		return FALSE;
 	if (!insert_pice(&door))
 	{
-		if (!error_abort("Tür konnte nicht gesetzt werden\n(set_door)"))
+		if (!error_abort("Could not place door\n(set_door)"))
 			return FALSE;
 	}
 	return TRUE;
@@ -351,7 +351,7 @@ GLOBAL _BOOL set_room_door(PICE *ptr, TYPE doortype)
 			return FALSE;
 	} else
 	{
-		if (!error_abort("Ungültige Tür-Position\n(set_room_door)"))
+		if (!error_abort("Invalid door position\n(set_room_door)"))
 			return FALSE;
 	}
 	return TRUE;
