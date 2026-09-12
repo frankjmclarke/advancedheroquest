@@ -29,6 +29,9 @@
 #define MIN_PICE 25
 #define MIN_MEM	10
 
+/* quest loaded when the remembered one cannot be used */
+#define DEFAULT_TABLE	"sonne2.tab"
+
 #define DEF_MAXX	50
 #define DEF_MAXY	50
 #define DEF_MAXPICE 1000
@@ -303,7 +306,7 @@ LOCAL _VOID karte_ok(_BOOL ok)
 
 /*** ---------------------------------------------------------------------- ***/
 
-LOCAL _BOOL do_table(PATH *file, _BOOL init)
+LOCAL _BOOL do_table(PATH *file, _BOOL init, _BOOL quiet)
 {
 	DIALOG *ptr;
 	_BOOL ok;
@@ -311,7 +314,8 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init)
 	
 	if (init && !F_File_Exists(file->pathname))
 	{
-		abbruch("Reference tables not available!");
+		if (!quiet)
+			abbruch("Reference tables not available!");
 		ok = FALSE;
 	} else
 	{
@@ -319,7 +323,8 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init)
 		get_path(&old);
 		if (F_Path_Set(file->path) == FALSE)
 		{
-			abbruch("The directory does not exist!");
+			if (!quiet)
+				abbruch("The directory does not exist!");
 			ok = FALSE;
 		} else
 		{	
@@ -335,10 +340,22 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init)
 			} else
 			{
 				Wind_Menu_Enable(MKARTE, FALSE);
-				abbruch("Could not create reference table!");
-				if (F_File_Exists("errors.txt"))
+				if (quiet)
 				{
-					show_text_file("errors.txt");
+					/*
+					 * Nobody is going to be shown this, and leaving it behind
+					 * in the quest folder only invites someone to open it
+					 * later and think the quest is broken.
+					 */
+					if (F_File_Exists("errors.txt"))
+						F_File_Delete("errors.txt");
+				} else
+				{
+					abbruch("Could not create reference table!");
+					if (F_File_Exists("errors.txt"))
+					{
+						show_text_file("errors.txt");
+					}
 				}
 			}
 		}
@@ -1009,7 +1026,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 	case MTABELLE:
 		if (get_filename(&AHQ_para.tabelle))
 		{
-			do_table(&AHQ_para.tabelle, FALSE);
+			do_table(&AHQ_para.tabelle, FALSE, FALSE);
 			break;
 		}
 		break;
@@ -1022,7 +1039,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		{
 			if (do_para())
 			{
-				do_table(&AHQ_para.tabelle, FALSE);
+				do_table(&AHQ_para.tabelle, FALSE, FALSE);
 				karte_ok(FALSE);
 			}
 		}
@@ -1160,7 +1177,24 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 				Wind_Menu_Check(MSTATIST, TRUE);
 			test_editor(FALSE);
 			karte_ok(FALSE);
-			if (do_table(&AHQ_para.tabelle, TRUE))
+			/*
+			 * Try the remembered quest without complaining, and fall back to
+			 * the one that ships with the program if it is unusable.
+			 *
+			 * The file selector will happily pick a file from inside a quest
+			 * folder, but those are components: on their own they have none
+			 * of the tables the generator needs. That choice is remembered,
+			 * so every later start failed the same way, and because the
+			 * profile deliberately survives uninstall a reinstall did not
+			 * clear it either. Only the startup load falls back; choosing a
+			 * bad table from the menu still reports the error.
+			 */
+			if (!do_table(&AHQ_para.tabelle, TRUE, TRUE))
+			{
+				default_program_dir(&AHQ_para.tabelle, "tables");
+				set_filename(&AHQ_para.tabelle, DEFAULT_TABLE);
+			}
+			if (do_table(&AHQ_para.tabelle, TRUE, FALSE))
 			{
 				_WORD tries;
 				_WORD res = RETRY;
