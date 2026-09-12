@@ -500,7 +500,7 @@ LOCAL _BOOL scan_feature(size_t *pos, _UBYTE *str, size_t maxstr, FEATURE **last
 					(*pos)++;
 					if (!test_chr(pos, str, TAB_END))
 					{
-						scan_error(*pos, str, "')' fehlt");
+						scan_error(*pos, str, "Missing ')'");
 						return FALSE;
 					}
 					(*pos)++;
@@ -554,7 +554,7 @@ LOCAL _BOOL scan_dice(size_t *pos, _UBYTE *str, TABLE *table)
 	
 	if (!test_chr(pos, str, "Dd"))
 	{
-		scan_error(*pos, str, "'D' fehlt");
+		scan_error(*pos, str, "Missing 'D'");
 		return FALSE;
 	}
 	(*pos)++;
@@ -859,7 +859,7 @@ LOCAL _BOOL cmd_include(size_t *pos, _UBYTE *str, size_t maxstr)
 	UNUSED(maxstr);
 	if (include_level >= MAXLEVEL)
 	{
-		scan_error(0, str, "Zu viele 'Include'-Verschachtelungen");
+		scan_error(0, str, "Too many nested 'Include' directives");
 	} else
 	{
 		include_level++;
@@ -907,7 +907,7 @@ LOCAL _BOOL cmd_define(size_t *pos, _UBYTE *str, size_t maxstr)
 	skip_chr(pos, str, SPACE_CHARS);
 	if (str[*pos] == '\0')
 	{
-		scan_error(*pos, str, "Define-Symbol fehlt");
+		scan_error(*pos, str, "Missing define symbol");
 	} else
 	{
 		if (!scan_name(pos, str, name, sizeof(name)))
@@ -973,7 +973,7 @@ LOCAL _BOOL test_symbol(size_t*pos, _UBYTE *str)
 		(*pos)++;
 		if (!test_chr(pos, str, TAB_END))
 		{
-			scan_error(*pos, str, "')' fehlt");
+			scan_error(*pos, str, "Missing ')'");
 		} else
 		{
 			(*pos)++;
@@ -995,7 +995,7 @@ LOCAL _BOOL cmd_if(size_t *pos, _UBYTE *str, size_t maxstr)
 	UNUSED(maxstr);
 	if (If_Level >= MAXLEVEL)
 	{
-		scan_error(*pos, str, "Zuviele 'If'-Verschachtelungen");
+		scan_error(*pos, str, "Too many nested 'If' directives");
 	} else
 	{
 		If_Level++;
@@ -1042,7 +1042,7 @@ LOCAL _BOOL cmd_skip_if(size_t *pos, _UBYTE *str, size_t maxstr)
 	UNUSED(maxstr);
 	if (If_Level >= MAXLEVEL)
 	{
-		scan_error(*pos, str, "Zuviele 'If'-Verschachtelungen");
+		scan_error(*pos, str, "Too many nested 'If' directives");
 	} else
 	{
 		If_Level++;
@@ -1146,7 +1146,7 @@ LOCAL _BOOL feature_test(TABLE *table, _WORD *n_features)
 				ret = feature_test(feature->ptr.subtable, n_features);
 				break;
 			case TEXTFEATURE:
-				scan_error(0, feature->ptr.text, "Text wird ignoriert");
+				scan_error(0, feature->ptr.text, "Text is ignored");
 				break;
 			case ROOMFEATURE:
 				(*n_features)++;

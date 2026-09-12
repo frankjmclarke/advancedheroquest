@@ -458,10 +458,10 @@ GLOBAL _VOID mem_free(_VOID *strPtr)
 		{
 #if DEBUG_ALLOC >= 2
 			/* assumes MAGIC_SIZE >= 4 */
-			ErrorOut(EO_FATAL, "MemEnd defekt %ld (%s). %02x %02x %02x %02x", memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)",
+			ErrorOut(EO_FATAL, "MemEnd corrupt %ld (%s). %02x %02x %02x %02x", memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)",
 				test[0], test[1], test[2], test[3]);
 #else
-			ErrorOut(EO_FATAL, "MemEnd defekt %ld.", memCntl->size, memUse);
+			ErrorOut(EO_FATAL, "MemEnd corrupt %ld.", memCntl->size, memUse);
 #endif
 		}
 	}
@@ -531,10 +531,10 @@ GLOBAL _BOOL mem_debug_check(_VOID *ptr, CONST _UBYTE *where)
 		{
 #if DEBUG_ALLOC >= 2
 			/* assumes MAGIC_SIZE >= 4 */
-			ErrorOut(EO_FATAL, "%s: MemEnd defekt %ld (%s). %02x %02x %02x %02x", where, memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)",
+			ErrorOut(EO_FATAL, "%s: MemEnd corrupt %ld (%s). %02x %02x %02x %02x", where, memCntl->size, memCntl->who ? memCntl->who : (CONST _UBYTE *) "(null)",
 				test[0], test[1], test[2], test[3]);
 #else
-			ErrorOut(EO_FATAL, "%s: MemEnd defekt %ld.", where, memCntl->size, memUse);
+			ErrorOut(EO_FATAL, "%s: MemEnd corrupt %ld.", where, memCntl->size, memUse);
 #endif
 			return FALSE;
 		}

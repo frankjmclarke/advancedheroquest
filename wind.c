@@ -372,7 +372,7 @@ GLOBAL _VOID show_grafic(_UBYTE *name)
 			ptr = show_string("Creating graphic map");
 			draw_img_map(img);
 			hide_string(ptr);
-			sprintf(str, "Grafik: %s", name);
+			sprintf(str, "Graphic: %s", name);
 			Grafik_Karte = Wind_Open(W_GRAFIK, WINDOW_ATTRIBUTES, grafic_proc, str, img);
 		} else
 		{
@@ -1027,7 +1027,7 @@ GLOBAL _BOOL save_statistik(PATH *p)
 
 GLOBAL _BOOL print_statistik(_VOID)
 {
-	return print_text_file(Statistik, "Drucke Statistik");
+	return print_text_file(Statistik, "Printing statistics");
 }
 
 /******************************************************************************/

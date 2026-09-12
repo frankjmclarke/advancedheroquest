@@ -111,6 +111,13 @@ MENUE ACCELERATORS
 	VK_SUBTRACT, MZOOMOUT, VIRTKEY, CONTROL
 	VK_OEM_PLUS, MZOOMIN, VIRTKEY, CONTROL
 	VK_OEM_MINUS, MZOOMOUT, VIRTKEY, CONTROL
+	/* On a US layout the plus key is Shift plus the equals key, so what
+	   the menu calls Ctrl-plus actually arrives as Ctrl+Shift+equals.
+	   An accelerator that does not name SHIFT only matches with shift
+	   up, so the shifted form has to be bound as well or the exact key
+	   combination printed in the menu does nothing at all. */
+	VK_OEM_PLUS, MZOOMIN, VIRTKEY, CONTROL, SHIFT
+	VK_OEM_MINUS, MZOOMOUT, VIRTKEY, CONTROL, SHIFT
 }
 
 

@@ -1082,7 +1082,7 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 	case 0:
 		if (save)
 		{
-			if (AHQ_para.ask_exit && !ok_abbruch("Programm beenden?"))
+			if (AHQ_para.ask_exit && !ok_abbruch("Exit program?"))
 				return FALSE;
 			AHQ_para.grafik = Wind_Menu_Checked(MGRAFIK);
 			AHQ_para.text = Wind_Menu_Checked(MTEXT);
