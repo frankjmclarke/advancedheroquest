@@ -145,6 +145,13 @@ _WORD   F_Path_TruncMode(CONST _UBYTE *path);
 _VOID   F_Path_Fullname(_UBYTE *filename);
 _VOID   F_Path_Get_Work(_UBYTE *path, CONST _UBYTE *name);
 _VOID   F_Path_Get_Program(_UBYTE *path, CONST _UBYTE *name);
+
+/*
+ * Call func() once per file matching pattern in dir, skipping subdirectories.
+ * func returns FALSE to stop early. Answers the number of files visited.
+ */
+typedef _BOOL (*F_SCAN_FUNC)(CONST _UBYTE *name, _VOID *para);
+_WORD   F_Dir_Scan(CONST _UBYTE *dir, CONST _UBYTE *pattern, F_SCAN_FUNC func, _VOID *para);
 _VOID   F_Path_Set_Program(CONST _UBYTE *path);
 _BOOL   F_Path_Get_User(_UBYTE *path, CONST _UBYTE *name);
 _UBYTE *F_Path_Append(_UBYTE *path, CONST _UBYTE *name);

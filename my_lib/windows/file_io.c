@@ -564,6 +564,39 @@ GLOBAL _UBYTE *F_Path_Append(_UBYTE *path, CONST _UBYTE *name)
  * which for an installed copy started from a shortcut is wherever the shell
  * happened to be, not where the data files are.
  */
+/*
+ * List the files matching a pattern in a directory.
+ *
+ * Subdirectories are skipped deliberately: the one caller builds the list of
+ * quests, and the files inside a quest's own folder are parts of that quest
+ * rather than quests in their own right.
+ */
+GLOBAL _WORD F_Dir_Scan(CONST _UBYTE *dir, CONST _UBYTE *pattern, F_SCAN_FUNC func, _VOID *para)
+{
+	_UBYTE spec[PATH_MAX];
+	WIN32_FIND_DATA fd;
+	HANDLE h;
+	_WORD count = 0;
+
+	strcpy(spec, dir);
+	F_Path_Append(spec, pattern);
+	h = FindFirstFile(spec, &fd);
+	if (h == INVALID_HANDLE_VALUE)
+		return 0;
+	do
+	{
+		if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			continue;
+		count++;
+		if (func != FUNK_NULL && !func(fd.cFileName, para))
+			break;
+	} while (FindNextFile(h, &fd));
+	FindClose(h);
+	return count;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 GLOBAL _VOID F_Path_Get_Program(_UBYTE *path, CONST _UBYTE *name)
 {
 	_UBYTE *p;

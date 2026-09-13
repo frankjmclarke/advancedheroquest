@@ -154,6 +154,187 @@ LOCAL _VOID default_program_dir(PATH *p, CONST _UBYTE *sub)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/******************************************************************************/
+/* The quest list                                                             */
+/******************************************************************************/
+
+/*
+ * The quests are the .tab files directly in tables\. Each one includes the
+ * pieces it needs from its own subdirectory, so those subdirectories hold
+ * parts of a quest rather than quests, and are deliberately not offered.
+ *
+ * The list is built by scanning, not hardcoded, so a quest someone writes
+ * themselves appears just by being dropped into tables\.
+ */
+#define MAX_QUESTS   128
+#define QUEST_NAME   64
+#define QUEST_TITLE  80
+
+LOCAL _UBYTE quest_file[MAX_QUESTS][QUEST_NAME];
+LOCAL _UBYTE quest_title[MAX_QUESTS][QUEST_TITLE];
+LOCAL CONST _UBYTE *quest_ptr[MAX_QUESTS];
+LOCAL _WORD quest_count;
+
+/*
+ * A quest's name for the list: the text of the first comment line, which is
+ * what the program already shows in the window title once loaded. Falls back
+ * to the file name for a file that has no such line.
+ */
+LOCAL _VOID quest_read_title(CONST _UBYTE *dir, CONST _UBYTE *name, _UBYTE *title, _UWORD len)
+{
+	_UBYTE path[PATH_MAX];
+	_UBYTE line[256];
+	FILE *fd;
+
+	strcpy(path, dir);
+	F_Path_Append(path, name);
+	title[0] = '\0';
+	fd = fopen(path, "r");
+	if (fd != NULL)
+	{
+		while (fgets(line, (int)sizeof(line), fd) != NULL)
+		{
+			_UBYTE *p = line;
+			_UBYTE *e;
+
+			if (*p != '#')
+				continue;
+			p++;
+			while (*p == ' ' || *p == '\t')
+				p++;
+			e = p + strlen(p);
+			while (e > p && (e[-1] == '\n' || e[-1] == '\r' || e[-1] == ' '))
+				*--e = '\0';
+			/* skip the rule of dashes drawn under the title */
+			if (*p == '\0' || strspn(p, "-=_") == strlen(p))
+				continue;
+			strMcpy(title, len, p);
+			break;
+		}
+		fclose(fd);
+	}
+	if (title[0] == '\0')
+		strMcpy(title, len, name);
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+LOCAL _BOOL quest_add(CONST _UBYTE *name, _VOID *para)
+{
+	CONST _UBYTE *dir = para;
+
+	if (quest_count >= MAX_QUESTS)
+		return FALSE;
+	strMcpy(quest_file[quest_count], QUEST_NAME, name);
+	quest_read_title(dir, name, quest_title[quest_count], QUEST_TITLE);
+	quest_count++;
+	return TRUE;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+/*
+ * Build the list, sorted by the name shown, and answer the entry matching the
+ * quest currently loaded so the dialog can open on it.
+ */
+LOCAL _WORD quest_scan(_VOID)
+{
+	_UBYTE dir[PATH_MAX];
+	_WORD i, j, curr;
+
+	quest_count = 0;
+	F_Path_Get_Program(dir, "tables");
+	F_Dir_Scan(dir, "*.tab", quest_add, dir);
+
+	for (i = 1; i < quest_count; i++)
+	{
+		for (j = i; j > 0 && stricmp(quest_title[j - 1], quest_title[j]) > 0; j--)
+		{
+			_UBYTE tmp[QUEST_TITLE];
+
+			strBcpy(tmp, quest_title[j]);
+			strBcpy(quest_title[j], quest_title[j - 1]);
+			strBcpy(quest_title[j - 1], tmp);
+			strBcpy(tmp, quest_file[j]);
+			strBcpy(quest_file[j], quest_file[j - 1]);
+			strBcpy(quest_file[j - 1], tmp);
+		}
+	}
+
+	/*
+	 * Two quests can carry the same title: sonne1.tab and sonne2.tab both
+	 * announce themselves as "The Quest for Sonneklinge", which would put two
+	 * identical lines in the list with no way to tell them apart. Where that
+	 * happens, add the file name.
+	 */
+	for (i = 0; i < quest_count; )
+	{
+		_WORD run = i + 1;
+
+		while (run < quest_count && stricmp(quest_title[i], quest_title[run]) == 0)
+			run++;
+		if (run - i > 1)
+		{
+			_WORD k;
+
+			for (k = i; k < run; k++)
+			{
+				_UBYTE base[QUEST_NAME];
+				_UBYTE line[QUEST_TITLE + QUEST_NAME + 8];
+				_UBYTE *dot;
+
+				strBcpy(base, quest_file[k]);
+				dot = strrchr(base, '.');
+				if (dot != NULL)
+					*dot = '\0';
+				/* strBcpy truncates to the field, so build it whole first */
+				sprintf(line, "%s (%s)", quest_title[k], base);
+				strBcpy(quest_title[k], line);
+			}
+		}
+		i = run;
+	}
+
+	curr = 0;
+	for (i = 0; i < quest_count; i++)
+	{
+		quest_ptr[i] = quest_title[i];
+		if (stricmp(quest_file[i], AHQ_para.tabelle.filename) == 0)
+			curr = i;
+	}
+	return curr;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
+/*** ---------------------------------------------------------------------- ***/
+
+LOCAL _WORD quest_choice;
+
+LOCAL DLG_RETURN quest_button(DIALOG *dialog, _WORD button, _BOOL *ret, _VOID *para)
+{
+	UNUSED(para);
+
+	switch (button)
+	{
+	case DO_INIT:
+		Dialog_SetPopup(dialog, QLIST, quest_ptr, quest_count, quest_choice);
+		return DLG_CONTINUE;
+
+	case QOK:
+	case IDOK:
+		quest_choice = Dialog_GetPopup(dialog, QLIST);
+		*ret = TRUE;
+		return DLG_END;
+
+	case QCANCEL:
+	case IDCANCEL:
+		*ret = FALSE;
+		return DLG_END;
+	}
+	return DLG_CONTINUE;
+}
+
 LOCAL _VOID Profile_ReadPath(PATH *p, CONST _UBYTE *section)
 {
 	Profile_ReadString(section, "path", p->path, PtrSize(p->path));
@@ -351,11 +532,24 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init, _BOOL quiet)
 						F_File_Delete("errors.txt");
 				} else
 				{
-					abbruch("Could not create reference table!");
-					if (F_File_Exists("errors.txt"))
-					{
-						show_text_file("errors.txt");
-					}
+					/*
+					 * Almost always this is a file from inside a quest
+					 * folder, which is only one part of a quest and has none
+					 * of the tables the generator needs. Say so, rather than
+					 * opening errors.txt and leaving the reader to work it
+					 * out from a list of missing table names. errors.txt is
+					 * still written for anyone editing tables.
+					 */
+					Form_Ok(
+						"Could not use '%s'.\n"
+						"\n"
+						"It is not a complete quest. Files inside a quest\n"
+						"folder, such as room1.tab or skaven.tab, are only\n"
+						"parts of one. Choose a table in the tables folder\n"
+						"itself, for example ravenloft1.tab.\n"
+						"\n"
+						"Details are in errors.txt.",
+						file->filename);
 				}
 			}
 		}
@@ -921,6 +1115,38 @@ LOCAL DLG_RETURN close_on_ok(DIALOG *ptr, _WORD button, _BOOL *ret, _VOID *para)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/*
+ * Roll a map and open the windows the Show settings ask for.
+ *
+ * try_makemap() answers RETRY when the roll produced no stairs down, so keep
+ * going with a fresh seed. Bounded, because callers run at times when an
+ * endless loop would simply hang: a quest may never satisfy the settings.
+ */
+LOCAL _BOOL make_first_map(_VOID)
+{
+	_WORD tries;
+	_WORD res = RETRY;
+
+	for (tries = 0; tries < 50; tries++)
+	{
+		res = try_makemap(AHQ_para.weiter);
+		if (res != RETRY)
+			break;
+		++AHQ_para.rnd;
+	}
+	if (res != TRUE)
+		return FALSE;
+
+	karte_ok(TRUE);
+	do_show(MSTATIST);
+	do_show(MMONSTER);
+	do_show(MTEXT);
+	do_show(MGRAFIK);
+	return TRUE;
+}
+
+/*** ---------------------------------------------------------------------- ***/
+
 LOCAL _BOOL do_menu(_WORD eintrag)
 {
 	_BOOL retV = TRUE;
@@ -1024,10 +1250,54 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		break;
 
 	case MTABELLE:
-		if (get_filename(&AHQ_para.tabelle))
 		{
-			do_table(&AHQ_para.tabelle, FALSE, FALSE);
-			break;
+			/*
+			 * Offer the quests rather than a file browser.
+			 *
+			 * The old file dialog let you wander into a quest's own folder
+			 * and pick something like room1.tab or skaven.tab. Those are
+			 * parts of a quest and have no hope of working alone, so the
+			 * program loaded nothing, greyed out map generation and showed a
+			 * list of missing table names. The list only contains whole
+			 * quests, so that cannot happen.
+			 */
+			_WORD curr = quest_scan();
+
+			if (quest_count == 0)
+			{
+				Form_Ok("No quests found in the tables folder.");
+			} else
+			{
+				PATH prev;
+
+				cpy_path(&prev, &AHQ_para.tabelle);
+				quest_choice = curr;
+				if (Dialog_Select(FQUEST, quest_button, NULL))
+				{
+					default_program_dir(&AHQ_para.tabelle, "tables");
+					set_filename(&AHQ_para.tabelle, quest_file[quest_choice]);
+					if (do_table(&AHQ_para.tabelle, FALSE, FALSE))
+					{
+						SetMouse(MOUSE_BUSY);
+						make_first_map();
+						SetMouse(MOUSE_RESTORE);
+					} else
+					{
+						/*
+						 * A quest of the user's own may still be broken.
+						 * Put the working one back so the program stays
+						 * usable rather than being left with no tables.
+						 */
+						cpy_path(&AHQ_para.tabelle, &prev);
+						if (do_table(&AHQ_para.tabelle, FALSE, TRUE))
+						{
+							SetMouse(MOUSE_BUSY);
+							make_first_map();
+							SetMouse(MOUSE_RESTORE);
+						}
+					}
+				}
+			}
 		}
 		break;
 
@@ -1196,50 +1466,8 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 			}
 			if (do_table(&AHQ_para.tabelle, TRUE, FALSE))
 			{
-				_WORD tries;
-				_WORD res = RETRY;
-
 				SetMouse(MOUSE_BUSY);
-				/*
-				 * Roll again with a fresh seed while the map comes out with
-				 * no stairs down, which try_makemap() reports as RETRY. This
-				 * used to make a single attempt and treat RETRY as failure,
-				 * so a startup whose seed happened to roll badly showed no
-				 * map and gave no reason; some quests only produce a usable
-				 * map about half the time.
-				 *
-				 * Bounded, unlike Next Map, because this runs before the
-				 * event loop: an endless loop here would hang the program on
-				 * a quest that can never satisfy the current settings.
-				 */
-				for (tries = 0; tries < 50; tries++)
-				{
-					res = try_makemap(AHQ_para.weiter);
-					if (res != RETRY)
-						break;
-					++AHQ_para.rnd;
-				}
-				if (res == TRUE)
-				{	
-					karte_ok(TRUE);
-					/*
-					 * Show the map that was just generated. Without this the
-					 * program starts on an empty grey window: the map exists
-					 * but nothing displays it, and the user has to know to
-					 * press Ctrl+K. It used to appear only because the
-					 * profile's [Windows] section happened to reopen the
-					 * graphic window, so a fresh profile showed nothing.
-					 *
-					 * Same order as Next Map, so whichever windows the Show
-					 * settings ask for are opened and the map ends up on top.
-					 * Each do_show() checks its own menu flag, so this only
-					 * opens what the user has enabled.
-					 */
-					do_show(MSTATIST);
-					do_show(MMONSTER);
-					do_show(MTEXT);
-					do_show(MGRAFIK);
-				}
+				make_first_map();
 				SetMouse(MOUSE_RESTORE);
 			}
 #if DEMO					

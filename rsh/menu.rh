@@ -91,4 +91,8 @@
 
 #define FDEMO              7
 #define FHELP              8
+#define FQUEST             9
+#define QLIST            150
+#define QOK              151
+#define QCANCEL          152
 
