@@ -1,0 +1,13 @@
+#The Quest For The Lichemaster (Dungeon 6)
+#-----------------------------------------
+#
+
+define ROOM-FURNISH
+
+include terror\room.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include terror\treasure.tab
+include standard\trap.tab
+include terror\monster.tab
+include terror\beastman.tab
