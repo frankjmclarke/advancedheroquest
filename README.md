@@ -12,6 +12,9 @@ the resource `VERSIONINFO` block carries product version `2.0.5.0`.
 > reserved — see [NOTICE.md](NOTICE.md). If you are the author or rights
 > holder, open an issue and any request will be honoured.
 
+Writing your own adventures: **[Guide to creating and editing table
+files](doc/TABLE-GUIDE.md)**.
+
 Screenshots of the workflow are in [`doc/`](doc/), numbered in the order you'd
 use them — table selection, generation, monster display, saving.
 

@@ -46,6 +46,7 @@ md "%STAGE%\maps"
 copy /y "%ROOT%\bin\hq_map.exe" "%STAGE%\" >nul
 xcopy /e /i /q /y "%ROOT%\tables" "%STAGE%\tables" >nul
 copy /y "%ROOT%\NOTICE.md" "%STAGE%\NOTICE.txt" >nul
+copy /y "%ROOT%\doc\TABLE-GUIDE.md" "%STAGE%\TABLE-GUIDE.md" >nul
 if exist "%ROOT%\dist\README.txt" copy /y "%ROOT%\dist\README.txt" "%STAGE%\" >nul
 
 rem  rsh\ is NOT shipped: the tile bitmaps are compiled into the executable as
