@@ -1,0 +1,77 @@
+; Deck 4 - the Command Spire.
+;
+; Now it is clear who opened the station. A warband of the Silent Hand holds
+; the command deck: Chaos Space Marines in sealed corridors, Dreadnoughts
+; walking the approaches, and the station's own Tarantula turrets slaved to
+; their cogitators and firing outward.
+
+Wandering-Monsters
+(   1D12
+    1-1     "4 Chaos Androids (60 Points)"
+    2-3     "2 Chaos Space Marines (50 Points)"
+    4-4     "1 Tarantula Turret, 2 Chaos Androids (60 Points)"
+    5-6     "2 Chaos Space Marines, 1 with Heavy Bolter (80 Points)"
+    7-7     "3 Chaos Space Marines (75 Points)"
+    8-8     "2 Chaos Space Marines, 3 Chaos Androids (95 Points)"
+    9-9     "1 Dreadnought, 1 Chaos Space Marine (75 Points)"
+   10-10    "4 Chaos Space Marines (100 Points)"
+   11-11    "3 Chaos Space Marines, 1 with Missile Launcher (110 Points)"
+   12-12    "1 Advanced Dreadnought (80 Points)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "4 Chaos Space Marines (100 Points)"
+    2-2     "6 Chaos Androids, 2 Chaos Space Marines (140 Points)"
+    3-3     "3 Chaos Space Marines, 2 Heavy Weapons (140 Points)"
+    4-4     "1 Dreadnought, 3 Chaos Space Marines (125 Points)"
+    5-5     "5 Chaos Space Marines (125 Points)"
+    6-6     "2 Tarantula Turrets, 4 Chaos Androids (120 Points)"
+    7-7     "5 Chaos Space Marines, 1 with Heavy Bolter (155 Points)" & Specialist-Xenos()
+    8-8     "4 Chaos Space Marines, 1 Dreadnought (140 Points)" & Specialist-Xenos()
+    9-9     "6 Chaos Space Marines (150 Points)" & Specialist-Xenos()
+   10-10    "4 Chaos Space Marines, 2 Heavy Weapons, 4 Chaos Androids (220 Points)" & Specialist-Xenos()
+   11-11    "1 Advanced Dreadnought, 4 Chaos Space Marines (180 Points)" & Specialist-Xenos()
+   12-12    "8 Chaos Space Marines (200 Points)" & Specialist-Xenos()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "6 Chaos Space Marines, 2 Chaos Androids (180 Points)" & Specialist-Xenos()
+    2-2     "5 Chaos Space Marines, 2 Heavy Weapons, 1 Dreadnought (230 Points)" & Specialist-Xenos()
+    3-3     "8 Chaos Space Marines (200 Points)" & Specialist-Xenos()
+    4-4     "6 Chaos Space Marines, 1 Advanced Dreadnought (210 Points)" & Specialist-Xenos()
+    5-5     "6 Chaos Space Marines, 2 Heavy Weapons, 4 Chaos Androids (270 Points)" & Specialist-Xenos()
+    6-6     "4 Chaos Space Marines, 2 Dreadnoughts, 2 Tarantula Turrets (240 Points)" & Specialist-Xenos()
+    7-7     "8 Chaos Space Marines, 2 Heavy Weapons (280 Points)" & Specialist-Xenos-Double()
+    8-8     "6 Chaos Space Marines, 1 Advanced Dreadnought, 1 Dreadnought (290 Points)" & Specialist-Xenos-Double()
+    9-9     "8 Chaos Space Marines, 6 Chaos Androids (290 Points)" & Specialist-Xenos-Double()
+   10-10    "10 Chaos Space Marines, 2 Heavy Weapons (320 Points)" & Specialist-Xenos-Double()
+   11-11    "8 Chaos Space Marines, 2 Advanced Dreadnoughts (340 Points)" & Specialist-Xenos-Double()
+   12-12    "10 Chaos Space Marines, 4 Heavy Weapons, 2 Advanced Dreadnoughts (420 Points)" & Specialist-Xenos-Double()
+)
+
+Specialist-Xenos
+(   1D12
+    1-3     Chaos-Space-Marine-Heavy()
+    4-6     Chaos-Space-Marine-Commander()
+    7-9     Dreadnought()
+   10-11    Chaos-Space-Marine-Heavy()
+   12-12    Advanced-Dreadnought()
+)
+
+Specialist-Xenos-Double
+(   1D12
+    1-3     Chaos-Space-Marine-Commander() & Chaos-Space-Marine-Heavy()
+    4-6     Chaos-Space-Marine-Commander() & Dreadnought()
+    7-8     Advanced-Dreadnought() & Chaos-Space-Marine-Heavy()
+    9-10    Chaos-Space-Marine-Commander() & Chaos-Space-Marine-Commander()
+   11-12    Chaos-Space-Marine-Commander() & Advanced-Dreadnought()
+)
+
+Lurker
+(   1D12
+    1-5     Chaos-Android()
+    6-10    Chaos-Space-Marine()
+   11-12    Chaos-Space-Marine-Heavy()
+)

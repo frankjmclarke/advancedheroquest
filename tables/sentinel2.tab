@@ -1,0 +1,13 @@
+#Sentinel V (Deck 2 - Cargo Holds)
+#--------------------------------
+#
+
+define ROOM-FURNISH
+
+include sentinel\room1.tab
+include sentinel\fittings.tab
+include sentinel\hazard.tab
+include sentinel\equip.tab
+include sentinel\trap.tab
+include sentinel\monster.tab
+include sentinel\holds.tab

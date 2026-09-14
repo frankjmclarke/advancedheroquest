@@ -1,0 +1,13 @@
+#Sentinel V (Deck 4 - Command Spire)
+#----------------------------------
+#
+
+define ROOM-FURNISH
+
+include sentinel\room2.tab
+include sentinel\fittings.tab
+include sentinel\hazard.tab
+include sentinel\equip.tab
+include sentinel\trap.tab
+include sentinel\monster.tab
+include sentinel\command.tab

@@ -1,0 +1,76 @@
+; Deck 3 - the Reactor Sumps.
+;
+; This is where the garrison went. The coolant sumps are lined with chitin
+; and the brood is well established: Genestealers in the dark, Androids
+; walking their old patrol routes through the middle of it, and a Dreadnought
+; sealed in the plant room that has not decided whose side it is on.
+
+Wandering-Monsters
+(   1D12
+    1-2     "2 Genestealers (50 Points)"
+    3-3     "3 Chaos Androids (45 Points)"
+    4-5     "1 Genestealer, 2 Chaos Androids (55 Points)"
+    6-6     "3 Genestealers (75 Points)"
+    7-7     "4 Chaos Androids (60 Points)"
+    8-8     "2 Genestealers, 2 Chaos Androids (80 Points)"
+    9-9     "2 Orks, 2 Genestealers (70 Points)"
+   10-10    "4 Genestealers (100 Points)"
+   11-11    "3 Genestealers, 2 Chaos Androids (105 Points)"
+   12-12    "1 Dreadnought (50 Points)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "4 Genestealers (100 Points)"
+    2-2     "6 Chaos Androids (90 Points)"
+    3-3     "3 Genestealers, 3 Chaos Androids (120 Points)"
+    4-4     "5 Genestealers (125 Points)"
+    5-5     "4 Chaos Androids, 2 Genestealers (110 Points)"
+    6-6     "2 Genestealers, 1 Dreadnought (100 Points)"
+    7-7     "5 Genestealers, 2 Chaos Androids (155 Points)" & Specialist-Xenos()
+    8-8     "6 Chaos Androids, 3 Genestealers (165 Points)" & Specialist-Xenos()
+    9-9     "6 Genestealers (150 Points)" & Specialist-Xenos()
+   10-10    "4 Genestealers, 1 Dreadnought (150 Points)" & Specialist-Xenos()
+   11-11    "5 Genestealers, 4 Chaos Androids (185 Points)" & Specialist-Xenos()
+   12-12    "8 Genestealers (200 Points)" & Specialist-Xenos()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "6 Genestealers, 2 Chaos Androids (180 Points)" & Specialist-Xenos()
+    2-2     "4 Genestealers, 6 Chaos Androids (190 Points)" & Specialist-Xenos()
+    3-3     "8 Genestealers (200 Points)" & Specialist-Xenos()
+    4-4     "5 Genestealers, 1 Dreadnought (175 Points)" & Specialist-Xenos()
+    5-5     "6 Genestealers, 4 Chaos Androids (210 Points)" & Specialist-Xenos()
+    6-6     "8 Chaos Androids, 4 Genestealers (220 Points)" & Specialist-Xenos()
+    7-7     "8 Genestealers, 4 Chaos Androids (260 Points)" & Specialist-Xenos-Double()
+    8-8     "6 Genestealers, 1 Dreadnought, 4 Chaos Androids (270 Points)" & Specialist-Xenos-Double()
+    9-9     "10 Genestealers (250 Points)" & Specialist-Xenos-Double()
+   10-10    "8 Genestealers, 1 Advanced Dreadnought (280 Points)" & Specialist-Xenos-Double()
+   11-11    "6 Genestealers, 8 Chaos Androids, 1 Dreadnought (300 Points)" & Specialist-Xenos-Double()
+   12-12    "12 Genestealers, 1 Advanced Dreadnought (360 Points)" & Specialist-Xenos-Double()
+)
+
+Specialist-Xenos
+(   1D12
+    1-4     Genestealer()
+    5-7     Chaos-Android()
+    8-10    Dreadnought()
+   11-12    Genestealer()
+)
+
+Specialist-Xenos-Double
+(   1D12
+    1-3     Genestealer() & Genestealer()
+    4-6     Dreadnought() & Genestealer()
+    7-9     Genestealer() & Chaos-Android()
+   10-11    Dreadnought() & Dreadnought()
+   12-12    Advanced-Dreadnought() & Genestealer()
+)
+
+Lurker
+(   1D12
+    1-8     Genestealer()
+    9-11    Chaos-Android()
+   12-12    Genestealer()
+)

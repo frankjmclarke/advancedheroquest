@@ -1,0 +1,61 @@
+; Sentinel V - station security, still armed.
+;
+; The Sentinel was built to keep people out of its lower decks. Nothing has
+; told it to stop.
+
+Room-Trap
+(   1D12
+    1-1     "Deck Collapse (Spot 5)"
+    2-2     "Automated Crossfire (Spot 8, Disarm 6)" & Crossfire()
+    3-3     "Blast Door Slams (Spot 6, Disarm 11)"
+    4-4     "Compactor Walls (Spot 7, Disarm 11)"
+    5-5     "Toxin Vent (Spot 10, Disarm 7)" & Toxin()
+    6-6     "Servo-Clamp (Spot 7, Disarm 6, 4 DD, Leg)"
+    7-7     "Psychic Ward (Spot 9, Disarm 7)" & Ward()
+    8-8     "Promethium Burst (Spot 8, Disarm 9)"
+    9-12    "Klaxon Alarm (Spot 7, Disarm 7)" & Wandering-Monsters()
+)
+
+Chest-Trap
+(   1D12
+    1-1     "Automated Crossfire (Spot 8, Disarm 6)" & Crossfire()
+    2-2     "Needle Spike (Spot 9, Disarm 8)"
+    3-3     "Toxin Vent (Spot 10, Disarm 7)" & Toxin()
+    4-4     "Servo-Clamp (Spot 7, Disarm 6, 4 DD, Hand)"
+    5-5     &
+            (   1D12
+                1-7     "Spike Bolt (Spot 6, Disarm 7, 3 DD)"
+                8-12    "Spike Bolt (Spot 6, Disarm 7, 3 DD, Poisoned)"
+            )
+    6-6     "Power Discharge (Spot 8, Disarm 11)"
+    7-7     "Psychic Ward (Spot 9, Disarm 7)" & Ward()
+    8-8     "Promethium Burst (Spot 8, Disarm 9)"
+    9-9     "Mindscrambler (Spot 6, Disarm 10)"
+   10-10    "Guillotine Shutter (Spot 6, Disarm 8, 2 DD, Hand)"
+   11-12    "Klaxon Alarm (Spot 7, Disarm 7)" & Wandering-Monsters()
+)
+
+Crossfire
+(   1D12
+    1-4     "(3 Damage Dice)"
+    5-8     "(6 Damage Dice)"
+    9-12    "(9 Damage Dice)"
+)
+
+Toxin
+(   1D12
+    1-6     "Mild Toxin"
+    7-8     "Nausea Gas"
+    9-10    "Hallucinogen"
+   11-11    "Nerve Agent (8 DD)"
+   12-12    "Phosgex - Deadly"
+)
+
+Ward
+(   1D12
+    1-2     "Soul Blast"
+    3-4     "Lightning Arc"
+    5-8     "Vice of Terror"
+    9-10    "Witchfire"
+   11-12    "Psychic Detonation"
+)

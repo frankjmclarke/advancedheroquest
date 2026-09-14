@@ -18,6 +18,14 @@ files](doc/TABLE-GUIDE.md)**.
 Screenshots of the workflow are in [`doc/`](doc/), numbered in the order you'd
 use them — table selection, generation, monster display, saving.
 
+Quests appear in *Options → Load Tables* by scanning `tables/` when the dialog
+opens, so a hand-written one shows up simply by being dropped in. Besides the
+1999 originals, the tree carries two campaigns written since: **Ravenloft**, ten
+quests of Warhammer undead, and **[Sentinel V](tables/sentinel/README.md)**, a
+five-deck Advanced HeroQuest campaign played with the Milton Bradley *Space
+Crusade* miniatures — the adventurers are Space Marines, and the last deck is
+held by the Eldar.
+
 ---
 
 ## What gets built
@@ -181,7 +189,8 @@ my_lib/windows/     Its Windows backend: window, w_draw, w_dialog, w_mouse,
 rsh/                Resources: menu.rc/.rh, grafic.rc/.rh, ja.ico,
                     ~200 map tile .bmp files, and two .RWS files
 tables/             Quest tables (.tab) — standard, sonne, dark, terror,
-                    faces, ritual, priests, oath, amulett, eyes, rivers
+                    faces, ritual, priests, oath, amulett, eyes, rivers,
+                    ravenloft, sentinel
 maps/               Sample generated maps (.bmp + .mon monster lists)
 doc/                Usage screenshots
 bin/ahq_map.ini     Runtime settings

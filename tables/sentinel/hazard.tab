@@ -1,0 +1,271 @@
+; Sentinel V - what a hazard room holds.
+;
+; Four hundred years of Mechanicus machinery, six weeks abandoned, and
+; whatever has moved into it since.
+
+Hazards-Matrix
+(   2D12
+    2-2     Apparition()
+    3-3     Rockfall()
+    4-4     Well()
+    5-5     Bridge()
+    6-6     Room-Furnish() & Wandering-Monsters()
+    7-7     Survivor()
+    8-8     Chasm()
+    9-9     Statue()
+   10-10    Vermin()
+   11-11    Mould()
+   12-12    Mushrooms()
+   13-13    Grate()
+   14-14    Pool()
+   15-15    Magic-Circle()
+   16-16    Trapdoor()
+   17-17    Throne()
+   18-18    Slime()
+   19-19    Cess-Pit()
+   20-20    Tomb()
+   21-21    Moths()
+   22-22    Room-Furnish() & Wandering-Monsters()
+   23-23    Statue()
+   24-24    Apparition()
+)
+
+Vermin
+(   1D12
+    1-6     Rats()
+    7-12    Bats()
+)
+
+Survivor
+(   1D12
+    1-3     Maiden & "Station Servitor, still obeying orders (Sp 4, WS 4, T 6, W 2)" & Wandering-Monsters()
+    4-6     Witch & "Rogue Psyker, burnt out and dangerous (Sp 6, WS 5, T 4, W 2)" & "- or -" & Wandering-Monsters()
+    7-9     Man-at-Arms & "Imperial Guardsman (Henchman: Sp 6, BS 6, WS 5, T 7, W 2)" & Wandering-Monsters()
+   10-12    Rogue & "Tech-Adept of the Sentinel (Sergeant: Sp 6, BS 8, WS 7, T 9, W 3, F 1)" & "- or -" & Wandering-Monsters()
+)
+
+Chasm
+(   1D12
+    1-12    Chasm & "Hull Breach - open to vacuum below" & Wandering-Monsters() & Supply-Crate()
+)
+
+Rockfall
+(   1D12
+    1-12    Rockfall & "Collapsed Bulkhead (clear it in 1D6 turns, or find another route)"
+)
+
+Bridge
+(   1D12
+    1-12    Bridge & "Gantry Bridge over the shaft (Sp -2 while crossing)"
+)
+
+Well
+(   1D12
+    1-12    Well &
+            (   1D12
+                1-3     "Reactor Shaft: sealed"
+                4-7     "Reactor Shaft: a working service lift"
+                8-10    "Reactor Shaft: radiation leak (1 Wound per turn within 2 squares)"
+               11-12    "Reactor Shaft: something is climbing up it" & Wandering-Monsters()
+            )
+)
+
+Cess-Pit
+(   1D12
+    1-12    Cess-Pit & "Waste Sump (Sp halved, and any Wound taken here festers)"
+)
+
+Slime
+(   1D12
+    1-12    Slime & "Xenos residue, thick on every surface" & Wandering-Monsters()
+)
+
+Moths
+(   1D12
+    1-12    Moths & "Psyber-Moth Swarm (BS -2 for all in the section)"
+)
+
+Apparition
+(   1D12
+    1-12    Apparition &
+            (   1D12
+                1-4     "Warp Echo: the last stand of the garrison, replayed"
+                5-8     "Warp Echo: a voice on the vox that has no source (F -1)"
+                9-11    "Warp Echo: the machine-spirit of the Sentinel, pleading"
+               12-12    "Warp Echo: a Farseer projection, watching in silence"
+            )
+)
+
+Tomb
+(   1D12
+    1-12    Tomb &
+            (   1D12
+                1-3     "Stasis Casket: empty, opened from inside"
+                4-7     "Stasis Casket: a dead Marine of an unknown Chapter" & Rare-Equipment()
+                8-10    "Stasis Casket: the station Magos, preserved" & Data-Slate()
+               11-12    "Stasis Casket: it opens as you pass" & Wandering-Monsters()
+            )
+)
+
+Statue
+(   1D12
+    1-12    Statue &
+            (   1D12
+                1-2     "Sentinel Servitor: it fires on anything that moves"
+                3-6     "Sentinel Servitor, reactivating (Sp 4, WS 8, BS 8, T 10, W 8, DD 5)"
+                7-11    "Sentinel Servitor: broadcasts your position" & Wandering-Monsters()
+               12-12    "Sentinel Servitor: dead machinery, nothing more"
+            )
+)
+
+Rats
+(   1D12
+    1-12    Rats &
+            (   2D12
+                2-2     "10 Vermin"
+                3-3     "15 Vermin"
+                4-4     "20 Vermin"
+                5-5     "25 Vermin"
+                6-6     "30 Vermin"
+                7-7     "35 Vermin"
+                8-8     "40 Vermin"
+                9-9     "45 Vermin"
+               10-10    "50 Vermin"
+               11-11    "55 Vermin"
+               12-12    "60 Vermin"
+               13-13    "65 Vermin"
+               14-14    "70 Vermin"
+               15-15    "75 Vermin"
+               16-16    "80 Vermin"
+               17-17    "85 Vermin"
+               18-18    "90 Vermin"
+               19-19    "95 Vermin"
+               20-20    "100 Vermin"
+               21-21    "105 Vermin"
+               22-22    "110 Vermin"
+               23-23    "115 Vermin"
+               24-24    "120 Vermin"
+            )
+)
+
+Bats
+(   1D12
+    1-12    Bats &
+            (   1D12
+                1-2     "Scrap-Bats (1 Wound)"
+                3-4     "Scrap-Bats (2 Wounds)"
+                5-6     "Scrap-Bats (3 Wounds)"
+                7-8     "Scrap-Bats (4 Wounds)"
+                9-10    "Scrap-Bats (5 Wounds)"
+               11-12    "Scrap-Bats (6 Wounds)"
+            )
+)
+
+Mould
+(   1D12
+    1-12    Mould & "Corrosive Fungus (eats through armour: T -1 while in contact)"
+)
+
+Mushrooms
+(   1D12
+    1-12    Mushrooms &
+            (   1D12
+                1-1     "1 Spore Pod:"
+                2-2     "2 Spore Pods:"
+                3-3     "3 Spore Pods:"
+                4-4     "4 Spore Pods:"
+                5-5     "5 Spore Pods:"
+                6-6     "6 Spore Pods:"
+                7-7     "7 Spore Pods:"
+                8-8     "8 Spore Pods:"
+                9-9     "9 Spore Pods:"
+               10-10    "10 Spore Pods:"
+               11-11    "11 Spore Pods:"
+               12-12    "12 Spore Pods:"
+            ) &
+            (   1D12
+                1-2     "Deadly Toxin"
+                3-4     "Soporific Spores"
+                5-6     "Inert"
+                7-8     "Stimulant (DD +1)"
+                9-10    "Accelerant (Sp +4)"
+               11-12    "Regenerative (heals 1D6 Wounds)"
+            )
+)
+
+Grate
+(   1D12
+    1-12    Grate & "Deck Grating, a crawlspace below" & Sub-Section()
+)
+
+Pool
+(   1D12
+    1-12    Pool &
+            (   1D12
+                1-6     "Coolant Pool (Sp halved)"
+                7-9     "Coolant Pool: contaminated (1 Wound per turn in contact)"
+               10-11    "Coolant Pool: something surfaces" & Wandering-Monsters()
+               12-12    "Coolant Pool: a sealed crate at the bottom" & Supply-Crate()
+            )
+)
+
+Magic-Circle
+(   1D12
+    1-12    Magic-Circle &
+            (   1D12
+                1-1     "Teleport Pad: misfires (scatter 1D6 sections, 1 Wound)"
+                2-2     "Teleport Pad: it brings something in" & Wandering-Monsters()
+                3-6     "Teleport Pad: dead, no power"
+                7-9     "Teleport Pad: live, one jump to any explored section"
+               10-11    "Teleport Pad: Mechanicus shrine attached (heals 1D6 Wounds, once)"
+               12-12    "Teleport Pad: a direct line to the strike cruiser (1 Fate Point)"
+            )
+)
+
+Trapdoor
+(   1D12
+    1-12    Trapdoor & "Access Hatch" &
+            (   1D12
+                1-1     Chest-Trap()
+                2-3     Sub-Section()
+                4-6     "Maintenance Crawl:" &
+                        (   1D12
+                            1-2     "Fungal Spores"
+                            3-6     "Empty"
+                            7-11    "A dead rating, 25 Points on the body"
+                           12-12    "Something is waiting in the crawl:" & Lurker()
+                        )
+                7-9     "Nothing"
+               10-12    "Drop Shaft Down"
+            )
+)
+
+Throne
+(   1D12
+    1-12    Throne & "Command Throne of the Sentinel" & Wandering-Monsters()
+)
+
+Sub-Section
+(   1D12
+    1-12    "Sub-Section" &
+            (   1D12
+                1-6     "Normal:" & Normal()
+                7-8     "Hazard:" &
+                        (   1D12
+                            1-1     Room-Furnish() & Wandering-Monsters()
+                            2-2     Survivor()
+                            3-3     Room-Furnish() & Wandering-Monsters()
+                            4-4     Statue()
+                            5-5     Vermin()
+                            6-6     Mould()
+                            7-7     Mushrooms()
+                            8-8     Room-Furnish() & Wandering-Monsters()
+                            9-9     Pool()
+                           10-10    Magic-Circle()
+                           11-11    Moths()
+                           12-12    Throne()
+                        ) & Hidden-Treasure()
+                9-10    "Lair: " & Lair()
+               11-12    "Objective Room: " & Quest()
+            )
+)

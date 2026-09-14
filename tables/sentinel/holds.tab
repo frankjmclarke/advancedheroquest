@@ -1,0 +1,76 @@
+; Deck 2 - the Cargo Holds.
+;
+; Deeper in, the mob is organised: Nobz, looted heavy weapons, and the first
+; of the Chaos Androids. The Orks did not build those. They found them in the
+; holds, crated and labelled, and something woke them up.
+
+Wandering-Monsters
+(   1D12
+    1-1     "4 Gretchin (20 Points)"
+    2-3     "3 Orks (30 Points)"
+    4-4     "2 Chaos Androids (30 Points)"
+    5-6     "2 Orks, 1 Ork with Heavy Bolter (35 Points)"
+    7-7     "1 Chaos Android, 2 Orks (35 Points)"
+    8-8     "4 Orks (40 Points)"
+    9-9     "1 Ork Nob, 2 Orks (40 Points)"
+   10-10    "3 Chaos Androids (45 Points)"
+   11-11    "2 Orks, 2 Chaos Androids (50 Points)"
+   12-12    "1 Ork Nob, 1 Ork with Missile Launcher, 2 Gretchin (60 Points)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "4 Orks, 4 Gretchin (60 Points)"
+    2-2     "4 Chaos Androids (60 Points)"
+    3-3     "3 Orks, 2 Ork Heavy Weapons (65 Points)"
+    4-4     "3 Chaos Androids, 2 Orks (65 Points)"
+    5-5     "6 Orks (60 Points)"
+    6-6     "2 Chaos Androids, 4 Gretchin, 2 Orks (70 Points)"
+    7-7     "5 Orks, 1 Ork with Heavy Bolter (80 Points)" & Specialist-Xenos()
+    8-8     "4 Chaos Androids, 2 Orks (90 Points)" & Specialist-Xenos()
+    9-9     "4 Orks, 2 Chaos Androids, 4 Gretchin (100 Points)" & Specialist-Xenos()
+   10-10    "3 Orks, 2 Ork Heavy Weapons, 3 Chaos Androids (110 Points)" & Specialist-Xenos()
+   11-11    "6 Orks, 4 Chaos Androids (120 Points)" & Specialist-Xenos()
+   12-12    "5 Chaos Androids, 4 Orks, 4 Gretchin (140 Points)" & Specialist-Xenos()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "5 Orks, 2 Chaos Androids (100 Points)" & Specialist-Xenos()
+    2-2     "4 Chaos Androids, 4 Orks (110 Points)" & Specialist-Xenos()
+    3-3     "6 Orks, 2 Ork Heavy Weapons (120 Points)" & Specialist-Xenos()
+    4-4     "5 Chaos Androids, 3 Orks (130 Points)" & Specialist-Xenos()
+    5-5     "4 Orks, 3 Chaos Androids, 6 Gretchin (140 Points)" & Specialist-Xenos()
+    6-6     "6 Orks, 3 Ork Heavy Weapons (150 Points)" & Specialist-Xenos()
+    7-7     "6 Chaos Androids, 4 Orks (180 Points)" & Specialist-Xenos-Double()
+    8-8     "8 Orks, 2 Ork Heavy Weapons, 4 Gretchin (190 Points)" & Specialist-Xenos-Double()
+    9-9     "4 Chaos Androids, 6 Orks, 2 Ork Heavy Weapons (200 Points)" & Specialist-Xenos-Double()
+   10-10    "1 Dreadnought, 4 Orks (220 Points)" & Specialist-Xenos-Double()
+   11-11    "1 Dreadnought, 4 Chaos Androids, 4 Gretchin (240 Points)" & Specialist-Xenos-Double()
+   12-12    "1 Dreadnought, 6 Orks, 4 Chaos Androids (280 Points)" & Specialist-Xenos-Double()
+)
+
+Specialist-Xenos
+(   1D12
+    1-4     Ork-Nob()
+    5-7     Ork-Heavy-Weapon()
+    8-10    Chaos-Android()
+   11-12    Ork-Nob()
+)
+
+Specialist-Xenos-Double
+(   1D12
+    1-3     Ork-Nob() & Ork-Heavy-Weapon()
+    4-6     Ork-Nob() & Chaos-Android()
+    7-9     Ork-Nob() & Ork-Nob()
+   10-11    Ork-Nob() & Ork-Heavy-Weapon() & Chaos-Android()
+   12-12    Dreadnought() & Ork-Nob()
+)
+
+Lurker
+(   1D12
+    1-4     Gretchin()
+    5-8     Ork()
+    9-11    Chaos-Android()
+   12-12    Ork-Nob()
+)

@@ -1,0 +1,15 @@
+#Sentinel V (Deck 5 - The Sentinel Core)
+#--------------------------------------
+#
+# The last deck. Every enemy here is Eldar.
+#
+
+define ROOM-FURNISH
+
+include sentinel\room3.tab
+include sentinel\fittings.tab
+include sentinel\hazard.tab
+include sentinel\equip.tab
+include sentinel\trap.tab
+include sentinel\monster.tab
+include sentinel\core.tab

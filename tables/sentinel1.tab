@@ -1,0 +1,17 @@
+#Sentinel V (Deck 1 - Docking Spires)
+#-----------------------------------
+#
+# Advanced HeroQuest, played with the miniatures from Milton Bradley's
+# Space Crusade and its expansions. The adventurers are Space Marines.
+# Rewards are given in Points, the scoring unit of Space Crusade.
+#
+
+define ROOM-FURNISH
+
+include sentinel\room1.tab
+include sentinel\fittings.tab
+include sentinel\hazard.tab
+include sentinel\equip.tab
+include sentinel\trap.tab
+include sentinel\monster.tab
+include sentinel\spires.tab
