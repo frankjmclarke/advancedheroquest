@@ -1,0 +1,817 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Sentinel V — monster reference</title>
+<style>
+@page { size: A4 portrait; margin: 7mm; }
+* { box-sizing: border-box; }
+body { font-family: "Book Antiqua", Palatino, Georgia, serif; margin: 0;
+       color: #000; }
+.page { display: grid; grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, 1fr); gap: 3mm;
+        width: 196mm; height: 283mm; page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+.mc { border: 2px solid #000; padding: 1.4mm; display: flex;
+      flex-direction: column; overflow: hidden; }
+.hd { display: flex; gap: 1.2mm; align-items: stretch; margin-bottom: 1.2mm; }
+.nmbox { flex: 1; border: 1px solid #000; padding: .6mm 1mm;
+         display: flex; flex-direction: column; justify-content: center; }
+.nm { font-size: 9.5pt; font-weight: bold; font-variant: small-caps;
+      line-height: 1.05; letter-spacing: .01em; }
+.set { font-size: 6pt; font-style: italic; color: #555; margin-top: .3mm; }
+table.ch { border-collapse: collapse; table-layout: fixed; width: 53mm; }
+table.ch td { border: 1px solid #000; width: 5.6mm; text-align: center; }
+table.ch td:last-child { width: 8.2mm; }
+table.ch tr.k td { background: #2a2a2a; color: #fff; font-size: 6.4pt;
+                   font-weight: bold; height: 4mm; }
+table.ch tr.v td { font-size: 9pt; font-weight: bold; height: 6.2mm; }
+.body { display: flex; gap: 1.2mm; flex: 1; min-height: 0; }
+.pic { width: 25mm; border: 1px solid #000; }
+.tables { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.bar { background: #2a2a2a; color: #fff; font-size: 6.6pt; font-weight: bold;
+       text-align: center; letter-spacing: .06em; height: 4mm;
+       line-height: 4mm; font-variant: small-caps; }
+table.t { border-collapse: collapse; table-layout: fixed; width: 100%; }
+table.t td { border: 1px solid #000; text-align: center; font-size: 6.8pt;
+             height: 4.8mm; padding: 0; }
+td.lh { width: 9mm; font-size: 5.6pt; background: #eee; line-height: 1.05; }
+td.dh { width: 8mm; font-size: 5.6pt; background: #eee; line-height: 1.05; }
+td.dd { font-size: 8.5pt; font-weight: bold; }
+td.f { font-weight: bold; font-size: 7.4pt; }
+tr.ghost { display: none; }
+.notes { border: 1px solid #000; border-top: 0; flex: 1; padding: 1mm 1.2mm;
+         font-size: 6.6pt; line-height: 1.32; }
+</style></head><body>
+<div class="page">
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Gretchin</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>4</td><td>4</td><td>2</td><td>4</td><td>6</td><td>3</td><td>4</td><td>1</td><td>5</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="dd">2</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">11</td><td class="f">12</td>
+            <td class="dd">24</td><td class="dd">2</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Autogun, knife. Runs for the nearest exit if no Ork is left in the section.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Ork</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>7</td><td>5</td><td>4</td><td>8</td><td>6</td><td>8</td><td>5</td><td>1</td><td>10</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">11</td>
+            <td class="dd">36</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Bolter, choppa.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Ork with Heavy Weapon</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>7</td><td>6</td><td>4</td><td>8</td><td>4</td><td>8</td><td>5</td><td>1</td><td>15-30</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td>
+            <td class="dd">48</td><td class="dd">6</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">A looted Heavy Bolter, Missile Launcher, Assault Cannon or Plasma Gun. Speed already includes the -2 for carrying it.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Ork Nob</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>9</td><td>6</td><td>5</td><td>10</td><td>6</td><td>10</td><td>6</td><td>2</td><td>20-50</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="dd">5</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td>
+            <td class="dd">36</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Power claw, bolter. While a Nob is on his feet every Ork and Gretchin in the section passes its Bravery tests automatically.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Chaos Android</div>
+      <div class="set">Space Crusade / Mission Dreadnought</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>8</td><td>7</td><td>5</td><td>12</td><td>4</td><td>12</td><td>4</td><td>2</td><td>15</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="dd">5</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td>
+            <td class="dd">36</td><td class="dd">5</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Integral bolter, power claw. Never takes a Bravery test. Unaffected by toxins, vacuum, gas and psychic attack.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Genestealer</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>11</td><td>—</td><td>5</td><td>10</td><td>12</td><td>12</td><td>6</td><td>2</td><td>25</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="dd">6</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td>
+            <td class="dd">—</td><td class="dd">—</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Rending claws. No ranged attack. Moves its full 12 squares and still attacks in the same turn. Its claws ignore the Toughness bonus of armour.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">&nbsp;</div>
+      <div class="set"></div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td>
+            <td class="dd"></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes"></div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">&nbsp;</div>
+      <div class="set"></div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td>
+            <td class="dd"></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes"></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page">
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Chaos Space Marine</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>9</td><td>8</td><td>5</td><td>12</td><td>6</td><td>11</td><td>8</td><td>2</td><td>25</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="dd">5</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td>
+            <td class="dd">36</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Bolter, chainsword. Power armour is already in the Toughness.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Chaos Space Marine with Heavy Weapon</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>9</td><td>9</td><td>5</td><td>12</td><td>4</td><td>11</td><td>8</td><td>2</td><td>30-45</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="dd">5</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td>
+            <td class="dd">48</td><td class="dd">7</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Heavy Bolter or Missile Launcher, chainsword. Speed already includes the -2 for the heavy weapon.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Chaos Space Marine Commander</div>
+      <div class="set">Space Crusade</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>11</td><td>9</td><td>6</td><td>14</td><td>6</td><td>12</td><td>9</td><td>4</td><td>50-100</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="dd">6</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td>
+            <td class="dd">12</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Power weapon, bolt pistol. Toughness 14: wounded only on a damage dice of 12, which is then rolled again.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Tarantula Turret</div>
+      <div class="set">Mission Dreadnought</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>2</td><td>8</td><td>—</td><td>10</td><td>—</td><td>—</td><td>—</td><td>3</td><td>20-50</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="dd">—</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td>
+            <td class="dd">48</td><td class="dd">6</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">A station turret slaved to the enemy. Cannot move and cannot attack in hand-to-hand; the Weapon Skill of 2 is only for working out hits against it. Fires at the nearest model it can see.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Dreadnought</div>
+      <div class="set">Space Crusade / Mission Dreadnought</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>9</td><td>8</td><td>8</td><td>18</td><td>4</td><td>12</td><td>6</td><td>6</td><td>40-70</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="dd">8</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td>
+            <td class="dd">24</td><td class="dd">8</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Assault cannon, power fist. Toughness 18: only a damage dice of 12 wounds it, and that dice is rolled again. A Fusion Gun rolls double damage dice against it.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Advanced Dreadnought</div>
+      <div class="set">Mission Dreadnought</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>10</td><td>9</td><td>9</td><td>20</td><td>4</td><td>12</td><td>6</td><td>8</td><td>60-120</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="dd">10</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td>
+            <td class="dd">48</td><td class="dd">10</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Las-cannon and conversion beam, power fist. Toughness 20: wounded only on a damage dice of 12, rolled again. Fusion Guns roll double dice.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">&nbsp;</div>
+      <div class="set"></div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td>
+            <td class="dd"></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes"></div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">&nbsp;</div>
+      <div class="set"></div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td>
+            <td class="dd"></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes"></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page">
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Eldar Guardian</div>
+      <div class="set">Eldar Attack</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>7</td><td>8</td><td>3</td><td>6</td><td>8</td><td>8</td><td>9</td><td>1</td><td>20</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="dd">3</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td>
+            <td class="dd">24</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Shuriken catapult. The rank and file of the Sentinel Host.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Eldar Guardian with Shuriken Cannon</div>
+      <div class="set">Eldar Attack</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>7</td><td>9</td><td>3</td><td>6</td><td>6</td><td>8</td><td>9</td><td>1</td><td>30</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="dd">3</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td>
+            <td class="dd">36</td><td class="dd">6</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">May fire at up to 3 targets in a turn, all within 2 squares of each other.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Eldar Guardian with Missile Launcher</div>
+      <div class="set">Eldar Attack</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>7</td><td>9</td><td>3</td><td>6</td><td>6</td><td>8</td><td>9</td><td>1</td><td>35</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="dd">3</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td>
+            <td class="dd">48</td><td class="dd">7</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Blast: every model adjacent to the target takes 3 damage dice.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Eldar Guardian with Las-Cannon</div>
+      <div class="set">Eldar Attack</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>7</td><td>9</td><td>3</td><td>6</td><td>6</td><td>8</td><td>9</td><td>1</td><td>40</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="f">10</td><td class="f">10</td><td class="f">10</td><td class="dd">3</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td>
+            <td class="dd">48</td><td class="dd">8</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">One shot a turn. Ignores the Toughness bonus of armour.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Eldar Leader</div>
+      <div class="set">Eldar Attack</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>12</td><td>10</td><td>4</td><td>8</td><td>10</td><td>11</td><td>11</td><td>3</td><td>60-120</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="dd">6</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td>
+            <td class="dd">16</td><td class="dd">4</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Power sword, shuriken pistol. One miniature, six characters: roll on Eldar-Leader in monster.tab for which. Farseer Ulvaneth is the one the strike force came down for.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">Eldar Wraithlord</div>
+      <div class="set">proxy — Dreadnought model</div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td>10</td><td>9</td><td>8</td><td>16</td><td>6</td><td>12</td><td>8</td><td>6</td><td>70-120</td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">2</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td><td class="f">8</td><td class="f">9</td><td class="dd">9</td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f">3</td><td class="f">4</td><td class="f">5</td><td class="f">6</td><td class="f">7</td>
+            <td class="dd">48</td><td class="dd">8</td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes">Wraithcannon, wraithbone fists. Toughness 16: wounded only on a damage dice of 12, rolled again. Optional; see README.md.</div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">&nbsp;</div>
+      <div class="set"></div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td>
+            <td class="dd"></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes"></div>
+    </div>
+  </div>
+</div>
+<div class="mc">
+  <div class="hd">
+    <div class="nmbox">
+      <div class="nm">&nbsp;</div>
+      <div class="set"></div>
+    </div>
+    <table class="ch">
+      <tr class="k"><td>WS</td><td>BS</td><td>S</td><td>T</td><td>Sp</td>
+          <td>Br</td><td>Int</td><td>W</td><td>PV</td></tr>
+      <tr class="v"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+  <div class="body">
+    <div class="pic"></div>
+    <div class="tables">
+      <div class="bar">Hand to Hand Combat</div>
+      <table class="t">
+        <tr><td class="lh">Target<br>WS</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Ranged Combat</div>
+      <table class="t r">
+        <tr><td class="lh">Range</td><td>1-3</td><td>4-12</td><td>13-24</td><td>25-36</td><td>37+</td><td class="dh">Max<br>Range</td>
+            <td class="dh">Dam.<br>Dice</td></tr>
+        <tr><td class="lh">Hit<br>Roll</td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td><td class="f"></td>
+            <td class="dd"></td><td class="dd"></td></tr>
+      </table>
+      <div class="bar">Equipment / Notes</div>
+      <div class="notes"></div>
+    </div>
+  </div>
+</div>
+</div>
+</body></html>
