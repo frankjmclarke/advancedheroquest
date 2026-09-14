@@ -50,7 +50,12 @@ Sentinel V is an Advanced HeroQuest adventure played with the Milton Bradley **S
 
 Press `Ctrl` `T` and pick a deck, then play them in order. Every model named is one that actually shipped in a box, rewards are in Points rather than gold crowns, and the last deck ends at a webway portal that is both the objective and the only way off Sentinel V.
 
-Advanced HeroQuest profiles for every miniature, and the rest of the briefing, are in `tables\sentinel\README.md` beside the program.
+**Printable sheets come with it**, in `tables\sentinel\` beside the program:
+
+- `space-marine-sheets.pdf` — a character sheet for each kind of Space Marine, Commander down to Fusion Gun, laid out like the Advanced HeroQuest class cards
+- `monster-sheets.pdf` — a reference card for all eighteen enemies, laid out like the Advanced HeroQuest monster sheets. Page 3 is the Eldar, which is the whole bestiary for the last deck
+
+Both have the hand-to-hand and ranged hit rolls already worked out, so there is no table to look up mid-game. The briefing and the full rosters are in `tables\sentinel\README.md`.
 
 ## Uninstalling
 
