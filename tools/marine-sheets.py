@@ -29,21 +29,24 @@ import os
 #
 # Toughness is split into base and armour the way a character sheet wants it,
 # rather than given as the single effective number a monster reference table
-# would carry. Power armour is Toughness +4 with no penalty, which sits just
-# under Enchanted Armour, the best in the treasure tables.
+# would carry. Power armour is Toughness +2 with no Bow Skill or Speed penalty.
+# Artificer Power Armour is Toughness +3.
+#
+# This gives a standard Marine Toughness 10 in power armour and the Commander
+# Toughness 11 in artificer armour.
 
 MARINE = dict(ws=9, bs=8, s=5, t=8, sp=6, br=12, intl=8, w=3, fate=1)
-COMMANDER = dict(ws=11, bs=9, s=6, t=8, sp=6, br=12, intl=9, w=5, fate=3)
+COMMANDER = dict(ws=11, bs=9, s=6, t=8, sp=6, br=12, intl=9, w=6, fate=3)
 
-ARMOUR = ('Power Armour', 0, 4, 0)          # name, Bow Skill, Toughness, Speed
-ARTIFICER = ('Artificer Power Armour', 0, 4, 0)
+ARMOUR = ('Power Armour', 0, 2, 0)          # name, Bow Skill, Toughness, Speed
+ARTIFICER = ('Artificer Power Armour', 0, 3, 0)
 
 HEAVY_NOTE = 'Heavy weapon: Speed -2 while it is carried ready.'
 
 # name, range in squares, damage dice, fumble, critical
-BOLTER      = ('Bolter',            '36',   '4',   '1',   '12')
-BOLT_PISTOL = ('Bolt Pistol',       '12',   '4',   '1',   '12')
-KNIFE       = ('Combat Knife',      'N/A', '3',  '1',   '12')
+BOLTER      = ('Bolter',            '36',  '4', '1', '12')
+BOLT_PISTOL = ('Bolt Pistol',       '12',  '4', '1', '12')
+KNIFE       = ('Combat Knife',     'N/A',  '3', '1', '12')
 
 CARDS = [
     dict(title='Space Marine Commander', set='Space Crusade', prof=COMMANDER,
@@ -62,14 +65,16 @@ CARDS = [
 
     dict(title='Space Marine, Heavy Bolter', set='Space Crusade', prof=MARINE,
          armour=ARMOUR, heavy=True,
-         weapons=[('Heavy Bolter', '48', '6', '1-2', '12'), BOLT_PISTOL, KNIFE],
+         weapons=[('Heavy Bolter', '48', '6', '1-2', '12'),
+                  BOLT_PISTOL, KNIFE],
          notes=[HEAVY_NOTE,
                 'May fire at up to 3 targets in one turn, all within 2 squares '
                 'of each other, rolling damage separately for each.']),
 
     dict(title='Space Marine, Assault Cannon', set='Space Crusade', prof=MARINE,
          armour=ARMOUR, heavy=True,
-         weapons=[('Assault Cannon', '24', '6', '1-2', '11-12'), BOLT_PISTOL, KNIFE],
+         weapons=[('Assault Cannon', '24', '6', '1-2', '11-12'),
+                  BOLT_PISTOL, KNIFE],
          notes=[HEAVY_NOTE,
                 'May fire at up to 4 targets in one turn, all within 2 squares '
                 'of each other.',
@@ -78,7 +83,8 @@ CARDS = [
 
     dict(title='Space Marine, Missile Launcher', set='Space Crusade', prof=MARINE,
          armour=ARMOUR, heavy=True,
-         weapons=[('Missile Launcher', '48', '7', '1-2', '12'), BOLT_PISTOL, KNIFE],
+         weapons=[('Missile Launcher', '48', '7', '1-2', '12'),
+                  BOLT_PISTOL, KNIFE],
          notes=[HEAVY_NOTE,
                 'Blast: every model adjacent to the target, friend or enemy, '
                 'takes 3 damage dice.',
@@ -86,14 +92,16 @@ CARDS = [
 
     dict(title='Space Marine, Plasma Gun', set='Space Crusade', prof=MARINE,
          armour=ARMOUR, heavy=True,
-         weapons=[('Plasma Gun', '36', '7', '1-2', '11-12'), BOLT_PISTOL, KNIFE],
+         weapons=[('Plasma Gun', '36', '7', '1-2', '11-12'),
+                  BOLT_PISTOL, KNIFE],
          notes=[HEAVY_NOTE,
                 'Overheats on a fumble: the firer takes 3 damage dice against '
                 'his own Toughness and may not fire next turn.']),
 
     dict(title='Space Marine, Las-Cannon', set='Mission Dreadnought', prof=MARINE,
          armour=ARMOUR, heavy=True,
-         weapons=[('Las-Cannon', '48', '9', '1-2', '12'), BOLT_PISTOL, KNIFE],
+         weapons=[('Las-Cannon', '48', '9', '1-2', '12'),
+                  BOLT_PISTOL, KNIFE],
          notes=[HEAVY_NOTE,
                 'One shot per turn. Ignores the Toughness bonus of any armour '
                 'the target is wearing.']),
@@ -109,13 +117,15 @@ CARDS = [
 
     dict(title='Space Marine, Fusion Gun', set='Mission Dreadnought', prof=MARINE,
          armour=ARMOUR, heavy=True,
-         weapons=[('Fusion Gun', '12', '10', '1-2', '12'), BOLT_PISTOL, KNIFE],
+         weapons=[('Fusion Gun', '12', '10', '1-2', '12'),
+                  BOLT_PISTOL, KNIFE],
          notes=[HEAVY_NOTE,
                 'Short ranged and devastating. Against a Dreadnought, a '
                 'bulkhead or a sealed door, roll double damage dice.']),
 
     dict(title='Space Marine', set='blank — fill in the loadout', prof=MARINE,
-         armour=ARMOUR, heavy=False, weapons=[('', '', '', '', ''), KNIFE],
+         armour=ARMOUR, heavy=False,
+         weapons=[('', '', '', '', ''), KNIFE],
          notes=['Spare card. Combat rows are for the standard profile: if the '
                 'weapon changes Bow Skill or Speed, redo the Ranged row.']),
 ]
@@ -143,7 +153,8 @@ def oval(value=''):
 
 def stat(label, start, current=''):
     return ('<div class="st"><div class="lbl">%s</div>'
-            '<div class="ovs">%s%s</div></div>' % (label, oval(start), oval(current)))
+            '<div class="ovs">%s%s</div></div>'
+            % (label, oval(start), oval(current)))
 
 
 def card(c):
@@ -153,15 +164,20 @@ def card(c):
     bs_now = p['bs'] + abs_
     t_now = p['t'] + at
 
-    left = ''.join([stat('WEAPON SKILL', p['ws']),
-                    stat('BOW SKILL', p['bs'], bs_now if abs_ else ''),
-                    stat('STRENGTH', p['s']),
-                    stat('TOUGHNESS', p['t'], t_now)])
-    right = ''.join([stat('SPEED', p['sp'], speed_now if speed_now != p['sp'] else ''),
-                     stat('BRAVERY', p['br']),
-                     stat('INTELLIGENCE', p['intl']),
-                     stat('FATE', p['fate']),
-                     stat('WOUNDS', p['w'])])
+    left = ''.join([
+        stat('WEAPON SKILL', p['ws']),
+        stat('BOW SKILL', p['bs'], bs_now if abs_ else ''),
+        stat('STRENGTH', p['s']),
+        stat('TOUGHNESS', p['t'], t_now),
+    ])
+
+    right = ''.join([
+        stat('SPEED', p['sp'], speed_now if speed_now != p['sp'] else ''),
+        stat('BRAVERY', p['br']),
+        stat('INTELLIGENCE', p['intl']),
+        stat('FATE', p['fate']),
+        stat('WOUNDS', p['w']),
+    ])
 
     hth = hth_row(p['ws'])
     rng = ranged_row(bs_now)
@@ -173,17 +189,26 @@ def card(c):
 
     wrows = ''
     for i in range(3):
-        n, r, dd, f, cr = c['weapons'][i] if i < len(c['weapons']) else ('', '', '', '', '')
-        wrows += ('<tr><td class="wn">%s</td><td>%s</td><td>%s</td>'
-                  '<td>%s</td><td>%s</td></tr>' % (n, r, dd, f, cr))
+        n, r, dd, f, cr = (
+            c['weapons'][i]
+            if i < len(c['weapons'])
+            else ('', '', '', '', '')
+        )
+        wrows += (
+            '<tr><td class="wn">%s</td><td>%s</td><td>%s</td>'
+            '<td>%s</td><td>%s</td></tr>'
+            % (n, r, dd, f, cr)
+        )
 
     def sgn(v):
         return '0' if v == 0 else '%+d' % v
 
     notes = '<br>'.join(c['notes'])
 
-    hdrow = ('<div class="hdrow"><span class="sc">START</span>'
-             '<span class="sc">CURRENT</span></div>')
+    hdrow = (
+        '<div class="hdrow"><span class="sc">START</span>'
+        '<span class="sc">CURRENT</span></div>'
+    )
 
     return f'''<div class="card">
   <div class="top">
@@ -282,19 +307,24 @@ td.notes { text-align: left; padding: 1mm 1.5mm; font-size: 7.6pt;
 
 
 def main():
-    out = ['<!doctype html><html><head><meta charset="utf-8">',
-           '<title>Space Crusade Space Marines — Advanced HeroQuest '
-           'character sheets</title><style>%s</style></head><body>' % CSS]
+    out = [
+        '<!doctype html><html><head><meta charset="utf-8">',
+        '<title>Space Crusade Space Marines — Advanced HeroQuest '
+        'character sheets</title><style>%s</style></head><body>' % CSS,
+    ]
+
     for i in range(0, len(CARDS), 2):
         out.append('<div class="page">')
         out.append(card(CARDS[i]))
         if i + 1 < len(CARDS):
             out.append(card(CARDS[i + 1]))
         out.append('</div>')
+
     out.append('</body></html>')
 
     dest = os.path.join('tables', 'sentinel', 'space-marine-sheets.html')
     io.open(dest, 'w', encoding='utf-8', newline='\n').write('\n'.join(out))
+
     print('%s  (%d cards, %d pages)'
           % (dest, len(CARDS), (len(CARDS) + 1) // 2))
 

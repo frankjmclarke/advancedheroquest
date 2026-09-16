@@ -359,8 +359,8 @@ Magic-Jewel
 
 Magic-Potion
 (   1D12
-    1-2     "Magic Potion of Healing"
-    5-7     "Magic Potion of Strenght"
+    1-3     "Magic Potion of Healing"
+    4-7     "Magic Potion of Strength"
     8-8     "Magic Potion of Prowess"
     9-9     "Magic Potion of Invulnerability"
     10-10   "Magic Potion of Regeneration"

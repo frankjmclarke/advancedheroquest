@@ -74,13 +74,14 @@ the weapon sprue is what differs.
 
 | | Sp | WS | BS | S | T | W | F |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Space Marine | 6 | 9 | 8 | 5 | 8 (12 in power armour) | 3 | 1 |
-| Space Marine, carrying a heavy weapon | 4 | 9 | 8 | 5 | 8 (12 in power armour) | 3 | 1 |
-| Space Marine Commander | 6 | 11 | 9 | 6 | 8 (12 in artificer armour) | 5 | 3 |
+| Space Marine | 6 | 9 | 8 | 5 | 8 (10 in power armour) | 3 | 1 |
+| Space Marine, carrying a heavy weapon | 4 | 9 | 8 | 5 | 8 (10 in power armour) | 3 | 1 |
+| Space Marine Commander | 6 | 11 | 9 | 6 | 8 (11 in artificer armour) | 6 | 3 |
 
 Bravery 12 and Intelligence 8 for all three, Intelligence 9 for the Commander.
-Power armour is Toughness +4 with no penalty to Bow Skill or Speed; a heavy
-weapon is Speed -2 while it is carried ready.
+Power armour is Toughness +2 and artificer power armour is Toughness +3, both
+with no penalty to Bow Skill or Speed; a heavy weapon is Speed -2 while it is
+carried ready.
 
 Damage dice belong to the weapon rather than the Marine: Bolter 4, Bolt Pistol
 4, Combat Knife 3, Heavy Bolter 6, Assault Cannon 6, Missile Launcher 7,
@@ -103,9 +104,9 @@ Tarantula mobile turret in each Chapter's colours.
 | Ork Nob | SC | 6 | 9 | 6 | 5 | 10 | 10 | 6 | 2 | 5 / 4 | 20-50 |
 | Chaos Android | SC / MD | 4 | 8 | 7 | 5 | 12 | 12 | 4 | 2 | 5 / 5 | 15 |
 | Genestealer | SC | 12 | 11 | — | 5 | 10 | 12 | 6 | 2 | 6 / — | 25 |
-| Chaos Space Marine | SC | 6 | 9 | 8 | 5 | 12 | 11 | 8 | 2 | 5 / 4 | 25 |
-| Chaos Space Marine with Heavy Weapon | SC | 4 | 9 | 9 | 5 | 12 | 11 | 8 | 2 | 5 / 7 | 30-45 |
-| Chaos Space Marine Commander | SC | 6 | 11 | 9 | 6 | 14 | 12 | 9 | 4 | 6 / 4 | 50-100 |
+| Chaos Space Marine | SC | 6 | 9 | 8 | 5 | 10 | 11 | 8 | 2 | 5 / 4 | 25 |
+| Chaos Space Marine with Heavy Weapon | SC | 4 | 9 | 9 | 5 | 10 | 11 | 8 | 2 | 5 / 7 | 30-45 |
+| Chaos Space Marine Commander | SC | 6 | 11 | 9 | 6 | 11 | 12 | 9 | 4 | 6 / 4 | 50-100 |
 | Tarantula Turret | MD | — | 2 | 8 | — | 10 | — | — | 3 | — / 6 | 20-50 |
 | Dreadnought | SC / MD | 4 | 9 | 8 | 8 | 18 | 12 | 6 | 6 | 8 / 8 | 40-70 |
 | Advanced Dreadnought | MD | 4 | 10 | 9 | 9 | 20 | 12 | 6 | 8 | 10 / 10 | 60-120 |
@@ -130,11 +131,11 @@ is an emplaced gun: it cannot move and cannot fight hand-to-hand, so it has
 no Strength, Speed, Bravery or Intelligence. Its Weapon Skill of 2 is there
 only so that attackers have something to look up when shooting at it.
 
-Four of these are tougher than a twelve-sided dice: the Chaos Space Marine
-Commander at 14, the Dreadnoughts at 18 and 20, and the Wraithlord at 16.
-That is deliberate, and it works because of the critical damage rule — a
-damage dice that rolls 12 always causes a Wound whatever the target's
-Toughness, and is rolled again. So a Dreadnought is not invulnerable; it is a
+Three of these are tougher than a twelve-sided dice: the Dreadnoughts at 18
+and 20, and the Wraithlord at 16. That is deliberate, and it works because of
+the critical damage rule — a damage dice that rolls 12 always causes a Wound
+whatever the target's Toughness, and is rolled again. So a Dreadnought is not
+invulnerable; it is a
 thing you chip down on 12s until somebody brings a Fusion Gun, which rolls
 double damage dice against it. Nothing the Marines themselves have goes above
 12, because a Hero's characteristics never do.
