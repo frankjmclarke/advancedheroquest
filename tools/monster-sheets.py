@@ -36,8 +36,22 @@ import os
 
 
 def M(name, set_, ws, bs, s, t, sp, br, intl, w, pv, hth, rng, notes):
-    return dict(name=name, set=set_, ws=ws, bs=bs, s=s, t=t, sp=sp, br=br,
-                intl=intl, w=w, pv=pv, hth=hth, rng=rng, notes=notes)
+    return dict(
+        name=name,
+        set=set_,
+        ws=ws,
+        bs=bs,
+        s=s,
+        t=t,
+        sp=sp,
+        br=br,
+        intl=intl,
+        w=w,
+        pv=pv,
+        hth=hth,
+        rng=rng,
+        notes=notes,
+    )
 
 
 SC, EA, MD = 'Space Crusade', 'Eldar Attack', 'Mission Dreadnought'
@@ -46,75 +60,96 @@ PAGE1 = [
     M('Gretchin', SC, 4, 4, 2, 4, 6, 3, 4, 1, '5', 2, (24, 2),
       'Autogun, knife. Runs for the nearest exit if no Ork is left in '
       'the section.'),
+
     M('Ork', SC, 7, 5, 4, 8, 6, 8, 5, 1, '10', 4, (36, 4),
       'Bolter, choppa.'),
+
     M('Ork with Heavy Weapon', SC, 7, 6, 4, 8, 4, 8, 5, 1, '15-30', 4, (48, 6),
       'A looted Heavy Bolter, Missile Launcher, Assault Cannon or Plasma Gun. '
       'Speed already includes the -2 for carrying it.'),
+
     M('Ork Nob', SC, 9, 6, 5, 10, 6, 10, 6, 2, '20-50', 5, (36, 4),
       'Power claw, bolter. While a Nob is on his feet every Ork and Gretchin '
       'in the section passes its Bravery tests automatically.'),
+
     M('Chaos Android', SC + ' / ' + MD, 8, 7, 5, 12, 4, 12, 4, 2, '15', 5,
       (36, 5),
       'Integral bolter, power claw. Never takes a Bravery test. Unaffected by '
       'toxins, vacuum, gas and psychic attack.'),
+
     M('Genestealer', SC, 11, '—', 5, 10, 12, 12, 6, 2, '25', 6, None,
       'Rending claws. No ranged attack. Moves its full 12 squares and still '
       'attacks in the same turn. Its claws ignore the Toughness bonus of '
       'armour.'),
-    None, None,
+
+    None,
+    None,
 ]
 
 PAGE2 = [
-    M('Chaos Space Marine', SC, 9, 8, 5, 12, 6, 11, 8, 2, '25', 5, (36, 4),
+    M('Chaos Space Marine', SC, 9, 8, 5, 10, 6, 11, 8, 2, '25', 5, (36, 4),
       'Bolter, chainsword. Power armour is already in the Toughness.'),
-    M('Chaos Space Marine with Heavy Weapon', SC, 9, 9, 5, 12, 4, 11, 8, 2,
+
+    M('Chaos Space Marine with Heavy Weapon', SC, 9, 9, 5, 10, 4, 11, 8, 2,
       '30-45', 5, (48, 7),
       'Heavy Bolter or Missile Launcher, chainsword. Speed already includes '
       'the -2 for the heavy weapon.'),
-    M('Chaos Space Marine Commander', SC, 11, 9, 6, 14, 6, 12, 9, 4, '50-100',
+
+    M('Chaos Space Marine Commander', SC, 11, 9, 6, 11, 6, 12, 9, 4, '50-100',
       6, (12, 4),
-      'Power weapon, bolt pistol. Toughness 14: wounded only on a damage dice '
-      'of 12, which is then rolled again.'),
+      'Power weapon, bolt pistol. Artificer power armour is already included '
+      'in the Toughness.'),
+
     M('Tarantula Turret', MD, 2, 8, '—', 10, '—', '—',
       '—', 3, '20-50', '—', (48, 6),
       'A station turret slaved to the enemy. Cannot move and cannot attack in '
       'hand-to-hand; the Weapon Skill of 2 is only for working out hits '
       'against it. Fires at the nearest model it can see.'),
+
     M('Dreadnought', SC + ' / ' + MD, 9, 8, 8, 18, 4, 12, 6, 6, '40-70', 8,
       (24, 8),
       'Assault cannon, power fist. Toughness 18: only a damage dice of 12 '
       'wounds it, and that dice is rolled again. A Fusion Gun rolls double '
       'damage dice against it.'),
+
     M('Advanced Dreadnought', MD, 10, 9, 9, 20, 4, 12, 6, 8, '60-120', 10,
       (48, 10),
       'Las-cannon and conversion beam, power fist. Toughness 20: wounded only '
       'on a damage dice of 12, rolled again. Fusion Guns roll double dice.'),
-    None, None,
+
+    None,
+    None,
 ]
 
 PAGE3 = [
     M('Eldar Guardian', EA, 7, 8, 3, 6, 8, 8, 9, 1, '20', 3, (24, 4),
       'Shuriken catapult. The rank and file of the Sentinel Host.'),
+
     M('Eldar Guardian with Shuriken Cannon', EA, 7, 9, 3, 6, 6, 8, 9, 1, '30',
       3, (36, 6),
       'May fire at up to 3 targets in a turn, all within 2 squares of each '
       'other.'),
+
     M('Eldar Guardian with Missile Launcher', EA, 7, 9, 3, 6, 6, 8, 9, 1, '35',
       3, (48, 7),
       'Blast: every model adjacent to the target takes 3 damage dice.'),
+
     M('Eldar Guardian with Las-Cannon', EA, 7, 9, 3, 6, 6, 8, 9, 1, '40', 3,
       (48, 8),
       'One shot a turn. Ignores the Toughness bonus of armour.'),
+
     M('Eldar Leader', EA, 12, 10, 4, 8, 10, 11, 11, 3, '60-120', 6, (16, 4),
       'Power sword, shuriken pistol. One miniature, six characters: roll on '
       'Eldar-Leader in monster.tab for which. Farseer Ulvaneth is the one the '
       'strike force came down for.'),
+
     M('Eldar Wraithlord', 'proxy — Dreadnought model', 10, 9, 8, 16, 6,
       12, 8, 6, '70-120', 9, (48, 8),
       'Wraithcannon, wraithbone fists. Toughness 16: wounded only on a damage '
       'dice of 12, rolled again. Optional; see README.md.'),
-    None, None,
+
+    None,
+    None,
 ]
 
 PAGES = [PAGE1, PAGE2, PAGE3]
@@ -125,17 +160,23 @@ def hth_row(ws):
     """Rulebook p43, Hand-to-Hand Hit Rolls Table."""
     if not isinstance(ws, int):
         return ['—'] * 12
-    return [str(max(2, min(10, 7 + d - ws))) for d in range(1, 13)]
+
+    return [
+        str(max(2, min(10, 7 + d - ws)))
+        for d in range(1, 13)
+    ]
 
 
 def ranged_row(bs):
     """Rulebook p43, Ranged Hit Rolls Table."""
     if not isinstance(bs, int):
         return [''] * 5
+
     out = []
     for band in range(5):
         v = 12 - bs + band
         out.append('—' if v > 12 else str(max(3, v)))
+
     return out
 
 
@@ -146,9 +187,20 @@ def card(m):
     else:
         blank = False
 
-    stats = ''.join('<td>%s</td>' % v for v in
-                    (m['ws'], m['bs'], m['s'], m['t'], m['sp'], m['br'],
-                     m['intl'], m['w'], m['pv']))
+    stats = ''.join(
+        '<td>%s</td>' % v
+        for v in (
+            m['ws'],
+            m['bs'],
+            m['s'],
+            m['t'],
+            m['sp'],
+            m['br'],
+            m['intl'],
+            m['w'],
+            m['pv'],
+        )
+    )
 
     if blank:
         hits = ''.join('<td></td>' for _ in range(12))
@@ -158,8 +210,13 @@ def card(m):
         if m['hth'] == '—':
             hits = ''.join('<td></td>' for _ in range(12))
         else:
-            hits = ''.join('<td class="f">%s</td>' % v for v in hth_row(m['ws']))
+            hits = ''.join(
+                '<td class="f">%s</td>' % v
+                for v in hth_row(m['ws'])
+            )
+
         rng = ranged_row(m['bs'])
+
         if m['rng'] is None:
             rng = [''] * 5
             maxr, rdd = '—', '—'
@@ -247,18 +304,23 @@ tr.ghost { display: none; }
 
 
 def main():
-    out = ['<!doctype html><html><head><meta charset="utf-8">',
-           '<title>Sentinel V — monster reference</title>',
-           '<style>%s</style></head><body>' % CSS]
+    out = [
+        '<!doctype html><html><head><meta charset="utf-8">',
+        '<title>Sentinel V — monster reference</title>',
+        '<style>%s</style></head><body>' % CSS,
+    ]
+
     for pg in PAGES:
         out.append('<div class="page">')
         for m in pg:
             out.append(card(m))
         out.append('</div>')
+
     out.append('</body></html>')
 
     dest = os.path.join('tables', 'sentinel', 'monster-sheets.html')
     io.open(dest, 'w', encoding='utf-8', newline='\n').write('\n'.join(out))
+
     n = sum(1 for pg in PAGES for m in pg if m is not None)
     print('%s  (%d creatures, %d pages)' % (dest, n, len(PAGES)))
 
