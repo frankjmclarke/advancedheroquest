@@ -1,0 +1,141 @@
+
+Sentinel V — session summary
+
+What was built
+
+A five-deck Advanced HeroQuest campaign using the Milton Bradley Space Crusade miniatures, published in tables/ and shipped in the v1.0 release.
+
+┌───────────────┬───────────────────┬───────────────────────────────────────────────┐
+│     Quest     │       Deck        │                    Held by                    │
+├───────────────┼───────────────────┼───────────────────────────────────────────────┤
+│ sentinel1.tab │ Docking Spires    │ Gretchin, Orks                                │
+├───────────────┼───────────────────┼───────────────────────────────────────────────┤
+│ sentinel2.tab │ Cargo Holds       │ Orks, Nobz, Chaos Androids                    │
+├───────────────┼───────────────────┼───────────────────────────────────────────────┤
+│ sentinel3.tab │ Reactor Sumps     │ Genestealers, Androids, a Dreadnought         │
+├───────────────┼───────────────────┼───────────────────────────────────────────────┤
+│ sentinel4.tab │ Command Spire     │ Chaos Space Marines, Dreadnoughts, Tarantulas │
+├───────────────┼───────────────────┼───────────────────────────────────────────────┤
+│ sentinel5.tab │ The Sentinel Core │ Eldar only                                    │
+└───────────────┴───────────────────┴───────────────────────────────────────────────┘
+
+Plus two printable sheet sets in tables/sentinel/: space-marine-sheets.pdf (10 character cards) and monster-sheets.pdf (18 monster reference cards).
+
+Commits: 5db708a, 8263806, 6fb99a6, ecf9498, d781e1a — all pushed. Release assets rebuilt and republished twice.
+
+---
+
+Hero stats — Space Marines
+
+All Marines share one profile: the castings are identical and the weapon sprue is what differs.
+
+┌──────────────────────────┬─────┬─────┬─────┬─────┬────────────────────────┬─────┬─────┬─────┬──────┐
+│                          │ Sp  │ WS  │ BS  │  S  │           T            │ Br  │ Int │  W  │ Fate │
+├──────────────────────────┼─────┼─────┼─────┼─────┼────────────────────────┼─────┼─────┼─────┼──────┤
+│ Space Marine             │ 6   │ 9   │ 8   │ 5   │ 8 (12 in power armour) │ 12  │ 8   │ 3   │ 1    │
+├──────────────────────────┼─────┼─────┼─────┼─────┼────────────────────────┼─────┼─────┼─────┼──────┤
+│ …carrying a heavy weapon │ 4   │ 9   │ 8   │ 5   │ 8 (12)                 │ 12  │ 8   │ 3   │ 1    │
+├──────────────────────────┼─────┼─────┼─────┼─────┼────────────────────────┼─────┼─────┼─────┼──────┤
+│ Space Marine Commander   │ 6   │ 11  │ 9   │ 6   │ 8 (12 artificer)       │ 12  │ 9   │ 5   │ 3    │
+└──────────────────────────┴─────┴─────┴─────┴─────┴────────────────────────┴─────┴─────┴─────┴──────┘
+
+Power Armour — Bow Skill 0, Toughness +4, Speed 0. A heavy weapon is Speed −2 while carried ready.
+
+Weapons (Range in squares / Damage Dice / Fumble / Critical):
+
+┌───────────────────────────┬──────────────┬───────┬─────┬───────┐
+│                           │      R       │  DD   │  F  │   C   │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Bolter                    │ 36           │ 4     │ 1   │ 12    │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Bolt Pistol               │ 12           │ 4     │ 1   │ 12    │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Combat Knife              │ melee        │ 3     │ 1   │ 12    │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Power Sword / Power Glove │ melee        │ 5 / 6 │ 1   │ 11-12 │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Heavy Bolter              │ 48           │ 6     │ 1-2 │ 12    │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Assault Cannon            │ 24           │ 6     │ 1-2 │ 11-12 │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Missile Launcher          │ 48           │ 7     │ 1-2 │ 12    │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Plasma Gun                │ 36           │ 7     │ 1-2 │ 11-12 │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Las-Cannon (MD)           │ 48           │ 9     │ 1-2 │ 12    │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Conversion Beam (MD)      │ 1-12 / 13-48 │ 5 / 9 │ 1-2 │ 12    │
+├───────────────────────────┼──────────────┼───────┼─────┼───────┤
+│ Fusion Gun (MD)           │ 12           │ 10    │ 1-2 │ 12    │
+└───────────────────────────┴──────────────┴───────┴─────┴───────┘
+
+---
+
+Monster stats
+
+┌──────────────────────┬───────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────────────┬────────┐
+│        Model         │  Set  │ Sp  │ WS  │ BS  │  S  │  T  │ Br  │ Int │  W  │ DD (melee/ranged) │ Points │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Gretchin             │ SC    │ 6   │ 4   │ 4   │ 2   │ 4   │ 3   │ 4   │ 1   │ 2 / 2             │ 5      │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Ork                  │ SC    │ 6   │ 7   │ 5   │ 4   │ 8   │ 8   │ 5   │ 1   │ 4 / 4             │ 10     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Ork w/ Heavy Weapon  │ SC    │ 4   │ 7   │ 6   │ 4   │ 8   │ 8   │ 5   │ 1   │ 4 / 6             │ 15-30  │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Ork Nob              │ SC    │ 6   │ 9   │ 6   │ 5   │ 10  │ 10  │ 6   │ 2   │ 5 / 4             │ 20-50  │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Chaos Android        │ SC/MD │ 4   │ 8   │ 7   │ 5   │ 12  │ 12  │ 4   │ 2   │ 5 / 5             │ 15     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Genestealer          │ SC    │ 12  │ 11  │ —   │ 5   │ 10  │ 12  │ 6   │ 2   │ 6 / —             │ 25     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Chaos Space Marine   │ SC    │ 6   │ 9   │ 8   │ 5   │ 12  │ 11  │ 8   │ 2   │ 5 / 4             │ 25     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ CSM w/ Heavy Weapon  │ SC    │ 4   │ 9   │ 9   │ 5   │ 12  │ 11  │ 8   │ 2   │ 5 / 7             │ 30-45  │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ CSM Commander        │ SC    │ 6   │ 11  │ 9   │ 6   │ 14  │ 12  │ 9   │ 4   │ 6 / 4             │ 50-100 │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Tarantula Turret     │ MD    │ —   │ 2   │ 8   │ —   │ 10  │ —   │ —   │ 3   │ — / 6             │ 20-50  │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Dreadnought          │ SC/MD │ 4   │ 9   │ 8   │ 8   │ 18  │ 12  │ 6   │ 6   │ 8 / 8             │ 40-70  │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Advanced Dreadnought │ MD    │ 4   │ 10  │ 9   │ 9   │ 20  │ 12  │ 6   │ 8   │ 10 / 10           │ 60-120 │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Eldar Guardian       │ EA    │ 8   │ 7   │ 8   │ 3   │ 6   │ 8   │ 9   │ 1   │ 3 / 4             │ 20     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ …Shuriken Cannon     │ EA    │ 6   │ 7   │ 9   │ 3   │ 6   │ 8   │ 9   │ 1   │ 3 / 6             │ 30     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ …Missile Launcher    │ EA    │ 6   │ 7   │ 9   │ 3   │ 6   │ 8   │ 9   │ 1   │ 3 / 7             │ 35     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ …Las-Cannon          │ EA    │ 6   │ 7   │ 9   │ 3   │ 6   │ 8   │ 9   │ 1   │ 3 / 8             │ 40     │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Eldar Leader         │ EA    │ 10  │ 12  │ 10  │ 4   │ 8   │ 11  │ 11  │ 3   │ 6 / 4             │ 60-120 │
+├──────────────────────┼───────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┼───────────────────┼────────┤
+│ Eldar Wraithlord     │ proxy │ 6   │ 10  │ 9   │ 8   │ 16  │ 12  │ 8   │ 6   │ 9 / 8             │ 70-120 │
+└──────────────────────┴───────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴───────────────────┴────────┘
+
+---
+
+What we actually learned
+
+The two AHQ combat tables are arithmetic. Rulebook p43 reduces to:
+
+hand-to-hand   hit = clamp(7 + defender_WS − attacker_WS, 2, 10)
+ranged         hit = max(3, 12 − Bow_Skill + band)   Miss if raw > 12
+
+Verified against all 144 + 60 printed cells, then independently against the seven Skaven cards in AHQ - Monsters 1.pdf. That's why both sheet sets compute their rows instead of transcribing them.
+
+Two traps in there. The ranged row uses Current Bow Skill (after armour), only discoverable from the filled-in "Pierre Chancier" example on the sheets. And Toughness above 12 is not unwoundable — a damage die of 12 always wounds regardless of Toughness and re-rolls, so a T 18 Dreadnought gets chipped down on 12s. The 12 cap applies only to Heroes.
+
+I got that second one wrong first. I initially flagged the T 14/16/18/20 enemies as broken and was going to rewrite them. The critical-damage rule vindicates them — but the Commander at T 14 was genuinely wrong, because he's a Hero, and Heroes cap at 12. Fixed to 8 base + 4 armour.
+
+The engine's rules, from reading the source: Stairs_and_Chest is the keyword that makes a room a stairs-down candidate; the "Stairs Down" string is just printed text. Lair/Quest tables accept only None/Nothing/Chest/Stairs_and_Chest/Tomb as keywords, though Name() calls returning strings are unrestricted. Quests are listed by scanning tables/ at dialog-open, so a hand-written one just appears.
+
+Verification that actually caught things. tabcheck.py only checks references, so I added throwaway checks for dice-range coverage, keyword legality against features.c, duplicate names, and call cycles — the range checker found a real pre-existing gap in ravenloft/treasure.tab and terror/treasure.tab (Magic-Potion jumps 1-2 → 5-7, so rolls of 3-4 fall through; still unfixed, not mine). A reachability check proved Deck 5 can only print Eldar. And every quest was loaded in the real hq_map.exe, which writes its title back to the profile on clean exit — that's the only externally observable proof a quest loaded.
+
+Two things I fumbled. The Bash heredoc silently ate backslashes in one Python script and choked on another file, so larger content went through the Write tool instead. And a CRLF-blind regex made my first portable-zip test report the wrong quest — the run looked like a pass and wasn't.
+
+I've saved three memories for next session: where the AHQ PDFs are and which have text, the hit-roll formulas with both traps, and the gh auth situation (git pushes work unattended, gh doesn't inherit it, and reading the stored credential is correctly blocked — so it needs ! gh auth login from you).
+
+✻ Churned for 1m 57s · done 2:29 AM
+
+※ recap: Sentinel V, a five-deck Space Crusade campaign for HQ-Map, is complete: tables, character sheets, and monster cards are committed, pushed, and published to the v1.0 release. Nothing is outstanding, so the next action is yours. (disable recaps in /config)

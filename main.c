@@ -335,6 +335,83 @@ LOCAL DLG_RETURN quest_button(DIALOG *dialog, _WORD button, _BOOL *ret, _VOID *p
 	return DLG_CONTINUE;
 }
 
+/*** ---------------------------------------------------------------------- ***/
+
+LOCAL DLG_RETURN description_button(DIALOG *dialog, _WORD button, _BOOL *ret, _VOID *para)
+{
+	switch (button)
+	{
+	case DO_INIT:
+		Dialog_SetStr(dialog, DESCTEXT, (_UBYTE *)para);
+		return DLG_CONTINUE;
+
+	case IDOK:
+	case IDCANCEL:
+		*ret = TRUE;
+		return DLG_END;
+	}
+	return DLG_CONTINUE;
+}
+
+/*
+ * Quest files are named <folder><suffix>.tab, where <folder> is the
+ * subfolder holding that quest's own tables (tables\amulett\, tables\faces\,
+ * ...) and <suffix> is digits/underscores telling levels or dungeons apart
+ * ("terror3.tab", "faces1_1.tab"). Strip the extension and any such suffix
+ * to get the folder a quest's description.txt, if any, lives in.
+ */
+LOCAL _VOID quest_folder(CONST _UBYTE *filename, _UBYTE *folder, _UWORD foldersize)
+{
+	_UBYTE *ext;
+	_WORD len;
+
+	strMcpy(folder, foldersize, filename);
+	ext = strrchr(folder, '.');
+	if (ext != NULL)
+		*ext = '\0';
+	len = strlen(folder);
+	while (len > 0 && (folder[len - 1] == '_' || (folder[len - 1] >= '0' && folder[len - 1] <= '9')))
+		folder[--len] = '\0';
+}
+
+LOCAL _VOID show_quest_description(CONST _UBYTE *filename)
+{
+	_UBYTE folder[PATH_MAX];
+	_UBYTE path[PATH_MAX];
+	_UBYTE raw[8000];
+	_UBYTE text[sizeof(raw) * 2];
+	FILE *fp;
+	size_t got, i, o;
+
+	quest_folder(filename, folder, sizeof(folder));
+
+	strBcpy(path, AHQ_para.tabelle.path);
+	F_Path_Append(path, folder);
+	F_Path_Append(path, "description.txt");
+
+	fp = fopen(path, "rb");
+	if (fp == NULL)
+		return;
+
+	got = fread(raw, 1, sizeof(raw) - 1, fp);
+	fclose(fp);
+
+	/*
+	 * A Win32 multiline edit control only breaks lines on CR+LF, so a
+	 * plain-LF text file would otherwise show as one run-on paragraph.
+	 */
+	o = 0;
+	for (i = 0; i < got && o < sizeof(text) - 2; i++)
+	{
+		if (raw[i] == '\n' && (i == 0 || raw[i - 1] != '\r'))
+			text[o++] = '\r';
+		text[o++] = raw[i];
+	}
+	text[o] = '\0';
+
+	Dialog_Select(FDESC, description_button, text);
+}
+
 LOCAL _VOID Profile_ReadPath(PATH *p, CONST _UBYTE *section)
 {
 	Profile_ReadString(section, "path", p->path, PtrSize(p->path));
@@ -351,6 +428,9 @@ LOCAL _VOID Profile_ReadPath(PATH *p, CONST _UBYTE *section)
 }
 
 /*** ---------------------------------------------------------------------- ***/
+
+/* set once read_profile() finds no [Config] Zoom key, i.e. a fresh install */
+LOCAL _BOOL zoom_is_default;
 
 LOCAL _VOID read_profile(_VOID)
 {
@@ -402,7 +482,7 @@ LOCAL _VOID read_profile(_VOID)
 	Profile_ReadPath(&AHQ_para.editpath, "Editpath");
 	Profile_ReadBool("Config", "Autosave", TRUE, &AHQ_para.autosave);
 	Profile_ReadBool("Config", "AskExit", TRUE, &AHQ_para.ask_exit);
-	Profile_ReadInt("Config", "Zoom", 3, &display_zoom);
+	zoom_is_default = !Profile_ReadInt("Config", "Zoom", 3, &display_zoom);
 	Grafik_Zoom_Set(display_zoom);		/* clamps a bad profile value */
 	Profile_ReadBool("Config", "Fullscreen", TRUE, &AHQ_para.fullscreen);
 	Profile_ReadInt("Print", "Zoom", 0, &print_zoom);
@@ -1281,6 +1361,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 						SetMouse(MOUSE_BUSY);
 						make_first_map();
 						SetMouse(MOUSE_RESTORE);
+						show_quest_description(AHQ_para.tabelle.filename);
 					} else
 					{
 						/*
@@ -1468,9 +1549,12 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 			{
 				SetMouse(MOUSE_BUSY);
 				make_first_map();
+				if (zoom_is_default)
+					Grafik_Zoom_Fit();
 				SetMouse(MOUSE_RESTORE);
+				show_quest_description(AHQ_para.tabelle.filename);
 			}
-#if DEMO					
+#if DEMO
 			do_demo();
 #endif /* DEMO */
 		}

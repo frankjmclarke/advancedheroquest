@@ -1,0 +1,9 @@
+Sentinel V
+
+Sentinel V is the last of the Adeptus Mechanicus watch-stations strung along the Cadmus Reach, sunk into a dead moon and left to listen. For four hundred years it did. Six weeks ago it stopped in the middle of a routine sweep, and the sweep it was halfway through is still the last thing it transmitted.
+
+A strike force teleports onto the upper spires. What they find on the way down is a sequence, not a siege: an Ork scavenger mob in the mooring clamps, its Nobz deeper in with Chaos Androids they did not build; the garrison gone into the coolant sumps and come back as a Genestealer brood; and on the command deck a warband of the Silent Hand, who opened the station and are the reason any of the rest got in.
+
+None of them are why the Eldar are here. At the bottom of the shaft a warhost holds the Sentinel Core, and a Farseer is finishing something at the heart of the machine that was begun a long time before the Imperium put a station on this moon. They have opened a webway portal in the Core chamber. It is the objective, and it is also the only way off Sentinel V.
+
+Five decks, played in order: Docking Spires (Gretchin and Orks), Cargo Holds (Orks, Nobz, Chaos Androids), Reactor Sumps (Genestealers, Androids, a Dreadnought), Command Spire (Chaos Space Marines and Dreadnoughts), and the Sentinel Core (Eldar only). Generate one map per deck; a deck ends at a Drop Shaft Down, the Core at the webway portal.

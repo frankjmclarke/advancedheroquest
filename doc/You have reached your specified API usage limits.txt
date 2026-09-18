@@ -1,0 +1,24 @@
+
+> commit this with a message. Make sure the deliverable .exe and .zip are updated
+
+  Ran 6 shell commands
+
+This is more involved than a simple commit — the branch has diverged from origin/main (a PR already merged upstream making the identical Magic-Potion fix, among other things), and several "dirty" files in the working tree turn out to already match that merged content exactly. I'll reconcile that first so the history stays clean.
+
+  Ran 7 shell commands
+
+Let me try a more direct approach — analysis suggests a plain merge should resolve cleanly without needing to stash anything.
+
+  Ran 1 shell command
+
+● API Error: 400 You have reached your specified API usage limits. You will regain access on 2026-10-01 at 00:00 UTC.
+
+✻ Baked for 4m 22s · done 3:54 AM
+
+※ recap: Added a briefing popup and a fit-to-window zoom default to HQ-Map to improve the game experience; both changes are built and working. Next: test on a truly fresh install (no saved Zoom in ahq_map.ini) to confirm fit-to-window triggers correctly. (disable recaps in /config)
+
+╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ ✻ Bug report drafted: Blind full-screen screenshot during Win32 GUI test captured user's real desktop/browser, not … │
+│ │ What happened: Used PowerShell + SendKeys/SetForegroundWindow to drive a Win32 app (hq_map.exe) and took full-screen screenshots to verify a new dialog. `$p…                                                               │
+│ 1 to review · 2 to send · 0 to dismiss                                                                               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯

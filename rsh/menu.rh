@@ -96,3 +96,6 @@
 #define QOK              151
 #define QCANCEL          152
 
+#define FDESC             10
+#define DESCTEXT         160
+

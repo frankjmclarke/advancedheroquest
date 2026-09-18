@@ -1,0 +1,17 @@
+Rivers of Blood
+
+This adventure is designed for experienced Heroes and begins with what sounds like a classic haunted-house commission. Johannes von Bleistift has inherited Alptraum Manor after the death of his uncle, Count Rutger. Since the burial, Johannes claims to be plagued by nightmares and unexplained noises from the cellars and catacombs beneath the house. He hires the Heroes to investigate.
+
+When they arrive, Johannes presents himself as a nervous, rather ignorant young nobleman who has supposedly spent years away in Marienburg and knows little about the manor's underground passages. He leads the Heroes to a trapdoor descending into the cellars. His story is largely a lie.
+
+Count Rutger is a Vampire. He is physically dead but continues to exist beneath the manor as a powerful Undead creature. Ordinary victims are no longer sufficient to sustain him; he requires the blood of exceptional people. Johannes knows this perfectly well. He serves his uncle in the hope that Rutger will eventually reward him with the blood kiss and transform him into a Vampire as well. Hiring the Heroes is therefore an elaborate feeding scheme: Johannes deliberately sends powerful adventurers underground so Rutger can hunt them.
+
+As soon as the Heroes enter the underground complex, the situation becomes a survival scenario. Alptraum Manor contains two levels of cellars and catacombs, swarming with Undead servants. Rutger also prepared the place even before death by employing a master locksmith and thief to trap many of its doors, so the environment itself is hostile. The Heroes soon discover that they are trapped below and cannot simply return by the route they entered. Escape requires confronting or incapacitating the Vampire.
+
+One location offers an important refuge: a tomb on the upper level consecrated by a priest of Morr, the God of Death. Rutger cannot enter it, and the Heroes can use it as a sanctuary to rest and recover Fate Points. Finding this protected chamber dramatically improves their chances of surviving the rest of the dungeon.
+
+Rutger is intended to be more than a conventional boss waiting at the end of a corridor. The GM notes describe him as a special character designed specifically to frustrate and infuriate the party. That gives the adventure a predatory quality: the Heroes have entered the Vampire's domain, and he is hunting them as much as they are searching for him.
+
+Rivers of Blood is therefore a deliberate reversal of the normal dungeon premise. The Heroes think they have accepted a paid investigation. In reality they are the treasure placed inside the dungeon for the monster to collect.
+
+Note: this description is written ahead of the campaign itself. There is no loadable "rivers" quest in tables/ yet -- only two fragment tables (a Wandering-Monsters undead table and a custom trapped-door table) survive from an earlier, unfinished attempt to build it.
