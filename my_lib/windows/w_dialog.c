@@ -32,6 +32,14 @@ GLOBAL _VOID Dialog_SetStr(DIALOG *dialog, _WORD id, _UBYTE *str)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/* Stock font ownership stays with Windows. Permit long read-only references. */
+GLOBAL _VOID Dialog_SetMonospace(DIALOG *dialog, _WORD id)
+{
+ HWND control = GetDlgItem(dialog->hdlg, id);
+ SendMessage(control, WM_SETFONT, (WPARAM)GetStockObject(ANSI_FIXED_FONT), TRUE);
+ SendMessage(control, EM_LIMITTEXT, 0, 0);
+}
+
 GLOBAL _VOID Dialog_GetStr(DIALOG *dialog, _WORD id, _UBYTE *str, _UWORD maxlen)
 {
 	int len;

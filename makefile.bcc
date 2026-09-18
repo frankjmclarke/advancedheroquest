@@ -985,7 +985,7 @@ $(OBJ_DIR)queue.obj:	$(SRC_DIR)\queue.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)\queue.c
 $(OBJ_DIR)set.obj:	$(SRC_DIR)\set.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)\set.c
-$(OBJ_DIR)liste.obj:	$(SRC_DIR)\liste.c
+$(OBJ_DIR)liste.obj:	$(SRC_DIR)\liste.c $(SRC_DIR)\ahq-reference-data.h
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)\liste.c
 $(OBJ_DIR)makemap.obj:	$(SRC_DIR)\makemap.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)\makemap.c

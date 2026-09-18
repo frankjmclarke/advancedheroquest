@@ -28,6 +28,7 @@ _BOOL Dialog_Run(DIALOG *ptr);
 _BOOL Dialog_Select(_WORD id, DIALOG_PROC proc, _VOID *para);
 
 _VOID Dialog_SetStr(DIALOG *dialog, _WORD id, _UBYTE *str);
+_VOID Dialog_SetMonospace(DIALOG *dialog, _WORD id);
 _VOID Dialog_SetLong(DIALOG *dialog, _WORD id, _LONG val, _WORD just);
 #define Dialog_SetInt(dialog, id, val, just) Dialog_SetLong(dialog, id, (_LONG)(val), just)
 _VOID Dialog_SetBool(DIALOG *dialog, _WORD id, _BOOL val);

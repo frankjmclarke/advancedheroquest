@@ -5,12 +5,14 @@ from pathlib import Path
 import subprocess
 import tempfile
 
-source = (Path(__file__).resolve().parents[1] / "wind.c").read_text(encoding="cp1252")
+repo = Path(__file__).resolve().parents[1]
+source = (repo / "wind.c").read_text(encoding="cp1252")
 handler = source[source.index("LOCAL DIALOG *Room_Contents"):source.index("LOCAL _BOOL player_proc")]
 prefix = r'''#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #define LOCAL static
 #define GLOBAL
 #define CONST const
@@ -27,6 +29,7 @@ prefix = r'''#include <assert.h>
 #define FROOMCONTENTS 11
 #define ROOMCONTENTSTEXT 170
 #define DO_EXIT -2
+#define DO_INIT -1
 #define IDCANCEL 2
 #define IDOK 1
 #define DLG_END 1
@@ -38,14 +41,15 @@ enum { SMALL_ROOM, NORMAL_ROOM, HAZARD, LARGE_ROOM, LAIR, QUEST, BIG, MERSCHA, P
 typedef struct { int type; char **text; } PICE;
 static int display_zoom, Ysize = 20, opened, writes, last_x, last_y;
 static DIALOG dialog;
-static char result[1024];
-static char *lines[] = { "#12", "3 Orks", "Treasure: 20 gold", NULL };
+static char result[65536];
+static char *lines[] = { "#12", "14 Zombies (115 Gold Crowns)", "Treasure: 20 gold", NULL };
 static PICE room = { NORMAL_ROOM, lines };
 static int get_square(int x, int y, PICE **p) {
  last_x=x; last_y=y;
  *p = (x == 3 && y == 4) ? &room : NULL;
  return x >= 0 && x < 20 && y >= 0 && y < 20;
 }
+static void Dialog_SetMonospace(DIALOG *d, int id) { (void)d; (void)id; }
 static void Dialog_Hide(DIALOG *d) { (void)d; }
 static DIALOG *Dialog_Show(int id, DLG_RETURN (*proc)(DIALOG*,short,int*,void*), int modal, void *p) {
  (void)id; (void)proc; (void)modal; (void)p; opened++; return &dialog;
@@ -62,7 +66,8 @@ suffix = r'''int main(void) {
   hit.yy=(20-4)*8*zoom + 4*zoom;
   show_room_contents(&hit);
   assert(last_x==3 && last_y==4);
-  assert(strcmp(result,"#12\r\n3 Orks\r\nTreasure: 20 gold\r\n")==0);
+  assert(strstr(result,"#12\r\n14 Zombies (115 Gold Crowns)\r\n") == result);
+  assert(strstr(result,"ZOMBIE\r\n") && strstr(result,"Treasure: 20 gold\r\n"));
  }
  assert(opened==1);
  before=writes;
@@ -83,6 +88,9 @@ suffix = r'''int main(void) {
 '''
 with tempfile.TemporaryDirectory() as temp:
     root = Path(temp)
-    (root / "check.c").write_text(prefix + handler + suffix)
+    logic = (repo / "liste.c").read_text(encoding="cp1252")
+    logic = logic[logic.index("/* Room reference expansion"):]
+    generated = (repo / "ahq-reference-data.h").read_text(encoding="ascii")
+    (root / "check.c").write_text(prefix + generated + logic + handler + suffix)
     subprocess.run(["cl", "/nologo", "check.c", "/Fe:check.exe"], cwd=root, check=True)
     subprocess.run([str(root / "check.exe")], cwd=root, check=True)

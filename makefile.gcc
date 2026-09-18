@@ -255,7 +255,7 @@ $(OBJ_DIR)queue.o:	$(SRC_DIR)/queue.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/queue.c
 $(OBJ_DIR)set.o:	$(SRC_DIR)/set.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/set.c
-$(OBJ_DIR)liste.o:	$(SRC_DIR)/liste.c
+$(OBJ_DIR)liste.o:	$(SRC_DIR)/liste.c $(SRC_DIR)/ahq-reference-data.h
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/liste.c
 $(OBJ_DIR)makemap.o:	$(SRC_DIR)/makemap.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)/makemap.c

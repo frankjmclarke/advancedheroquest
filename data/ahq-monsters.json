@@ -1,0 +1,2789 @@
+{
+  "source": "AHQ - Monsters 1.pdf",
+  "pages": [
+    [
+      {
+        "name": "Skaven Warrior",
+        "stats": [
+          "6",
+          "5",
+          "5",
+          "7",
+          "10",
+          "6",
+          "6",
+          "3",
+          "1"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Leather armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Warrior",
+          "Skaven Warriors"
+        ]
+      },
+      {
+        "name": "Skaven Sentry",
+        "stats": [
+          "6",
+          "6",
+          "5",
+          "6",
+          "11",
+          "6",
+          "6",
+          "3",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Sentry",
+          "Skaven Sentries"
+        ]
+      },
+      {
+        "name": "Skaven Champion",
+        "stats": [
+          "7",
+          "5",
+          "6",
+          "8",
+          "9",
+          "8",
+          "6",
+          "3",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Chain armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Champion",
+          "Skaven Champions"
+        ]
+      },
+      {
+        "name": "Skaven Warlord",
+        "stats": [
+          "8",
+          "5",
+          "7",
+          "8",
+          "9",
+          "9",
+          "7",
+          "4",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "6",
+        "notes": "Magic halberd.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Warlord",
+          "Skaven Warlords"
+        ]
+      },
+      {
+        "name": "Skaven Gutter Runner",
+        "stats": [
+          "6",
+          "6",
+          "5",
+          "5",
+          "12",
+          "6",
+          "6",
+          "3",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Poisoned dagger (counts as a sword).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Gutter Runner",
+          "Skaven Gutter Runners"
+        ]
+      },
+      {
+        "name": "Skaven Night Runner",
+        "stats": [
+          "7",
+          "7",
+          "5",
+          "5",
+          "12",
+          "6",
+          "6",
+          "3",
+          "3"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Poisoned dagger (counts as a sword).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Night Runner",
+          "Skaven Night Runners"
+        ]
+      },
+      {
+        "name": "Skaven Poisoned Wind Globadier",
+        "stats": [
+          "6",
+          "6",
+          "3",
+          "5",
+          "10",
+          "6",
+          "6",
+          "3",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "2",
+        "notes": "Halberd. * See special rules.",
+        "ranged": [
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "*",
+          "*"
+        ],
+        "aliases": [
+          "Skaven Poisoned Wind Globadier",
+          "Skaven Poisoned Wind Globadiers",
+          "Poisoned Wind Globadier",
+          "Poisoned Wind Globadiers"
+        ]
+      },
+      {
+        "name": "Skaven Jezzailachis Team",
+        "stats": [
+          "6",
+          "6",
+          "6",
+          "4",
+          "10",
+          "6",
+          "6",
+          "3",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "2",
+        "notes": "Sword. * See special rules.",
+        "ranged": [
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "*",
+          "*"
+        ],
+        "aliases": [
+          "Skaven Jezzailachis Team",
+          "Skaven Jezzailachis Teams",
+          "Jezzailachis Team",
+          "Jezzailachis Teams"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Beastman",
+        "stats": [
+          "6",
+          "4",
+          "5",
+          "7",
+          "7",
+          "7",
+          "5",
+          "4",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Beastman",
+          "Beastmen"
+        ]
+      },
+      {
+        "name": "Beastman Champion",
+        "stats": [
+          "8",
+          "5",
+          "6",
+          "9",
+          "6",
+          "8",
+          "6",
+          "5",
+          "4"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Leather armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Beastman Champion",
+          "Beastman Champions"
+        ]
+      },
+      {
+        "name": "Beastman Sentry",
+        "stats": [
+          "6",
+          "5",
+          "5",
+          "7",
+          "8",
+          "7",
+          "6",
+          "4",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Beastman Sentry",
+          "Beastman Sentries"
+        ]
+      },
+      {
+        "name": "Beastman Warlord",
+        "stats": [
+          "9",
+          "6",
+          "7",
+          "10",
+          "6",
+          "9",
+          "7",
+          "6",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "5",
+        "notes": "Chain armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Beastman Warlord",
+          "Beastman Warlords"
+        ]
+      },
+      {
+        "name": "Wight",
+        "stats": [
+          "9",
+          "4",
+          "6",
+          "9",
+          "7",
+          "10",
+          "6",
+          "6",
+          "8"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Chain mail; sword. Strength drain; fearsome monster; invulnerable monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Wight",
+          "Wights"
+        ]
+      },
+      {
+        "name": "Liche",
+        "stats": [
+          "9",
+          "7",
+          "7",
+          "9",
+          "7",
+          "10",
+          "10",
+          "8",
+          "12"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Staff (= spear). Fearsome monster; hypnotizes. Spells: Flesh Flaying, Strengthen Undead, Fire Ball (x2), Flight, Inferno of Doom.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Liche",
+          "Liches"
+        ]
+      },
+      {
+        "name": "Ghoul",
+        "stats": [
+          "6",
+          "2",
+          "5",
+          "6",
+          "6",
+          "8",
+          "2",
+          "4",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Club (counts as warhammer). Fearsome monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Ghoul",
+          "Ghouls"
+        ]
+      },
+      {
+        "name": "Vampire",
+        "stats": [
+          "9",
+          "8",
+          "7",
+          "9",
+          "8",
+          "10",
+          "10",
+          "6",
+          "14"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "5",
+        "notes": "Fearsome, regenerating, invulnerable monster. 2 attacks (claws, fangs). Hypnotizes; strength drain. Spells: Fire Ball, Flight, Inferno of Doom.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Vampire",
+          "Vampires"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Clan Mors Warlord Shaffat",
+        "stats": [
+          "8",
+          "5",
+          "7",
+          "8",
+          "9",
+          "9",
+          "7",
+          "4",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "6",
+        "notes": "Magic halberd (fumble 1-2, critical 11-12).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Clan Mors Warlord Shaffat",
+          "Clan Mors Warlord Shaffats"
+        ]
+      },
+      {
+        "name": "Clan Skryre Sorceror Tsekkaz",
+        "stats": [
+          "5",
+          "7",
+          "5",
+          "5",
+          "10",
+          "6",
+          "10",
+          "4",
+          "10"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "1",
+        "notes": "Dagger; ring of magic protection; Black Hand of Death (see Character Monsters earlier). Spells: Choke x1, Flaming Skull of Terror x1, Fireball x2.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Clan Skryre Sorceror Tsekkaz",
+          "Clan Skryre Sorceror Tsekkazs"
+        ]
+      },
+      {
+        "name": "Skaven Beastmaster",
+        "stats": [
+          "7",
+          "5",
+          "6",
+          "6",
+          "10",
+          "7",
+          "5",
+          "3",
+          "3"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Leather armor. Poisoned whip (as axe or warhammer, except fumble on 1-2 and critical on 11-12; specialist weapon cannot be used by Heroes).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Beastmaster",
+          "Skaven Beastmasters"
+        ]
+      },
+      {
+        "name": "Skaven Slavemaster",
+        "stats": [
+          "7",
+          "5",
+          "5",
+          "5",
+          "10",
+          "6",
+          "5",
+          "3",
+          "3"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Poisoned whip (as axe or warhammer, except fumble on 1-2 and critical on 11-12; specialist weapon cannot be used by Heroes).",
+        "ranged": [
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "12",
+          "3"
+        ],
+        "aliases": [
+          "Skaven Slavemaster",
+          "Skaven Slavemasters"
+        ]
+      },
+      {
+        "name": "Rat Ogre",
+        "stats": [
+          "7",
+          "3",
+          "8",
+          "8",
+          "7",
+          "8",
+          "4",
+          "7",
+          "7"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "6",
+        "notes": "Fights with claws and fangs. Fearsome monster; large monster. May run amok without Beastmaster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Rat Ogre",
+          "Rat Ogres"
+        ]
+      },
+      {
+        "name": "Skaven Slave",
+        "stats": [
+          "5",
+          "5",
+          "5",
+          "7",
+          "11",
+          "5",
+          "5",
+          "3",
+          ".5"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "1",
+        "notes": "Unless a Slavemaster is within six squares or in line of sight, a Slave must roll his Bravery or less or run from combat.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skaven Slave",
+          "Skaven Slaves"
+        ]
+      },
+      {
+        "name": "Cave Troll",
+        "stats": [
+          "5",
+          "1",
+          "9",
+          "9",
+          "7",
+          "4",
+          "3",
+          "9",
+          "9"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "7",
+        "notes": "Fights with claws and fangs. Fearsome monster; large monster; regenerates. May run amok without Beastmaster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Cave Troll",
+          "Cave Trolls"
+        ]
+      },
+      {
+        "name": "Skaven Gutter Runner",
+        "stats": [
+          "5",
+          "6",
+          "5",
+          "5",
+          "10",
+          "6",
+          "6",
+          "3",
+          "3"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Sword; sling. +1 to surprise.",
+        "ranged": [
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "12",
+          "3"
+        ],
+        "aliases": [
+          "Skaven Gutter Runner",
+          "Skaven Gutter Runners"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Chaos Lord",
+        "stats": [
+          "12",
+          "3",
+          "6",
+          "10",
+          "6",
+          "10",
+          "8",
+          "5",
+          "12"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "damage": "4+4",
+        "notes": "Plate armour; two axes.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Chaos Lord",
+          "Chaos Lords"
+        ]
+      },
+      {
+        "name": "Daemonette",
+        "stats": [
+          "8",
+          "1",
+          "5",
+          "7",
+          "10",
+          "10",
+          "6",
+          "4",
+          "12"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "3+3",
+        "notes": "Claws; fearsome monster; invulnerable; two attacks. Can cast: Flaming Skull of Terror x1.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Daemonette",
+          "Daemonettes"
+        ]
+      },
+      {
+        "name": "Undead Champion",
+        "stats": [
+          "8",
+          "1",
+          "6",
+          "8",
+          "6",
+          "10",
+          "3",
+          "4",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Chain armour; sword; fearsome monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Undead Champion",
+          "Undead Champions"
+        ]
+      },
+      {
+        "name": "Greater Daemon of Tzeentch",
+        "stats": [
+          "7",
+          "1",
+          "8",
+          "9",
+          "8",
+          "10",
+          "-",
+          "10",
+          "20"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "6+6",
+        "notes": "Claws; fearsome monster; invulnerable; large monster; two attacks. Can cast: Choke x2, Fireball x2, Flaming Skull of Terror x2.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Greater Daemon of Tzeentch",
+          "Greater Daemon of Tzeentchs"
+        ]
+      },
+      {
+        "name": "Minotaur Lord",
+        "stats": [
+          "9",
+          "4",
+          "8",
+          "9",
+          "8",
+          "9",
+          "6",
+          "10",
+          "11"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "8",
+        "notes": "Huge club; berserker; fearsome monster; large monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Minotaur Lord",
+          "Minotaur Lords"
+        ]
+      },
+      {
+        "name": "Chaos Sorcerer",
+        "stats": [
+          "7",
+          "3",
+          "5",
+          "7",
+          "8",
+          "9",
+          "10",
+          "4",
+          "11"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Scythe (counts as halberd). Can cast: Choke x1, Fireball x1, Flaming Skull of Terror x1.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Chaos Sorcerer",
+          "Chaos Sorcerers"
+        ]
+      },
+      {
+        "name": "Orc Warchief",
+        "stats": [
+          "9",
+          "3",
+          "6",
+          "9",
+          "6",
+          "10",
+          "7",
+          "4",
+          "8"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Chain armour; double-handed weapon (fumble 1-2, critical 11-12).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Orc Warchief",
+          "Orc Warchiefs"
+        ]
+      },
+      {
+        "name": "Ogre Chieftain",
+        "stats": [
+          "9",
+          "1",
+          "9",
+          "10",
+          "5",
+          "8",
+          "6",
+          "10",
+          "10"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "9",
+        "notes": "Chain armour; huge sword (counts as huge club).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Ogre Chieftain",
+          "Ogre Chieftains"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Zombie",
+        "stats": [
+          "6",
+          "1",
+          "5",
+          "4",
+          "6",
+          "10",
+          "2",
+          "3",
+          "1"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Cleaver (counts as a sword). Fearsome monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Zombie",
+          "Zombies"
+        ]
+      },
+      {
+        "name": "Skeleton",
+        "stats": [
+          "6",
+          "4",
+          "5",
+          "5",
+          "6",
+          "10",
+          "2",
+          "3",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Scythe (counts as a halberd). Fearsome monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Skeleton",
+          "Skeletons"
+        ]
+      },
+      {
+        "name": "Mummy",
+        "stats": [
+          "7",
+          "1",
+          "6",
+          "8",
+          "6",
+          "10",
+          "5",
+          "4",
+          "10"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Claws; cause disease; fearsome monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Mummy",
+          "Mummies"
+        ]
+      },
+      {
+        "name": "Fimir",
+        "stats": [
+          "6",
+          "2",
+          "5",
+          "7",
+          "6",
+          "8",
+          "5",
+          "4",
+          "7"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3+2",
+        "notes": "Leather armor; axe; two attacks.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Fimir",
+          "Fimirs"
+        ]
+      },
+      {
+        "name": "Ogre",
+        "stats": [
+          "7",
+          "3",
+          "8",
+          "8",
+          "7",
+          "7",
+          "4",
+          "9",
+          "8"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "8",
+        "notes": "Huge club; fearsome monster; large monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Ogre",
+          "Ogres"
+        ]
+      },
+      {
+        "name": "Troll",
+        "stats": [
+          "5",
+          "1",
+          "9",
+          "8",
+          "7",
+          "6",
+          "4",
+          "9",
+          "9"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "9",
+        "notes": "Huge club; fearsome monster; large monster; regenerates.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Troll",
+          "Trolls"
+        ]
+      },
+      {
+        "name": "Minotaur",
+        "stats": [
+          "7",
+          "4",
+          "7",
+          "8",
+          "8",
+          "8",
+          "4",
+          "9",
+          "9"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "7",
+        "notes": "Huge club; berserker; fearsome monster; large monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Minotaur",
+          "Minotaurs"
+        ]
+      },
+      {
+        "name": "Bloodthirster",
+        "stats": [
+          "5",
+          "3",
+          "8",
+          "10",
+          "10",
+          "8",
+          "5",
+          "6",
+          "12"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "6",
+        "notes": "Invulnerable; flight; fearsome monster; large monster; claws.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Bloodthirster",
+          "Bloodthirsters"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Goblin",
+        "stats": [
+          "5",
+          "5",
+          "4",
+          "5",
+          "6",
+          "5",
+          "5",
+          "2",
+          "1/2"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "2",
+        "notes": "Sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Goblin",
+          "Goblins"
+        ]
+      },
+      {
+        "name": "Goblin Archer",
+        "stats": [
+          "5",
+          "5",
+          "4",
+          "5",
+          "6",
+          "5",
+          "5",
+          "2",
+          "1/2"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "1",
+        "notes": "Dagger; short bow. * No critical hit at this range.",
+        "ranged": [
+          "7",
+          "8",
+          "9",
+          "10",
+          "11*",
+          "24",
+          "3"
+        ],
+        "aliases": [
+          "Goblin Archer",
+          "Goblin Archers"
+        ]
+      },
+      {
+        "name": "Orc",
+        "stats": [
+          "6",
+          "5",
+          "5",
+          "7",
+          "6",
+          "7",
+          "5",
+          "4",
+          "1"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Leather armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Orc",
+          "Orcs"
+        ]
+      },
+      {
+        "name": "Orc Champion",
+        "stats": [
+          "7",
+          "5",
+          "6",
+          "7",
+          "5",
+          "8",
+          "5",
+          "4",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ],
+        "damage": "4",
+        "notes": "Leather armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Orc Champion",
+          "Orc Champions"
+        ]
+      },
+      {
+        "name": "Orc Warlord",
+        "stats": [
+          "8",
+          "5",
+          "6",
+          "9",
+          "6",
+          "9",
+          "6",
+          "4",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Chain armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Orc Warlord",
+          "Orc Warlords"
+        ]
+      },
+      {
+        "name": "Chaos Thug",
+        "stats": [
+          "7",
+          "5",
+          "5",
+          "7",
+          "7",
+          "8",
+          "6",
+          "3",
+          "1"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Leather armour; shield; sword.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Chaos Thug",
+          "Chaos Thugs"
+        ]
+      },
+      {
+        "name": "Chaos Warrior",
+        "stats": [
+          "8",
+          "4",
+          "6",
+          "9",
+          "6",
+          "9",
+          "8",
+          "4",
+          "4"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "6",
+        "notes": "Plate armour; shield; axe.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Chaos Warrior",
+          "Chaos Warriors"
+        ]
+      },
+      {
+        "name": "Chaos Champion",
+        "stats": [
+          "10",
+          "4",
+          "6",
+          "10",
+          "6",
+          "10",
+          "8",
+          "4",
+          "8"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9"
+        ],
+        "damage": "5",
+        "notes": "Plate armour; shield; double-handed axe (fumble 1-2, critical 11-12).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Chaos Champion",
+          "Chaos Champions"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Skaven Warpfire-Thrower Team",
+        "stats": [
+          "6",
+          "6",
+          "4",
+          "4",
+          "10",
+          "6",
+          "6",
+          "3",
+          "10"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "2",
+        "notes": "Sword. * See special rules.",
+        "ranged": [
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "*",
+          "*"
+        ],
+        "aliases": [
+          "Skaven Warpfire-Thrower Team",
+          "Skaven Warpfire-Thrower Teams",
+          "Warpfire-Thrower Team",
+          "Warpfire-Thrower Teams"
+        ]
+      },
+      {
+        "name": "Clan Skryre Warpweaver",
+        "stats": [
+          "5",
+          "6",
+          "4",
+          "5",
+          "10",
+          "6",
+          "9",
+          "3",
+          "6"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "1",
+        "notes": "Dagger. Can cast: Fireball x1, Flaming Skull of Terror x1.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Clan Skryre Warpweaver",
+          "Clan Skryre Warpweavers",
+          "Warpweaver",
+          "Warpweavers"
+        ]
+      },
+      {
+        "name": "Clan Skryre White Skaven Sorcerer",
+        "stats": [
+          "5",
+          "7",
+          "5",
+          "5",
+          "10",
+          "6",
+          "10",
+          "4",
+          "10"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "",
+        "notes": "Dagger; ring of magic protection. Can cast: Choke x1, Flaming Skull of Terror x1, Fireball x2.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Clan Skryre White Skaven Sorcerer",
+          "Clan Skryre White Skaven Sorcerers",
+          "White Skaven Sorcerer",
+          "White Skaven Sorcerers"
+        ]
+      },
+      {
+        "name": "Clan Pestilens Plague Censer Bearer",
+        "stats": [
+          "6",
+          "6",
+          "4",
+          "5",
+          "10",
+          "6",
+          "6",
+          "3",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "2",
+        "notes": "Staff (counts as a sword). * See special rules.",
+        "ranged": [
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "*",
+          "*"
+        ],
+        "aliases": [
+          "Clan Pestilens Plague Censer Bearer",
+          "Clan Pestilens Plague Censer Bearers",
+          "Plague Censer Bearer",
+          "Plague Censer Bearers"
+        ]
+      },
+      {
+        "name": "Clan Pestilens Plague Monk",
+        "stats": [
+          "6",
+          "6",
+          "4",
+          "5",
+          "10",
+          "6",
+          "8",
+          "3",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "2",
+        "notes": "Dagger; warp scroll.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Clan Pestilens Plague Monk",
+          "Clan Pestilens Plague Monks",
+          "Plague Monk",
+          "Plague Monks"
+        ]
+      },
+      {
+        "name": "Clan Mors Warlord",
+        "stats": [
+          "8+2",
+          "5",
+          "7+2",
+          "8",
+          "9",
+          "9",
+          "7",
+          "4",
+          "10"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9"
+        ],
+        "damage": "7",
+        "notes": "Chain armour; shield; runesword (+2 WS, +2 S).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Clan Mors Warlord",
+          "Clan Mors Warlords"
+        ]
+      },
+      {
+        "name": "Clan Eshin Assassin",
+        "stats": [
+          "9",
+          "9",
+          "5",
+          "7",
+          "12",
+          "9",
+          "7",
+          "4",
+          "8"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Poisoned dagger (counts as a sword).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Clan Eshin Assassin",
+          "Clan Eshin Assassins",
+          "Skaven Assassin",
+          "Skaven Assassins"
+        ]
+      },
+      {
+        "name": "Praznagar Prince of Agony",
+        "stats": [
+          "9",
+          "7",
+          "6+2",
+          "8",
+          "9",
+          "9",
+          "9",
+          "5",
+          "-"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9"
+        ],
+        "damage": "6",
+        "notes": "Leather armour; chaos sword (never fumbles, +2 S); fearsome monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Praznagar Prince of Agony",
+          "Praznagar Prince of Agonys"
+        ]
+      }
+    ],
+    [
+      {
+        "name": "Orc Sentry",
+        "stats": [
+          "6",
+          "6",
+          "5",
+          "7",
+          "7",
+          "7",
+          "5",
+          "4",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Shield; sword (fumble 1, critical 12).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Orc Sentry",
+          "Orc Sentries"
+        ]
+      },
+      {
+        "name": "Chaos Thug Sentry",
+        "stats": [
+          "7",
+          "6",
+          "5",
+          "6",
+          "8",
+          "8",
+          "6",
+          "3",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Shield; sword.",
+        "ranged": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "aliases": [
+          "Chaos Thug Sentry",
+          "Chaos Thug Sentries"
+        ]
+      },
+      {
+        "name": "Wight",
+        "stats": [
+          "6",
+          "1",
+          "5",
+          "5",
+          "5",
+          "10",
+          "2",
+          "3",
+          "6"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Fearsome monster; invulnerable (fumble 1, critical 12).",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Wight",
+          "Wights"
+        ]
+      },
+      {
+        "name": "Giant Rat",
+        "stats": [
+          "5",
+          "-",
+          "3",
+          "5",
+          "10",
+          "6",
+          "6",
+          "1",
+          "1/2"
+        ],
+        "hits": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "1",
+        "notes": "Bite.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Giant Rat",
+          "Giant Rats"
+        ]
+      },
+      {
+        "name": "Sorcerer of Nurgle",
+        "stats": [
+          "7",
+          "3",
+          "5",
+          "7",
+          "8",
+          "9",
+          "10",
+          "4",
+          "11"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Sword (fumble 1, critical 12). Has a spellbook containing The Green Eye, The Pool of Many Places, The Cloak of Dainne and The Emerald Waterfall.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Sorcerer of Nurgle",
+          "Sorcerer of Nurgles"
+        ]
+      },
+      {
+        "name": "Wolf",
+        "stats": [
+          "8",
+          "-",
+          "4",
+          "7",
+          "9",
+          "8",
+          "7",
+          "4",
+          "3"
+        ],
+        "hits": [
+          "2",
+          "2",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10"
+        ],
+        "damage": "3",
+        "notes": "Bite.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Wolf",
+          "Wolves"
+        ]
+      },
+      {
+        "name": "Ghoul",
+        "stats": [
+          "6",
+          "2",
+          "5",
+          "6",
+          "6",
+          "8",
+          "2",
+          "4",
+          "2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "4",
+        "notes": "Claw attack; fearsome monster.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Ghoul",
+          "Ghouls"
+        ]
+      },
+      {
+        "name": "Giant Vampire Bat",
+        "stats": [
+          "6",
+          "-",
+          "3",
+          "6",
+          "12",
+          "8",
+          "7",
+          "1",
+          "1/2"
+        ],
+        "hits": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "damage": "2",
+        "notes": "Bloodsucking bite.",
+        "ranged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "aliases": [
+          "Giant Vampire Bat",
+          "Giant Vampire Bats"
+        ]
+      }
+    ]
+  ]
+}

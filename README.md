@@ -234,6 +234,28 @@ for reference during play. Long descriptions scroll and can be selected and
 copied. Clicking corridors or blank space leaves the current contents visible.
 Closing or regenerating the map closes the contents window.
 
+Room contents also includes AHQ monster references beneath matching encounter
+entries: characteristics, hand-to-hand and ranged tables, and equipment notes.
+Explicit singular/plural aliases are matched without guessing creature subtypes.
+When the source has multiple profiles (for example Wights or Ghouls), all are
+labelled with variant numbers. Unrecognized counted
+creatures are marked as missing; their original encounter text is retained.
+The reference area uses a fixed-width font with horizontal and vertical scrolling.
+
+The shared source is `data/ahq-monsters.json`. To update it, edit the profile or
+its explicit aliases, then regenerate both outputs:
+
+```powershell
+python tools/ahq-monster-sheet.py
+python tools/generate-ahq-reference.py
+python tools/generate-ahq-reference.py --check
+.\build-msvc.bat
+```
+
+The generated `ahq-reference-data.h` is checked in with the sources. The Windows
+application reads the embedded C data, so it needs neither Python nor the PDF at
+runtime. Printed values, source variants and blank cells are preserved.
+
 ### Player view and fog of war
 
 Choose **Map → Player View (fog of war)** after generating a dungeon. The

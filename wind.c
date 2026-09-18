@@ -13,6 +13,7 @@
 #include <ro_mem.h>
 #include <file_io.h>
 #include <string.h>
+#include <stdlib.h>
 #include <w_draw.h>
 #include <w_print.h>
 
@@ -334,8 +335,8 @@ LOCAL _BOOL room_contents_closed = FALSE;
 
 LOCAL DLG_RETURN room_contents_proc(DIALOG *dialog, _WORD button, _BOOL *ret, _VOID *para)
 {
-	UNUSED(dialog);
 	UNUSED(para);
+	if (button == DO_INIT) Dialog_SetMonospace(dialog, ROOMCONTENTSTEXT);
 	*ret = FALSE;
 	if (button == DO_EXIT || button == IDCANCEL || button == IDOK)
 	{
@@ -359,8 +360,7 @@ LOCAL _VOID show_room_contents(CONST WIPR_HIT *hit)
 {
 	PICE *piece;
 	_WORD x, y;
-	_UBYTE **line, *text, *out;
-	size_t size = 1, len;
+	_UBYTE *text;
 
 	/* WMY_HIT is already in scrolled document pixels. The bitmap has a
 	 * one-cell border; map coordinates run upwards, bitmap rows downwards. */
@@ -385,33 +385,14 @@ LOCAL _VOID show_room_contents(CONST WIPR_HIT *hit)
 		Room_Contents = Dialog_Show(FROOMCONTENTS, room_contents_proc, FALSE, NULL);
 	if (Room_Contents == NULL)
 		return;
-	if (piece->text == NULL || piece->text[0] == NULL)
-	{
-		Dialog_SetStr(Room_Contents, ROOMCONTENTSTEXT, "No contents recorded for this room.");
-		return;
-	}
-	for (line = piece->text; *line != NULL; line++)
-	{
-		len = strlen(*line);
-		if (len > (size_t)-1 - size - 2)
-			return;
-		size += len + 2;
-	}
-	text = MALLOC(size, "room contents");
+	text = room_contents_text(piece->text);
 	if (text == NULL)
-		return;
-	out = text;
-	for (line = piece->text; *line != NULL; line++)
 	{
-		len = strlen(*line);
-		memcpy(out, *line, len);
-		out += len;
-		*out++ = '\r';
-		*out++ = '\n';
+		Dialog_SetStr(Room_Contents, ROOMCONTENTSTEXT, "Not enough memory for room contents.");
+		return;
 	}
-	*out = 0;
 	Dialog_SetStr(Room_Contents, ROOMCONTENTSTEXT, text);
-	FREE(text, size);
+	free(text);
 }
 
 LOCAL _BOOL player_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
