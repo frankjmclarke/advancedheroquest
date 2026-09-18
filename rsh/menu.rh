@@ -99,3 +99,6 @@
 #define FDESC             10
 #define DESCTEXT         160
 
+
+#define FROOMCONTENTS      11
+#define ROOMCONTENTSTEXT  170

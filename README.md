@@ -225,6 +225,15 @@ Only the 32-bit build is worth targeting on a modern machine — 64-bit Windows
 dropped the 16-bit subsystem, so the `WIN16` and `DOS` targets need DOSBox or a
 VM to run.
 
+### Inspecting a room
+
+Click a room in the graphic map to open **Room contents**, showing its room
+number and the generated encounter, treasure, and other description text.
+The window stays open while you click other rooms; move it beside the map
+for reference during play. Long descriptions scroll and can be selected and
+copied. Clicking corridors or blank space leaves the current contents visible.
+Closing or regenerating the map closes the contents window.
+
 ### Colour
 
 The map is drawn in colour on screen, keyed to what each piece is:

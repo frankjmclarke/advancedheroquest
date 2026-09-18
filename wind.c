@@ -320,6 +320,92 @@ LOCAL _VOID draw_grafic(WINDOW_DEF *window, MFDB *mfdb, CONST GRECT *area)
 
 /*** ---------------------------------------------------------------------- ***/
 
+/* The dialog owns a copy of the displayed text, never a pointer into a map. */
+LOCAL DIALOG *Room_Contents = NULL;
+LOCAL _BOOL room_contents_closed = FALSE;
+
+LOCAL DLG_RETURN room_contents_proc(DIALOG *dialog, _WORD button, _BOOL *ret, _VOID *para)
+{
+	UNUSED(dialog);
+	UNUSED(para);
+	*ret = FALSE;
+	if (button == DO_EXIT || button == IDCANCEL || button == IDOK)
+	{
+		room_contents_closed = TRUE;
+		return DLG_END;
+	}
+	return DLG_CONTINUE;
+}
+
+LOCAL _VOID close_room_contents(_VOID)
+{
+	if (Room_Contents != NULL)
+	{
+		Dialog_Hide(Room_Contents);
+		Room_Contents = NULL;
+	}
+	room_contents_closed = FALSE;
+}
+
+LOCAL _VOID show_room_contents(CONST WIPR_HIT *hit)
+{
+	PICE *piece;
+	_WORD x, y;
+	_UBYTE **line, *text, *out;
+	size_t size = 1, len;
+
+	/* WMY_HIT is already in scrolled document pixels. The bitmap has a
+	 * one-cell border; map coordinates run upwards, bitmap rows downwards. */
+	if (display_zoom < 1 || hit->xx < 0 || hit->yy < 0)
+		return;
+	x = hit->xx / display_zoom / ICON_SCALE - 1;
+	y = Ysize - hit->yy / display_zoom / ICON_SCALE;
+	if (!get_square(x, y, &piece) || piece == NULL)
+		return;
+	switch (piece->type)
+	{
+	case SMALL_ROOM: case NORMAL_ROOM: case HAZARD: case LARGE_ROOM:
+	case LAIR: case QUEST: case BIG: case MERSCHA:
+		break;
+	default:
+		return;
+	}
+
+	if (room_contents_closed)
+		close_room_contents();
+	if (Room_Contents == NULL)
+		Room_Contents = Dialog_Show(FROOMCONTENTS, room_contents_proc, FALSE, NULL);
+	if (Room_Contents == NULL)
+		return;
+	if (piece->text == NULL || piece->text[0] == NULL)
+	{
+		Dialog_SetStr(Room_Contents, ROOMCONTENTSTEXT, "No contents recorded for this room.");
+		return;
+	}
+	for (line = piece->text; *line != NULL; line++)
+	{
+		len = strlen(*line);
+		if (len > (size_t)-1 - size - 2)
+			return;
+		size += len + 2;
+	}
+	text = MALLOC(size, "room contents");
+	if (text == NULL)
+		return;
+	out = text;
+	for (line = piece->text; *line != NULL; line++)
+	{
+		len = strlen(*line);
+		memcpy(out, *line, len);
+		out += len;
+		*out++ = '\r';
+		*out++ = '\n';
+	}
+	*out = 0;
+	Dialog_SetStr(Room_Contents, ROOMCONTENTSTEXT, text);
+	FREE(text, size);
+}
+
 LOCAL _BOOL grafic_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
 {
 	L_GRECT show;
@@ -339,9 +425,13 @@ LOCAL _BOOL grafic_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
 		Wind_SetDoc(window, &show);
 		break;
 	case WMY_CLOSE:
+		close_room_contents();
 		Grafik_Karte = NULL;
 		ptr = buf;
 		free_mfdb(ptr);
+		break;
+	case WMY_HIT:
+		show_room_contents(buf);
 		break;
 	case WMY_UPDATE:
 		ptr = Wind_Buf_Ptr(window);
