@@ -9,6 +9,7 @@
 #endif
 
 _BOOL draw_img_map(MFDB *image);
+_BOOL draw_player_map(MFDB *image, CONST _UBYTE *visible);
 _BOOL init_icons(_VOID);
 _VOID free_icons(_VOID);
 

@@ -460,7 +460,7 @@ LOCAL _BOOL draw_pice(MFDB *image, PICE *pice)
 
 /*** ---------------------------------------------------------------------- ***/
 
-GLOBAL _BOOL draw_img_map(MFDB *image)
+LOCAL _BOOL draw_map_visible(MFDB *image, CONST _UBYTE *visible)
 {
 	_WORD i;
 	PICE *pice;
@@ -472,6 +472,7 @@ GLOBAL _BOOL draw_img_map(MFDB *image)
 		pice = Pice;
 		for (i = 0; i < MAX_PICE; i++)
 		{
+			if (visible != NULL && !fog_visible(visible, i)) { pice++; continue; }
 			switch (pice->type)
 			{
 			case SMALL_ROOM:
@@ -509,6 +510,7 @@ GLOBAL _BOOL draw_img_map(MFDB *image)
 		pice = Pice;
 		for (i = 0; i < MAX_PICE; i++)
 		{
+			if (visible != NULL && !fog_visible(visible, i)) { pice++; continue; }
 			switch (pice->type)
 			{
 			case DOOR:
@@ -528,6 +530,16 @@ GLOBAL _BOOL draw_img_map(MFDB *image)
 }
 
 /*** ---------------------------------------------------------------------- ***/
+
+GLOBAL _BOOL draw_img_map(MFDB *image)
+{
+ return draw_map_visible(image, NULL);
+}
+
+GLOBAL _BOOL draw_player_map(MFDB *image, CONST _UBYTE *visible)
+{
+ return draw_map_visible(image, visible);
+}
 
 LOCAL _VOID center_mfdb(_WORD *x, _WORD *y, _WORD w, _WORD h, _WORD mw, _WORD mh)
 {

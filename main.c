@@ -560,6 +560,7 @@ LOCAL _VOID karte_ok(_BOOL ok)
 	Wind_Menu_Enable(MWEITER, ok);
 	Wind_Menu_Enable(MABSPEIC, ok);
 	Wind_Menu_Enable(MGRAFIK, ok);
+	Wind_Menu_Enable(MPLAYER, ok);
 	Wind_Menu_Enable(MTEXT, ok);
 	Wind_Menu_Enable(MMONSTER, ok);
 	Wind_Menu_Enable(MSTATIST, ok);
@@ -1309,6 +1310,10 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 			karte_ok(FALSE);
 		}
 		SetMouse(MOUSE_RESTORE);
+		break;
+
+	case MPLAYER:
+		show_player_view(AHQ_para.name);
 		break;
 
 	case MABSPEIC:

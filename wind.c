@@ -17,6 +17,9 @@
 #include <w_print.h>
 
 GLOBAL WINDOW_DEF *Grafik_Karte = NULL;
+LOCAL WINDOW_DEF *Player_View = NULL;
+LOCAL _UBYTE *player_visible = NULL;
+LOCAL size_t player_visible_size = 0;
 GLOBAL WINDOW_DEF *Text_Karte = NULL;
 GLOBAL WINDOW_DEF *Monster_Liste = NULL;
 GLOBAL WINDOW_DEF *Statistik = NULL;
@@ -235,7 +238,8 @@ GLOBAL _VOID Grafik_Zoom_Set(_WORD zoom)
 {
 	L_GRECT show;
 	MFDB *ptr;
-	_WORD w, h;
+	_WORD w, h, i;
+	WINDOW_DEF *views[2];
 
 	if (zoom < ZOOM_MIN)
 		zoom = ZOOM_MIN;
@@ -245,20 +249,23 @@ GLOBAL _VOID Grafik_Zoom_Set(_WORD zoom)
 		return;
 	display_zoom = zoom;
 
-	if (Grafik_Karte != NULL)
+	views[0] = Grafik_Karte;
+	views[1] = Player_View;
+	for (i = 0; i < 2; i++)
 	{
-		ptr = Wind_Buf_Ptr(Grafik_Karte);
+		if (views[i] == NULL) continue;
+		ptr = Wind_Buf_Ptr(views[i]);
 		if (ptr != NULL)
 		{
 			get_mfdb_info(ptr, &w, &h, NULL);
-			Wind_GetDoc(Grafik_Karte, &show);
+			Wind_GetDoc(views[i], &show);
 			show.xx = 0;
 			show.yy = 0;
 			show.ww = (_LONG)w * zoom;
 			show.hh = (_LONG)h * zoom;
-			Wind_SetDoc(Grafik_Karte, &show);
+			Wind_SetDoc(views[i], &show);
 		}
-		Wind_Redraw(Grafik_Karte);
+		Wind_Redraw(views[i]);
 	}
 }
 
@@ -275,16 +282,17 @@ GLOBAL _VOID Grafik_Zoom_Fit(_VOID)
 	GRECT work;
 	MFDB *ptr;
 	_WORD w, h, zx, zy;
+	WINDOW_DEF *view = Wind_Top() == Player_View ? Player_View : Grafik_Karte;
 
-	if (Grafik_Karte == NULL)
+	if (view == NULL)
 		return;
-	ptr = Wind_Buf_Ptr(Grafik_Karte);
+	ptr = Wind_Buf_Ptr(view);
 	if (ptr == NULL)
 		return;
 	get_mfdb_info(ptr, &w, &h, NULL);
 	if (w <= 0 || h <= 0)
 		return;
-	Wind_GetWork(Grafik_Karte, &work);
+	Wind_GetWork(view, &work);
 	zx = (_WORD)(work.g_w / w);
 	zy = (_WORD)(work.g_h / h);
 	Grafik_Zoom_Set(zx < zy ? zx : zy);
@@ -312,8 +320,8 @@ LOCAL _VOID draw_grafic(WINDOW_DEF *window, MFDB *mfdb, CONST GRECT *area)
 		gr.g_y = (gr.g_y + (_WORD)show.yy) / display_zoom;
 		gr.g_w = (gr.g_w + display_zoom * 2 - 1) / display_zoom;
 		gr.g_h = (gr.g_h + display_zoom * 2 - 1) / display_zoom;
-		dx = (area->g_x / display_zoom) * display_zoom;
-		dy = (area->g_y / display_zoom) * display_zoom;
+		dx = gr.g_x * display_zoom - (_WORD)show.xx;
+		dy = gr.g_y * display_zoom - (_WORD)show.yy;
 		W_Draw_Bitmap(window, mfdb, gr.g_x, gr.g_y, gr.g_w, gr.g_h, dx, dy, display_zoom);
 	}
 }
@@ -404,6 +412,81 @@ LOCAL _VOID show_room_contents(CONST WIPR_HIT *hit)
 	*out = 0;
 	Dialog_SetStr(Room_Contents, ROOMCONTENTSTEXT, text);
 	FREE(text, size);
+}
+
+LOCAL _BOOL player_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
+{
+ L_GRECT show;
+ _WORD w, h, x, y;
+ WIPR_HIT *hit;
+ MFDB *image;
+ PICE *piece;
+ switch (msg) {
+ case WMY_OPEN:
+  Wind_SetFac(window, 1, 1, 8, 8);
+  get_mfdb_info(buf, &w, &h, NULL);
+  show.xx = show.yy = 0;
+  show.ww = (_LONG)w * display_zoom;
+  show.hh = (_LONG)h * display_zoom;
+  Wind_SetDoc(window, &show);
+  break;
+ case WMY_UPDATE:
+  draw_grafic(window, Wind_Buf_Ptr(window), buf);
+  break;
+ case WMY_HIT:
+  hit = buf;
+  if (display_zoom < 1 || hit->xx < 0 || hit->yy < 0) break;
+  x = hit->xx / display_zoom;
+  y = hit->yy / display_zoom;
+  if (fog_open_door(player_visible, x, y)) {
+   image = Wind_Buf_Ptr(window);
+   draw_player_map(image, player_visible);
+   Wind_Redraw(window);
+  } else if (get_square(x / ICON_SCALE - 1, Ysize - y / ICON_SCALE, &piece) &&
+             piece != NULL && fog_visible(player_visible, (_WORD)(piece - Pice))) {
+   show_room_contents(hit);
+  }
+  break;
+ case WMY_CLOSE:
+  Player_View = NULL;
+  free_mfdb(buf);
+  break;
+ case WMY_OUT:
+ case WMY_PRINT:
+  return FALSE;
+ default:
+  break;
+ }
+ return TRUE;
+}
+
+GLOBAL _VOID show_player_view(_UBYTE *name)
+{
+ MFDB *image;
+ _UBYTE title[256];
+ if (Player_View != NULL) {
+  Wind_On_Top(Player_View);
+  return;
+ }
+ if (player_visible == NULL) {
+  player_visible_size = (size_t)MAX_PICE;
+  player_visible = MALLOC(player_visible_size, "player visibility");
+  if (player_visible == NULL) return;
+  fog_init(player_visible);
+ }
+ image = get_mfdb((Xsize + 2) * ICON_SCALE, (Ysize + 2) * ICON_SCALE, GetNumPlanes(), NULL);
+ if (image == NULL)
+  image = get_mfdb((Xsize + 2) * ICON_SCALE, (Ysize + 2) * ICON_SCALE, 1, NULL);
+ if (image == NULL) {
+  abbruch("Not enough memory for player view");
+  return;
+ }
+ if (!draw_player_map(image, player_visible)) {
+  free_mfdb(image);
+  return;
+ }
+ sprintf(title, "Player view: %s", name);
+ Player_View = Wind_Open(W_PLAYER, WINDOW_ATTRIBUTES, player_proc, title, image);
 }
 
 LOCAL _BOOL grafic_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
@@ -1151,4 +1234,9 @@ GLOBAL _BOOL print_statistik(_VOID)
 GLOBAL _VOID close_all_windows(_BOOL delete)
 {
 	Wind_Close_All(delete);
+ if (player_visible != NULL) {
+  FREE(player_visible, player_visible_size);
+  player_visible = NULL;
+  player_visible_size = 0;
+ }
 }

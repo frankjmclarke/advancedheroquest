@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 
 source = (Path(__file__).resolve().parents[1] / "wind.c").read_text(encoding="cp1252")
-handler = source[source.index("LOCAL DIALOG *Room_Contents"):source.index("LOCAL _BOOL grafic_proc")]
+handler = source[source.index("LOCAL DIALOG *Room_Contents"):source.index("LOCAL _BOOL player_proc")]
 prefix = r'''#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

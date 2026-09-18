@@ -38,6 +38,7 @@
 #define MZOOM100         146
 #define MZOOMFIT         147
 #define MHELP            148
+#define MPLAYER          149
 
 #define FKARTE             2
 #define KNAME            102

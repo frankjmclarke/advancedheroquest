@@ -38,7 +38,7 @@ _VOID Grafik_Zoom_Set(_WORD zoom);
 _VOID Grafik_Zoom_Fit(_VOID);
 extern _WORD print_zoom;
 
-enum { W_DATEI=1, W_TEXT, W_GRAFIK, W_LISTE, W_STATISTIK };
+enum { W_DATEI=1, W_TEXT, W_GRAFIK, W_LISTE, W_STATISTIK, W_PLAYER };
 
 typedef enum _img_type { IMG, PCX, BMP } IMG_TYPE;
 
@@ -52,6 +52,7 @@ _BOOL print_liste(_VOID);
 _BOOL print_statistik(_VOID);
 _BOOL print_file(WINDOW_DEF *wr);
 _VOID show_grafic(_UBYTE *str);
+_VOID show_player_view(_UBYTE *str);
 _VOID show_text(_UBYTE *str);
 WINDOW_DEF *show_text_file(_UBYTE *path);
 _VOID show_liste(_UBYTE *str);

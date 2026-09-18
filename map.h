@@ -22,4 +22,9 @@ _VOID map_exit(_VOID);
 
 #define clr_square(x,y) set_square((x), (y), NULL)
 
+/* One visibility byte per Pice slot. Doors derive visibility from their sides. */
+_VOID fog_init(_UBYTE *visible);
+_BOOL fog_visible(CONST _UBYTE *visible, _WORD index);
+_BOOL fog_open_door(_UBYTE *visible, _WORD pixel_x, _WORD pixel_y);
+
 #endif /* __MAP_H__ */

@@ -234,6 +234,20 @@ for reference during play. Long descriptions scroll and can be selected and
 copied. Clicking corridors or blank space leaves the current contents visible.
 Closing or regenerating the map closes the contents window.
 
+### Player view and fog of war
+
+Choose **Map → Player View (fog of war)** after generating a dungeon. The
+separate map window initially shows all corridors, stairs, and their doors.
+Rooms stay blank until you click a visible doorway. That reveals the adjoining
+room, its map contents, and all its doors; it does not reveal further rooms.
+All doors includes secret doors adjoining a visible corridor or revealed room.
+
+Click a revealed room to read its contents. The normal graphic map remains
+fully visible for the GM. Both maps support zoom and scrolling; **Fit to Window**
+uses the active map window. Reopening Player View preserves discoveries for the
+current map. Generating a new map or using Close All resets discoveries.
+Discovery state is kept only for the current application session.
+
 ### Colour
 
 The map is drawn in colour on screen, keyed to what each piece is:
