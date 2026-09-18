@@ -12,7 +12,9 @@ Passage-End
     8-11    Right-Turn
    12-14    T-Junction
    15-18    Left-Turn
-   19-22    Dead-End
+   19-20    Dead-End
+   21-21    Stairs-Down
+   22-22    Stairs-Out
    23-24    T-Junction
 )
 
