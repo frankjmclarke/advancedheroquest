@@ -39,4 +39,7 @@ _BOOL mfdb_start_paint(MFDB *mfdb);
 _VOID mfdb_end_paint(MFDB *mfdb);
 _VOID W_Draw_Bitmap(_VOID /* WINDOW_DEF */ *window, MFDB *mfdb, _WORD x, _WORD y, _WORD w, _WORD h, _WORD dx, _WORD dy, _WORD zoom);
 
+/* Scale a complete colour tile to its on-screen bounds. */
+_VOID W_Draw_Tile(_VOID *window, MFDB *tile, _WORD dx, _WORD dy, _WORD w, _WORD h);
+
 #endif /* __MFDB_H__ */

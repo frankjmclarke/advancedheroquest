@@ -484,6 +484,7 @@ LOCAL _VOID read_profile(_VOID)
 	Profile_ReadBool("Config", "AskExit", TRUE, &AHQ_para.ask_exit);
 	zoom_is_default = !Profile_ReadInt("Config", "Zoom", 3, &display_zoom);
 	Grafik_Zoom_Set(display_zoom);		/* clamps a bad profile value */
+	Profile_ReadBool("Config", "EnhancedTiles", TRUE, &enhanced_view);
 	Profile_ReadBool("Config", "Fullscreen", TRUE, &AHQ_para.fullscreen);
 	Profile_ReadInt("Print", "Zoom", 0, &print_zoom);
 }
@@ -534,6 +535,7 @@ LOCAL _VOID write_profile(_VOID)
 	Profile_WriteBool("Config", "Autosave", AHQ_para.autosave);
 	Profile_WriteBool("Config", "AskExit", AHQ_para.ask_exit);
 	Profile_WriteInt("Config", "Zoom", display_zoom);
+	Profile_WriteBool("Config", "EnhancedTiles", enhanced_view);
 	Profile_WriteBool("Config", "Fullscreen", AHQ_para.fullscreen);
 	Profile_WriteInt("Print", "Zoom", print_zoom);
 }
@@ -1422,6 +1424,10 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		write_profile();
 		break;
 
+	case MENHANCED:
+		Grafik_Enhanced_Set(!enhanced_view);
+		break;
+
 	case MZOOMIN:
 		Grafik_Zoom_Set(Grafik_Zoom_Get() + 1);
 		break;
@@ -1523,6 +1529,7 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 			AHQ_para.statistik = Wind_Menu_Checked(MSTATIST);
 		} else
 		{
+			Wind_Menu_Check(MENHANCED, enhanced_view);
 			if (AHQ_para.grafik)
 				Wind_Menu_Check(MGRAFIK, TRUE);
 			if (AHQ_para.text)

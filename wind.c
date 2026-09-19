@@ -25,6 +25,16 @@ GLOBAL WINDOW_DEF *Text_Karte = NULL;
 GLOBAL WINDOW_DEF *Monster_Liste = NULL;
 GLOBAL WINDOW_DEF *Statistik = NULL;
 GLOBAL _WORD display_zoom;
+GLOBAL _BOOL enhanced_view = TRUE;
+
+GLOBAL _VOID Grafik_Enhanced_Set(_BOOL enabled)
+{
+	enhanced_view = enabled;
+	Wind_Menu_Check(MENHANCED, enabled);
+	if (Grafik_Karte != NULL) Wind_Redraw(Grafik_Karte);
+	if (Player_View != NULL) Wind_Redraw(Player_View);
+}
+
 GLOBAL _WORD print_zoom = 0;
 GLOBAL _WORD tabstop = 8;
 
@@ -324,6 +334,9 @@ LOCAL _VOID draw_grafic(WINDOW_DEF *window, MFDB *mfdb, CONST GRECT *area)
 		dx = gr.g_x * display_zoom - (_WORD)show.xx;
 		dy = gr.g_y * display_zoom - (_WORD)show.yy;
 		W_Draw_Bitmap(window, mfdb, gr.g_x, gr.g_y, gr.g_w, gr.g_h, dx, dy, display_zoom);
+		if (enhanced_view)
+			draw_board_map(window, mfdb, window == Player_View ? player_visible : NULL,
+				display_zoom, (_WORD)show.xx, (_WORD)show.yy);
 	}
 }
 

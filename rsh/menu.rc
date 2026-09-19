@@ -66,6 +66,8 @@ MENUE MENU
 	}
 	POPUP "&View"
 	{
+		MENUITEM "&Enhanced board-game tiles", MENHANCED
+		MENUITEM SEPARATOR
 		MENUITEM "Zoom &In\tCtrl++", MZOOMIN
 		MENUITEM "Zoom &Out\tCtrl+-", MZOOMOUT
 		MENUITEM "&Actual Size\tCtrl+0", MZOOM100

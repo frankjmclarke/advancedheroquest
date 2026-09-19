@@ -317,3 +317,27 @@ OS_GLOBAL HBITMAP get_mfdb_bitmap(_VOID /* MFDB */ *mfdb)
 	return ((MFDB *)mfdb)->bmp;
 }
 
+
+/* Colour board artwork is sampled at display resolution, not ICON_SCALE. */
+GLOBAL _VOID W_Draw_Tile(_VOID *window, MFDB *tile, _WORD dx, _WORD dy, _WORD w, _WORD h)
+{
+    HDC screen = W_GetDC(window);
+    HDC source;
+    HGDIOBJ previous;
+    int saved;
+    RECT bounds;
+    bounds.left = dx; bounds.top = dy; bounds.right = dx + w; bounds.bottom = dy + h;
+    if (screen == NO_DC || tile == NULL || w <= 0 || h <= 0) return;
+    if (!RectVisible(screen, &bounds)) return;
+    source = CreateCompatibleDC(screen);
+    if (source == NULL) return;
+    previous = SelectObject(source, tile->bmp);
+    saved = SaveDC(screen);
+    SetStretchBltMode(screen, HALFTONE);
+    SetBrushOrgEx(screen, 0, 0, NULL);
+    StretchBlt(screen, dx, dy, w, h, source, 0, 0,
+               tile->ic.bmWidth, tile->ic.bmHeight, SRCCOPY);
+    RestoreDC(screen, saved);
+    SelectObject(source, previous);
+    DeleteDC(source);
+}

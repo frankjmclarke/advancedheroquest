@@ -20,6 +20,8 @@ extern WINDOW_DEF *Text_Karte;
 extern WINDOW_DEF *Monster_Liste;
 extern WINDOW_DEF *Statistik;
 extern _WORD display_zoom;
+extern _BOOL enhanced_view;
+_VOID Grafik_Enhanced_Set(_BOOL enabled);
 
 /*
  * On-screen magnification of the graphic map. The map is rendered once at

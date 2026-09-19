@@ -103,3 +103,5 @@
 
 #define FROOMCONTENTS      11
 #define ROOMCONTENTSTEXT  170
+
+#define MENHANCED 153

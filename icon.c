@@ -2,6 +2,7 @@
 #include <pice.h>
 #include <map.h>
 #include <grafic.rh>
+#include <board-features.rh>
 #include <defs.h>
 #include <boxf.h>
 #include <ctype.h>
@@ -800,10 +801,24 @@ LOCAL _BOOL init_mfdb(MFDB **mfdb, _WORD formular, _WORD images)
 
 /*** ---------------------------------------------------------------------- ***/
 
+LOCAL MFDB *board_tiles[24];
+LOCAL MFDB *board_portcullis_trap;
+LOCAL MFDB *board_rooms[BOARD_ROOMS_COUNT];
+typedef struct board_feature {
+    _WORD original, resource;
+    MFDB *image;
+} BOARD_FEATURE;
+LOCAL BOARD_FEATURE board_features[] = BOARD_FEATURE_RESOURCES;
+#define BOARD_FEATURE_COUNT (sizeof(board_features) / sizeof(board_features[0]))
+
 GLOBAL _BOOL init_icons(_VOID)
 {
 	ICON *icon;
 	
+	if (!init_mfdb(board_tiles, BOARD_FIRST, 24))
+		return FALSE;
+	if (!init_mfdb(board_rooms, BOARD_ROOMS_FIRST, BOARD_ROOMS_COUNT))
+		return FALSE;
 	if (!init_mfdb(MFDB_digit, Z0, 10))
 		return FALSE;
 	
@@ -837,11 +852,201 @@ LOCAL _VOID free_mfdbs(MFDB **mfdb, _WORD images)
 GLOBAL _VOID free_icons(_VOID)
 {
 	ICON *icon;
+	unsigned int i;
 	
+	for (i = 0; i < BOARD_FEATURE_COUNT; i++)
+		free_mfdbs(&board_features[i].image, 1);
+	free_mfdbs(board_tiles, 24);
+	free_mfdbs(&board_portcullis_trap, 1);
+	free_mfdbs(board_rooms, BOARD_ROOMS_COUNT);
 	free_mfdbs(MFDB_digit, 10);
 	
 	for (icon = Icons; icon->ptr != NULL; icon++)
 	{
 		free_mfdbs(icon->mfdb, 4);
 	}
+}
+
+/* Only replace plain rooms of matching dimensions. Special-feature artwork
+ * remains intact until a corresponding board illustration is supported. */
+LOCAL MFDB *board_room_image(PICE *p)
+{
+    _WORD variant, x = 0, y = 0;
+    DIRECTION dir = p->pos;
+    _ULONG seed = (_ULONG)p->x * 13 + (_ULONG)p->y * 7;
+    if (dir < North || dir > West) return NULL;
+    switch (p->type)
+    {
+    case SMALL_ROOM:
+    case NORMAL_ROOM:
+    case HAZARD:
+        if (p->w != 5 || p->h != 5) return NULL;
+        switch (p->feature)
+        {
+        case Nothing:
+        case Wandering_Monsters:
+        case Maiden:
+        case Witch:
+        case Man_at_Arms:
+        case Rogue:
+        case Wight:
+            break;
+        default: return NULL;
+        }
+        variant = (_WORD)(seed % 4);
+        break;
+    case LARGE_ROOM:
+    case LAIR:
+    case QUEST:
+        if (p->feature != Nothing) return NULL;
+        if (!((p->w == 5 && p->h == 10) || (p->w == 10 && p->h == 5))) return NULL;
+        variant = 4 + (_WORD)(seed % 2);
+        /* Use the same dimension-aware orientation as the old room bitmap. */
+        dir = room_pos(dir, &x, &y, p->w, p->h);
+        break;
+    default: return NULL;
+    }
+    return board_rooms[variant * 4 + dir];
+}
+
+/* Feature tiles are loaded on demand: the original view and unrevealed
+ * player rooms do not allocate a second set of large colour bitmaps. */
+LOCAL MFDB *board_feature_image(PICE *p)
+{
+    ICON *icon = pice_icon(p);
+    DIRECTION dir = p->pos;
+    _WORD x = 0, y = 0, w, h, original;
+    unsigned int i;
+    if (icon == NULL || dir < North || dir > West) return NULL;
+    if (icon->position != FUNK_NULL)
+        dir = icon->position(dir, &x, &y, p->w, p->h);
+    if (dir < North || dir > West) return NULL;
+    original = icon->rsc + dir;
+    for (i = 0; i < BOARD_FEATURE_COUNT; i++)
+    {
+        if (board_features[i].original != original) continue;
+        if (board_features[i].image == NULL)
+            board_features[i].image = get_mfdb_from_bitmap(board_features[i].resource);
+        if (board_features[i].image == NULL) return NULL;
+        get_mfdb_info(board_features[i].image, &w, &h, NULL);
+        if (w != p->w * BOARD_PIXELS_PER_SQUARE || h != p->h * BOARD_PIXELS_PER_SQUARE) return NULL;
+        return board_features[i].image;
+    }
+    return NULL;
+}
+
+/* Trap tables emit text rather than a dedicated feature code. Recognize
+ * the complete trap name at the start of a generated line, case-insensitively. */
+LOCAL _BOOL has_portcullis_trap(PICE *p)
+{
+    _UBYTE **line;
+    CONST _UBYTE *s, *q;
+    CONST char *name;
+    if (p->text == NULL) return FALSE;
+    for (line = p->text; *line != NULL; line++)
+    {
+        s = *line;
+        do
+        {
+            while (*s == ' ' || *s == '\t' || *s == '\r') s++;
+            q = s; name = "portcullis";
+            while (*name && *q && tolower((unsigned char)*q) == *name) { q++; name++; }
+            if (*name == '\0' && (*q == '\0' || *q == '(' || isspace((unsigned char)*q)))
+                return TRUE;
+            while (*s && *s != '\n') s++;
+            if (*s == '\n') s++;
+        } while (*s);
+    }
+    return FALSE;
+}
+
+LOCAL _VOID draw_board_trap(_VOID *window, PICE *p, _WORD zoom, _WORD sx, _WORD sy)
+{
+    _WORD x, y, w = 2 * ICON_SCALE, h = ICON_SCALE;
+    if (p->w < 2 || p->h < 2 || !has_portcullis_trap(p)) return;
+    if (board_portcullis_trap == NULL)
+        board_portcullis_trap = get_mfdb_from_bitmap(BOARD_PORTCULLIS_TRAP);
+    if (board_portcullis_trap == NULL) return;
+    if (w > p->w * ICON_SCALE - 4) w = p->w * ICON_SCALE - 4;
+    x = (p->x + 1) * ICON_SCALE + 2;
+    y = (Ysize + 1 - p->y - p->h) * ICON_SCALE + 2;
+    W_Draw_Tile(window, board_portcullis_trap, x * zoom - sx, y * zoom - sy, w * zoom, h * zoom);
+}
+
+/* Overlay supported board artwork. The base map remains the authority for
+ * labels and doors, so fog, hit testing, saving and printing are unchanged. */
+GLOBAL _VOID draw_board_map(_VOID *window, MFDB *base, CONST _UBYTE *visible,
+                           _WORD zoom, _WORD scroll_x, _WORD scroll_y)
+{
+    _WORD i, kind, x, y, w, h, n, dw, dh, wx, hx, wy, hy, axis;
+    _UBYTE *text;
+    PICE *p;
+    DIRECTION dir;
+    ICON *icon;
+    MFDB *tile;
+    for (i = 0; i < MAX_PICE; i++)
+    {
+        if (visible != NULL && !fog_visible(visible, i)) continue;
+        p = &Pice[i];
+        switch (p->type)
+        {
+        case PASSAGE: kind = 0; break;
+        case DEAD_END: kind = 1; break;
+        case LEFT_TURN: kind = 2; break;
+        case RIGHT_TURN: kind = 3; break;
+        case T_JUNCTION: kind = 4; break;
+        case CORNER: kind = 5; break;
+        default: kind = -1; break;
+        }
+        if (p->pos < North || p->pos > West) continue;
+        tile = kind >= 0 ? board_tiles[kind * 4 + p->pos] : board_room_image(p);
+        if (tile == NULL && p->type != EMPTY && p->type != INVALID)
+            tile = board_feature_image(p);
+        if (tile == NULL) continue;
+        x = (p->x + 1) * ICON_SCALE;
+        y = (Ysize + 1 - p->y - p->h) * ICON_SCALE;
+        w = p->w * ICON_SCALE; h = p->h * ICON_SCALE;
+        W_Draw_Tile(window, tile,
+                    x * zoom - scroll_x, y * zoom - scroll_y, w * zoom, h * zoom);
+        if (visible == NULL) draw_board_trap(window, p, zoom, scroll_x, scroll_y);
+        /* Preserve the original number as a legible small badge. */
+        if (p->text == NULL || p->text[0] == NULL) continue;
+        text = p->text[0]; wx = hx = wy = hy = 0;
+        for (n = 1; n <= N_DIGIT && text[n] != '\0' && isdigit(text[n]); n++)
+        {
+            get_mfdb_info(MFDB_digit[text[n] - '0'], &dw, &dh, NULL);
+            wx += dw; hy += dh;
+            if (dh > hx) hx = dh;
+            if (dw > wy) wy = dw;
+        }
+        if (wx == 0 || hy == 0) continue;
+        y = (p->y + 1) * ICON_SCALE;
+        dir = p->pos; icon = pice_icon(p);
+        if (icon == NULL || icon->number == FUNK_NULL) continue;
+        if (icon->position != FUNK_NULL) dir = icon->position(dir, &x, &y, w, h);
+        if (dir == Illegal_Dir) continue;
+        axis = icon->number(dir, &x, &y, w, h, wx, hx, wy, hy);
+        if (axis == DIR_NONE) continue;
+        w = axis == DIR_X ? wx : wy; h = axis == DIR_X ? hx : hy;
+        y = (Ysize + 2) * ICON_SCALE - y - h;
+        W_Draw_Bitmap(window, base, x, y, w, h,
+                      x * zoom - scroll_x, y * zoom - scroll_y, zoom);
+    }
+    /* Doors straddle tile boundaries and must be the final layer. Copy the
+     * existing coloured door pixels, respecting player visibility. */
+    for (i = 0; i < MAX_PICE; i++)
+    {
+        if (visible != NULL && !fog_visible(visible, i)) continue;
+        p = &Pice[i];
+        if (p->type != DOOR && p->type != SECRET && p->type != TEST) continue;
+        icon = pice_icon(p);
+        if (icon == NULL) continue;
+        x = (p->x + 1) * ICON_SCALE; y = (p->y + 1) * ICON_SCALE;
+        w = p->w * ICON_SCALE; h = p->h * ICON_SCALE; dir = p->pos;
+        if (icon->position != FUNK_NULL) dir = icon->position(dir, &x, &y, w, h);
+        if (dir == Illegal_Dir) continue;
+        y = (Ysize + 2) * ICON_SCALE - y - h;
+        W_Draw_Bitmap(window, base, x, y, w, h,
+                      x * zoom - scroll_x, y * zoom - scroll_y, zoom);
+    }
 }

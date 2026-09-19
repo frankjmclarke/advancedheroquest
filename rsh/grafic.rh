@@ -261,3 +261,13 @@
 #define FBOOKE           205 
 #define FBOOKW           206 
 
+
+#define BOARD_FIRST 207
+
+#define BOARD_ROOMS_FIRST 231
+#define BOARD_ROOMS_COUNT 24
+
+/* Prepared board artwork pixels per map square. */
+#define BOARD_PIXELS_PER_SQUARE 32
+
+#define BOARD_PORTCULLIS_TRAP 700
