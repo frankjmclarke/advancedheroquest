@@ -3,6 +3,7 @@
 #include <map.h>
 #include <grafic.rh>
 #include <board-features.rh>
+#include <board-atlas.h>
 #include <defs.h>
 #include <boxf.h>
 #include <ctype.h>
@@ -783,13 +784,34 @@ RLOCAL ICON Icons[] =
 	{ NULL }
 };
 
+typedef struct board_image {
+    _WORD id, w, h;
+    _ULONG offset;
+} BOARD_IMAGE;
+LOCAL CONST BOARD_IMAGE board_images[] = BOARD_IMAGE_ENTRIES;
+LOCAL MFDB *board_atlas;
+
+LOCAL MFDB *get_board_bitmap(_WORD id)
+{
+    unsigned int i;
+    for (i = 0; i < sizeof(board_images) / sizeof(board_images[0]); i++)
+    {
+        if (board_images[i].id != id) continue;
+        if (board_atlas == NULL) board_atlas = get_mfdb_from_bitmap(BOARD_ATLAS_RESOURCE);
+        if (board_atlas == NULL) return NULL;
+        return assemble_mfdb(board_atlas, board_images[i].w, board_images[i].h,
+            BOARD_ATLAS_BLOCK, BOARD_ATLAS_COLUMNS, board_patch_codes + board_images[i].offset);
+    }
+    return NULL;
+}
+
 LOCAL _BOOL init_mfdb(MFDB **mfdb, _WORD formular, _WORD images)
 {
 	_WORD i;
 	
 	for (i = 0; i < images; i++)
 	{
-		mfdb[i] = get_mfdb_from_bitmap(formular + i);
+		mfdb[i] = formular >= BOARD_FIRST ? get_board_bitmap(formular + i) : get_mfdb_from_bitmap(formular + i);
 		if (mfdb[i] == NULL)
 		{
 			ende("RSC error (init_mfdb)");
@@ -857,6 +879,7 @@ GLOBAL _VOID free_icons(_VOID)
 	for (i = 0; i < BOARD_FEATURE_COUNT; i++)
 		free_mfdbs(&board_features[i].image, 1);
 	free_mfdbs(board_tiles, 24);
+	free_mfdbs(&board_atlas, 1);
 	free_mfdbs(&board_portcullis_trap, 1);
 	free_mfdbs(board_rooms, BOARD_ROOMS_COUNT);
 	free_mfdbs(MFDB_digit, 10);
@@ -926,7 +949,7 @@ LOCAL MFDB *board_feature_image(PICE *p)
     {
         if (board_features[i].original != original) continue;
         if (board_features[i].image == NULL)
-            board_features[i].image = get_mfdb_from_bitmap(board_features[i].resource);
+            board_features[i].image = get_board_bitmap(board_features[i].resource);
         if (board_features[i].image == NULL) return NULL;
         get_mfdb_info(board_features[i].image, &w, &h, NULL);
         if (w != p->w * BOARD_PIXELS_PER_SQUARE || h != p->h * BOARD_PIXELS_PER_SQUARE) return NULL;
@@ -965,7 +988,7 @@ LOCAL _VOID draw_board_trap(_VOID *window, PICE *p, _WORD zoom, _WORD sx, _WORD 
     _WORD x, y, w = 2 * ICON_SCALE, h = ICON_SCALE;
     if (p->w < 2 || p->h < 2 || !has_portcullis_trap(p)) return;
     if (board_portcullis_trap == NULL)
-        board_portcullis_trap = get_mfdb_from_bitmap(BOARD_PORTCULLIS_TRAP);
+        board_portcullis_trap = get_board_bitmap(BOARD_PORTCULLIS_TRAP);
     if (board_portcullis_trap == NULL) return;
     if (w > p->w * ICON_SCALE - 4) w = p->w * ICON_SCALE - 4;
     x = (p->x + 1) * ICON_SCALE + 2;

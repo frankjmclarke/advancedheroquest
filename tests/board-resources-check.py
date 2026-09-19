@@ -29,7 +29,7 @@ entries = []
 for name in ('grafic.rc', 'board-features.rc'):
     entries += re.findall(r'(?m)^(\d+) BITMAP "(board/[^"\n]+)"',
                           (root / 'rsh' / name).read_text())
-assert len(entries) == 185
+assert len(entries) == 1  # All enhanced images now share one atlas.
 module = kernel.LoadLibraryExW(str(root / 'bin/hq_map.exe'), None, 2)
 assert module, C.get_last_error()
 try:

@@ -15,6 +15,7 @@ struct _mfdb {
 	_BOOL is_resource;
 	_LONG size;
 	HDC hDC;
+	DWORD *atlas_pixels;
 };
 
 /******************************************************************************/
@@ -98,12 +99,9 @@ GLOBAL _VOID free_mfdb(MFDB *ptr)
 		if (ptr->hDC != NO_DC)
 			DeleteDC(ptr->hDC);
 		if (ptr->bmp != NO_BITMAP)
-		{
-			if (ptr->is_resource)
-				FreeResource((HGLOBAL) ptr->bmp);
-			else
-				DeleteObject(ptr->bmp);
-		}
+			DeleteObject(ptr->bmp);
+		if (ptr->atlas_pixels != NULL)
+			FREE(ptr->atlas_pixels, ptr->ic.bmWidth * ptr->ic.bmHeight * 4);
 		if (ptr->ic.bmBits != NULL)
 			FREE(ptr->ic.bmBits, ptr->size);
 		OFREE(ptr);
@@ -126,6 +124,7 @@ LOCAL MFDB *alloc_mfdb(VOID)
 	ptr->ic.bmBits = NULL;
 	ptr->is_resource = FALSE;
 	ptr->hDC = NO_DC;
+	ptr->atlas_pixels = NULL;
 	return ptr;
 }
 
@@ -340,4 +339,64 @@ GLOBAL _VOID W_Draw_Tile(_VOID *window, MFDB *tile, _WORD dx, _WORD dy, _WORD w,
     RestoreDC(screen, saved);
     SelectObject(source, previous);
     DeleteDC(source);
+}
+
+/* Reconstruct pixels with integer quarter turns. GDI parallelogram blits
+ * can sample different edge pixels when rotated; explicit copies are exact. */
+GLOBAL MFDB *assemble_mfdb(MFDB *atlas, _WORD w, _WORD h, _WORD block,
+                          _WORD columns, CONST _UWORD *codes)
+{
+    MFDB *result;
+    HDC screen;
+    BITMAPINFO info = {0};
+    DWORD *dest;
+    int x, y, dx, dy, px, py, sx, sy, patch, turn;
+    if (atlas == NULL || codes == NULL || block <= 0 || columns <= 0 ||
+        w <= 0 || h <= 0 || w % block || h % block) return NULL;
+    screen = GetDC(HWND_DESKTOP);
+    if (screen == NULL) return NULL;
+    info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    info.bmiHeader.biWidth = atlas->ic.bmWidth;
+    info.bmiHeader.biHeight = -atlas->ic.bmHeight;
+    info.bmiHeader.biPlanes = 1;
+    info.bmiHeader.biBitCount = 32;
+    if (atlas->atlas_pixels == NULL)
+    {
+        atlas->atlas_pixels = MALLOC(atlas->ic.bmWidth * atlas->ic.bmHeight * 4, "board atlas pixels");
+        if (atlas->atlas_pixels == NULL) { ReleaseDC(HWND_DESKTOP, screen); return NULL; }
+        if (!GetDIBits(screen, atlas->bmp, 0, atlas->ic.bmHeight, atlas->atlas_pixels, &info, DIB_RGB_COLORS))
+        {
+            FREE(atlas->atlas_pixels, atlas->ic.bmWidth * atlas->ic.bmHeight * 4);
+            atlas->atlas_pixels = NULL; ReleaseDC(HWND_DESKTOP, screen); return NULL;
+        }
+    }
+    result = get_mfdb(w, h, 32, NULL);
+    if (result == NULL) { ReleaseDC(HWND_DESKTOP, screen); return NULL; }
+    dest = result->ic.bmBits;
+    for (y = 0; y < h; y += block)
+    {
+        for (x = 0; x < w; x += block)
+        {
+            patch = *codes >> 2; turn = *codes++ & 3;
+            sx = (patch % columns) * block; sy = (patch / columns) * block;
+            if (sx + block > atlas->ic.bmWidth || sy + block > atlas->ic.bmHeight)
+            { free_mfdb(result); ReleaseDC(HWND_DESKTOP, screen); return NULL; }
+            for (dy = 0; dy < block; dy++) for (dx = 0; dx < block; dx++)
+            {
+                switch (turn)
+                {
+                case 0: px = dx; py = dy; break;
+                case 1: px = dy; py = block - 1 - dx; break;
+                case 2: px = block - 1 - dx; py = block - 1 - dy; break;
+                default: px = block - 1 - dy; py = dx; break;
+                }
+                dest[(y + dy) * w + x + dx] = atlas->atlas_pixels[(sy + py) * atlas->ic.bmWidth + sx + px];
+            }
+        }
+    }
+    info.bmiHeader.biWidth = w; info.bmiHeader.biHeight = -h;
+    if (!SetDIBits(screen, result->bmp, 0, h, dest, &info, DIB_RGB_COLORS))
+    { free_mfdb(result); result = NULL; }
+    ReleaseDC(HWND_DESKTOP, screen);
+    return result;
 }

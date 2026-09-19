@@ -35,7 +35,7 @@ Numbers keep their original positions, and doors remain on top. Changing the dis
 position, zoom and revealed rooms; hidden rooms stay hidden in Player View.
 Saved images and printouts still use the original style.
 
-The executable embeds the prepared images in `rsh/board`. Ordinary builds
+The executable embeds the shared artwork in `rsh/board/atlas.bmp`. Ordinary builds
 (`build-msvc.bat` or `package.bat`) need no image-processing tools. To regenerate
 the images, install Pillow and ImageMagick (`magick` on PATH), then run
 `python tools/prepare-board-tiles.py`.
@@ -51,13 +51,20 @@ Special features use `Advanced Heroquest - Tiles - 1.jpg`, the decorated
 `Advanced Heroquest - Rooms - 5.jpg`, and the supplied stair images. Monster
 counters and extra scenic images are not assigned to unrelated map features.
 
-Feature resources and their lookup table are generated together in
-`rsh/board-features.rc` and `rsh/board-features.rh`. Feature images are loaded
-only when visible in enhanced view and cached until shutdown. They use local
-256-colour palettes to limit executable size. All board artwork is prepared
-at 32 pixels per board square, after cropping and compositing at 64 pixels per
-square. ImageMagick performs the final downsampling and palette conversion.
-This retains detail at the default zoom (24 screen pixels per square), with
-softer detail at high zoom levels. The original scans are preserved and are
-not needed at runtime. Ordinary application builds use the prepared BMPs and
-do not require ImageMagick.
+The generator shares identical 16×16 pixel patches, including rotated copies,
+across floors, features and walls. The executable contains one full-colour
+atlas and small assembly recipes in `rsh/board-atlas.h`, rather than 185
+separate colour bitmaps. Large rooms reuse the same floor patches; features
+reuse the floor behind them. Each distinct patch is stored only once.
+
+Images are reconstructed with exact integer rotations and cached in memory.
+Special-feature images are assembled only when needed. Normal rendering,
+numbers, doors and fog-of-war behaviour are unchanged. `rsh/board-atlas.json`
+records sizes and lossless image hashes for validation; it is not embedded or
+required at runtime. Complete reference images are generated under
+`obj/board-reference` for development only, and are not shipped.
+
+All board artwork remains at 32 pixels per board square, prepared at 64 pixels
+before ImageMagick downsampling. The atlas retains full RGB colour; there is
+no further palette reduction. The original scans are preserved. Ordinary
+application builds use the prepared atlas and do not require ImageMagick.

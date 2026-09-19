@@ -35,6 +35,9 @@ _VOID free_mfdb(MFDB *ptr);
 MFDB *get_mfdb(_WORD w, _WORD h, _WORD planes, _VOID *data);
 _VOID get_mfdb_info(MFDB *mfdb, _WORD *w, _WORD *h, _VOID **data);
 MFDB *get_mfdb_from_bitmap(_WORD id);
+/* Assemble shared square patches; low two code bits select clockwise turns. */
+MFDB *assemble_mfdb(MFDB *atlas, _WORD w, _WORD h, _WORD block,
+                    _WORD columns, CONST _UWORD *codes);
 _BOOL mfdb_start_paint(MFDB *mfdb);
 _VOID mfdb_end_paint(MFDB *mfdb);
 _VOID W_Draw_Bitmap(_VOID /* WINDOW_DEF */ *window, MFDB *mfdb, _WORD x, _WORD y, _WORD w, _WORD h, _WORD dx, _WORD dy, _WORD zoom);

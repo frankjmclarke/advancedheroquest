@@ -16,13 +16,9 @@ source = (root / 'icon.c').read_text(encoding='cp1252')
 def section(start, end):
     return source[source.index(start):source.index(end)]
 
-descriptors = []
-for resource, old in re.findall(r'(\d+) BITMAP "board/feature(\d+)\.bmp"',
-                               (root / 'rsh/board-features.rc').read_text()):
-    data = (root / f'rsh/board/feature{old}.bmp').read_bytes()
-    assert data[:2] == b'BM'
-    w, h = struct.unpack_from('<ii', data, 18)
-    descriptors.append(f'{{{resource},{w},{h}}}')
+import json
+catalog = json.loads((root / 'rsh/board-atlas.json').read_text())
+descriptors = [f"{{{r['id']},{r['width']},{r['height']}}}" for r in catalog['images'] if 500 <= r['id'] < 700]
 
 prefix = r'''
 #include <assert.h>
@@ -69,7 +65,7 @@ static void W_Draw_Bitmap(void *win,MFDB *m,_WORD x,_WORD y,_WORD w,_WORD h,
 }
 '''
 backend = 'static MFDB embedded[]={' + ','.join(descriptors) + '};\n' + r'''
-static MFDB *get_mfdb_from_bitmap(_WORD id) {
+static MFDB *get_board_bitmap(_WORD id) {
  static MFDB trap={700,64,32};
  unsigned int i;allocations++;
  if(id==700)return &trap;
@@ -158,7 +154,7 @@ with tempfile.TemporaryDirectory() as temp:
     (work / 'check.c').write_text(prefix + backend
         + section('typedef struct icon', 'LOCAL ICON *rack;') + 'LOCAL ICON *rack;\n'
         + section('LOCAL ICON *pice_icon', '/*\n * Ink and paper')
-        + section('LOCAL _VOID center_mfdb', 'LOCAL _BOOL init_mfdb')
+        + section('LOCAL _VOID center_mfdb', 'typedef struct board_image')
         + section('LOCAL MFDB *board_tiles', 'GLOBAL _BOOL init_icons')
         + source[source.index('LOCAL MFDB *board_room_image'):]
         + main)
