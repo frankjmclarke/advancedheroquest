@@ -101,14 +101,15 @@ rem --- flags -----------------------------------------------------------------
 set "CFLAGS=/nologo /c /W3 /DSTDC_HEADERS=1 /DHAVE_DIRENT_H=1 /DSTRICT=1 /D_CRT_SECURE_NO_WARNINGS"
 set "CINC=/I. /Imy_lib /Imy_lib\windows /Irsh"
 set "LIBS=kernel32.lib user32.lib gdi32.lib shell32.lib comdlg32.lib version.lib winspool.lib ole32.lib advapi32.lib"
-set "LFLAGS=/nologo /subsystem:windows /machine:X86 /STACK:20480 /HEAP:4096"
+set "LFLAGS=/nologo /subsystem:windows /machine:X86 /STACK:1048576 /HEAP:4096"
 
-rem  STACK and HEAP mirror hq_map32.def, which the Borland build passes to
+rem  Use a 1 MB stack for recursive campaign discovery. HEAP mirrors
+rem  hq_map32.def, which the Borland build passes to
 rem  tlink32. The .def itself is not reused here: its IMPORTS section is
 rem  Borland module-definition syntax that link.exe does not accept.
 
 rem --- source lists ----------------------------------------------------------
-set "SRC_COMMON=pice.c move.c rolldice.c table.c features.c random.c stairs.c test.c queue.c set.c map.c liste.c text.c makemap.c icon.c image.c pcx.c bmp.c mem.c"
+set "SRC_COMMON=campaign.c pice.c move.c rolldice.c table.c features.c random.c stairs.c test.c queue.c set.c map.c liste.c text.c makemap.c icon.c image.c pcx.c bmp.c mem.c"
 set "SRC_MYLIB=my_lib\path.c my_lib\termproc.c my_lib\grect.c my_lib\routine.c"
 set "SRC_WIN=my_lib\windows\w_mouse.c my_lib\windows\w_dialog.c my_lib\windows\memory.c my_lib\windows\file_io.c my_lib\windows\boxf.c my_lib\windows\mfdb.c my_lib\windows\filesel.c my_lib\windows\openwork.c my_lib\windows\window.c my_lib\windows\ro_help.c my_lib\windows\w_draw.c my_lib\windows\w_print.c my_lib\windows\profile.c"
 rem  maindm.c and winddm.c are two lines each: #define DEMO 1 followed by an

@@ -19,6 +19,8 @@
 #include <icon.h>
 #include <wind.h>
 #include <table.h>
+#include "campaign.h"
+#include "rsh/campaign.rh"
 #include <mem.h>
 #include <stairs.h>
 #include <map.h>
@@ -1336,6 +1338,10 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		}
 		break;
 
+	case MCAMPAIGN:
+		campaign_builder(AHQ_para.tabelle.path, AHQ_para.tabelle.filename);
+		break;
+
 	case MTABELLE:
 		{
 			/*
@@ -1604,8 +1610,20 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 
 _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 {
-	UNUSED(argc);
-	UNUSED(argv);
+	/* The builder validates in a separate process so live maps and tables
+	 * remain untouched. No profile or window state is loaded or saved. */
+	if (argc == 4 && strcmp(argv[1], "--check-campaign") == 0)
+	{
+		_BOOL valid;
+		FILE *probe = fopen(argv[2], "rb");
+		if (probe == NULL) return 1;
+		fclose(probe);
+		if (!mem_alloc(16, 16, 25, 4096)) return 2;
+		heap_clear();
+		valid = read_table((_UBYTE *)argv[2], (_UBYTE *)argv[3]);
+		mem_freeall();
+		return valid ? 0 : 1;
+	}
 	
 	read_profile();
 	

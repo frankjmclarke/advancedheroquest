@@ -1,0 +1,15 @@
+#define MCAMPAIGN 154
+#define FCB 20
+#define FCBPREVIEW 21
+#define CBBASE 200
+#define CBTITLE 201
+#define CBSLUG 202
+#define CBCATEGORY 210
+#define CBVIEW 220
+#define CBFURNISH 230
+#define CBDESC 231
+#define CBCHECK 232
+#define CBCREATE 233
+#define CBREFRESH 234
+#define CBSTATUS 235
+#define CBPREVIEWTEXT 236

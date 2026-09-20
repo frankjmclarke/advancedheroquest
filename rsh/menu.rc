@@ -7,6 +7,7 @@
 #include <windows.h>
 #include "../version.h"
 #include "menu.rh"
+#include "campaign.rh"
 
 #define DIALOG_FONT 10, "MS Sans Serif"
 
@@ -56,6 +57,7 @@ MENUE MENU
 	POPUP "&Options"
 	{
 		MENUITEM "Load &Tables...\tCtrl+T", MTABELLE
+		MENUITEM "&Campaign Builder...", MCAMPAIGN
 		MENUITEM SEPARATOR
 		MENUITEM "&Program Parameters...\tAlt+P", MPARA
 		MENUITEM SEPARATOR
@@ -362,3 +364,5 @@ FILETYPE VFT_APP
 	0x409, 1252
  }
 }
+
+#include "campaign.rc"

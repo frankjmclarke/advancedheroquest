@@ -839,6 +839,7 @@ HQ_MAP_DEMO_OBJS=+$(OBJ_DIR)maindm.obj \
 HQ_MAP_ALWAYS_OBJS=+$(OBJ_DIR)pice.obj \
 		+$(OBJ_DIR)move.obj \
 		+$(OBJ_DIR)rolldice.obj \
+		+$(OBJ_DIR)campaign.obj \
 		+$(OBJ_DIR)table.obj \
 		+$(OBJ_DIR)features.obj \
 		+$(OBJ_DIR)random.obj \
@@ -967,6 +968,8 @@ $(OBJ_DIR)move.obj:	$(SRC_DIR)\move.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)\move.c
 $(OBJ_DIR)rolldice.obj:	$(SRC_DIR)\rolldice.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)\rolldice.c
+$(OBJ_DIR)campaign.obj:	$(SRC_DIR)\campaign.c $(SRC_DIR)\campaign.h
+		$(CCC) $(EXTRA_DEFINES) -I$(RSH_DIR) $(SRC_DIR)\campaign.c
 $(OBJ_DIR)table.obj:	$(SRC_DIR)\table.c
 		$(CCC) $(EXTRA_DEFINES) $(SRC_DIR)\table.c
 $(OBJ_DIR)features.obj:	$(SRC_DIR)\features.c

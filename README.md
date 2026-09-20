@@ -12,6 +12,10 @@ the resource `VERSIONINFO` block carries product version `2.0.5.0`.
 > reserved — see [NOTICE.md](NOTICE.md). If you are the author or rights
 > holder, open an issue and any request will be honoured.
 
+Create a campaign with **Options → Campaign Builder...**: mix existing room, monster,
+hazard, furnishing, trap and treasure tables into a new independent campaign.
+See the [Campaign Builder guide](doc/campaign-builder.md). No Python is needed.
+
 Writing your own adventures: **[Guide to creating and editing table
 files](doc/TABLE-GUIDE.md)**.
 
