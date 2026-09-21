@@ -50,6 +50,7 @@ static void W_Draw_Bitmap(void *win,MFDB *m,_WORD x,_WORD y,_WORD w,_WORD h,
 static ICON door_icon;
 static ICON *pice_icon(PICE *p) {return &door_icon;}
 static MFDB *board_feature_image(PICE *p) {return NULL;}
+static MFDB *board_door_image(PICE *p,DIRECTION dir) {return NULL;}
 static void draw_board_trap(void *win,PICE *p,_WORD zoom,_WORD sx,_WORD sy) {}
 '''
 main = r'''

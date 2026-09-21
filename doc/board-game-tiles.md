@@ -13,9 +13,12 @@ Room artwork rotates to fit horizontal and vertical layouts.
 Stairs, pits, chasms, bridges, grates, trapdoors, thrones and chests use matching
 scanned artwork. Magic-circle rooms and quest rooms use the decorated room
 floor. Rats, bats, slime, mould and mushrooms use their tokens from
-`Terror in the Dark - Items - 3.jpg`. Other special features (including furniture, pools and
-tombs) retain their familiar symbols on a parchment badge over the enhanced
-floor. The 10×10 and 15×15 rooms assemble floor panels without internal walls.
+`Terror in the Dark - Items - 3.jpg`. Bookcases, cupboards, tables, fireplaces,
+weapons racks, torture racks and both small and large tomb rooms use illustrations
+from `Tiles/icons.jpg`. Their white page background and captions are removed,
+and the illustrations retain their proportions in all four orientations.
+Other unmatched special features (including pools) retain their familiar symbols
+on a parchment badge over the enhanced floor. The 10×10 and 15×15 rooms assemble floor panels without internal walls.
 
 The pit, rope bridge, throne, grate, trapdoor and treasure chest artwork comes
 from `Advanced Heroquest - Tiles - 1.jpg`. Chasm rooms use the pit artwork;
@@ -28,8 +31,9 @@ piece in the enhanced GM map. The table does not specify an exact square, so
 this is a contents marker inside the piece, not a newly placed door. It stays
 hidden in Player View even after the room is revealed, because entering a
 room does not automatically discover its traps. The earlier portcullis door
-style option has been removed. Ordinary and secret doors retain their normal
-appearance and click behaviour.
+style option has been removed. Ordinary doors use `Tiles/door.png`; secret doors use a red-tinted version of
+the same artwork. Both rotate with the door and retain the original one-square
+footprint, click behaviour and fog visibility. The original bitmap view is unchanged.
 
 Numbers keep their original positions, and doors remain on top. Changing the display keeps the current scroll
 position, zoom and revealed rooms; hidden rooms stay hidden in Player View.
@@ -53,8 +57,7 @@ counters and extra scenic images are not assigned to unrelated map features.
 
 The generator shares identical 16×16 pixel patches, including rotated copies,
 across floors, features and walls. The executable contains one full-colour
-atlas and small assembly recipes in `rsh/board-atlas.h`, rather than 185
-separate colour bitmaps. Large rooms reuse the same floor patches; features
+atlas and small assembly recipes in `rsh/board-atlas.h`, rather than separate colour bitmaps. Large rooms reuse the same floor patches; features
 reuse the floor behind them. Each distinct patch is stored only once.
 
 Images are reconstructed with exact integer rotations and cached in memory.

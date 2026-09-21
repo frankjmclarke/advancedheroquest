@@ -109,7 +109,7 @@ int main(int argc,char **argv) {
  }
  assert(GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS)==before);
  free(a);free(atlas.atlas_pixels);DeleteObject(atlas.bmp);FreeLibrary(module);
- puts("PASS: all 185 images assembled pixel-for-pixel by Win32, including rotations; no GDI leaks.");
+ puts("PASS: all atlas images assembled pixel-for-pixel by Win32, including rotations; no GDI leaks.");
  return 0;
 }
 '''

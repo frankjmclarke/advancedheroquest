@@ -103,6 +103,31 @@ def generate_features(out):
         'mould': terror.crop((450, 486, 744, 769)),
         'fungi': terror.crop((94, 487, 375, 765)),
     }
+    # Supplied furniture illustrations. Crop out captions and remove the white
+    # page so the existing board floor remains visible around each object.
+    furniture = Image.open(ROOT / 'Tiles/icons.jpg').convert('RGB')
+    furniture_boxes = {
+        'fireplace': (50, 38, 241, 245),
+        'weapons': (32, 250, 310, 450),
+        'cupboard': (14, 507, 286, 649),
+        'bookcase': (14, 677, 286, 818),
+        'table': (375, 298, 568, 445),
+        'tomb': (317, 734, 481, 987),
+        'rack': (555, 30, 850, 245),
+    }
+    for name, box in furniture_boxes.items():
+        patch = furniture.crop(box)
+        draw = ImageDraw.Draw(patch)
+        if name == 'fireplace':
+            draw.rectangle((129, 0, patch.width, 54), fill='white')
+        elif name == 'weapons':
+            draw.rectangle((65, 177, 218, patch.height), fill='white')
+        elif name == 'rack':
+            draw.rectangle((0, 0, 79, 55), fill='white')
+        patch = patch.convert('RGBA')
+        patch.putdata([(r, g, b, 0 if min(r, g, b) >= 240 else 255)
+                       for r, g, b, a in patch.getdata()])
+        art[name] = patch
     for name in ('up', 'down'):
         # Keep the landing as well as the steps, so the stair direction is
         # still readable when fitted to the application's 2x2 footprint.
@@ -147,6 +172,14 @@ def generate_features(out):
         129: [('pit', (12, 10, 28, 30))],
         145: [('chest', (32, 2, 38, 8))],
         149: [('down', (15, 7, 25, 17)), ('chest', (17, 25, 23, 31))],
+        153: [('weapons', (6, 2, 34, 22))],
+        157: [('cupboard', (10, 2, 30, 13))],
+        161: [('table', (10, 10, 30, 26))],
+        165: [('fireplace', (12, 2, 28, 20))],
+        169: [('bookcase', (10, 2, 30, 13))],
+        173: [('rack', (9, 9, 31, 26))],
+        181: [('tomb', (14, 10, 26, 29))],
+        185: [('tomb', (14, 10, 26, 29))],
     }
     mapping, resources = [], []
     chest_glyph = Image.open(originals[17]).convert('L').crop((17, 17, 23, 23))
@@ -198,6 +231,11 @@ def generate_features(out):
             for name, rect in placements.get(first, []):
                 x1, y1, x2, y2 = [v * 8 for v in rect]
                 patch = art[name].resize((x2 - x1, y2 - y1), Image.Resampling.LANCZOS)
+                if name in furniture_boxes:
+                    # Perspective illustrations should not be stretched into
+                    # the narrow footprint of the old monochrome glyph.
+                    patch = ImageOps.pad(art[name], (x2 - x1, y2 - y1),
+                                         method=Image.Resampling.LANCZOS, color=(0, 0, 0, 0))
                 if rotation is not None:
                     patch = patch.transpose(rotation)
                 W, H = cols * CELL, rows * CELL
@@ -218,6 +256,21 @@ def generate_features(out):
     tile = art['portcullis'].transpose(Image.Transpose.ROTATE_90).resize((CELL * 2, CELL), Image.Resampling.LANCZOS)
     tile.save(out / 'portcullis-trap.bmp')
     resources.append('700 BITMAP "board/portcullis-trap.bmp"')
+    # Keep doors inside their existing one-square drawing/click footprint.
+    # The secret version retains the stonework/wood detail with a red tint.
+    door = Image.open(ROOT / 'Tiles/door.png').convert('RGB')
+    # Lift midtones without clipping the wood and stone highlights.
+    gamma = [round(255 * (value / 255) ** (1 / 1.65)) for value in range(256)]
+    door = door.point(gamma * 3)
+    secret_door = ImageOps.colorize(ImageOps.grayscale(door), '#400000', '#ff4030')
+    for kind, source in (('door', door), ('secret-door', secret_door)):
+        tile = ImageOps.pad(source, (CELL, CELL), method=Image.Resampling.LANCZOS,
+                            color='#30231d' if kind == 'door' else '#300c0c')
+        for direction, rotation in enumerate(rotations):
+            name = f'{kind}-{direction}.bmp'
+            (tile if rotation is None else tile.transpose(rotation)).save(out / name)
+            resource = 710 + (4 if kind == 'secret-door' else 0) + direction
+            resources.append(f'{resource} BITMAP "board/{name}"')
     for direction in range(4):
         (out / f'portcullis{direction}.bmp').unlink(missing_ok=True)
     (ROOT / 'rsh/board-features.rh').write_text(

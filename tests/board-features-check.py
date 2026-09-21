@@ -45,7 +45,8 @@ static void W_Draw_Tile(void *win,MFDB *m,_WORD x,_WORD y,_WORD w,_WORD h) {
   assert(y==((Ysize+1-pieces[0].y-pieces[0].h)*8+2)*zoom-17);
   assert(w<=pieces[0].w*8*zoom && h==8*zoom);trap_markers++;return;
  }
- if(pieces[0].type==DOOR) {
+ if(pieces[0].type==DOOR || pieces[0].type==SECRET) {
+  assert(m->id==710+(pieces[0].type==SECRET?4:0)+pieces[0].pos);
   assert(x==expected_x*zoom-11 && y==expected_y*zoom-17);
   assert(w==8*zoom && h==8*zoom);tiles++;return;
  }
@@ -67,8 +68,10 @@ static void W_Draw_Bitmap(void *win,MFDB *m,_WORD x,_WORD y,_WORD w,_WORD h,
 backend = 'static MFDB embedded[]={' + ','.join(descriptors) + '};\n' + r'''
 static MFDB *get_board_bitmap(_WORD id) {
  static MFDB trap={700,64,32};
+ static MFDB doors[8]={{710,32,32},{711,32,32},{712,32,32},{713,32,32},{714,32,32},{715,32,32},{716,32,32},{717,32,32}};
  unsigned int i;allocations++;
  if(id==700)return &trap;
+ if(id>=710 && id<718)return &doors[id-710];
  for(i=0;i<sizeof(embedded)/sizeof(embedded[0]);i++)if(embedded[i].id==id)return &embedded[i];
  assert(0);return NULL;
 }
@@ -141,11 +144,23 @@ int main(void) {
   pieces[0].text=no_trap;assert(!has_portcullis_trap(&pieces[0]));
   pieces[0].text=multiline;assert(has_portcullis_trap(&pieces[0]));
   pieces[0].text=NULL;assert(!has_portcullis_trap(&pieces[0]));
-  pieces[0].type=DOOR;pieces[0].w=pieces[0].h=1;tiles=old_doors=0;
-  draw_board_map(NULL,&base,NULL,zoom,11,17);assert(!tiles && old_doors==1);
+  pieces[0].w=pieces[0].h=1;
+  for(zoom=1;zoom<=16;zoom+=5) for(i=0;i<8;i++) {
+   pieces[0].type=i<4?DOOR:SECRET;pieces[0].pos=(DIRECTION)(i%4);
+   x=(pieces[0].x+1)*8;y=(pieces[0].y+1)*8;
+   door_pos(pieces[0].pos,&x,&y,8,8);
+   expected_x=x;expected_y=(Ysize+2)*8-y-8;
+   tiles=old_doors=0;visible[0]=0;before=allocations;
+   draw_board_map(NULL,&base,visible,zoom,11,17);
+   assert(!tiles && !old_doors && allocations==before);
+   visible[0]=1;
+   draw_board_map(NULL,&base,visible,zoom,11,17);assert(tiles==1 && !old_doors);
+   before=allocations;tiles=0;
+   draw_board_map(NULL,&base,NULL,zoom,11,17);assert(tiles==1 && !old_doors && allocations==before);
+  }
  }
  puts("PASS: all 136 feature sprites, four orientations, original number positions, zoom/scroll, fog and lazy loading.");
- puts("PASS: table-generated portcullis traps, GM-only markers, hidden/revealed Player View rooms and unchanged doors.");
+ puts("PASS: table-generated portcullis traps, GM-only markers, hidden/revealed Player View rooms and illustrated doors in all orientations.");
  return 0;
 }
 '''

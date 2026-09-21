@@ -825,6 +825,7 @@ LOCAL _BOOL init_mfdb(MFDB **mfdb, _WORD formular, _WORD images)
 
 LOCAL MFDB *board_tiles[24];
 LOCAL MFDB *board_portcullis_trap;
+LOCAL MFDB *board_doors[8];
 LOCAL MFDB *board_rooms[BOARD_ROOMS_COUNT];
 typedef struct board_feature {
     _WORD original, resource;
@@ -881,6 +882,7 @@ GLOBAL _VOID free_icons(_VOID)
 	free_mfdbs(board_tiles, 24);
 	free_mfdbs(&board_atlas, 1);
 	free_mfdbs(&board_portcullis_trap, 1);
+	free_mfdbs(board_doors, 8);
 	free_mfdbs(board_rooms, BOARD_ROOMS_COUNT);
 	free_mfdbs(MFDB_digit, 10);
 	
@@ -996,8 +998,19 @@ LOCAL _VOID draw_board_trap(_VOID *window, PICE *p, _WORD zoom, _WORD sx, _WORD 
     W_Draw_Tile(window, board_portcullis_trap, x * zoom - sx, y * zoom - sy, w * zoom, h * zoom);
 }
 
+LOCAL MFDB *board_door_image(PICE *p, DIRECTION dir)
+{
+    _WORD index;
+    if ((p->type != DOOR && p->type != SECRET) || p->w != 1 || p->h != 1 ||
+        dir < North || dir > West) return NULL;
+    index = (p->type == SECRET ? 4 : 0) + dir;
+    if (board_doors[index] == NULL)
+        board_doors[index] = get_board_bitmap(710 + index);
+    return board_doors[index];
+}
+
 /* Overlay supported board artwork. The base map remains the authority for
- * labels and doors, so fog, hit testing, saving and printing are unchanged. */
+ * labels and door positions; fog, hit testing, saving and printing are unchanged. */
 GLOBAL _VOID draw_board_map(_VOID *window, MFDB *base, CONST _UBYTE *visible,
                            _WORD zoom, _WORD scroll_x, _WORD scroll_y)
 {
@@ -1055,8 +1068,8 @@ GLOBAL _VOID draw_board_map(_VOID *window, MFDB *base, CONST _UBYTE *visible,
         W_Draw_Bitmap(window, base, x, y, w, h,
                       x * zoom - scroll_x, y * zoom - scroll_y, zoom);
     }
-    /* Doors straddle tile boundaries and must be the final layer. Copy the
-     * existing coloured door pixels, respecting player visibility. */
+    /* Doors straddle tile boundaries and must be the final layer. Their
+     * artwork changes, but their geometry and fog visibility do not. */
     for (i = 0; i < MAX_PICE; i++)
     {
         if (visible != NULL && !fog_visible(visible, i)) continue;
@@ -1069,7 +1082,12 @@ GLOBAL _VOID draw_board_map(_VOID *window, MFDB *base, CONST _UBYTE *visible,
         if (icon->position != FUNK_NULL) dir = icon->position(dir, &x, &y, w, h);
         if (dir == Illegal_Dir) continue;
         y = (Ysize + 2) * ICON_SCALE - y - h;
-        W_Draw_Bitmap(window, base, x, y, w, h,
-                      x * zoom - scroll_x, y * zoom - scroll_y, zoom);
+        tile = board_door_image(p, dir);
+        if (tile != NULL)
+            W_Draw_Tile(window, tile, x * zoom - scroll_x, y * zoom - scroll_y,
+                        w * zoom, h * zoom);
+        else
+            W_Draw_Bitmap(window, base, x, y, w, h,
+                          x * zoom - scroll_x, y * zoom - scroll_y, zoom);
     }
 }
