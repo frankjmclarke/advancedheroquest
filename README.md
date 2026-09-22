@@ -18,6 +18,9 @@ See the [Campaign Builder guide](doc/campaign-builder.md). No Python is needed.
 
 Play with a persistent party using **Party → Heroes and Reserve...**. Name heroes,
 edit their stats, move their markers, and save the exact dungeon and explored rooms.
+Revealed encounters place monster tokens automatically: drag to move, double-click
+to wound, and use **Party → Monsters...** to correct the roster. Character deaths
+persist within the saved adventure.
 See the [Heroes and saved games guide](doc/hero-sessions.md).
 
 Writing your own adventures: **[Guide to creating and editing table

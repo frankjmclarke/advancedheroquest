@@ -20,3 +20,19 @@
 #define GPAPPLY 325
 #define GPPORTRAIT 326
 #define GPRULES 327
+
+#define MGAMEMONSTERS 268
+#define FGMONSTERS 31
+#define GMLIST 340
+#define GMROOM 341
+#define GMNAME 342
+#define GMMAX 343
+#define GMWOUNDS 344
+#define GMUNIQUE 345
+#define GMADD 346
+#define GMAPPLY 347
+#define GMPLACE 348
+#define GMDAMAGE 349
+#define GMREMOVE 350
+#define GMINFO 351
+#define GMCONTENTS 352

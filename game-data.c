@@ -58,13 +58,38 @@ int game_valid_square(const GAME_DATA *d,int hero,int x,int y)
     index=d->cells[y*d->width+x];
     if(index<0 || index>=d->count || d->pieces[index].type==EMPTY || d->pieces[index].type==TEST) return 0;
     for(i=0;i<d->hero_count;i++) if(i!=hero && d->heroes[i].x==x && d->heroes[i].y==y) return 0;
+    for(i=0;i<d->monsters.count;i++) if(d->monsters.tokens[i].x==x && d->monsters.tokens[i].y==y) return 0;
     return 1;
 }
 static int valid_data(const GAME_DATA *d)
 {
     int i,j;
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) return 0;
-    if(!d->pieces || !d->cells || !d->visible) return 0;
+    if(!d->pieces || !d->cells || !d->visible || d->player_view < -1 || d->player_view > 1) return 0;
+    if(d->monsters.count<0 || d->monsters.count>MONSTER_LIMIT || d->monsters.dead_count<0 || d->monsters.dead_count>CHARACTER_LIMIT) return 0;
+    for(i=0;i<d->count;i++) if(d->monsters.seen[i]>2) return 0;
+    for(i=0;i<d->monsters.dead_count;i++) {
+        if(!memchr(d->monsters.dead[i],0,64) || !d->monsters.dead[i][0]) return 0;
+        for(j=0;j<i;j++) if(!_stricmp(d->monsters.dead[i],d->monsters.dead[j])) return 0;
+    }
+    for(i=0;i<d->monsters.count;i++) {
+        const MONSTER *m=&d->monsters.tokens[i]; int cell;
+        if(!memchr(m->name,0,64) || !m->name[0] || m->room<0 || m->room>=d->count ||
+           m->unique<0 || m->unique>1 || m->wounds<0 || m->wounds>m->stats[7] || m->stats[7]<1) return 0;
+        for(j=0;j<HERO_STATS;j++) if(m->stats[j]<0 || m->stats[j]>99) return 0;
+        if(!d->visible[m->room] || !d->monsters.seen[m->room] || d->pieces[m->room].type==EMPTY) return 0;
+        for(j=0;j<d->monsters.dead_count;j++) if(m->wounds && !_stricmp(m->name,d->monsters.dead[j])) return 0;
+        for(j=0;j<i;j++) if(m->wounds && d->monsters.tokens[j].wounds && (m->unique || d->monsters.tokens[j].unique) && !_stricmp(m->name,d->monsters.tokens[j].name)) return 0;
+        if(m->unique && !m->wounds) {
+            for(j=0;j<d->monsters.dead_count;j++) if(!_stricmp(m->name,d->monsters.dead[j])) break;
+            if(j==d->monsters.dead_count) return 0;
+        }
+        if(m->x==-1 && m->y==-1) continue;
+        if(!m->wounds || m->x<0 || m->y<0 || m->x>=d->width || m->y>=d->height) return 0;
+        cell=d->cells[m->y*d->width+m->x];
+        if(cell<0 || cell>=d->count || !d->visible[cell] || d->pieces[cell].type==EMPTY || d->pieces[cell].type==TEST) return 0;
+        for(j=0;j<i;j++) if(d->monsters.tokens[j].x==m->x && d->monsters.tokens[j].y==m->y) return 0;
+    }
     for(i=0;i<d->count;i++) {
         PICE *p=&d->pieces[i];
         if(!valid_type(p->type) || d->visible[i]>1) return 0;
@@ -135,7 +160,7 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d)) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,1); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,3); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -152,6 +177,15 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
         for(j=0;j<n;j++) put_string(&b,p->text[j],65535);
     }
     for(i=0;i<d->width*d->height;i++) put32(&b,d->cells[i]);
+    put32(&b,d->monsters.count); put32(&b,d->monsters.dead_count);
+    for(i=0;i<d->count;i++) put32(&b,d->monsters.seen[i]);
+    for(i=0;i<d->monsters.count;i++) {
+        const MONSTER *m=&d->monsters.tokens[i]; put_string(&b,m->name,63);
+        for(j=0;j<HERO_STATS;j++) put32(&b,m->stats[j]);
+        put32(&b,m->wounds); put32(&b,m->x); put32(&b,m->y); put32(&b,m->room); put32(&b,m->unique);
+    }
+    for(i=0;i<d->monsters.dead_count;i++) put_string(&b,d->monsters.dead[i],63);
+    put32(&b,d->player_view);
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -166,10 +200,11 @@ void game_data_free(GAME_DATA *d)
 }
 GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
 {
-    BYTES b={0}; GAME_DATA *d; int i,j,n; char *s;
+    BYTES b={0}; GAME_DATA *d; int i,j,n,version; char *s;
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
-    if(get32(&b)!=1 || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    version=get32(&b);
+    if((version!=1 && version!=2 && version!=3) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -197,6 +232,18 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
         for(j=0;j<n;j++) { p->text[j]=get_string(&b,65535); if(!b.ok) goto bad; }
     }
     for(i=0;i<d->width*d->height && b.ok;i++) d->cells[i]=get32(&b);
+    if(version>=2) {
+        d->monsters.count=get32(&b); d->monsters.dead_count=get32(&b);
+        if(d->monsters.count<0 || d->monsters.count>MONSTER_LIMIT || d->monsters.dead_count<0 || d->monsters.dead_count>CHARACTER_LIMIT) goto bad;
+        for(i=0;i<d->count;i++) { n=get32(&b); if(n<0 || n>2) goto bad; d->monsters.seen[i]=(unsigned char)n; }
+        for(i=0;i<d->monsters.count && b.ok;i++) {
+            MONSTER *m=&d->monsters.tokens[i]; s=get_string(&b,63); if(!s) goto bad; strcpy(m->name,s); free(s);
+            for(j=0;j<HERO_STATS;j++) m->stats[j]=get32(&b);
+            m->wounds=get32(&b); m->x=get32(&b); m->y=get32(&b); m->room=get32(&b); m->unique=get32(&b);
+        }
+        for(i=0;i<d->monsters.dead_count && b.ok;i++) { s=get_string(&b,63); if(!s) goto bad; strcpy(d->monsters.dead[i],s); free(s); }
+    }
+    d->player_view=version>=3?get32(&b):-1;
     if(!b.ok || b.pos!=b.n || !valid_data(d)) goto bad;
     return d;
 bad: game_data_free(d); return NULL;

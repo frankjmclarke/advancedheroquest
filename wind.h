@@ -55,6 +55,7 @@ _BOOL print_statistik(_VOID);
 _BOOL print_file(WINDOW_DEF *wr);
 _VOID show_grafic(_UBYTE *str);
 _VOID show_player_view(_UBYTE *str);
+WINDOW_DEF *map_view_window(_BOOL player);
 _VOID show_text(_UBYTE *str);
 WINDOW_DEF *show_text_file(_UBYTE *path);
 _VOID show_liste(_UBYTE *str);

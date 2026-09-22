@@ -63,7 +63,8 @@ MENUE MENU
     POPUP "&Party"
     {
         MENUITEM "&Heroes and Reserve...\tAlt+H", MGAMEPARTY
-        MENUITEM "&Undo Hero Change", MGAMEUNDO
+        MENUITEM "&Monsters...", MGAMEMONSTERS
+        MENUITEM "&Undo Token Change", MGAMEUNDO
         MENUITEM SEPARATOR
         MENUITEM "&Leave Dungeon (all to reserve)", MGAMELEAVE
         MENUITEM "&Next Dungeon with Current Party", MGAMENEXT

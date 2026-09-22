@@ -418,6 +418,9 @@ LOCAL _BOOL player_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
  MFDB *image;
  PICE *piece;
  switch (msg) {
+ case WMY_TOP:
+  game_view_selected(1);
+  break;
  case WMY_OPEN:
   Wind_SetFac(window, 1, 1, 8, 8);
   get_mfdb_info(buf, &w, &h, NULL);
@@ -455,6 +458,11 @@ LOCAL _BOOL player_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
   break;
  }
  return TRUE;
+}
+
+GLOBAL WINDOW_DEF *map_view_window(_BOOL player)
+{
+ return player ? Player_View : Grafik_Karte;
 }
 
 GLOBAL _VOID show_player_view(_UBYTE *name)
@@ -504,6 +512,9 @@ LOCAL _BOOL grafic_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
 		show.ww = w * display_zoom;
 		show.hh = h * display_zoom;
 		Wind_SetDoc(window, &show);
+		break;
+	case WMY_TOP:
+		game_view_selected(0);
 		break;
 	case WMY_CLOSE:
 		close_room_contents();
@@ -1232,7 +1243,9 @@ GLOBAL _BOOL print_statistik(_VOID)
 
 GLOBAL _VOID close_all_windows(_BOOL delete)
 {
+	game_view_pause(1);
 	Wind_Close_All(delete);
+	game_view_pause(0);
 }
 
 

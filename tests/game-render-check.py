@@ -35,6 +35,12 @@ static int render_checks(void) {
         if(can_move(0,i%Xsize,i/Xsize,NULL)) { heroes[0].x=i%Xsize; heroes[0].y=i/Xsize; break; }
     }
     assert(heroes[0].x>=0);
+    {
+        static char *encounter[]={"#42","2 Goblins, 1 Orc (20 Gold Crowns)",NULL};
+        for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM) break;
+        assert(i<MAX_PICE); Pice[i].text=encounter; game_fog()[i]=1; game_changed();
+        assert(monsters.seen[i] && monsters.count>=3);
+    }
     assert(SetCurrentDirectoryA(save_dir));
     GetFullPathNameA("render.hqg",MAX_PATH,recovery_path,NULL);
     assert(write_game(recovery_path,0));
@@ -43,6 +49,7 @@ static int render_checks(void) {
        Exercise both default and enhanced graphics and player fog rendering. */
     for(mode=0;mode<2;mode++) {
         fprintf(stderr,"Load and render saved map, enhanced=%d\n",mode); enhanced_view=mode; active=0; assert(game_load(1));
+        assert(monsters.count>=3);
         assert(hero_count==2 && heroes[0].x>=0 && heroes[1].x==-1);
         UpdateWindow(W_GetHwnd(Grafik_Karte));
         show_player_view(session_title);

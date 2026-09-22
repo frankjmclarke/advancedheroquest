@@ -278,3 +278,54 @@ GLOBAL _UBYTE *room_contents_text(_UBYTE **lines)
     if (buf.failed) { free(buf.text); return NULL; }
     return (_UBYTE *)buf.text;
 }
+
+/* Reuse the contents viewer's exact alias matching for encounter rosters. */
+int room_monsters(_UBYTE **lines,void (*add)(const char *,const int *,int,void *),void *context)
+{
+    const char *start,*p,*end,*s,*profile; char *name;
+    int depth,sep,count,counted,stats[9],review=0; size_t i,match,matches;
+    if(!lines) return 0;
+    for(;*lines;lines++) {
+        start=p=(const char*)*lines; depth=0;
+        /* Alternatives require adjudication; never spawn both choices. */
+        for(s=p;*s;s++) if(room_join(s," or ")) break;
+        if(*s) { review=1; continue; }
+        for(;;) {
+            sep=0;
+            if(*p=='(') depth++;
+            if(*p==')' && depth) depth--;
+            if(!depth) {
+                if(*p==',' || *p==';' || *p=='&') sep=1;
+                else if(room_join(p," and ")) sep=5;
+            }
+            if(!*p || sep) {
+                s=start; while(s<p && (isspace((unsigned char)*s)||*s=='"')) s++;
+                count=1; counted=0;
+                if(s<p && isdigit((unsigned char)*s)) {
+                    counted=1; count=0; while(s<p && isdigit((unsigned char)*s)) { if(count<10000) count=count*10+(*s-'0'); s++; }
+                }
+                while(s<p && isspace((unsigned char)*s)) s++;
+                end=s; while(end<p && *end!='(') end++;
+                while(end>s && (isspace((unsigned char)end[-1])||end[-1]=='.'||end[-1]=='"')) end--;
+                name=room_name(s,end); if(!name) return 1;
+                matches=0; match=0;
+                for(i=0;i<AHQ_REFERENCE_COUNT;i++) if(room_alias(name,ahq_references[i].aliases)) { match=i; matches++; }
+                if(matches==1 && count>0 && count<=512) {
+                    profile=strstr(ahq_references[match].text,"   WS");
+                    profile=profile?strchr(profile,'\n'):NULL;
+                    if(profile && sscanf(profile,"%d %d %d %d %d %d %d %d %d",&stats[0],&stats[1],&stats[2],&stats[3],&stats[4],&stats[5],&stats[6],&stats[7],&stats[8])==9 && stats[7]>0) {
+                        /* Canonical singular alias makes plural encounters share identity. */
+                        const char *alias=ahq_references[match].aliases; char canonical[64];
+                        size_t len=strcspn(alias,"|"); if(len>63) len=63;
+                        memcpy(canonical,alias,len); canonical[len]=0;
+                        add(canonical,stats,count,context);
+                    } else review=1;
+                } else if(matches || ((counted || room_contains(s,p,"Gold Crowns") || room_contains(s,p,"WS ")) && !room_nonmonster(name))) review=1;
+                free(name);
+                if(!*p) break;
+                p+=sep; start=p;
+            } else p++;
+        }
+    }
+    return review;
+}

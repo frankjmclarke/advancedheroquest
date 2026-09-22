@@ -10,4 +10,7 @@ size_t draw_monster_liste(_UBYTE **mem);
 /* Caller releases the returned buffer with free(). NULL means allocation failure. */
 _UBYTE *room_contents_text(_UBYTE **lines);
 
+/* Enumerate only unambiguous reference matches. Returns nonzero when manual
+ * review is needed. Does not roll dice or alter generated contents. */
+int room_monsters(_UBYTE **lines, void (*add)(const char *,const int *,int,void *),void *context);
 #endif /* __LISTE_H__ */

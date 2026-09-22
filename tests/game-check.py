@@ -108,6 +108,7 @@ int main(int argc,char **argv) {
     generate();
     /* Snapshot exact grid and text. Mark a room explored and modify stats. */
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM || Pice[i].type==HAZARD) { game_fog()[i]=1; break; }
+    monsters_reveal();
     heroes[1].wounds=1; heroes[3].stats[6]=11; strcpy(heroes[0].name,"Aldric");
     assert(capture(&snapshot));
     assert(game_encode(&snapshot,&bytes,&size)); free(snapshot.cells);
@@ -119,7 +120,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=2; assert(!game_decode(bytes,size)); bytes[8]=1;
+    bytes[8]=4; assert(!game_decode(bytes,size)); bytes[8]=3;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;

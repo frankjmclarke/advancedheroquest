@@ -439,6 +439,7 @@ LOCAL _BOOL zoom_is_default;
 LOCAL _VOID read_profile(_VOID)
 {
 	_WORD w;
+    _BOOL player_view;
 	
 	Profile_UseFile("ahq_map", "JAlbuschies");
 	
@@ -454,6 +455,8 @@ LOCAL _VOID read_profile(_VOID)
 	Profile_ReadBool("Map", "Weiter", FALSE, &AHQ_para.weiter);
 	Profile_ReadString("Map", "Name", "", PtrSize(AHQ_para.name));
 	Profile_ReadBool("Show", "Grafik", TRUE, &AHQ_para.grafik);
+    Profile_ReadBool("Show", "PlayerView", FALSE, &player_view);
+    game_view_selected(player_view);
 	Profile_ReadBool("Show", "Text", FALSE, &AHQ_para.text);
 	Profile_ReadBool("Show", "Statistik", FALSE, &AHQ_para.statistik);
 	Profile_ReadBool("Show", "Monster", FALSE, &AHQ_para.monster);
@@ -517,6 +520,7 @@ LOCAL _VOID write_profile(_VOID)
 	Profile_WriteBool("Map", "Weiter", AHQ_para.weiter);
 	Profile_WriteString("Map", "Name", AHQ_para.name);
 	Profile_WriteBool("Show", "Grafik", AHQ_para.grafik);
+    Profile_WriteBool("Show", "PlayerView", game_player_view());
 	Profile_WriteBool("Show", "Text", AHQ_para.text);
 	Profile_WriteBool("Show", "Statistik", AHQ_para.statistik);
 	Profile_WriteBool("Show", "Monster", AHQ_para.monster);
@@ -1125,6 +1129,19 @@ LOCAL _VOID do_show(_WORD object)
 	}
 }
 
+/* Opening the GM bitmap must not override the user's preferred map view. */
+LOCAL _VOID show_dungeon_views(_VOID)
+{
+    game_view_pause(1);
+    do_show(MSTATIST);
+    do_show(MMONSTER);
+    do_show(MTEXT);
+    do_show(MGRAFIK);
+    game_view_pause(0);
+    game_restore_view();
+}
+
+
 /*** ---------------------------------------------------------------------- ***/
 
 LOCAL _BOOL test_editor(_BOOL warn)
@@ -1232,10 +1249,7 @@ LOCAL _BOOL make_first_map(_VOID)
 
 	game_new_dungeon(AHQ_para.name);
 	karte_ok(TRUE);
-	do_show(MSTATIST);
-	do_show(MMONSTER);
-	do_show(MTEXT);
-	do_show(MGRAFIK);
+	show_dungeon_views();
 	return TRUE;
 }
 
@@ -1257,6 +1271,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
     if ((eintrag==MKARTE || eintrag==MWEITER || eintrag==MGAMENEXT || eintrag==MTABELLE || eintrag==MPARA) && !game_before_replace()) return TRUE;
 	switch (eintrag)
 	{
+    case MGAMEMONSTERS: game_monsters(); break;
     case MGAMEPARTY: game_party(); break;
     case MGAMESAVE: game_save(0); break;
     case MGAMESAVEAS: game_save(1); break;
@@ -1306,10 +1321,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 			if (do_makemap())
 			{	
 				karte_ok(TRUE);
-				do_show(MSTATIST);
-				do_show(MMONSTER);
-				do_show(MTEXT);
-				do_show(MGRAFIK);
+				show_dungeon_views();
 #if DEMO					
 				do_demo();
 #endif /* DEMO */
@@ -1328,10 +1340,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		if (do_makemap())
 		{	
 			karte_ok(TRUE);
-			do_show(MSTATIST);
-			do_show(MMONSTER);
-			do_show(MTEXT);
-			do_show(MGRAFIK);
+			show_dungeon_views();
 #if DEMO					
 			do_demo();
 #endif /* DEMO */
@@ -1544,8 +1553,10 @@ LOCAL size_t WindPos_Read_Write(_BOOL save, WIND_RESTORE *buf, size_t numElems)
 
 /*** ---------------------------------------------------------------------- ***/
 
+LOCAL _BOOL startup_started;
 LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 {
+    _BOOL tables_ready=FALSE;
 	UNUSED(var_bez);
 	
 	switch (art)
@@ -1556,12 +1567,16 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 			if (AHQ_para.ask_exit && !ok_abbruch("Exit program?"))
 				return FALSE;
 			if (!game_before_replace()) return FALSE;
+            game_view_pause(1); /* keep the last map choice during shutdown */
 			AHQ_para.grafik = Wind_Menu_Checked(MGRAFIK);
 			AHQ_para.text = Wind_Menu_Checked(MTEXT);
 			AHQ_para.monster = Wind_Menu_Checked(MMONSTER);
 			AHQ_para.statistik = Wind_Menu_Checked(MSTATIST);
 		} else
 		{
+            game_view_pause(0); /* also resume tracking after Hide/Show or an editor launch */
+            if(startup_started) { show_dungeon_views(); break; }
+            startup_started=TRUE; /* set before any modal startup UI */
 			Wind_Menu_Check(MENHANCED, enhanced_view);
 			if (AHQ_para.grafik)
 				Wind_Menu_Check(MGRAFIK, TRUE);
@@ -1585,21 +1600,25 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 			 * clear it either. Only the startup load falls back; choosing a
 			 * bad table from the menu still reports the error.
 			 */
-			if (!do_table(&AHQ_para.tabelle, TRUE, TRUE))
-			{
-				default_program_dir(&AHQ_para.tabelle, "tables");
-				set_filename(&AHQ_para.tabelle, DEFAULT_TABLE);
-			}
-			if (do_table(&AHQ_para.tabelle, TRUE, FALSE))
-			{
-				SetMouse(MOUSE_BUSY);
-				make_first_map();
-				if (zoom_is_default)
-					Grafik_Zoom_Fit();
-				SetMouse(MOUSE_RESTORE);
-				show_quest_description(AHQ_para.tabelle.filename);
-			}
-			game_recover();
+
+            /* Load campaign tables before recovery; do_table clears map state.
+               Never clear a session that has already been restored. */
+            if(!game_has_loaded_session()) {
+                if (!do_table(&AHQ_para.tabelle, TRUE, TRUE)) {
+                    default_program_dir(&AHQ_para.tabelle, "tables");
+                    set_filename(&AHQ_para.tabelle, DEFAULT_TABLE);
+                }
+                tables_ready=do_table(&AHQ_para.tabelle, TRUE, FALSE);
+            }
+            if(game_recover()) {
+                karte_ok(TRUE);
+            } else if(tables_ready) {
+                SetMouse(MOUSE_BUSY);
+                make_first_map();
+                if(zoom_is_default) Grafik_Zoom_Fit();
+                SetMouse(MOUSE_RESTORE);
+                show_quest_description(AHQ_para.tabelle.filename);
+            }
 #if DEMO
 			do_demo();
 #endif /* DEMO */
@@ -1627,10 +1646,17 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 		break;
 
 	case W_GRAFIK:
-		if (!save)
-			do_show(MGRAFIK);
-		break;
+        if (!save) {
+            game_view_pause(1);
+            do_show(MGRAFIK);
+            game_view_pause(0);
+        }
+        break;
+    case W_PLAYER:
+        /* Reopen only when it is the preferred view, below. */
+        break;
 	}
+    if (!save) game_restore_view();
 	return TRUE;
 }
 
@@ -1688,6 +1714,8 @@ _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 	
 	if (AHQ_para.autosave)
 		write_profile();
+    /* The last map view is remembered even when automatic option saving is off. */
+    Profile_WriteBool("Show", "PlayerView", game_player_view());
 	
 	return 0;
 }
