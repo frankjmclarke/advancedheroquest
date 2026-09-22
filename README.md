@@ -23,6 +23,8 @@ See the [Heroes and saved games guide](doc/hero-sessions.md).
 Writing your own adventures: **[Guide to creating and editing table
 files](doc/TABLE-GUIDE.md)**.
 
+How maps are built: **[Dungeon generation algorithm](doc/dungeon-generation.md)**.
+
 Screenshots of the workflow are in [`doc/`](doc/), numbered in the order you'd
 use them — table selection, generation, monster display, saving.
 

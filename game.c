@@ -185,13 +185,25 @@ static int hero_at(int x,int y,const unsigned char *visible)
 /* Small code-drawn class emblems stay sharp without growing the artwork atlas. */
 static void marker(HDC dc,int x,int y,int size,int kind,int chosen,int defeated)
 {
-    static const COLORREF colours[5]={RGB(165,46,36),RGB(145,91,31),RGB(32,117,65),RGB(61,66,162),RGB(86,93,101)};
+    static const COLORREF colours[HERO_CLASS_COUNT]={RGB(165,46,36),RGB(145,91,31),RGB(32,117,65),RGB(61,66,162),RGB(86,93,101),RGB(181,137,24),RGB(28,126,132),RGB(126,39,72),RGB(122,58,163)};
     int saved=SaveDC(dc),a=size/4,b=size*3/4,c=size/2;
     HPEN edge=CreatePen(PS_SOLID,chosen?3:1,chosen?RGB(255,220,65):RGB(245,234,203));
     HPEN ink=CreatePen(PS_SOLID,size>40?3:2,RGB(255,245,215));
     HBRUSH fill=CreateSolidBrush(colours[kind]); POINT pts[3];
     SelectObject(dc,edge); SelectObject(dc,fill); Ellipse(dc,x+1,y+1,x+size-1,y+size-1); SelectObject(dc,ink);
-    if(kind==3) { pts[0].x=x+c; pts[0].y=y+a; pts[1].x=x+a; pts[1].y=y+b; pts[2].x=x+b; pts[2].y=y+b; Polygon(dc,pts,3); }
+    if(kind==5) { /* holy symbol */
+        Rectangle(dc,x+c-size/10,y+a,x+c+size/10+1,y+b);
+        Rectangle(dc,x+a,y+c-size/10,x+b,y+c+size/10+1);
+    } else if(kind==6) { /* dagger */
+        MoveToEx(dc,x+a,y+b,NULL); LineTo(dc,x+b,y+a);
+        MoveToEx(dc,x+a,y+c,NULL); LineTo(dc,x+c,y+b);
+    } else if(kind==7) { /* crossed blades */
+        MoveToEx(dc,x+a,y+a,NULL); LineTo(dc,x+b,y+b);
+        MoveToEx(dc,x+b,y+a,NULL); LineTo(dc,x+a,y+b);
+    } else if(kind==8) { /* staff and orb */
+        MoveToEx(dc,x+c,y+c,NULL); LineTo(dc,x+c,y+b);
+        Ellipse(dc,x+a,y+a,x+b,y+c+2);
+    } else if(kind==3) { pts[0].x=x+c; pts[0].y=y+a; pts[1].x=x+a; pts[1].y=y+b; pts[2].x=x+b; pts[2].y=y+b; Polygon(dc,pts,3); }
     else if(kind==2) { Arc(dc,x+a,y+a,x+b,y+b,x+c,y+a,x+c,y+b); MoveToEx(dc,x+c,y+a,NULL); LineTo(dc,x+c,y+b); }
     else {
         MoveToEx(dc,x+c,y+a,NULL); LineTo(dc,x+c,y+b);
@@ -319,7 +331,7 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
     int id=LOWORD(wp),n,i;
     if(msg==WM_INITDIALOG) {
-        for(i=0;i<5;i++) SendDlgItemMessageA(hwnd,GPCLASS,CB_ADDSTRING,0,(LPARAM)hero_classes[i]);
+        for(i=0;i<HERO_CLASS_COUNT;i++) SendDlgItemMessageA(hwnd,GPCLASS,CB_ADDSTRING,0,(LPARAM)hero_classes[i]);
         SendDlgItemMessage(hwnd,GPCLASS,CB_SETCURSEL,0,0); SendDlgItemMessage(hwnd,GPNAME,EM_LIMITTEXT,39,0);
         party_selection=selected>=0?selected:hero_count?0:-1; party_list(hwnd); party_fields(hwnd); return TRUE;
     }
@@ -335,6 +347,11 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         n=(int)SendDlgItemMessage(hwnd,GPLIST,LB_GETCURSEL,0,0);
         if(!party_apply(hwnd)) { SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,party_selection,0); return TRUE; }
         party_selection=n; SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,n,0); party_fields(hwnd); return TRUE;
+    }
+    if(id==GPRULES) {
+        n=party_selection>=0?heroes[party_selection].kind:(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0);
+        if(n>=0 && n<HERO_CLASS_COUNT) MessageBoxA(hwnd,hero_class_rules(n),hero_classes[n],MB_OK|MB_ICONINFORMATION);
+        return TRUE;
     }
     if(id!=GPADD && id!=GPAPPLY && id!=GPMOVE && id!=GPRESERVE && id!=IDOK && id!=IDCANCEL) return FALSE;
     if(!party_apply(hwnd)) return TRUE;

@@ -1,7 +1,8 @@
 # Heroes and saved games
 
 Open **Party > Heroes and Reserve...** (Alt+H) with a generated or loaded dungeon.
-Choose Warrior, Dwarf, Elf, Wizard or Henchman, then **Add**. The party holds up
+Choose Warrior, Dwarf, Elf, Wizard, Henchman, Warrior Priest, Rogue, Fighter or
+Mage, then **Add**. The party holds up
 to 16 heroes, including those in reserve. Each class has its own coloured symbol.
 Markers are drawn by the program, so they add no image files to the executable.
 
@@ -66,3 +67,21 @@ reserve/undo, and carrying heroes into the next dungeon.
 
 The rendering check opens real Win32 GM/player map windows, loads saved games
 with placed and reserve heroes in both graphics modes, and checks empty room text.
+
+## Additional classes
+
+Warrior Priest, Rogue, Fighter and Mage follow the class adjustments described
+in `ahqHeros.pdf` (pages 1-4). The new presets use the existing Warrior suggestion
+as a human base. Priest reduces Strength by 1 and raises Bravery by 1. Rogue
+reduces WS and Bravery by 1 and raises BS and Speed by 1. The Fighter already
+meets the WS/Strength thresholds. Mage trades one WS for one Intelligence.
+These remain suggestions: adjust the stats for a rolled character or another race.
+
+**Class rules** describes the selected hero's abilities and restrictions,
+including healing, trap skills, attack rerolls, optional berserker adjustments,
+and magic. Abilities are applied manually. There are no new resource counters;
+Fate is not a counter for remaining healing spells or rerolls. To distinguish a
+berserker, include that in the hero's name and edit the relevant stats.
+
+Existing saves retain the original five class identities. Saves containing new
+classes require this updated executable.

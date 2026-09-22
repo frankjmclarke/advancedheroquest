@@ -19,3 +19,4 @@
 #define GPSTATUS 324
 #define GPAPPLY 325
 #define GPPORTRAIT 326
+#define GPRULES 327

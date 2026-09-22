@@ -6,15 +6,42 @@
 #include <stdio.h>
 #include "game.h"
 #define MAX_SAVE (16u*1024u*1024u)
-const char *hero_classes[5]={"Warrior","Dwarf","Elf","Wizard","Henchman"};
+const char *hero_classes[HERO_CLASS_COUNT]={"Warrior","Dwarf","Elf","Wizard","Henchman","Warrior Priest","Rogue","Fighter","Mage"};
+/* Reference summaries from ahqHeros.pdf, pages 1-4. Abilities are adjudicated
+ * by players; Fate is not a remaining-healing or remaining-rerolls counter. */
+const char *hero_class_rules(int kind)
+{
+    switch(kind) {
+    case 5: return "Warrior Priest\n\nStarting adjustment: Strength -1, Bravery +1.\n\n"
+        "Healing spells equal total Fate points (two for a beginning priest).\n\n"
+        "Holding a holy symbol in one hand can frighten Undead in the priest's death zone: at the start of their turn they must pass a Bravery roll, modified by the priest's total Fate, or be unable to act. The other hand may hold a one-handed weapon or shield.\n\n"
+        "Only crushing or bruising weapons; no blades.\n\nApply abilities manually during play.";
+    case 6: return "Rogue\n\nStarting adjustments: WS -1, Bravery -1, Speed +1, BS +1.\n\n"
+        "+1 to rolls for secret doors, treasure, spotting traps and surprise. With thieves' tools, add total Fate to disarm-trap rolls (initially +2).\n\n"
+        "Tools also allow locking/unlocking doors or chests and setting traps, rolling against current Speed.\n\n"
+        "No more than +1 from any single armour piece; shields allowed.\n\nApply abilities manually during play.";
+    case 7: return "Fighter\n\nUse the racial profile. If WS is below 7, add 1; if Strength is below 4, add 1. Deduct the same total from Intelligence and/or Speed.\n\n"
+        "Attack rerolls per expedition equal total Fate. Each rerolls one attack die just rolled.\n\n"
+        "Optional berserker: Intelligence -2, BS -2, WS -1 only if this would not take WS below 7. Record the choice in the hero's name and edit the stats; use the rulebook's berserker rules.\n\n"
+        "Any weapons and armour permitted. Apply abilities manually during play.";
+    case 8: return "Mage\n\nUse the racial profile. If Intelligence is below 7, you may add up to 2, deducting the same total from Strength and/or WS. This preset uses a human suggestion with WS -1 and Intelligence +1.\n\n"
+        "Human and Elf mages start with their college's first four spells. Dwarf mages start with one chosen spell and pay double to learn new spells.\n\n"
+        "No armour; only daggers or a staff in combat.\n\nEdit stats for your chosen race and apply spells manually during play.";
+    default: return "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.";
+    }
+}
 void hero_defaults(HERO *h,int kind,int number)
 {
     /* Editable suggestions, not automatic character creation or class rules.
        WS BS S T Sp Br Int W(max) PV. */
-    static const int values[5][9]={
+    static const int values[HERO_CLASS_COUNT][HERO_STATS]={
         {7,6,6,6,8,8,6,4,0},{7,5,6,7,6,9,6,4,0},
         {6,8,5,5,9,8,8,4,0},{4,5,4,5,8,7,9,4,0},
-        {5,5,5,5,8,7,5,2,0}};
+        {5,5,5,5,8,7,5,2,0},
+        /* Human suggestions: existing Warrior base plus ahqHeros adjustments.
+           Mage trades one WS for one Int; Fighter needs no base adjustment. */
+        {7,6,5,6,8,9,6,4,0},{6,7,6,6,9,7,6,4,0},
+        {7,6,6,6,8,8,6,4,0},{6,6,6,6,8,8,7,4,0}};
     memset(h,0,sizeof(*h)); h->kind=kind;
     sprintf(h->name,"%s %d",hero_classes[kind],number);
     memcpy(h->stats,values[kind],sizeof(h->stats));
@@ -54,7 +81,7 @@ static int valid_data(const GAME_DATA *d)
     }
     for(i=0;i<d->hero_count;i++) {
         const HERO *h=&d->heroes[i];
-        if(!memchr(h->name,0,sizeof(h->name)) || !h->name[0] || h->kind<0 || h->kind>4 || h->wounds<0 || h->wounds>h->stats[7] || h->fate<0 || h->fate>99) return 0;
+        if(!memchr(h->name,0,sizeof(h->name)) || !h->name[0] || h->kind<0 || h->kind>=HERO_CLASS_COUNT || h->wounds<0 || h->wounds>h->stats[7] || h->fate<0 || h->fate>99) return 0;
         for(j=0;j<HERO_STATS;j++) if(h->stats[j]<0 || h->stats[j]>99) return 0;
         if(h->x==-1 && h->y==-1) continue;
         if(!game_valid_square(d,i,h->x,h->y)) return 0;

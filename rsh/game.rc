@@ -35,6 +35,7 @@ BEGIN
     PUSHBUTTON "Apply",GPAPPLY,328,134,90,17
     PUSHBUTTON "Place / Move",GPMOVE,178,171,113,20
     PUSHBUTTON "To reserve",GPRESERVE,301,171,117,20
+    PUSHBUTTON "Class rules",GPRULES,353,193,70,16
     LTEXT "Editable starting suggestions. No class rules are enforced.",-1,10,201,320,12
     LTEXT "",GPSTATUS,10,218,330,12
     DEFPUSHBUTTON "Close",IDOK,353,212,70,18

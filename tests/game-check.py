@@ -158,8 +158,25 @@ int main(int argc,char **argv) {
     assert(party_apply(dialog)); assert(!strcmp(heroes[0].name,"Renamed hero") && heroes[0].wounds==2);
     SendMessage(dialog,WM_COMMAND,GPRESERVE,0); assert(heroes[0].x==-1);
     game_command(MGAMEUNDO); assert(heroes[0].x>=0);
-    /* All five presets have distinct marker colours and class labels. */
-    assert(SendDlgItemMessage(dialog,GPCLASS,CB_GETCOUNT,0,0)==5);
+    /* Preserve old class IDs, and add all four new classes through the UI. */
+    assert(SendDlgItemMessage(dialog,GPCLASS,CB_GETCOUNT,0,0)==HERO_CLASS_COUNT);
+    for(i=5;i<HERO_CLASS_COUNT;i++) {
+        SendDlgItemMessage(dialog,GPCLASS,CB_SETCURSEL,i,0);
+        SendMessage(dialog,WM_COMMAND,GPADD,0);
+        assert(hero_count==i+1 && heroes[i].kind==i && heroes[i].x==-1);
+        assert(strstr(heroes[i].name,hero_classes[i]) && strlen(hero_class_rules(i))>100);
+    }
+    assert(heroes[5].stats[2]==5 && heroes[5].stats[5]==9);
+    assert(heroes[6].stats[0]==6 && heroes[6].stats[1]==7 && heroes[6].stats[4]==9 && heroes[6].stats[5]==7);
+    assert(heroes[7].stats[0]==7 && heroes[7].stats[2]==6);
+    assert(heroes[8].stats[0]==6 && heroes[8].stats[6]==7);
+    assert(capture(&snapshot)); assert(game_encode(&snapshot,&other,&other_size)); free(snapshot.cells);
+    again=game_decode(other,other_size); assert(again && again->hero_count==9);
+    for(i=0;i<HERO_CLASS_COUNT;i++) assert(again->heroes[i].kind==i);
+    again->heroes[8].kind=HERO_CLASS_COUNT;
+    { unsigned char *invalid; size_t invalid_size; assert(!game_encode(again,&invalid,&invalid_size)); }
+    game_data_free(again); free(other);
+
     /* Render the actual native dialog for visual inspection. */
     {
         HDC screen=GetDC(NULL),dc=CreateCompatibleDC(screen); HBITMAP bitmap,old;

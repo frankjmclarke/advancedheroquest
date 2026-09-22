@@ -4,6 +4,7 @@
 #include <window.h>
 #define HERO_LIMIT 16
 #define HERO_STATS 9
+#define HERO_CLASS_COUNT 9
 typedef struct {
     char name[40];
     int kind, stats[HERO_STATS], wounds, fate, x, y;
@@ -16,7 +17,8 @@ typedef struct {
     int *cells;
     unsigned char *visible;
 } GAME_DATA;
-extern const char *hero_classes[5];
+extern const char *hero_classes[HERO_CLASS_COUNT];
+const char *hero_class_rules(int kind);
 void hero_defaults(HERO *hero,int kind,int number);
 int game_valid_square(const GAME_DATA *data,int hero,int x,int y);
 int game_encode(const GAME_DATA *data,unsigned char **bytes,size_t *size);
