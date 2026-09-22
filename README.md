@@ -16,6 +16,10 @@ Create a campaign with **Options → Campaign Builder...**: mix existing room, m
 hazard, furnishing, trap and treasure tables into a new independent campaign.
 See the [Campaign Builder guide](doc/campaign-builder.md). No Python is needed.
 
+Play with a persistent party using **Party → Heroes and Reserve...**. Name heroes,
+edit their stats, move their markers, and save the exact dungeon and explored rooms.
+See the [Heroes and saved games guide](doc/hero-sessions.md).
+
 Writing your own adventures: **[Guide to creating and editing table
 files](doc/TABLE-GUIDE.md)**.
 
@@ -271,7 +275,8 @@ All doors includes secret doors adjoining a visible corridor or revealed room.
 Click a revealed room to read its contents. The normal graphic map remains
 fully visible for the GM. Both maps support zoom and scrolling; **Fit to Window**
 uses the active map window. Reopening Player View preserves discoveries for the
-current map. Generating a new map or using Close All resets discoveries.
+current map, including after Close All. Generating a new map resets discoveries.
+Saved games preserve them.
 Discovery state is kept only for the current application session.
 
 ### Colour

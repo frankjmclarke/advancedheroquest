@@ -1,6 +1,7 @@
 #include <map.h>
 #include <ro_mem.h>
 #include <defs.h>
+#include <queue.h>
 
 GLOBAL _WORD Xsize, Ysize;
 GLOBAL _WORD MAX_X = 0;
@@ -169,4 +170,29 @@ GLOBAL _BOOL fog_open_door(_UBYTE *visible, _WORD pixel_x, _WORD pixel_y)
   return changed;
  }
  return FALSE;
+}
+
+/* Allocate both arrays before touching the current dungeon. Text pointers are
+ * borrowed from the loaded session until the next map replaces it. */
+GLOBAL _BOOL map_restore(CONST PICE *pieces, int count, int width, int height, CONST int *cells)
+{
+    int i,x,y,capacity=count>MAX_PICE?count:MAX_PICE;
+    int mw=width>MAX_X?width:MAX_X, mh=height>MAX_Y?height:MAX_Y;
+    PICE *next;
+    PICE **grid;
+    next=MALLOC(sizeof(PICE)*(size_t)capacity*(N_QUEUES+1), "restore pieces");
+    if(next==NULL) return FALSE;
+    grid=MALLOC(sizeof(PICE*)*(size_t)mw*mh, "restore map");
+    if(grid==NULL) { SFREE(next); return FALSE; }
+    memset(next,0,sizeof(PICE)*(size_t)capacity*(N_QUEUES+1));
+    for(i=0;i<capacity;i++) next[i].type=EMPTY;
+    memcpy(next,pieces,sizeof(PICE)*count);
+    memset(grid,0,sizeof(PICE*)*(size_t)mw*mh);
+    for(y=0;y<height;y++) for(x=0;x<width;x++) {
+        i=cells[y*width+x]; grid[y*mw+x]=i<0?NULL:&next[i];
+    }
+    map_exit(); pice_exit();
+    Map=grid; MAX_X=(_WORD)mw; MAX_Y=(_WORD)mh; Xsize=(_WORD)width; Ysize=(_WORD)height;
+    Pice=next; MAX_PICE=(_WORD)capacity;
+    init_queues(); return TRUE;
 }

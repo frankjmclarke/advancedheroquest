@@ -4,22 +4,21 @@
 #include <map.h>
 #include <ro_mem.h>
 
-#define N_QUEUES 2
 
 
 GLOBAL _WORD MAX_PICE;
 GLOBAL PICE *Pice;
 
-GLOBAL CONST SIZE Section = {2, 5};
-GLOBAL CONST SIZE End = {2, 2};
-GLOBAL CONST SIZE Ultra_Room = {15, 15};
-GLOBAL CONST SIZE Big_Room = {10, 10};
-GLOBAL CONST SIZE Large_Room = {5, 10};
-GLOBAL CONST SIZE Small_Room = {5, 5};
+GLOBAL CONST PICE_SIZE Section = {2, 5};
+GLOBAL CONST PICE_SIZE End = {2, 2};
+GLOBAL CONST PICE_SIZE Ultra_Room = {15, 15};
+GLOBAL CONST PICE_SIZE Big_Room = {10, 10};
+GLOBAL CONST PICE_SIZE Large_Room = {5, 10};
+GLOBAL CONST PICE_SIZE Small_Room = {5, 5};
 
-GLOBAL CONST SIZE Border = {1, 1};
-GLOBAL CONST SIZE Door = {1, 1};
-GLOBAL CONST SIZE Void = {0, 0};
+GLOBAL CONST PICE_SIZE Border = {1, 1};
+GLOBAL CONST PICE_SIZE Door = {1, 1};
+GLOBAL CONST PICE_SIZE Void = {0, 0};
 
 /******************************************************************************/
 /*** ---------------------------------------------------------------------- ***/
@@ -27,7 +26,7 @@ GLOBAL CONST SIZE Void = {0, 0};
 
 GLOBAL _BOOL init_pice(PICE *ptr, TYPE type, _WORD x, _WORD y, DIRECTION pos)
 {
-	CONST SIZE *size = &Void;
+	CONST PICE_SIZE *size = &Void;
 	
 	ptr->type = type;
 	ptr->x = x;

@@ -19,6 +19,8 @@ _BOOL init_map(_WORD x, _WORD y);
 
 _BOOL map_init(_WORD max_x, _WORD max_y);
 _VOID map_exit(_VOID);
+/* Atomically install a validated saved map; the caller owns its text strings. */
+_BOOL map_restore(CONST PICE *pieces, int count, int width, int height, CONST int *cells);
 
 #define clr_square(x,y) set_square((x), (y), NULL)
 

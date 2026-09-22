@@ -1,5 +1,6 @@
 #ifndef __PICE_H__
 #define __PICE_H__
+#define N_QUEUES 2
 
 #ifndef __PORTAB_H__
 #include <portab.h>
@@ -49,21 +50,21 @@ typedef struct pice
 	DIRECTION pos;
 } PICE;
 
-typedef struct size { _WORD w, h; } SIZE;
+typedef struct size { _WORD w, h; } PICE_SIZE;
 
 extern _WORD MAX_PICE;
 extern PICE *Pice;
 
-extern CONST SIZE Section;
-extern CONST SIZE End;
-extern CONST SIZE Ultra_Room;
-extern CONST SIZE Big_Room;
-extern CONST SIZE Large_Room;
-extern CONST SIZE Small_Room;
+extern CONST PICE_SIZE Section;
+extern CONST PICE_SIZE End;
+extern CONST PICE_SIZE Ultra_Room;
+extern CONST PICE_SIZE Big_Room;
+extern CONST PICE_SIZE Large_Room;
+extern CONST PICE_SIZE Small_Room;
 
-extern CONST SIZE Border;
-extern CONST SIZE Door;
-extern CONST SIZE Void;
+extern CONST PICE_SIZE Border;
+extern CONST PICE_SIZE Door;
+extern CONST PICE_SIZE Void;
 
 #define copy_pice(d, s) (*(d) = *(s))
 

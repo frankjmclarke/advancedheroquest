@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 root = Path(__file__).resolve().parents[1]
 source = (root / "map.c").read_text(encoding="cp1252")
-logic = source[source.index("/* Fog geometry"):]
+logic = source[source.index("/* Fog geometry"):source.index("/* Allocate both arrays")]
 render_source = (root / "icon.c").read_text(encoding="cp1252")
 render = render_source[render_source.index("LOCAL _BOOL draw_map_visible"):render_source.index("GLOBAL _BOOL draw_img_map")]
 harness = r'''#include <assert.h>

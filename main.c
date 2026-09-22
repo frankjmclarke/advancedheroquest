@@ -20,6 +20,8 @@
 #include <wind.h>
 #include <table.h>
 #include "campaign.h"
+#include "game.h"
+#include "rsh/game.rh"
 #include "rsh/campaign.rh"
 #include <mem.h>
 #include <stairs.h>
@@ -546,6 +548,7 @@ LOCAL _VOID write_profile(_VOID)
 
 LOCAL _BOOL mem_init(_WORD x, _WORD y, _WORD pice, _WORD mem)
 {
+	game_discard_dungeon();
 	if (!mem_alloc(x, y, pice, mem))
 	{
 		return FALSE;
@@ -562,6 +565,7 @@ LOCAL _BOOL mem_init(_WORD x, _WORD y, _WORD pice, _WORD mem)
 LOCAL _VOID karte_ok(_BOOL ok)
 {
 	Wind_Menu_Enable(MWEITER, ok);
+	Wind_Menu_Enable(MGAMENEXT, ok);
 	Wind_Menu_Enable(MABSPEIC, ok);
 	Wind_Menu_Enable(MGRAFIK, ok);
 	Wind_Menu_Enable(MPLAYER, ok);
@@ -594,6 +598,7 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init, _BOOL quiet)
 			ok = FALSE;
 		} else
 		{	
+			game_discard_dungeon();
 			ptr = show_string("Reading reference table");
 			ok = read_table(file->filename, "errors.txt");
 			hide_string(ptr);
@@ -879,7 +884,8 @@ LOCAL DLG_RETURN karte_button(DIALOG *dialog, _WORD button, _BOOL *ret, _VOID *p
 		AHQ_para.rnd = Dialog_GetInt(dialog, KZUFALL);
 		if (AHQ_para.rnd == 0)
 			AHQ_para.rnd = (_UWORD)(clock() & 0x7FFF);
-		new_rand(AHQ_para.rnd);
+		game_discard_dungeon();
+	new_rand(AHQ_para.rnd);
 		AHQ_para.treppe = Dialog_GetBool(dialog, KIMMER);
 		AHQ_para.nureine = Dialog_GetBool(dialog, KNUREINE);
 		AHQ_para.weiter = Dialog_GetBool(dialog, KWEITER);
@@ -1002,6 +1008,7 @@ LOCAL _WORD try_makemap(_BOOL weiter)
 	_UBYTE str[256];
 	DIALOG *ptr;
 
+	game_discard_dungeon();
 	new_rand(AHQ_para.rnd);
 	if (weiter)
 		sprintf(str, "Generating map (#%u), press a key to cancel", AHQ_para.rnd);
@@ -1041,7 +1048,7 @@ LOCAL _BOOL do_makemap(_VOID)
 		switch (try_makemap(AHQ_para.weiter))
 		{
 			case FALSE: return FALSE;
-			case TRUE: return TRUE;
+			case TRUE: game_new_dungeon(AHQ_para.name); return TRUE;
 		}
 		
 		if (AHQ_para.weiter)
@@ -1057,6 +1064,7 @@ LOCAL _BOOL do_makemap(_VOID)
 			switch (button)
 			{
 			case 1:
+				game_new_dungeon(AHQ_para.name);
 				return TRUE;
 			case 2:
 				break;
@@ -1222,6 +1230,7 @@ LOCAL _BOOL make_first_map(_VOID)
 	if (res != TRUE)
 		return FALSE;
 
+	game_new_dungeon(AHQ_para.name);
 	karte_ok(TRUE);
 	do_show(MSTATIST);
 	do_show(MMONSTER);
@@ -1232,12 +1241,28 @@ LOCAL _BOOL make_first_map(_VOID)
 
 /*** ---------------------------------------------------------------------- ***/
 
+GLOBAL _VOID game_loaded_title(const char *title)
+{
+ strMcpy(AHQ_para.name, sizeof(AHQ_para.name), title);
+ karte_ok(TRUE);
+ Wind_Menu_Check(MGRAFIK, TRUE);
+ do_show(MGRAFIK);
+ Grafik_Zoom_Fit();
+}
+
 LOCAL _BOOL do_menu(_WORD eintrag)
 {
 	_BOOL retV = TRUE;
 
+    if ((eintrag==MKARTE || eintrag==MWEITER || eintrag==MGAMENEXT || eintrag==MTABELLE || eintrag==MPARA) && !game_before_replace()) return TRUE;
 	switch (eintrag)
 	{
+    case MGAMEPARTY: game_party(); break;
+    case MGAMESAVE: game_save(0); break;
+    case MGAMESAVEAS: game_save(1); break;
+    case MGAMELOAD: game_load(0); break;
+    case MGAMERECOVER: game_load(1); break;
+    case MGAMELEAVE: case MGAMEUNDO: game_command(eintrag); break;
 	case MHELP:
 		Dialog_Select(FHELP, close_on_ok, NULL);
 		break;
@@ -1296,6 +1321,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		}
 		break;
 
+	case MGAMENEXT:
 	case MWEITER:
 		++AHQ_para.rnd;
 		SetMouse(MOUSE_BUSY);
@@ -1529,6 +1555,7 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 		{
 			if (AHQ_para.ask_exit && !ok_abbruch("Exit program?"))
 				return FALSE;
+			if (!game_before_replace()) return FALSE;
 			AHQ_para.grafik = Wind_Menu_Checked(MGRAFIK);
 			AHQ_para.text = Wind_Menu_Checked(MTEXT);
 			AHQ_para.monster = Wind_Menu_Checked(MMONSTER);
@@ -1572,6 +1599,7 @@ LOCAL _BOOL WindPos_Save_Restore(_BOOL save, _WORD art, _LONG *var_bez)
 				SetMouse(MOUSE_RESTORE);
 				show_quest_description(AHQ_para.tabelle.filename);
 			}
+			game_recover();
 #if DEMO
 			do_demo();
 #endif /* DEMO */
@@ -1625,6 +1653,7 @@ _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 		return valid ? 0 : 1;
 	}
 	
+	game_initialize();
 	read_profile();
 	
 	/* must happen before the main window is shown by Wind_Hide_Show_Init */
@@ -1652,6 +1681,7 @@ _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 			Evnt_Multi(do_menu, MENUE);
 		}
 		
+		game_shutdown();
 		mem_freeall();
 	}
 	free_icons();

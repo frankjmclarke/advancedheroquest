@@ -1,0 +1,370 @@
+/* Native party UI, token interaction and durable session files. */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+#include <commdlg.h>
+#include <shlobj.h>
+#include <openwork.h>
+#include <wind.h>
+#include <defs.h>
+#include "game.h"
+#include "rsh/game.rh"
+
+static HERO heroes[HERO_LIMIT], undo_heroes[HERO_LIMIT];
+static int hero_count,undo_count,undo_valid,selected=-1,move_mode,active,dirty,ready,autosave_warned,map_ready;
+static char session_title[160],save_path[MAX_PATH],recovery_path[MAX_PATH],previous_path[MAX_PATH];
+static GAME_DATA *loaded_owner;
+static WINDOW_DEF *preview_window;
+static int preview_hero=-1,preview_x,preview_y;
+extern void game_loaded_title(const char *title);
+static void message(const char *text) { MessageBoxA(GlMainHwnd,text,"HQ-Map game",MB_OK|MB_ICONINFORMATION); }
+static void remember(void) { memcpy(undo_heroes,heroes,sizeof(heroes)); undo_count=hero_count; undo_valid=1; }
+static int capture(GAME_DATA *d)
+{
+    int x,y; PICE *p;
+    memset(d,0,sizeof(*d)); if(!map_ready || !Pice || Xsize<1 || Ysize<1) return 0;
+    d->pieces=Pice; d->count=MAX_PICE; d->width=Xsize; d->height=Ysize;
+    d->visible=game_fog(); if(!d->visible) return 0;
+    d->hero_count=hero_count; memcpy(d->heroes,heroes,sizeof(heroes)); strcpy(d->title,session_title);
+    d->cells=(int*)malloc(sizeof(int)*Xsize*Ysize); if(!d->cells) return 0;
+    for(y=0;y<Ysize;y++) for(x=0;x<Xsize;x++) {
+        get_square(x,y,&p); d->cells[y*Xsize+x]=p?(int)(p-Pice):-1;
+    }
+    return 1;
+}
+/* Durable replacement: write and flush a unique sibling before replacing the
+ * destination. The prior autosave is kept as a second recovery generation. */
+static int write_game(const char *path,int backup)
+{
+    GAME_DATA d; unsigned char *bytes=NULL; size_t size=0;
+    HANDLE file; DWORD written; int ok=0; char temp[MAX_PATH];
+    if(!*path || !capture(&d)) return 0;
+    ok=game_encode(&d,&bytes,&size); free(d.cells); if(!ok) return 0;
+    if(strlen(path)+48>=MAX_PATH) { free(bytes); return 0; }
+    sprintf(temp,"%s.%lu.%lu.tmp",path,GetCurrentProcessId(),GetTickCount());
+    file=CreateFileA(temp,GENERIC_WRITE,0,NULL,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,NULL);
+    if(file==INVALID_HANDLE_VALUE) { free(bytes); return 0; }
+    ok=WriteFile(file,bytes,(DWORD)size,&written,NULL) && written==size && FlushFileBuffers(file);
+    if(!CloseHandle(file)) ok=0; free(bytes);
+    if(ok && backup && GetFileAttributesA(path)!=INVALID_FILE_ATTRIBUTES)
+        ok=CopyFileA(path,previous_path,FALSE)!=0;
+    if(ok) ok=MoveFileExA(temp,path,MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH)!=0;
+    if(!ok) DeleteFileA(temp); return ok;
+}
+static GAME_DATA *read_game(const char *path)
+{
+    FILE *fp=fopen(path,"rb"); long length; unsigned char *bytes; GAME_DATA *d=NULL;
+    if(!fp) return NULL;
+    if(fseek(fp,0,SEEK_END) || (length=ftell(fp))<32 || length>16*1024*1024) { fclose(fp); return NULL; }
+    rewind(fp); bytes=(unsigned char*)malloc(length);
+    if(bytes && fread(bytes,1,length,fp)==(size_t)length) d=game_decode(bytes,length);
+    free(bytes); fclose(fp); return d;
+}
+void game_initialize(void)
+{
+    char folder[MAX_PATH]; ready=0;
+    if(SHGetFolderPathA(NULL,CSIDL_LOCAL_APPDATA|CSIDL_FLAG_CREATE,NULL,0,folder)==S_OK && strlen(folder)<MAX_PATH-50) {
+        strcat(folder,"\\HQ-Map"); CreateDirectoryA(folder,NULL);
+        sprintf(recovery_path,"%s\\recovery.hqg",folder);
+        sprintf(previous_path,"%s\\recovery-previous.hqg",folder);
+    }
+}
+void game_changed(void)
+{
+    if(!active || !map_ready) return;
+    dirty=1; game_redraw();
+    if(ready && !write_game(recovery_path,1) && !autosave_warned) {
+        autosave_warned=1; message("Autosave could not be written. Use File > Save Game to choose a writable location.");
+    }
+}
+static int choose_path(char *path,int save)
+{
+    OPENFILENAMEA dialog; memset(&dialog,0,sizeof(dialog));
+    dialog.lStructSize=sizeof(dialog); dialog.hwndOwner=GlMainHwnd;
+    dialog.lpstrFilter="HQ-Map saved games (*.hqg)\0*.hqg\0\0";
+    dialog.lpstrFile=path; dialog.nMaxFile=MAX_PATH; dialog.lpstrDefExt="hqg";
+    dialog.Flags=OFN_EXPLORER|OFN_NOCHANGEDIR|OFN_PATHMUSTEXIST|(save?OFN_OVERWRITEPROMPT:OFN_FILEMUSTEXIST);
+    return save?GetSaveFileNameA(&dialog):GetOpenFileNameA(&dialog);
+}
+int game_save(int save_as)
+{
+    char path[MAX_PATH];
+    if(!map_ready) { message("Generate or load a dungeon first. Your recovery copy is unchanged."); return 0; }
+    strcpy(path,save_path);
+    if((save_as || !*path) && !choose_path(path,1)) return 0;
+    if(!write_game(path,0)) { message("Could not save the game. Your existing save has not been replaced."); return 0; }
+    strcpy(save_path,path); active=1; dirty=0;
+    if(ready && !write_game(recovery_path,1) && !autosave_warned) { autosave_warned=1; message("Game saved, but the separate recovery copy could not be updated."); }
+    return 1;
+}
+int game_before_replace(void)
+{
+    int choice;
+    if(!active || !dirty) return 1;
+    choice=MessageBoxA(GlMainHwnd,"Save your current game before continuing?", "HQ-Map game",MB_YESNOCANCEL|MB_ICONQUESTION);
+    if(choice==IDCANCEL) return 0;
+    return choice==IDYES?game_save(0):1;
+}
+int game_load(int recovery)
+{
+    char path[MAX_PATH]; GAME_DATA *d;
+    if(!recovery) { path[0]=0; if(!choose_path(path,0)) return 0; }
+    else strcpy(path,recovery_path);
+    d=read_game(path);
+    if(!d && recovery) d=read_game(previous_path);
+    if(!d) { message("This saved game is damaged, unsupported, or unavailable. The current game has not changed."); return 0; }
+    if(!game_before_replace()) { game_data_free(d); return 0; }
+    /* map_restore allocates first, so even allocation failure preserves play. */
+    if(!map_restore(d->pieces,d->count,d->width,d->height,d->cells)) { game_data_free(d); message("Not enough memory to load the game."); return 0; }
+    close_all_windows(FALSE);
+    game_data_free(loaded_owner); loaded_owner=d;
+    hero_count=d->hero_count; memcpy(heroes,d->heroes,sizeof(heroes));
+    strcpy(session_title,d->title); game_set_fog(d->visible,d->count);
+    selected=-1; move_mode=0; undo_valid=0; active=1; map_ready=1; dirty=recovery?1:0;
+    if(recovery) save_path[0]=0; else strcpy(save_path,path);
+    game_loaded_title(session_title);
+    return 1;
+}
+void game_recover(void)
+{
+    if(*recovery_path && (GetFileAttributesA(recovery_path)!=INVALID_FILE_ATTRIBUTES || GetFileAttributesA(previous_path)!=INVALID_FILE_ATTRIBUTES)) {
+        if(MessageBoxA(GlMainHwnd,"A saved recovery session is available. Resume it?", "HQ-Map recovery",MB_YESNO|MB_ICONQUESTION)==IDYES) game_load(1);
+    }
+    ready=1;
+}
+void game_discard_dungeon(void)
+{
+    int i; map_ready=0; dirty=0; selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
+    for(i=0;i<hero_count;i++) heroes[i].x=heroes[i].y=-1;
+    game_reset_fog();
+}
+void game_new_dungeon(const char *title)
+{
+    int i; map_ready=1;
+    game_data_free(loaded_owner); loaded_owner=NULL;
+    game_reset_fog();
+    strncpy(session_title,title,sizeof(session_title)-1); session_title[sizeof(session_title)-1]=0;
+    for(i=0;i<hero_count;i++) heroes[i].x=heroes[i].y=-1;
+    selected=-1; move_mode=0; undo_valid=0;
+    if(active) game_changed();
+}
+void game_shutdown(void)
+{
+    game_data_free(loaded_owner); loaded_owner=NULL;
+    game_reset_fog();
+}
+static void reserve_party(void)
+{
+    int i; if(!hero_count) return; remember();
+    for(i=0;i<hero_count;i++) heroes[i].x=heroes[i].y=-1;
+    move_mode=0; game_changed();
+}
+/* Keep token locations on occupied map squares, with strictly one hero each. */
+static int can_move(int index,int x,int y,const unsigned char *visible)
+{
+    PICE *piece; int i;
+    if(!get_square((_WORD)x,(_WORD)y,&piece) || !piece || piece->type==EMPTY || piece->type==TEST) return 0;
+    if(visible && !fog_visible(visible,(_WORD)(piece-Pice))) return 0;
+    for(i=0;i<hero_count;i++) if(i!=index && heroes[i].x==x && heroes[i].y==y) return 0;
+    return 1;
+}
+static int move_hero(int index,int x,int y,const unsigned char *visible)
+{
+    if(index<0 || index>=hero_count || !can_move(index,x,y,visible)) { MessageBeep(MB_ICONWARNING); return 0; }
+    if(heroes[index].x==x && heroes[index].y==y) return 1;
+    remember(); heroes[index].x=x; heroes[index].y=y; game_changed(); return 1;
+}
+static int hero_at(int x,int y,const unsigned char *visible)
+{
+    int i; PICE *p;
+    if(!get_square((_WORD)x,(_WORD)y,&p) || !p || (visible && !fog_visible(visible,(_WORD)(p-Pice)))) return -1;
+    for(i=0;i<hero_count;i++) if(heroes[i].x==x && heroes[i].y==y) return i;
+    return -1;
+}
+/* Small code-drawn class emblems stay sharp without growing the artwork atlas. */
+static void marker(HDC dc,int x,int y,int size,int kind,int chosen,int defeated)
+{
+    static const COLORREF colours[5]={RGB(165,46,36),RGB(145,91,31),RGB(32,117,65),RGB(61,66,162),RGB(86,93,101)};
+    int saved=SaveDC(dc),a=size/4,b=size*3/4,c=size/2;
+    HPEN edge=CreatePen(PS_SOLID,chosen?3:1,chosen?RGB(255,220,65):RGB(245,234,203));
+    HPEN ink=CreatePen(PS_SOLID,size>40?3:2,RGB(255,245,215));
+    HBRUSH fill=CreateSolidBrush(colours[kind]); POINT pts[3];
+    SelectObject(dc,edge); SelectObject(dc,fill); Ellipse(dc,x+1,y+1,x+size-1,y+size-1); SelectObject(dc,ink);
+    if(kind==3) { pts[0].x=x+c; pts[0].y=y+a; pts[1].x=x+a; pts[1].y=y+b; pts[2].x=x+b; pts[2].y=y+b; Polygon(dc,pts,3); }
+    else if(kind==2) { Arc(dc,x+a,y+a,x+b,y+b,x+c,y+a,x+c,y+b); MoveToEx(dc,x+c,y+a,NULL); LineTo(dc,x+c,y+b); }
+    else {
+        MoveToEx(dc,x+c,y+a,NULL); LineTo(dc,x+c,y+b);
+        if(kind==1) Rectangle(dc,x+a,y+a,x+b,y+c);
+        else { MoveToEx(dc,x+a,y+c,NULL); LineTo(dc,x+b,y+c); MoveToEx(dc,x+c,y+a,NULL); LineTo(dc,x+c-3,y+a+5); }
+    }
+    if(defeated) { MoveToEx(dc,x+a,y+a,NULL); LineTo(dc,x+b,y+b); MoveToEx(dc,x+b,y+a,NULL); LineTo(dc,x+a,y+b); }
+    RestoreDC(dc,saved); DeleteObject(edge); DeleteObject(ink); DeleteObject(fill);
+}
+void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,int sy)
+{
+    int i,x,y,size=8*zoom,saved; HDC dc=W_GetDC(window); RECT label;
+    if(!dc) return; saved=SaveDC(dc); SetBkMode(dc,OPAQUE); SetBkColor(dc,RGB(35,28,22)); SetTextColor(dc,RGB(255,249,221));
+    SelectObject(dc,GetStockObject(DEFAULT_GUI_FONT));
+    for(i=0;i<hero_count;i++) {
+        HERO *h=&heroes[i]; if(h->x<0 || hero_at(h->x,h->y,visible)!=i) continue;
+        x=((i==preview_hero && window==preview_window?preview_x:h->x)+1)*size-sx;
+        y=(Ysize-(i==preview_hero && window==preview_window?preview_y:h->y))*size-sy;
+        marker(dc,x,y,size,h->kind,i==selected,h->wounds==0);
+        if(size>=24) { label.left=x-size/2; label.right=x+size+size/2; label.top=y+size; label.bottom=label.top+16;
+            DrawTextA(dc,h->name,-1,&label,DT_CENTER|DT_SINGLELINE|DT_END_ELLIPSIS|DT_NOPREFIX); }
+    }
+    RestoreDC(dc,saved);
+}
+typedef struct { WINDOW_DEF *window; WNDPROC previous; int player,drag,start_x,start_y; } MAP_HOOK;
+static int map_point(MAP_HOOK *hook,LPARAM lp,int *x,int *y)
+{
+    L_GRECT doc; int px=(short)LOWORD(lp),py=(short)HIWORD(lp),zoom=Grafik_Zoom_Get(); RECT client;
+    GetClientRect(W_GetHwnd(hook->window),&client);
+    if(px<0 || py<0 || px>=client.right || py>=client.bottom || zoom<1) return 0;
+    Wind_GetDoc(hook->window,&doc); px+=(int)doc.xx; py+=(int)doc.yy;
+    *x=px/(8*zoom)-1; *y=Ysize-py/(8*zoom); return px>=0 && py>=0;
+}
+static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
+{
+    MAP_HOOK *hook=(MAP_HOOK*)GetPropA(hwnd,"HQHeroMap"); int x,y,n;
+    const unsigned char *visible;
+    if(!hook) return DefWindowProc(hwnd,msg,wp,lp);
+    /* Preserve activation, but do not let the legacy procedure eat a token
+       click when focus returns from the Party dialog or another map window. */
+    if(msg==WM_MOUSEACTIVATE && LOWORD(lp)==HTCLIENT && HIWORD(lp)==WM_LBUTTONDOWN && (move_mode || hero_count)) {
+        LRESULT activation=CallWindowProc(hook->previous,hwnd,msg,wp,lp);
+        if(activation==MA_ACTIVATEANDEAT) return MA_ACTIVATE;
+        if(activation==MA_NOACTIVATEANDEAT) return MA_NOACTIVATE;
+        return activation;
+    }
+    visible=hook->player?game_fog():NULL;
+    if(msg==WM_SETCURSOR && move_mode && LOWORD(lp)==HTCLIENT) { SetCursor(LoadCursor(NULL,IDC_CROSS)); return TRUE; }
+    if((msg==WM_LBUTTONDOWN || msg==WM_LBUTTONDBLCLK) && map_point(hook,lp,&x,&y)) {
+        n=hero_at(x,y,visible);
+        if(n>=0) { selected=n; move_mode=1; hook->drag=n; hook->start_x=x; hook->start_y=y; SetCapture(hwnd); game_redraw(); return 0; }
+        if(move_mode && selected>=0) {
+            if(move_hero(selected,x,y,visible)) { move_mode=0; SetCursor(LoadCursor(NULL,IDC_ARROW)); }
+            return 0;
+        }
+    }
+    if(msg==WM_MOUSEMOVE && hook->drag>=0) {
+        if(map_point(hook,lp,&x,&y) && can_move(hook->drag,x,y,visible)) {
+            if(preview_hero!=hook->drag || preview_x!=x || preview_y!=y) {
+                preview_window=hook->window; preview_hero=hook->drag; preview_x=x; preview_y=y; game_redraw();
+            }
+            SetCursor(LoadCursor(NULL,IDC_SIZEALL));
+        } else SetCursor(LoadCursor(NULL,IDC_NO));
+        return 0;
+    }
+    if(msg==WM_LBUTTONUP && hook->drag>=0) {
+        n=hook->drag; hook->drag=-1; ReleaseCapture();
+        if(map_point(hook,lp,&x,&y) && (x!=hook->start_x || y!=hook->start_y)) {
+            move_hero(n,x,y,visible); move_mode=0;
+        }
+        return 0;
+    }
+    if(msg==WM_CAPTURECHANGED) { hook->drag=-1; preview_hero=-1; game_redraw(); }
+    if(msg==WM_RBUTTONDOWN && move_mode) { move_mode=0; hook->drag=-1; ReleaseCapture(); game_redraw(); return 0; }
+    if(msg==WM_NCDESTROY) {
+        WNDPROC previous=hook->previous; RemovePropA(hwnd,"HQHeroMap"); free(hook);
+        return CallWindowProc(previous,hwnd,msg,wp,lp);
+    }
+    return CallWindowProc(hook->previous,hwnd,msg,wp,lp);
+}
+void game_attach(WINDOW_DEF *window,int player)
+{
+    MAP_HOOK *hook; HWND hwnd;
+    if(!window) return; hwnd=W_GetHwnd(window); if(GetPropA(hwnd,"HQHeroMap")) return;
+    hook=(MAP_HOOK*)calloc(1,sizeof(*hook)); if(!hook) return;
+    hook->window=window; hook->player=player; hook->drag=-1;
+    if(!SetPropA(hwnd,"HQHeroMap",hook)) { free(hook); return; }
+    hook->previous=(WNDPROC)SetWindowLongPtr(hwnd,GWLP_WNDPROC,(LONG_PTR)map_proc);
+}
+static int party_selection=-1;
+static void party_fields(HWND hwnd)
+{
+    int i,valid=party_selection>=0 && party_selection<hero_count;
+    HERO *h=valid?&heroes[party_selection]:NULL; char status[100];
+    SetDlgItemTextA(hwnd,GPNAME,h?h->name:"");
+    for(i=0;i<HERO_STATS;i++) { SetDlgItemInt(hwnd,GPSTAT+i,h?h->stats[i]:0,FALSE); EnableWindow(GetDlgItem(hwnd,GPSTAT+i),valid); }
+    SetDlgItemInt(hwnd,GPWOUNDS,h?h->wounds:0,FALSE); SetDlgItemInt(hwnd,GPFATE,h?h->fate:0,FALSE);
+    EnableWindow(GetDlgItem(hwnd,GPNAME),valid); EnableWindow(GetDlgItem(hwnd,GPWOUNDS),valid); EnableWindow(GetDlgItem(hwnd,GPFATE),valid);
+    EnableWindow(GetDlgItem(hwnd,GPMOVE),valid); EnableWindow(GetDlgItem(hwnd,GPRESERVE),valid); EnableWindow(GetDlgItem(hwnd,GPAPPLY),valid);
+    if(h && h->x>=0) sprintf(status,"On map: square %d, %d",h->x+1,h->y+1); else strcpy(status,h?"In reserve - choose Place / Move to enter the dungeon.":"Choose a class and Add your first hero.");
+    SetDlgItemTextA(hwnd,GPSTATUS,status); InvalidateRect(GetDlgItem(hwnd,GPPORTRAIT),NULL,TRUE);
+}
+static void party_list(HWND hwnd)
+{
+    int i; char label[100]; SendDlgItemMessage(hwnd,GPLIST,LB_RESETCONTENT,0,0);
+    for(i=0;i<hero_count;i++) { sprintf(label,"%s  [%s]",heroes[i].name,heroes[i].x<0?"reserve":"map"); SendDlgItemMessageA(hwnd,GPLIST,LB_ADDSTRING,0,(LPARAM)label); }
+    SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,party_selection,0);
+}
+static int party_apply(HWND hwnd)
+{
+    HERO next; int i; BOOL ok;
+    if(party_selection<0) return 1;
+    next=heroes[party_selection]; GetDlgItemTextA(hwnd,GPNAME,next.name,sizeof(next.name));
+    if(!next.name[0]) { message("Give this hero a name."); return 0; }
+    for(i=0;i<HERO_STATS+2;i++) {
+        int value=(int)GetDlgItemInt(hwnd,i<HERO_STATS?GPSTAT+i:i==HERO_STATS?GPWOUNDS:GPFATE,&ok,FALSE);
+        if(!ok || value<0 || value>99) { message("Enter whole numbers from 0 to 99."); return 0; }
+        if(i<HERO_STATS) next.stats[i]=value; else if(i==HERO_STATS) next.wounds=value; else next.fate=value;
+    }
+    if(next.wounds>next.stats[7]) { message("Current Wounds cannot exceed Max W."); return 0; }
+    if(memcmp(&next,&heroes[party_selection],sizeof(next))) { remember(); heroes[party_selection]=next; active=1; game_changed(); party_list(hwnd); }
+    return 1;
+}
+static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
+{
+    int id=LOWORD(wp),n,i;
+    if(msg==WM_INITDIALOG) {
+        for(i=0;i<5;i++) SendDlgItemMessageA(hwnd,GPCLASS,CB_ADDSTRING,0,(LPARAM)hero_classes[i]);
+        SendDlgItemMessage(hwnd,GPCLASS,CB_SETCURSEL,0,0); SendDlgItemMessage(hwnd,GPNAME,EM_LIMITTEXT,39,0);
+        party_selection=selected>=0?selected:hero_count?0:-1; party_list(hwnd); party_fields(hwnd); return TRUE;
+    }
+    if(msg==WM_DRAWITEM && wp==GPPORTRAIT) {
+        DRAWITEMSTRUCT *di=(DRAWITEMSTRUCT*)lp;
+        FillRect(di->hDC,&di->rcItem,GetSysColorBrush(COLOR_BTNFACE));
+        if(party_selection>=0) marker(di->hDC,0,0,di->rcItem.bottom,heroes[party_selection].kind,0,heroes[party_selection].wounds==0);
+        return TRUE;
+    }
+    if(msg==WM_CLOSE) { if(party_apply(hwnd)) EndDialog(hwnd,0); return TRUE; }
+    if(msg!=WM_COMMAND) return FALSE;
+    if(id==GPLIST && HIWORD(wp)==LBN_SELCHANGE) {
+        n=(int)SendDlgItemMessage(hwnd,GPLIST,LB_GETCURSEL,0,0);
+        if(!party_apply(hwnd)) { SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,party_selection,0); return TRUE; }
+        party_selection=n; SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,n,0); party_fields(hwnd); return TRUE;
+    }
+    if(id!=GPADD && id!=GPAPPLY && id!=GPMOVE && id!=GPRESERVE && id!=IDOK && id!=IDCANCEL) return FALSE;
+    if(!party_apply(hwnd)) return TRUE;
+    if(id==GPADD) {
+        if(hero_count==HERO_LIMIT) { message("This party already has 16 heroes, including reserve."); return TRUE; }
+        n=(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0); if(n<0) return TRUE;
+        remember(); hero_defaults(&heroes[hero_count],n,hero_count+1); party_selection=hero_count++; active=1; game_changed();
+    } else if(id==GPRESERVE && party_selection>=0) {
+        remember(); heroes[party_selection].x=heroes[party_selection].y=-1; move_mode=0; game_changed();
+    } else if(id==GPMOVE && party_selection>=0) {
+        selected=party_selection; move_mode=1; game_redraw(); EndDialog(hwnd,1); return TRUE;
+    } else if(id==IDOK || id==IDCANCEL) { EndDialog(hwnd,0); return TRUE; }
+    party_list(hwnd); party_fields(hwnd); return TRUE;
+}
+void game_party(void)
+{
+    if(!map_ready || !Pice || !Xsize || !Ysize) { message("Generate or load a dungeon first."); return; }
+    if(!Grafik_Karte) show_grafic(session_title);
+    if(DialogBoxParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGPARTY),GlMainHwnd,party_proc,0)==1 && Grafik_Karte) {
+        Wind_On_Top(Grafik_Karte);
+        SetFocus(W_GetHwnd(Grafik_Karte));
+    }
+}
+void game_command(int command)
+{
+    if(!map_ready) return;
+    if(command==MGAMELEAVE) reserve_party();
+    else if(command==MGAMEUNDO && undo_valid) {
+        HERO swap[HERO_LIMIT]; int n=hero_count;
+        memcpy(swap,heroes,sizeof(heroes)); memcpy(heroes,undo_heroes,sizeof(heroes)); memcpy(undo_heroes,swap,sizeof(heroes));
+        hero_count=undo_count; undo_count=n; selected=-1; move_mode=0; game_changed();
+    }
+}

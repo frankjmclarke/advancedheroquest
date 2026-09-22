@@ -8,6 +8,7 @@
 #include "../version.h"
 #include "menu.rh"
 #include "campaign.rh"
+#include "game.rh"
 
 #define DIALOG_FONT 10, "MS Sans Serif"
 
@@ -34,7 +35,12 @@ MENUE MENU
 {
 	POPUP "&File"
 	{
-		MENUITEM "&Save...\tCtrl+S", MSPEICH
+		MENUITEM "Save &Game...\tCtrl+S", MGAMESAVE
+		MENUITEM "Save Game &As...", MGAMESAVEAS
+		MENUITEM "&Load Game...", MGAMELOAD
+		MENUITEM "Recover Last Session...", MGAMERECOVER
+		MENUITEM SEPARATOR
+		MENUITEM "Save Window...", MSPEICH
 		MENUITEM "&Print\tCtrl+P", MDRUCK
 		MENUITEM "&Close\tCtrl+U", MSCHLIES
 		MENUITEM "Close &All\tCtrl+X", MALLESCH
@@ -54,6 +60,14 @@ MENUE MENU
 		MENUITEM "&Monster List\tAlt+M", MMONSTER, GRAYED
 		MENUITEM "Room &Statistics\tAlt+S", MSTATIST, GRAYED
 	}
+    POPUP "&Party"
+    {
+        MENUITEM "&Heroes and Reserve...\tAlt+H", MGAMEPARTY
+        MENUITEM "&Undo Hero Change", MGAMEUNDO
+        MENUITEM SEPARATOR
+        MENUITEM "&Leave Dungeon (all to reserve)", MGAMELEAVE
+        MENUITEM "&Next Dungeon with Current Party", MGAMENEXT
+    }
 	POPUP "&Options"
 	{
 		MENUITEM "Load &Tables...\tCtrl+T", MTABELLE
@@ -87,7 +101,8 @@ MENUE MENU
 
 MENUE ACCELERATORS
 {
-	"^S", MSPEICH, ASCII
+	"^S", MGAMESAVE, ASCII
+    "h", MGAMEPARTY, ASCII, ALT
 	"^P", MDRUCK, ASCII
 	"^U", MSCHLIES, ASCII
 	"^X", MALLESCH, ASCII
@@ -366,3 +381,5 @@ FILETYPE VFT_APP
 }
 
 #include "campaign.rc"
+
+#include "game.rc"

@@ -401,7 +401,7 @@ LOCAL _BOOL draw_pice(MFDB *image, PICE *pice)
 			reset_mfdb_colors();		/* room numbers stay black */
 		}
 		
-		if (pice->text != NULL && icon->number != FUNK_NULL)
+		if (pice->text != NULL && pice->text[0] != NULL && pice->text[0][0] != '\0' && icon->number != FUNK_NULL)
 		{
 			xx = 0;
 			yy = 0;
@@ -1046,7 +1046,7 @@ GLOBAL _VOID draw_board_map(_VOID *window, MFDB *base, CONST _UBYTE *visible,
                     x * zoom - scroll_x, y * zoom - scroll_y, w * zoom, h * zoom);
         if (visible == NULL) draw_board_trap(window, p, zoom, scroll_x, scroll_y);
         /* Preserve the original number as a legible small badge. */
-        if (p->text == NULL || p->text[0] == NULL) continue;
+        if (p->text == NULL || p->text[0] == NULL || p->text[0][0] == '\0') continue;
         text = p->text[0]; wx = hx = wy = hy = 0;
         for (n = 1; n <= N_DIGIT && text[n] != '\0' && isdigit(text[n]); n++)
         {

@@ -109,7 +109,7 @@ rem  tlink32. The .def itself is not reused here: its IMPORTS section is
 rem  Borland module-definition syntax that link.exe does not accept.
 
 rem --- source lists ----------------------------------------------------------
-set "SRC_COMMON=campaign.c pice.c move.c rolldice.c table.c features.c random.c stairs.c test.c queue.c set.c map.c liste.c text.c makemap.c icon.c image.c pcx.c bmp.c mem.c"
+set "SRC_COMMON=game.c game-data.c campaign.c pice.c move.c rolldice.c table.c features.c random.c stairs.c test.c queue.c set.c map.c liste.c text.c makemap.c icon.c image.c pcx.c bmp.c mem.c"
 set "SRC_MYLIB=my_lib\path.c my_lib\termproc.c my_lib\grect.c my_lib\routine.c"
 set "SRC_WIN=my_lib\windows\w_mouse.c my_lib\windows\w_dialog.c my_lib\windows\memory.c my_lib\windows\file_io.c my_lib\windows\boxf.c my_lib\windows\mfdb.c my_lib\windows\filesel.c my_lib\windows\openwork.c my_lib\windows\window.c my_lib\windows\ro_help.c my_lib\windows\w_draw.c my_lib\windows\w_print.c my_lib\windows\profile.c"
 rem  maindm.c and winddm.c are two lines each: #define DEMO 1 followed by an

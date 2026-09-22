@@ -1,4 +1,5 @@
 #include <wind.h>
+#include "game.h"
 #include <demo.h>
 #include <menu.rh>
 #include <boxf.h>
@@ -338,6 +339,7 @@ LOCAL _VOID draw_grafic(WINDOW_DEF *window, MFDB *mfdb, CONST GRECT *area)
 			draw_board_map(window, mfdb, window == Player_View ? player_visible : NULL,
 				display_zoom, (_WORD)show.xx, (_WORD)show.yy);
 	}
+	game_draw(window, window == Player_View ? game_fog() : NULL, display_zoom, (_WORD)show.xx, (_WORD)show.yy);
 }
 
 /*** ---------------------------------------------------------------------- ***/
@@ -436,6 +438,7 @@ LOCAL _BOOL player_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
    image = Wind_Buf_Ptr(window);
    draw_player_map(image, player_visible);
    Wind_Redraw(window);
+   game_changed();
   } else if (get_square(x / ICON_SCALE - 1, Ysize - y / ICON_SCALE, &piece) &&
              piece != NULL && fog_visible(player_visible, (_WORD)(piece - Pice))) {
    show_room_contents(hit);
@@ -481,6 +484,7 @@ GLOBAL _VOID show_player_view(_UBYTE *name)
  }
  sprintf(title, "Player view: %s", name);
  Player_View = Wind_Open(W_PLAYER, WINDOW_ATTRIBUTES, player_proc, title, image);
+ game_attach(Player_View, 1);
 }
 
 LOCAL _BOOL grafic_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
@@ -565,6 +569,7 @@ GLOBAL _VOID show_grafic(_UBYTE *name)
 			hide_string(ptr);
 			sprintf(str, "Graphic: %s", name);
 			Grafik_Karte = Wind_Open(W_GRAFIK, WINDOW_ATTRIBUTES, grafic_proc, str, img);
+			game_attach(Grafik_Karte, 0);
 		} else
 		{
 			abbruch("Not enough memory for graphic map");
@@ -1228,9 +1233,32 @@ GLOBAL _BOOL print_statistik(_VOID)
 GLOBAL _VOID close_all_windows(_BOOL delete)
 {
 	Wind_Close_All(delete);
- if (player_visible != NULL) {
-  FREE(player_visible, player_visible_size);
-  player_visible = NULL;
-  player_visible_size = 0;
+}
+
+
+GLOBAL _VOID game_reset_fog(_VOID)
+{
+ if(player_visible) FREE(player_visible,player_visible_size);
+ player_visible=NULL; player_visible_size=0;
+}
+GLOBAL unsigned char *game_fog(_VOID)
+{
+ if(player_visible_size!=(size_t)MAX_PICE) game_reset_fog();
+ if(player_visible==NULL && MAX_PICE>0) {
+  player_visible_size=MAX_PICE;
+  player_visible=MALLOC(player_visible_size,"saved visibility");
+  if(player_visible) fog_init(player_visible);
  }
+ return (unsigned char *)player_visible;
+}
+GLOBAL _VOID game_set_fog(const unsigned char *visible,int count)
+{
+ unsigned char *dest;
+ game_reset_fog(); dest=game_fog();
+ if(dest && count<=MAX_PICE) memcpy(dest,visible,count);
+}
+GLOBAL _VOID game_redraw(_VOID)
+{
+ if(Grafik_Karte) Wind_Redraw(Grafik_Karte);
+ if(Player_View) Wind_Redraw(Player_View);
 }
