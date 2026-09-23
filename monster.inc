@@ -43,6 +43,8 @@ static void monster_add_reference(const char *name,const int *stats,int count,vo
         if(monsters.count==MONSTER_LIMIT) { monsters.seen[room]=2; return; }
         m=&monsters.tokens[monsters.count]; memset(m,0,sizeof(*m));
         strcpy(m->name,name); memcpy(m->stats,stats,sizeof(m->stats)); m->wounds=stats[7];
+        if(room_melee(name,&m->melee.dice,m->melee.hit)) strcpy(m->melee.weapon,"Printed melee profile");
+        monster_ranged_defaults(&m->ranged,name);
         m->room=room; m->x=m->y=-1; monsters.count++; monster_place(monsters.count-1);
     }
 }

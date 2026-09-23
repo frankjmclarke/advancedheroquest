@@ -329,3 +329,54 @@ int room_monsters(_UBYTE **lines,void (*add)(const char *,const int *,int,void *
     }
     return review;
 }
+
+int room_melee(const char *name,int *dice,int hits[12])
+{
+    char *clean=room_name(name,name+strlen(name)),*end;
+    const char *text=NULL,*p; size_t i; int matches=0,j,n,row[12]; long v;
+    if(!clean) return 0;
+    for(i=0;i<AHQ_REFERENCE_COUNT;i++) if(room_alias(clean,ahq_references[i].aliases)) {
+        text=ahq_references[i].text; matches++;
+    }
+    free(clean); if(matches!=1) return 0;
+    p=strstr(text,"Hit roll:"); if(!p) return 0; p+=9;
+    for(j=0;j<12;j++) {
+        while(*p==' ' || *p=='\t') p++;
+        if(!isdigit((unsigned char)*p)) return 0;
+        v=strtol(p,&end,10); if(v<1 || v>12) return 0; row[j]=(int)v; p=end;
+    }
+    while(*p==' ' || *p=='\t') p++;
+    if(*p!='\r' && *p!='\n') return 0;
+    p=strstr(p,"Damage dice:"); if(!p) return 0; p+=12;
+    while(*p==' ' || *p=='\t') p++;
+    if(!isdigit((unsigned char)*p)) return 0;
+    v=strtol(p,&end,10); if(v<1 || v>99) return 0; n=(int)v;
+    while(*end==' ' || *end=='\t') end++;
+    if(*end!='\r' && *end!='\n') return 0;
+    *dice=n; memcpy(hits,row,sizeof(row)); return 1;
+}
+
+/* Strict unambiguous ranged lookup. A star outside weapon range has no effect;
+ * special marked bands inside range require manual entry instead. */
+int room_ranged(const char *name,int *range,int *dice,int hits[5],int *kind)
+{
+    char *clean=room_name(name,name+strlen(name)),*end; const char *text=NULL,*p,*max;
+    size_t i; int matches=0,j,row[5],r,d,starts[5]={1,4,13,25,37}; long v;
+    if(!clean) return 0;
+    for(i=0;i<AHQ_REFERENCE_COUNT;i++) if(room_alias(clean,ahq_references[i].aliases)) { text=ahq_references[i].text; matches++; }
+    free(clean); if(matches!=1) return 0;
+    p=strstr(text,"RANGED COMBAT"); if(!p) return 0;
+    max=strstr(p,"Max range:");
+    if(!max || sscanf(max,"Max range: %d    Damage dice: %d",&r,&d)!=2 || r<1 || r>480 || d<1 || d>99) return 0;
+    p=strstr(p,"Hit roll:"); if(!p) return 0; p+=9;
+    for(j=0;j<5;j++) {
+        while(*p==' ' || *p=='\t') p++;
+        if(!isdigit((unsigned char)*p)) return 0;
+        v=strtol(p,&end,10); if(v<1 || v>12) return 0; row[j]=(int)v; p=end;
+        if(*p=='*') { if(starts[j]<=r) return 0; p++; }
+    }
+    while(*p==' ' || *p=='\t') p++;
+    if(*p!='\r' && *p!='\n') return 0;
+    *kind=strstr(text,"crossbow")?2:strstr(text,"bow")?1:4;
+    *range=r; *dice=d; memcpy(hits,row,sizeof(row)); return 1;
+}

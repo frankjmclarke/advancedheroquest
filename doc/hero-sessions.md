@@ -159,7 +159,7 @@ another adventure replaces the ledger. Keep separate named saves for separate ad
 
 Saved games and recovery include monster profiles, remaining Wounds, positions,
 unplaced/dead records, already-populated encounters and character deaths. The new
-version-3 format reads existing version-1 hero saves and version-2 monster saves.
+version-6 format reads earlier version-1 through version-5 saves.
 Revealed encounters in version-1 saves are populated on load. New saves require
 this updated executable.
 
@@ -197,3 +197,154 @@ Only when no usable recovery exists does startup generate a dungeon. To replace
 the recovered dungeon, use **Next Map** or **Next Dungeon with Current Party**.
 Window-restoration callbacks do not reload an already restored session. Startup
 recovery has no confirmation or save-before-recovery dialog.
+
+
+## Orthogonal hand-to-hand combat
+
+In **Party → Heroes and Reserve**, select a hero and choose **Weapon / combat**.
+New heroes have editable equipment presets from the supplied hero cards, with
+labelled suggestions for other classes. Completely blank saved profiles receive
+the same defaults on load. See [Hero weapon presets](hero-weapons.md) for the
+source values and invented suggestions. You can edit the weapon name, number
+of damage D12s, and the twelve required-hit values against target Weapon Skill
+1–12 from the hero's sheet. Zero means unconfigured.
+Changing WS does not infer or recalculate the hit table. Weapon bonuses, armour
+and other adjustments must already be reflected in the profile you enter.
+
+Newly revealed, recognized monsters receive their exact printed melee hit row
+and damage dice automatically. **Party → Monsters → Melee profile** also lets
+you edit their WS, Toughness and melee profile, or load **Use monster reference**.
+Unknown or ambiguous references require manual entry. The generic label
+“Printed melee profile” identifies the reference's damage pool; it does not
+infer a particular equipped weapon. Old saves can load the reference into the
+combat preview without changing the saved monster until Apply.
+
+Drag a hero onto a living monster in the square immediately above, below, left
+or right to open combat. Dragging a monster onto an adjacent hero works too.
+Both tokens stay in their original squares. Diagonal and distant targets now
+open ranged combat instead. Unrevealed targets and attacks through walls or
+closed doors are rejected; opened connecting doors are supported.
+Dragging to an empty square still moves the token. Both GM and Player View use
+the same combat workflow and retain the selected view.
+
+1. Check the attacker, weapon, required hit and target's WS/T/Wounds. Profile
+   buttons allow corrections in the draft before a roll is calculated.
+2. Choose **Roll attack**. It rolls the hit die, all required damage dice and
+   bonus dice from twelves, then calculates the result in one action. The dice
+   and result are displayed for review. A natural 1 fumbles; a natural 12
+   grants a free attack.
+3. **Take free attack** continues
+   with the attacker after a critical, or the defender after a fumble, provided
+   both remain alive. These attacks share the same preview and Undo operation.
+   Players adjudicate free-attack eligibility and special rules; the supplied
+   rule extract does not include the complete Free Attacks section.
+4. **Apply** commits the previewed results. **Cancel** discards the entire draft,
+   including profile edits. Starting an optional free attack and then choosing
+   Apply commits only the attacks already calculated. The log shows every
+   calculated roll and wound change.
+
+A killed monster or Henchman is removed; unique monster deaths are recorded for
+the continuing adventure. Heroes at zero Wounds retain the existing defeated
+marker for manual adjudication. **Undo Token Change** reverses the
+whole applied exchange, profiles and character death included.
+
+Combat does not enforce attack allowances per turn, class weapon restrictions,
+long-reach exceptions, ammunition or special abilities. Ranged eligibility and
+normal orthogonal death zones are handled as described below. WS outside the
+printed table's 1–12 range requires manual adjudication. A preview is bounded to
+32 attacks and 512 damage dice per attack; further attacks can be adjudicated
+separately. Profiles persist through save/load, automatic recovery and the next
+dungeon. Version-5 saves require the updated executable.
+
+`tests/combat-check.py` checks printed lookup, native dialogs and drag routing in
+both views, adjacency and walls/doors, manual and generated dice, damage
+explosions, criticals/fumbles, draft isolation, Apply/Undo, deaths and profiles in
+saved sessions. Existing save tests also construct actual version-1/2/3 files.
+
+
+## Ranged combat and automatic targeting
+
+Click a hero, then an enemy, or drag the hero onto the enemy. Selecting a monster
+and then a hero also works. **Orthogonal neighbours use melee; every other
+position uses ranged combat**, including diagonally adjacent targets. An attack
+does not move either figure. Right-click empty map space to cancel target
+selection before selecting an opposing figure for ordinary movement.
+
+Use **Ranged weapon** in the hero or monster editor to equip a bow, crossbow,
+thrown weapon or other ranged weapon. Record its maximum range, damage D12s and
+hit requirements for distance bands 1–3, 4–12, 13–24, 25–36 and 37+. **None
+equipped** disables ranged attacks. A missing weapon opens a blocked preview
+with an attacker-profile button, so it can be configured there too.
+
+Source defaults are Torallion's longbow for Elf (48 squares, 4 damage dice,
+hits 3/4/5/6/7) and Telor's thrown dagger for Wizard (4 squares, 1 damage die,
+hits 6/7/8/9/10). Other hero classes start without ranged equipment; this does
+not restrict what the user may equip. Unambiguous monster reference rows are
+loaded when available. Ambiguous or unsupported special profiles require manual
+entry. **Other** weapon types leave movement eligibility to the user.
+
+Range is the sum of horizontal and vertical square distances. A gold firing line
+appears during the ranged preview. Clearly intersected friendly and hostile
+figures block it, including defeated figures still on the board. Walls, closed
+doors and unexplored space block shots. Exact corner grazes are treated
+generously: side figures touched only at a corner are ignored, and either open
+route around a wall corner is accepted. Cancel any shot you disallow.
+
+Doors now retain an individual open state: click them in Player View to open
+them. Revealing one room does not open every other door into it. When importing
+pre-version-5 saves, old openings are inferred where both sides were already
+explored, since those saves did not record individual door states.
+
+**Roll attack** rolls the hit die, damage and all bonus dice, and calculates a
+preview in one action. A natural 12 halves the target's Toughness for wound rolls
+(fractions round down); it does not grant a melee free attack. Review the displayed
+result, then Apply or Cancel.
+
+A natural 1 shows a **Friendly fire** message only after the fumble occurs:
+“Fumble! You may have hit a friendly model. Resolve friendly fire manually.”
+There is no friendly-fire selector or question in the combat form beforehand.
+The intended target is unharmed, and the program does not choose or damage a
+friendly model. Resolve any friendly fire manually using the rulebook: a friendly
+model within two squares of the intended target is struck; if more than one is
+present, the player controlling the intended target chooses. With none, it misses.
+Apply commits the preview; Cancel discards it. Undo reverses applied changes.
+
+## Movement, turns and death-zone focus
+
+**Party → Next Turn (reset movement)** clears the moved flag for all heroes and
+monsters. It preserves death-zone focus. Moving an already placed model sets its
+moved flag; bows and crossbows cannot fire while it is set. Thrown weapons can.
+The ranged profile's **Moved this turn** checkbox permits manual correction.
+Reserve placement is treated as setup rather than movement.
+
+With living opponents on the map, movement follows a shortest open orthogonal
+path through explored, unoccupied squares. It stops at the first newly entered
+enemy death zone, even if you dropped the token farther away. Move in shorter
+segments if you want a different route. When no opponents are placed, the
+existing creative repositioning behaviour remains available.
+
+A normal death zone covers the four orthogonal neighbours reachable without a
+wall or closed door. Its owner focuses on the first opponent entering it. Other
+opponents can then pass that owner's zone without being stopped by it, though
+other enemies may still stop them. The focus follows its opponent while it
+remains in the zone, and clears when that opponent leaves or either model is
+removed. A removed model's focus clears immediately; Undo restores it. Defeated
+heroes retained on the map are still models until explicitly removed.
+
+A shooter in an enemy's active death zone cannot fire. Diagonal proximity and
+long-reach exceptions do not prohibit ranged attacks in this implementation,
+following the user's generous diagonal ruling. The user retains the final say.
+Movement limits, attack counts, initiative and ammunition remain manual.
+
+Version 5 persists ranged profiles, moved flags, focused opponents and individual
+opened doors through saves and automatic recovery. New dungeons clear movement
+and focus while retaining equipment. `tests/ranged-check.py` covers native
+click/drag routing in both views, line of sight, movement/focus, criticals,
+fumbles, Cancel/Apply/Undo, profiles and save migration.
+
+Heroes who have applied a ranged attack see an already-fired explanation and a
+**Next Turn** button in the ranged dialog. Applied misses and fumbles also use
+the shot; cancelled previews do not. Next Turn immediately resets all movement
+and hero ranged attacks, even if the dialog is later cancelled; Undo can restore
+the prior turn. The fired flag is saved and recovered; older saves default to
+not fired. Melee free attacks and their chains are unaffected.

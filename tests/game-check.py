@@ -120,7 +120,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=4; assert(!game_decode(bytes,size)); bytes[8]=3;
+    bytes[8]=7; assert(!game_decode(bytes,size)); bytes[8]=6;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;
@@ -131,6 +131,8 @@ int main(int argc,char **argv) {
         else if(!fog_visible(game_fog(),(_WORD)(p-Pice))) assert(!can_move(0,x,y,game_fog()));
     }
     mouse_checks();
+    /* Movement now persists a moved-this-turn flag; recovery must retain it. */
+    free(bytes); assert(capture(&snapshot)); assert(game_encode(&snapshot,&bytes,&size)); free(snapshot.cells);
     assert(SetCurrentDirectoryA(argv[2]));
     GetFullPathNameA("recovery.hqg",MAX_PATH,recovery_path,NULL);
     GetFullPathNameA("previous.hqg",MAX_PATH,previous_path,NULL);

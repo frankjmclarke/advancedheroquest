@@ -15,6 +15,8 @@ static void monster_fields(HWND hwnd)
     SetDlgItemTextA(hwnd,GMNAME,m?m->name:"");
     SetDlgItemInt(hwnd,GMMAX,m?m->stats[7]:1,FALSE); SetDlgItemInt(hwnd,GMWOUNDS,m?m->wounds:1,FALSE);
     CheckDlgButton(hwnd,GMUNIQUE,m && m->unique?BST_CHECKED:BST_UNCHECKED);
+    EnableWindow(GetDlgItem(hwnd,GMCOMBAT),m!=NULL);
+    EnableWindow(GetDlgItem(hwnd,GMRANGED),m!=NULL);
     EnableWindow(GetDlgItem(hwnd,GMAPPLY),m!=NULL); EnableWindow(GetDlgItem(hwnd,GMDAMAGE),m && m->wounds);
     EnableWindow(GetDlgItem(hwnd,GMPLACE),m && m->wounds && m->x<0); EnableWindow(GetDlgItem(hwnd,GMREMOVE),m && m->wounds);
     if(m) {
@@ -86,6 +88,20 @@ static INT_PTR CALLBACK monsters_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     } else if(id==GMREMOVE && selected_monster>=0) {
         SetDlgItemInt(hwnd,GMWOUNDS,0,FALSE);
         if(monster_editor_apply(hwnd,0)) { monster_list(hwnd); monster_fields(hwnd); }
+    } else if(id==GMRANGED && selected_monster>=0) {
+        MONSTER next; if(!monster_editor_apply(hwnd,0)) return TRUE; next=monsters.tokens[selected_monster];
+        if(edit_ranged(hwnd,&next.ranged,&next.moved,-1,next.name) && memcmp(&next,&monsters.tokens[selected_monster],sizeof(next))) {
+            remember(); monsters.tokens[selected_monster]=next; active=1; game_changed();
+        }
+        monster_fields(hwnd);
+    } else if(id==GMCOMBAT && selected_monster>=0) {
+        MONSTER next;
+        if(!monster_editor_apply(hwnd,0)) return TRUE;
+        next=monsters.tokens[selected_monster];
+        if(edit_profile(hwnd,&next.melee,next.stats,next.name,-1) && memcmp(&next,&monsters.tokens[selected_monster],sizeof(next))) {
+            remember(); monsters.tokens[selected_monster]=next; active=1; game_changed();
+        }
+        monster_list(hwnd); monster_fields(hwnd);
     } else if(id==GMCONTENTS) {
         _UBYTE *contents;
         n=(int)SendDlgItemMessage(hwnd,GMROOM,CB_GETCURSEL,0,0);
@@ -102,6 +118,7 @@ static INT_PTR CALLBACK monsters_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 }
 void game_monsters(void)
 {
+    attack_monster=-1;
     if(!map_ready) { message("Generate or load a dungeon first."); return; }
     monsters_reveal();
     DialogBoxParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGMONSTERS),GlMainHwnd,monsters_proc,0);

@@ -102,11 +102,25 @@ int main(int argc,char **argv) {
     assert(capture(&d)); d.player_view=1; assert(game_encode(&d,&bytes,&size)); free(d.cells);
     decoded=game_decode(bytes,size); assert(decoded && decoded->player_view==1);
     decoded->player_view=2; assert(!game_encode(decoded,&bytes2,&size2)); game_data_free(decoded);
+    /* Strip v5 ranged/turn data to build a genuine v4 save. */
+    size-=4*d.hero_count;
+    for(i=0;i<d.hero_count;i++) size-=44+strlen(d.heroes[i].ranged.weapon);
+    for(i=0;i<d.monsters.count;i++) size-=44+strlen(d.monsters.tokens[i].ranged.weapon);
+    bytes[8]=4; crc_fix(bytes,size); decoded=game_decode(bytes,size); assert(decoded); game_data_free(decoded);
+    /* Strip the v4 profile extension to construct actual older layouts. */
+    for(i=0;i<d.hero_count;i++) size-=56+strlen(d.heroes[i].melee.weapon);
+    for(i=0;i<d.monsters.count;i++) size-=56+strlen(d.monsters.tokens[i].melee.weapon);
+    bytes[8]=3; crc_fix(bytes,size);
+    decoded=game_decode(bytes,size); assert(decoded && decoded->player_view==1 && decoded->heroes[0].melee.dice>0);
+    game_data_free(decoded);
     bytes[8]=2; size-=4; crc_fix(bytes,size);
     decoded=game_decode(bytes,size); assert(decoded && decoded->player_view==-1 && decoded->monsters.count==monsters.count);
     game_data_free(decoded); free(bytes);
     /* Real version-1 layout, with no monster extension, remains readable. */
     memset(&monsters,0,sizeof(monsters)); assert(capture(&d)); assert(game_encode(&d,&bytes,&size)); free(d.cells);
+    size-=4*d.hero_count;
+    for(i=0;i<d.hero_count;i++) size-=44+strlen(d.heroes[i].ranged.weapon);
+    for(i=0;i<d.hero_count;i++) size-=56+strlen(d.heroes[i].melee.weapon);
     size-=12+4*MAX_PICE; bytes[8]=1; crc_fix(bytes,size);
     decoded=game_decode(bytes,size); assert(decoded && decoded->monsters.count==0 && decoded->monsters.dead_count==0);
     game_data_free(decoded); free(bytes);

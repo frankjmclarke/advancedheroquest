@@ -5,9 +5,17 @@
 #define HERO_LIMIT 16
 #define HERO_STATS 9
 #define HERO_CLASS_COUNT 9
+/* Zero values mean not configured; presets use printed or labelled suggested rows. */
+typedef struct { char weapon[40]; int dice, hit[12]; } MELEE_PROFILE;
+/* kind: none, bow, crossbow, thrown, other/manual. Hit bands: 1-3,4-12,13-24,25-36,37+. */
+typedef struct { char weapon[40]; int kind,range,dice,hit[5]; } RANGED_PROFILE;
 typedef struct {
     char name[40];
     int kind, stats[HERO_STATS], wounds, fate, x, y;
+    MELEE_PROFILE melee;
+    RANGED_PROFILE ranged;
+    int fired; /* normal ranged attack used this turn */
+    int moved,focus; /* focus: opposing roster index + 1, or zero */
 } HERO;
 #define MONSTER_LIMIT 512
 #define CHARACTER_LIMIT 256
@@ -15,6 +23,9 @@ typedef struct {
 typedef struct {
     char name[64];
     int stats[HERO_STATS], wounds, x, y, room, unique;
+    MELEE_PROFILE melee;
+    RANGED_PROFILE ranged;
+    int moved,focus; /* focus: opposing roster index + 1, or zero */
 } MONSTER;
 typedef struct {
     int count, dead_count;
@@ -35,6 +46,9 @@ typedef struct {
 extern const char *hero_classes[HERO_CLASS_COUNT];
 const char *hero_class_rules(int kind);
 void hero_defaults(HERO *hero,int kind,int number);
+void hero_melee_defaults(MELEE_PROFILE *profile,int kind);
+void hero_ranged_defaults(RANGED_PROFILE *profile,int kind);
+int monster_ranged_defaults(RANGED_PROFILE *profile,const char *name);
 int game_valid_square(const GAME_DATA *data,int hero,int x,int y);
 int game_encode(const GAME_DATA *data,unsigned char **bytes,size_t *size);
 GAME_DATA *game_decode(const unsigned char *bytes,size_t size);

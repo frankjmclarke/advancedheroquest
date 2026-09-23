@@ -1,3 +1,54 @@
+## Current update — 23 September 2026
+
+Branch: `codex/orthogonal-melee-combat`, based on main at `236476a`.
+The user authorized implementation after creating this feature branch.
+Both combat dialogs now use one Roll attack button for hit, damage (including
+bonus dice) and calculation. Dice displays are read-only; Apply/Cancel remain.
+
+Implemented native melee previews by dragging heroes/monsters onto orthogonal
+enemies. `combat.inc` holds profile editing, adjacency checks, manual/generated
+D12 handling, critical/fumble follow-ups and transactional Apply/Cancel. Undo
+restores the whole exchange. `MELEE_PROFILE` lives in heroes and monsters;
+`liste.c` extracts only exact unambiguous printed monster rows. Hero equipment
+and hit rows now default from the supplied heroesStats.png for Warrior, Dwarf,
+Elf and Wizard; other classes have explicitly labelled invented suggestions,
+as authorized by the user. See doc/hero-weapons.md. Loading upgrades only wholly
+blank hero melee profiles; existing entries and attributes remain unchanged. Saves are version
+6 with the hero fired-this-turn flag and ranged profiles, movement/focus and opened doors; readers support versions
+1–4. See the melee
+section of `doc/hero-sessions.md` for usage and deliberately manual rules.
+
+Ranged combat is implemented in `ranged.inc` (profiles, native preview, rolls,
+post-fumble friendly-fire notice, transactional Apply) and `ranged-rules.inc` (range,
+generous ray visibility, shortest-path movement and focused death zones).
+Click hero then enemy, or drag: orthogonal adjacency routes to melee, all other
+positions including diagonal neighbours route to ranged. A combined ranged roll
+button rolls and previews attack/damage. `Party > Next Turn` resets movement for
+both sides. No ammo/initiative enforcement. Heroes have one normal ranged attack per turn; melee free attacks remain unchanged. Focus clears on leaving
+the zone or model removal. Other weapon movement and friendly-fire damage remain manual. Friendly fire
+is mentioned only after a rolled fumble, in a simple message; no advance selector
+or question. Ranged critical Toughness is halved rounding down. `map.c` now stores open-door bits in the fog
+array; older saves infer open doors between explored areas. Tests additionally
+include `tests/ranged-check.py`. See the guide for the full agreed behaviour.
+
+Preserve these user decisions from the preceding feature work:
+- Automatic recovery on startup, without a prompt or placeholder dungeon.
+- Player View remains on top across next map, save/load, restart and placement.
+- New maps have no placed heroes or old monsters; heroes go to reserve.
+- Revealed-room monsters auto-place; surprise positioning is manual.
+- Species colours, drag movement and double-click one-wound damage remain.
+- Character monster deaths persist per continuing adventure, not globally.
+
+Build with `build-msvc.bat`. Regression scripts now include `combat-check.py`,
+`monster-check.py` and `view-check.py` as well as the original four listed below.
+Keep the runnable `dist/HQ-Map/hq_map.exe` in sync after successful testing;
+back up the previous executable and never run package.bat over local user data.
+
+The earlier handover below is historical and some feature/version details are
+superseded by this update and `doc/hero-sessions.md`.
+
+---
+
 # Chat handover — 22 September 2026
 
 ## Where to resume
@@ -193,3 +244,14 @@ changes have not been published to that release by the assistant.
 “Read doc/chat-handover.md and doc/dungeon-generation.md. I want to discuss
 whether room-aware corridor placement could make the dungeon more compact.
 Inspect the current generator before proposing changes.”
+
+Heroes who have applied a ranged attack see an already-fired explanation and a
+**Next Turn** button in the ranged dialog. Applied misses and fumbles also use
+the shot; cancelled previews do not. Next Turn immediately resets all movement
+and hero ranged attacks, even if the dialog is later cancelled; Undo can restore
+the prior turn. The fired flag is saved and recovered; older saves default to
+not fired. Melee free attacks and their chains are unaffected.
+
+The ranged dialog always displays Next Turn, including when the bow/crossbow
+movement warning says to use it. It is disabled only while a rolled preview
+awaits Apply/Cancel.

@@ -1277,7 +1277,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
     case MGAMESAVEAS: game_save(1); break;
     case MGAMELOAD: game_load(0); break;
     case MGAMERECOVER: game_load(1); break;
-    case MGAMELEAVE: case MGAMEUNDO: game_command(eintrag); break;
+    case MGAMELEAVE: case MGAMEUNDO: case MGAMETURN: game_command(eintrag); break;
 	case MHELP:
 		Dialog_Select(FHELP, close_on_ok, NULL);
 		break;

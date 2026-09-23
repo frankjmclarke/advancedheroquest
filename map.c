@@ -162,6 +162,8 @@ GLOBAL _BOOL fog_open_door(_UBYTE *visible, _WORD pixel_x, _WORD pixel_y)
   }
   if (pixel_x < x || pixel_x >= x + ICON_SCALE ||
       pixel_y < y || pixel_y >= y + ICON_SCALE) continue;
+  /* Door slots persist their open state independently of adjacent room fog. */
+  if (!visible[i]) { visible[i] = TRUE; changed = TRUE; }
   for (j = 0; j < MAX_PICE; j++)
    if (!visible[j] && fog_room(Pice[j].type) && fog_door_side(door, &Pice[j])) {
     visible[j] = TRUE;

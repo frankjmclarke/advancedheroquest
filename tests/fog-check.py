@@ -55,7 +55,7 @@ int main(void) {
  assert(!fog_open_door(visible,8*8,28*8)); /* hidden second door */
  assert(!visible[3]);
  assert(!fog_open_door(visible,0,0));
- click(2);
+ click(2); assert(visible[2]);
  memset(drawn,0,sizeof(drawn)); draw_map_visible(&image,visible);
  assert(drawn[0]==1 && drawn[1]==1 && drawn[2]==1 && drawn[4]==1 && drawn[3]==0);
  assert(visible[1] && !visible[3] && fog_visible(visible,4));

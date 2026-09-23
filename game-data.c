@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "game.h"
+#include "liste.h"
 #define MAX_SAVE (16u*1024u*1024u)
 const char *hero_classes[HERO_CLASS_COUNT]={"Warrior","Dwarf","Elf","Wizard","Henchman","Warrior Priest","Rogue","Fighter","Mage"};
 /* Reference summaries from ahqHeros.pdf, pages 1-4. Abilities are adjudicated
@@ -30,6 +31,49 @@ const char *hero_class_rules(int kind)
     default: return "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.";
     }
 }
+/* heroesStats.png: Heinrich, Sven, Torallion and Magnus/Telor respectively.
+ * Other classes are explicitly invented suggestions, authorized by the user.
+ * These are starting equipment packages, not a formula derived from current WS.
+ * See doc/hero-weapons.md for transcription, provenance and limitations. */
+void hero_melee_defaults(MELEE_PROFILE *p,int kind)
+{
+    static const int rows[4][12]={
+        {2,2,2,3,4,5,6,7,8,9,10,10}, /* Heinrich and Sven */
+        {2,2,2,2,3,4,5,6,7,8,9,10}, /* Torallion */
+        {3,4,5,6,7,8,9,10,10,10,10,10}, /* Magnus and Telor */
+        {3,3,4,5,6,7,8,9,10,10,11,12} /* invented support profile */
+    };
+    static const struct { const char *weapon; int dice,row; } presets[HERO_CLASS_COUNT]={
+        {"Sword (Heinrich)",4,0}, {"Warhammer (Sven)",4,0},
+        {"Sword (Torallion)",3,1}, {"Dagger (Magnus / Telor)",1,2},
+        {"Short sword (suggested)",2,3}, {"Warhammer (suggested)",3,0},
+        {"Short sword (suggested)",2,3}, {"Sword (suggested)",4,0},
+        {"Staff (suggested)",2,2}
+    };
+    memset(p,0,sizeof(*p)); if(kind<0 || kind>=HERO_CLASS_COUNT) return;
+    strcpy(p->weapon,presets[kind].weapon); p->dice=presets[kind].dice;
+    memcpy(p->hit,rows[presets[kind].row],sizeof(p->hit));
+}
+void hero_ranged_defaults(RANGED_PROFILE *p,int kind)
+{
+    static const int common[5]={6,7,8,9,10},elf[5]={3,4,5,6,7};
+    memset(p,0,sizeof(*p));
+    /* Only explicitly equipped ranged weapons from heroesStats.png. */
+    if(kind==2) { strcpy(p->weapon,"Long bow (Torallion)"); p->kind=1; p->range=48; p->dice=4; memcpy(p->hit,elf,sizeof(elf)); }
+    if(kind==3) { strcpy(p->weapon,"Throwing dagger (Telor)"); p->kind=3; p->range=4; p->dice=1; memcpy(p->hit,common,sizeof(common)); }
+}
+int monster_ranged_defaults(RANGED_PROFILE *p,const char *name)
+{
+    RANGED_PROFILE next={0};
+    if(!room_ranged(name,&next.range,&next.dice,next.hit,&next.kind)) return 0;
+    strcpy(next.weapon,"Printed ranged profile"); *p=next; return 1;
+}
+static int melee_blank(const MELEE_PROFILE *p)
+{
+    int i; if(p->weapon[0] || p->dice) return 0;
+    for(i=0;i<12;i++) if(p->hit[i]) return 0;
+    return 1;
+}
 void hero_defaults(HERO *h,int kind,int number)
 {
     /* Editable suggestions, not automatic character creation or class rules.
@@ -45,6 +89,8 @@ void hero_defaults(HERO *h,int kind,int number)
     memset(h,0,sizeof(*h)); h->kind=kind;
     sprintf(h->name,"%s %d",hero_classes[kind],number);
     memcpy(h->stats,values[kind],sizeof(h->stats));
+    hero_melee_defaults(&h->melee,kind);
+    hero_ranged_defaults(&h->ranged,kind);
     h->wounds=h->stats[7]; h->fate=kind==4?0:2; h->x=h->y=-1;
 }
 static int valid_type(int t)
@@ -61,6 +107,20 @@ int game_valid_square(const GAME_DATA *d,int hero,int x,int y)
     for(i=0;i<d->monsters.count;i++) if(d->monsters.tokens[i].x==x && d->monsters.tokens[i].y==y) return 0;
     return 1;
 }
+static int valid_ranged(const RANGED_PROFILE *p,int moved,int focus,int opponents)
+{
+    int i;
+    if(!memchr(p->weapon,0,40) || p->kind<0 || p->kind>4 || p->range<0 || p->range>480 || p->dice<0 || p->dice>99 || moved<0 || moved>1 || focus<0 || focus>opponents) return 0;
+    for(i=0;i<5;i++) if(p->hit[i]<0 || p->hit[i]>12) return 0;
+    return 1;
+}
+static int valid_melee(const MELEE_PROFILE *p)
+{
+    int i;
+    if(!memchr(p->weapon,0,sizeof(p->weapon)) || p->dice<0 || p->dice>99) return 0;
+    for(i=0;i<12;i++) if(p->hit[i]<0 || p->hit[i]>12) return 0;
+    return 1;
+}
 static int valid_data(const GAME_DATA *d)
 {
     int i,j;
@@ -74,7 +134,7 @@ static int valid_data(const GAME_DATA *d)
     }
     for(i=0;i<d->monsters.count;i++) {
         const MONSTER *m=&d->monsters.tokens[i]; int cell;
-        if(!memchr(m->name,0,64) || !m->name[0] || m->room<0 || m->room>=d->count ||
+        if(!valid_ranged(&m->ranged,m->moved,m->focus,d->hero_count) || !valid_melee(&m->melee) || !memchr(m->name,0,64) || !m->name[0] || m->room<0 || m->room>=d->count ||
            m->unique<0 || m->unique>1 || m->wounds<0 || m->wounds>m->stats[7] || m->stats[7]<1) return 0;
         for(j=0;j<HERO_STATS;j++) if(m->stats[j]<0 || m->stats[j]>99) return 0;
         if(!d->visible[m->room] || !d->monsters.seen[m->room] || d->pieces[m->room].type==EMPTY) return 0;
@@ -106,7 +166,7 @@ static int valid_data(const GAME_DATA *d)
     }
     for(i=0;i<d->hero_count;i++) {
         const HERO *h=&d->heroes[i];
-        if(!memchr(h->name,0,sizeof(h->name)) || !h->name[0] || h->kind<0 || h->kind>=HERO_CLASS_COUNT || h->wounds<0 || h->wounds>h->stats[7] || h->fate<0 || h->fate>99) return 0;
+        if(h->fired<0 || h->fired>1 || !valid_ranged(&h->ranged,h->moved,h->focus,d->monsters.count) || !valid_melee(&h->melee) || !memchr(h->name,0,sizeof(h->name)) || !h->name[0] || h->kind<0 || h->kind>=HERO_CLASS_COUNT || h->wounds<0 || h->wounds>h->stats[7] || h->fate<0 || h->fate>99) return 0;
         for(j=0;j<HERO_STATS;j++) if(h->stats[j]<0 || h->stats[j]>99) return 0;
         if(h->x==-1 && h->y==-1) continue;
         if(!game_valid_square(d,i,h->x,h->y)) return 0;
@@ -156,11 +216,33 @@ static char *get_string(BYTES *b,size_t limit)
     memcpy(s,b->p+b->pos,n); b->pos+=n;
     if(memchr(s,0,n)) { free(s); b->ok=0; return NULL; } return s;
 }
+static void put_melee(BYTES *b,const MELEE_PROFILE *p)
+{
+    int j; put_string(b,p->weapon,39); put32(b,p->dice);
+    for(j=0;j<12;j++) put32(b,p->hit[j]);
+}
+static void get_melee(BYTES *b,MELEE_PROFILE *p)
+{
+    int j; char *s=get_string(b,39); if(!s) return;
+    strcpy(p->weapon,s); free(s); p->dice=get32(b);
+    for(j=0;j<12;j++) p->hit[j]=get32(b);
+}
+static void put_ranged(BYTES *b,const RANGED_PROFILE *p,int moved,int focus)
+{
+    int j; put_string(b,p->weapon,39); put32(b,p->kind); put32(b,p->range); put32(b,p->dice);
+    for(j=0;j<5;j++) put32(b,p->hit[j]); put32(b,moved); put32(b,focus);
+}
+static void get_ranged(BYTES *b,RANGED_PROFILE *p,int *moved,int *focus)
+{
+    int j; char *s=get_string(b,39); if(!s) return; strcpy(p->weapon,s); free(s);
+    p->kind=get32(b); p->range=get32(b); p->dice=get32(b);
+    for(j=0;j<5;j++) p->hit[j]=get32(b); *moved=get32(b); *focus=get32(b);
+}
 int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d)) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,3); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,6); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -186,6 +268,11 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
     }
     for(i=0;i<d->monsters.dead_count;i++) put_string(&b,d->monsters.dead[i],63);
     put32(&b,d->player_view);
+    for(i=0;i<d->hero_count;i++) put_melee(&b,&d->heroes[i].melee);
+    for(i=0;i<d->monsters.count;i++) put_melee(&b,&d->monsters.tokens[i].melee);
+    for(i=0;i<d->hero_count;i++) put_ranged(&b,&d->heroes[i].ranged,d->heroes[i].moved,d->heroes[i].focus);
+    for(i=0;i<d->monsters.count;i++) put_ranged(&b,&d->monsters.tokens[i].ranged,d->monsters.tokens[i].moved,d->monsters.tokens[i].focus);
+    for(i=0;i<d->hero_count;i++) put32(&b,d->heroes[i].fired);
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -198,13 +285,32 @@ void game_data_free(GAME_DATA *d)
     }
     free(d->pieces); free(d->cells); free(d->visible); free(d);
 }
+/* Older saves recorded revealed rooms, but not individual opened doors.
+ * Infer old openings only when both sides were explored. Version 5 retains
+ * each door independently, including closed doors between explored rooms. */
+static void legacy_open_doors(GAME_DATA *d)
+{
+    int i,j,x,y,nx,ny,a,b; PICE *door,*p;
+    for(i=0;i<d->count;i++) {
+        door=&d->pieces[i]; if(door->type!=DOOR && door->type!=SECRET) continue;
+        x=door->x; y=door->y;
+        nx=x+(door->pos==East?1:door->pos==West?-1:0);
+        ny=y+(door->pos==North?1:door->pos==South?-1:0); a=b=0;
+        for(j=0;j<d->count;j++) {
+            p=&d->pieces[j]; if(!d->visible[j] || p->type==EMPTY || p->type==TEST || p->type==DOOR || p->type==SECRET) continue;
+            if(x>=p->x && x<p->x+p->w && y>=p->y && y<p->y+p->h) a=1;
+            if(nx>=p->x && nx<p->x+p->w && ny>=p->y && ny<p->y+p->h) b=1;
+        }
+        d->visible[i]=(unsigned char)(a && b);
+    }
+}
 GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
 {
     BYTES b={0}; GAME_DATA *d; int i,j,n,version; char *s;
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version!=1 && version!=2 && version!=3) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version!=1 && version!=2 && version!=3 && version!=4 && version!=5 && version!=6) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -244,7 +350,25 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
         for(i=0;i<d->monsters.dead_count && b.ok;i++) { s=get_string(&b,63); if(!s) goto bad; strcpy(d->monsters.dead[i],s); free(s); }
     }
     d->player_view=version>=3?get32(&b):-1;
+    if(version>=4) {
+        for(i=0;i<d->hero_count && b.ok;i++) get_melee(&b,&d->heroes[i].melee);
+        for(i=0;i<d->monsters.count && b.ok;i++) get_melee(&b,&d->monsters.tokens[i].melee);
+    }
+    if(version>=5) {
+        for(i=0;i<d->hero_count && b.ok;i++) get_ranged(&b,&d->heroes[i].ranged,&d->heroes[i].moved,&d->heroes[i].focus);
+        for(i=0;i<d->monsters.count && b.ok;i++) get_ranged(&b,&d->monsters.tokens[i].ranged,&d->monsters.tokens[i].moved,&d->monsters.tokens[i].focus);
+    }
+    if(version>=6) for(i=0;i<d->hero_count && b.ok;i++) d->heroes[i].fired=get32(&b);
     if(!b.ok || b.pos!=b.n || !valid_data(d)) goto bad;
+    if(version<5) {
+        legacy_open_doors(d);
+        for(i=0;i<d->hero_count;i++) hero_ranged_defaults(&d->heroes[i].ranged,d->heroes[i].kind);
+        for(i=0;i<d->monsters.count;i++) monster_ranged_defaults(&d->monsters.tokens[i].ranged,d->monsters.tokens[i].name);
+    }
+    /* Upgrade only completely absent equipment, including first v4 saves.
+     * Partial/manual profiles and all existing hero statistics are preserved. */
+    for(i=0;i<d->hero_count;i++) if(melee_blank(&d->heroes[i].melee))
+        hero_melee_defaults(&d->heroes[i].melee,d->heroes[i].kind);
     return d;
 bad: game_data_free(d); return NULL;
 }

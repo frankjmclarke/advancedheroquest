@@ -65,6 +65,7 @@ MENUE MENU
         MENUITEM "&Heroes and Reserve...\tAlt+H", MGAMEPARTY
         MENUITEM "&Monsters...", MGAMEMONSTERS
         MENUITEM "&Undo Token Change", MGAMEUNDO
+        MENUITEM "Next &Turn (reset movement)", MGAMETURN
         MENUITEM SEPARATOR
         MENUITEM "&Leave Dungeon (all to reserve)", MGAMELEAVE
         MENUITEM "&Next Dungeon with Current Party", MGAMENEXT

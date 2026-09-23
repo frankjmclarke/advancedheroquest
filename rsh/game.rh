@@ -36,3 +36,53 @@
 #define GMREMOVE 350
 #define GMINFO 351
 #define GMCONTENTS 352
+
+#define GPCOMBAT 328
+#define GMCOMBAT 353
+#define FGMELEE 32
+#define MPWEAPON 360
+#define MPDICE 361
+#define MPWS 362
+#define MPT 363
+#define MPREF 364
+#define MPINFO 365
+#define MPHIT 370
+#define FGCOMBAT 33
+#define MCINFO 400
+#define MCHIT 401
+#define MCDAMAGE 402
+#define MCROLLHIT 403
+#define MCROLLDAMAGE 404
+#define MCCALC 405
+#define MCNEXT 406
+#define MCLOG 407
+#define MCHERO 408
+#define MCMONSTER 409
+#define MCSTATUS 410
+
+#define MGAMETURN 269
+#define GPRANGED 329
+#define GMRANGED 354
+#define FGRANGEDPROFILE 34
+#define RPWEAPON 420
+#define RPKIND 421
+#define RPRANGE 422
+#define RPDICE 423
+#define RPHIT 424
+#define RPMOVED 429
+#define RPDEFAULT 430
+#define RPINFO 431
+#define FGRANGED 35
+#define RSINFO 440
+#define RSPROFILE 441
+#define RSHIT 442
+#define RSDAMAGE 443
+#define RSROLL 444
+#define RSCALC 445
+#define RSALLY 446
+#define RSRESULT 447
+#define RSSTATUS 448
+
+#define RSROLLDAMAGE 449
+
+#define RSNEXTTURN 450

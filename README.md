@@ -20,7 +20,9 @@ Play with a persistent party using **Party → Heroes and Reserve...**. Name her
 edit their stats, move their markers, and save the exact dungeon and explored rooms.
 Revealed encounters place monster tokens automatically: drag to move, double-click
 to wound, and use **Party → Monsters...** to correct the roster. Character deaths
-persist within the saved adventure.
+persist within the saved adventure. Configure a hero's **Weapon / combat** profile,
+then click or drag onto an enemy: orthogonal neighbours use hand-to-hand combat;
+other targets use the separate **Ranged weapon** profile. Both use one **Roll attack** button for hit, damage and calculation. Use **Party → Next Turn** to reset movement for shooting. Apply the result, Cancel, or Undo the exchange.
 See the [Heroes and saved games guide](doc/hero-sessions.md).
 
 Writing your own adventures: **[Guide to creating and editing table
