@@ -1,10 +1,73 @@
 # HQ-Map 1.0 Release Notes
 
+![HQ-Map: six features for your Advanced HeroQuest adventures](https://raw.githubusercontent.com/frankjmclarke/advancedheroquest/f9581c4dde9d357956662a69e84d9aeb0f94ce8b/doc/hq-map-facebook-ad.png)
+
 **A dungeon generator for Advanced HeroQuest.**
 
 Press a couple of keys and it rolls you a whole dungeon — rooms, corridors, doors, traps, wandering monsters and treasure — and draws the map.
 
 Written by Jürgen Albuschies in 1999. This version runs on today's Windows, in English, in colour, and fills the screen.
+
+## September 23 update: heroes, monsters and combat
+
+The ZIP and setup EXE now include the combat features described below, built
+from commit `e83ee4c` on `codex/orthogonal-melee-combat`.
+
+### Click or drag to attack
+
+Select a hero, then click an enemy, or drag the hero onto it. Orthogonally
+adjacent enemies open **hand-to-hand combat**; other targets open **ranged
+combat**, including diagonal neighbours. Monsters can attack heroes too.
+
+- **Roll attack** handles the hit roll, damage dice, all bonus dice from twelves,
+  and the result calculation in one click.
+- Review the displayed dice and wounds, then **Apply** or **Cancel**. **Undo**
+  restores an applied exchange.
+- Melee criticals and fumbles offer **Take free attack**. Further criticals or
+  fumbles can continue the chain while both models remain alive.
+- Hero **Weapon / combat** and **Ranged weapon** profiles are editable. The
+  Warrior, Dwarf, Elf and Wizard have defaults based on the supplied character
+  sheets; other classes have labelled suggested melee profiles. Matching monster
+  reference data supplies profiles where available.
+
+### Ranged attacks and Next Turn
+
+Ranged combat checks the equipped weapon, orthogonal square-count range,
+movement, enemy death zones and line of sight. Bows and crossbows require the
+attacker to remain stationary; thrown weapons allow movement. Intervening
+figures and obvious walls or closed doors block shots. Corner visibility is
+generous: players can cancel a shot they disallow.
+
+A blocked attack displays its reason. **Next Turn** is always visible in the
+ranged dialog and resets movement and heroes' normal ranged attacks for everyone,
+just like the Party menu command. It is disabled while a rolled preview awaits
+Apply or Cancel. A hero's applied shot, including a miss or fumble, uses their
+normal ranged attack for that turn; cancelling a preview does not. Melee free
+attacks remain available. Turn resets happen immediately and can be undone.
+
+Ranged criticals halve target Toughness, rounding down. A fumble displays a
+**Friendly fire** notice only after rolling; players resolve any friendly-model
+damage manually. There is no advance friendly-fire question or selector.
+
+### Tokens, saved adventures and fog of war
+
+- Revealing a room automatically places its monsters, with different colours
+  for different species. Drag tokens to move them; double-click a monster to
+  inflict one wound. Surprise positioning remains a manual choice.
+- Monsters at zero wounds are removed. Unique character-monster deaths are
+  remembered for the continuing adventure.
+- Movement into an enemy death zone stops the model and tracks the zone's
+  focused opponent. Focus clears when that opponent leaves the zone or is removed.
+- Saved adventures retain heroes, monsters, weapon profiles, explored rooms,
+  opened doors, movement and heroes' fired-this-turn state. Older saves still load.
+- Startup automatically recovers the previous session without a recovery prompt.
+  Player View stays selected across save/load, restart, map generation and hero
+  placement.
+- Generating a new map clears placed figures: heroes return to reserve and old
+  monsters do not carry onto the new map.
+
+Players still adjudicate special abilities and other rules not automated here.
+The portable ZIP includes `HERO-SESSIONS.md` and `HERO-WEAPONS.md` for details.
 
 ## September 18 update: tools for playing at the table
 
@@ -31,8 +94,8 @@ the player map.
   Scroll/zoom alignment has also been corrected so clicks track the map accurately.
 
 Closing and reopening Player View preserves discoveries for the current map.
-Generating a new map or choosing **Close All** resets them. Discovery state is
-not saved between application sessions.
+Discovery state is now included in saved adventures and automatic recovery.
+Generating a new map resets discoveries for the new dungeon.
 
 ### Monster stats beside the encounter
 
@@ -93,12 +156,17 @@ executables build successfully with Visual Studio.
 
 ## Using it
 
-There is nothing to set up. It starts with a map.
+There is nothing to set up. It restores your previous session when available,
+or starts with a new map.
 
 - `Ctrl` + `N` — roll a different dungeon
 - `Ctrl` + `T` — pick a different quest
 - `Alt` + `W` — open Player View with fog of war
 - Click a room — inspect its contents and matching monster references
+- **Party → Heroes and Reserve** — manage and place heroes
+- Select a hero, then an enemy — open melee or ranged combat
+- **Roll attack** — roll and calculate the attack in one action
+- **Next Turn** — reset movement and normal hero ranged attacks
 - `F1` — the full list of what it can do
 
 ## A few more things
