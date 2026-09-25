@@ -1,0 +1,402 @@
+
+Monster-Magic-Treasure
+(   1D12
+    1-1     "Amulett of Courage"
+    2-2     "Ring of Speed (SP +1)"
+    3-4     "Potion of Healing"
+    5-5     "Potion of Prowess"
+    6-6     "Amulett of Protection"
+    7-7     "Scroll containing 2 Wizard Spells"
+    8-8     "Magic Shield - Arrow Catcher"
+    9-10    "Ring of Magic Protection (Level 1)"
+    11-11   "Magic Sword (WS +1)"
+    12-12   "Potion of Regeneration"
+)
+
+;Monster-Treasure
+
+Skaven-Warrior
+(   1D12
+    1-4     "Skaven Warrior (5 Gold Crowns)"
+    5-8     "Skaven Warrior (10 Gold Crowns)"
+    9-11    "Skaven Warrior (15 Gold Crowns)"
+    12-12   "Skaven Warrior (20 Gold Crowns)"
+)
+
+Skaven-Champion
+(   1D12
+    1-4     "Skaven Champion (10 Gold Crowns)"
+    5-8     "Skaven Champion (20 Gold Crowns)"
+    9-11    "Skaven Champion (30 Gold Crowns)"
+    12-12   "Skaven Champion (40 Gold Crowns)"
+)
+
+Skaven-Gutter-Runner
+(   1D12
+    1-4     "Skaven Gutter Runner (10 Gold Crowns)"
+    5-8     "Skaven Gutter Runner (20 Gold Crowns)"
+    9-11    "Skaven Gutter Runner (25 Gold Crowns)"
+    12-12   "Skaven Gutter Runner (35 Gold Crowns)"
+)
+
+Skaven-Poisoned-Globadier
+(   1D12
+    1-4     "Skaven Poisoned Globadier (15 Gold Crowns)"
+    5-8     "Skaven Poisoned Globadier (30 Gold Crowns)"
+    9-11    "Skaven Poisoned Globadier (50 Gold Crowns)"
+    12-12   "Skaven Poisoned Globadier (60 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Skaven-Sentry
+(   1D12
+    1-4     "Skaven Sentry (10 Gold Crowns)"
+    5-8     "Skaven Sentry (20 Gold Crowns)"
+    9-11    "Skaven Sentry (30 Gold Crowns)"
+    12-12   "Skaven Sentry (40 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Skaven-Warlord
+(   1D12
+    1-4     "Skaven Warlord (40 Gold Crowns)"
+    5-8     "Skaven Warlord (60 Gold Crowns)"
+    9-11    "Skaven Warlord (80 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Skaven Warlord (100 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Skaven-Night-Runner
+(   1D12
+    1-4     "Skaven Night Runner (10 Gold Crowns)"
+    5-8     "Skaven Night Runner (30 Gold Crowns)"
+    9-11    "Skaven Night Runner (40 Gold Crowns)"
+    12-12   "Skaven Night Runner (50 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Skaven-Jazzailachis-Team
+(   1D12
+    1-4     "Skaven Jazzailachis-Team (40 Gold Crowns)"
+    5-8     "Skaven Jazzailachis-Team (60 Gold Crowns)"
+    9-11    "Skaven Jazzailachis-Team (80 Gold Crowns)"
+    12-12   "Skaven Jazzailachis-Team (100 Gold Crowns)"
+)
+
+Skaven-Warpfire-Team
+(   1D12
+    1-4     "Skaven Warpfire Team (80 Gold Crowns)"
+    5-8     "Skaven Warpfire Team (100 Gold Crowns)"
+    9-11    "Skaven Warpfire Team (120 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Skaven Warpfire Team (150 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Clan-Skryre-White-Skaven-Sorcerer
+(   1D12
+    1-4     "Clan Skryre White Skaven Sorcerer (60 Gold Crowns)"
+    5-8     "Clan Skryre White Skaven Sorcerer (100 Gold Crowns)" & Monster-Magic-Treasure()
+    9-11    "Clan Skryre White Skaven Sorcerer (110 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Clan Skryre White Skaven Sorcerer (120 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Clan-Pestilens-Plague-Monk
+(   1D12
+    1-4     "Clan Pestilens Plague Monk (30 Gold Crowns)"
+    5-8     "Clan Pestilens Plague Monk (60 Gold Crowns)"
+    9-11    "Clan Pestilens Plague Monk (80 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Clan Pestilens Plague Monk (100 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Clan-Eshin-Assassin
+(   1D12
+    1-4     "Clan Eshin Assassin (50 Gold Crowns)"
+    5-8     "Clan Eshin Assassin (80 Gold Crowns)"
+    9-11    "Clan Eshin Assassin (120 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Clan Eshin Assassin (150 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Clan-Skryre-Warpweaver
+(   1D12
+    1-4     "Clan Skryre Warpweaver (40 Gold Crowns)"
+    5-8     "Clan Skryre Warpweaver (60 Gold Crowns)"
+    9-11    "Clan Skryre Warpweaver (80 Gold Crowns)"
+    12-12   "Clan Skryre Warpweaver (80 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Clan-Pestilens-Plague-Censer-Bearer
+(   1D12
+    1-4     "Clan Pestilens Plague Censer Bearer (40 Gold Crowns)"
+    5-8     "Clan Pestilens Plague Censer Bearer (60 Gold Crowns)"
+    9-11    "Clan Pestilens Plague Censer Bearer (80 Gold Crowns)"
+    12-12   "Clan Pestilens Plague Censer Bearer (90 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Clan-Mors-Warlord
+(   1D12
+    1-4     "Clan Mors Warlord (70 Gold Crowns)"
+    5-8     "Clan Mors Warlord (100 Gold Crowns)"
+    9-11    "Clan Mors Warlord (120 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Clan Mors Warlord (150 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Goblin
+(   1D12
+    1-4     "Goblin (0 Gold Crowns)"
+    5-8     "Goblin (5 Gold Crowns)"
+    9-11    "Goblin (5 Gold Crowns)"
+    12-12   "Goblin (10 Gold Crowns)"
+)
+
+Goblin-Archer
+(   1D12
+    1-4     "Goblin Archer (0 Gold Crowns)"
+    5-8     "Goblin Archer (5 Gold Crowns)"
+    9-11    "Goblin Archer (5 Gold Crowns)"
+    12-12   "Goblin Archer (15 Gold Crowns)"
+)
+
+Orc-Warlord
+(   1D12
+    1-4     "Orc Warlord (50 Gold Crowns)"
+    5-8     "Orc Warlord (60 Gold Crowns)"
+    9-11    "Orc Warlord (80 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Orc Warlord (120 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Orc-Warchief
+(   1D12
+    1-4     "Orc Warchief (50 Gold Crowns)"
+    5-8     "Orc Warchief (80 Gold Crowns)"
+    9-11    "Orc Warchief (100 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Orc Warchief (120 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Orc-Champion
+(   1D12
+    1-4     "Orc Champion (10 Gold Crowns)"
+    5-8     "Orc Champion (20 Gold Crowns)"
+    9-11    "Orc Champion (25 Gold Crowns)"
+    12-12   "Orc Champion (30 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Orc
+(   1D12
+    1-4     "Orc (5 Gold Crowns)"
+    5-8     "Orc (10 Gold Crowns)"
+    9-11    "Orc (15 Gold Crowns)"
+    12-12   "Orc (20 Gold Crowns)"
+)
+
+Chaos-Thug
+(   1D12
+    1-4     "Chaos Thug (0 Gold Crowns)"
+    5-8     "Chaos Thug (10 Gold Crowns)"
+    9-11    "Chaos Thug (20 Gold Crowns)"
+    12-12   "Chaos Thug (30 Gold Crowns)"
+)
+
+Chaos-Champion
+(   1D12
+    1-4     "Chaos Champion (50 Gold Crowns)"
+    5-8     "Chaos Champion (80 Gold Crowns)"
+    9-11    "Chaos Champion (80 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Chaos Champion (100 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Chaos-Warrior
+(   1D12
+    1-4     "Chaos Warrior (30 Gold Crowns)"
+    5-8     "Chaos Warrior (40 Gold Crowns)"
+    9-11    "Chaos Warrior (50 Gold Crowns)"
+    12-12   "Chaos Warrior (60 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Chaos-Lord
+(   1D12
+    1-4     "Chaos Lord (90 Gold Crowns)"
+    5-8     "Chaos Lord (120 Gold Crowns)"
+    9-11    "Chaos Lord (150 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Chaos Lord (180 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Chaos-Sorcerer
+(   1D12
+    1-4     "Chaos Sorcerer (80 Gold Crowns)"
+    5-8     "Chaos Sorcerer (100 Gold Crowns)" & Monster-Magic-Treasure()
+    9-11    "Chaos Sorcerer (140 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Chaos Sorcerer (170 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Geater-Daemon
+(   1D12
+    1-4     "Geater Daemon (150 Gold Crowns)"
+    5-8     "Geater Daemon (200 Gold Crowns)"
+    9-11    "Geater Daemon (250 Gold Crowns)"
+    12-12   "Geater Daemon (300 Gold Crowns)"
+)
+
+Daemonette
+(   1D12
+    1-4     "Daemonette (90 Gold Crowns)"
+    5-8     "Daemonette (120 Gold Crowns)"
+    9-11    "Daemonette (150 Gold Crowns)"
+    12-12   "Daemonette (200 Gold Crowns)"
+)
+
+Bloodthirter
+(   1D12
+    1-4     "Bloodthirter (100 Gold Crowns)"
+    5-8     "Bloodthirter (120 Gold Crowns)"
+    9-11    "Bloodthirter (150 Gold Crowns)"
+    12-12   "Bloodthirter (200 Gold Crowns)"
+)
+
+Minotaur-Lord
+(   1D12
+    1-4     "Minotaur Lord (80 Gold Crowns)"
+    5-8     "Minotaur Lord (110 Gold Crowns)"
+    9-11    "Minotaur Lord (140 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Minotaur Lord (170 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Minotaur
+(   1D12
+    1-4     "Minotaur (60 Gold Crowns)"
+    5-8     "Minotaur (90 Gold Crowns)"
+    9-11    "Minotaur (120 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Minotaur (150 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Ogre-Chieftain
+(   1D12
+    1-4     "Ogre Chieftain (70 Gold Crowns)"
+    5-8     "Ogre Chieftain (100 Gold Crowns)"
+    9-11    "Ogre Chieftain (120 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Ogre Chieftain (150 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Ogre
+(   1D12
+    1-4     "Ogre (50 Gold Crowns)"
+    5-8     "Ogre (80 Gold Crowns)"
+    9-11    "Ogre (100 Gold Crowns)"
+    12-12   "Ogre (120 Gold Crowns)"
+)
+
+Troll
+(   1D12
+    1-4     "Troll (60 Gold Crowns)"
+    5-8     "Troll (90 Gold Crowns)"
+    9-11    "Troll (120 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Troll (150 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Fimir
+(   1D12
+    1-4     "Fimir (50 Gold Crowns)"
+    5-8     "Fimir (70 Gold Crowns)"
+    9-11    "Fimir (100 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Fimir (120 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Undead-Champion
+(   1D12
+    1-4     "Count Strahd von Zarovich (190 Gold Crowns)"
+    5-8     "Young Vampire (160 Gold Crowns)"
+    9-10    "Howling Hag (110 Gold Crowns)"
+    11-12   "Klack (100 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Undead-Champion-Monster
+(   1D12
+    1-4     "Flesh Golem (160 Gold Crowns)"
+    5-8     "Gravestorm (180 Gold Crowns)"
+    9-10    "Werewolf (150 Gold Crowns)"
+    11-12   "Zombie Dragon (150 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Zombie
+(   1D12
+    1-4     "Zombie (0 Gold Crowns)"
+    5-8     "Zombie (10 Gold Crowns)"
+    9-11    "Zombie (10 Gold Crowns)"
+    12-12   "Zombie (20 Gold Crowns)"
+)
+
+Skeleton
+(   1D12
+    1-4     "Skeleton (10 Gold Crowns)"
+    5-8     "Skeleton (10 Gold Crowns)"
+    9-11    "Skeleton (10 Gold Crowns)"
+    12-12   "Skeleton (20 Gold Crowns)"
+)
+
+Mummy
+(   1D12
+    1-4     "Mummy (0 Gold Crowns)"
+    5-8     "Mummy (20 Gold Crowns)"
+    9-11    "Mummy (40 Gold Crowns)"
+    12-12   "Mummy (100 Gold Crowns)"
+)
+
+
+Ghoul
+(   1D12
+    1-4     "Ghoul (10 Gold Crowns)"
+    5-8     "Ghoul (20 Gold Crowns)"
+    9-11    "Ghoul (25 Gold Crowns)"
+    12-12   "Ghoul (30 Gold Crowns)"
+)
+
+Wight
+(   1D12
+    1-4     "Wight (60 Gold Crowns)"
+    5-8     "Wight (80 Gold Crowns)" & Monster-Magic-Treasure()
+    9-11    "Wight (100 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Wight (120 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Liche
+(   1D12
+    1-4     "Liche (90 Gold Crowns)"
+    5-8     "Liche (120 Gold Crowns)" & Monster-Magic-Treasure()
+    9-11    "Liche (150 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Liche (200 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Vampire
+(   1D12
+    1-4     "Vampire (100 Gold Crowns)"
+    5-8     "Vampire (140 Gold Crowns)" & Monster-Magic-Treasure()
+    9-11    "Vampire (170 Gold Crowns)" & Monster-Magic-Treasure()
+    12-12   "Vampire (200 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Beastman
+(   1D12
+    1-4     "Beastman (10 Gold Crowns)"
+    5-8     "Beastman (20 Gold Crowns)"
+    9-11    "Beastman (25 Gold Crowns)"
+    12-12   "Beastman (30 Gold Crowns)"
+)
+
+Beastman-Sentry
+(   1D12
+    1-4     "Beastman Sentry (10 Gold Crowns)"
+    5-8     "Beastman Sentry (20 Gold Crowns)"
+    9-11    "Beastman Sentry (30 Gold Crowns)"
+    12-12   "Beastman Sentry (40 Gold Crowns)"
+)
+
+Beastman-Champion
+(   1D12
+    1-4     "Beastman Champion (20 Gold Crowns)"
+    5-8     "Beastman Champion (40 Gold Crowns)"
+    9-11    "Beastman Champion (60 Gold Crowns)"
+    12-12   "Beastman Champion (60 Gold Crowns)" & Monster-Magic-Treasure()
+)
+
+Beastman-Warlord
+(   1D12
+    1-4     "Beastman Warlord (50 Gold Crowns)"
+    5-8     "Beastman Warlord (80 Gold Crowns)"
+    9-11    "Beastman Warlord (100 Gold Crowns)"
+    12-12   "Beastman Warlord (120 Gold Crowns)" & Monster-Magic-Treasure()
+)
+

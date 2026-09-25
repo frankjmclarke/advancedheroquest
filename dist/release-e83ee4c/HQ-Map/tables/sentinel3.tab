@@ -1,0 +1,13 @@
+#Sentinel V (Deck 3 - Reactor Sumps)
+#----------------------------------
+#
+
+define ROOM-FURNISH
+
+include sentinel\room2.tab
+include sentinel\fittings.tab
+include sentinel\hazard.tab
+include sentinel\equip.tab
+include sentinel\trap.tab
+include sentinel\monster.tab
+include sentinel\reactor.tab

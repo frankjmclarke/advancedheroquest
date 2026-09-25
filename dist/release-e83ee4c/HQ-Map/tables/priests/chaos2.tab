@@ -1,0 +1,44 @@
+Wandering-Monsters
+(   1D12
+    1-2     "2 Chaos Thugs (20 Gold Crowns)"
+    3-4     "2 Chaos Thugs (25 Gold Crowns)"
+    5-6     "3 Chaos Thugs (30 Gold Crowns)"
+    7-8     "3 Chaos Thugs (35 Gold Crowns)"
+    9-9     "4 Chaos Thugs (40 Gold Crowns)"
+    10-10   "1 Chaos Warrior (45 Gold Crowns)"
+    11-11   "1 Chaos Warrior, 1 Chaos Thug (50 Gold Crowns)"
+    12-12   "6 Chaos Thugs (60 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "2 Chaos Thugs, 2 Beastmen (40 Gold Crowns)"
+    2-2     "4 Chaos Thugs (45 Gold Crowns)"
+    3-3     "3 Chaos Thugs, 2 Beastmen (50 Gold Crowns)"
+    4-4     "2 Chaos Thugs, 3 Beastmen (55 Gold Crowns)"
+    5-5     "2 Chaos Thugs, 2 Beastmen, 1 Beastman Sentry (60 Gold Crowns)"
+    6-6     "4 Chaos Thugs, 1 Chaos Thug Sentry (65 Gold Crowns)"
+    7-7     "1 Chaos Warrior, 2 Chaos Thugs (70 Gold Crowns)"
+    8-8     "1 Chaos Warriors, 3 Chaos Thugs (75 Gold Crowns)"
+    9-9     "1 Chaos Warrior, 2 Chaos Thugs, 1 Chaos Thug Sentry (80 Gold Crowns)"
+    10-10   "1 Chaos Warrior, 3 Chaos Thugs, 1 Chaos Thug Sentry (85 Gold Crowns)"
+    11-11   "1 Chaos Champion, 1 Chaos Thug Sentry (90 Gold Crowns)"
+    12-12   "2 Chaos Warriors, 1 Chaos Thug Sentry (100 Gold Crowns)"
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "2 Chaos Warriors, 1 Chaos Thug Sentry (100 Gold Crowns)"
+    2-2     "1 Chaos Warrior, 5 Chaos Thugs, 1 Chaos Thug Sentry (105 Gold Crowns)"
+    3-3     "1 Chaos Champion, 1 Chaos Thug Sentry (110 Gold Crowns)"
+    4-4     "7 Chaos Thugs, 4 Beastmen, 1 Chaos Thug Sentry (115 Gold Crowns)"
+    5-5     "1 Chaos Warrior, 3 Chaos Thugs, 4 Beastmen, 1 Chaos Thug Sentry (120 Gold Crowns)"
+    6-6     "1 Chaos Warrior, 7 Beastmen, 1 Beastman Sentry (125 Gold Crowns)"
+    7-7     "1 Chaos Warrior, 4 Chaos Thugs, 3 Beastmen, 1 Beastman Sentry (130 Gold Crowns)"
+    8-8     "1 Chaos Warrior, 8 Beastmen, 1 Beastman Sentry (135 Gold Crowns)"
+    9-9     "1 Chaos Warrior, 4 Chaos Thugs, 5 Beastmen, 1 Chaos Thug Sentry (140 Gold Crowns)"
+    10-10   "2 Chaos Warriors 4 Chaos Thugs, 1 Chaos Thug Sentry (145 Gold Crowns)"
+    11-11   "2 Chaos Warriors, 5 Beastmen, 1 Beastman Sentry (150 Gold Crowns)"
+    12-12   "2 Chaos Warriors, 1 Chaos Thugs, 3 Beastmen, 2 Chaos Thug Sentries (160 Gold Crowns)"
+)
+

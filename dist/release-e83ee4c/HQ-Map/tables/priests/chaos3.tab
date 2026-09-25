@@ -1,0 +1,44 @@
+Wandering-Monsters
+(   1D12
+    1-2     "1 Chaos Thug, 1 Beastman (20 Gold Crowns)"
+    3-4     "2 Beastmen (25 Gold Crowns)"
+    5-6     "1 Chaos Thug, 2 Beastmen (30 Gold Crowns)"
+    7-8     "3 Beastmen (35 Gold Crowns)"
+    9-9     "4 Beastmen (40 Gold Crowns)"
+    10-10   "1 Chaos Thug, 3 Beastmen (45 Gold Crowns)"
+    11-11   "5 Beastmen (50 Gold Crowns)"
+    12-12   "6 Beastmen (60 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "4 Beastmen (40 Gold Crowns)"
+    2-2     "4 Beastmen (45 Gold Crowns)"
+    3-3     "5 Beastmen (50 Gold Crowns)"
+    4-4     "3 Beastmen, 1 Beastman Sentry (55 Gold Crowns)"
+    5-5     "4 Beastmen, 1 Beastman Sentry (60 Gold Crowns)"
+    6-6     "2 Beastmen, 2 Beastmen Sentries (65 Gold Crowns)"
+    7-7     "4 Beastmen, 1 Beastman Sentry (70 Gold Crowns)"
+    8-8     "5 Beastmen, 1 Beastman Sentry (75 Gold Crowns)"
+    9-9     "6 Beastmen, 1 Beastman Sentry (80 Gold Crowns)"
+    10-10   "7 Beastmen, 1 Beastman Sentry (85 Gold Crowns)"
+    11-11   "8 Beastmen, 1 Beastman Sentry (90 Gold Crowns)"
+    12-12   "9 Beastmen, 1 Beastman Sentry (100 Gold Crowns)"
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "7 Beastmen, 1 Beastman Sentry (100 Gold Crowns)"
+    2-2     "8 Beastmen, 1 Beastman Sentry (105 Gold Crowns)"
+    3-3     "8 Beastmen, 2 Beastmen Sentries (110 Gold Crowns)"
+    4-4     "10 Beastmen, 1 Beastman Sentry (115 Gold Crowns)"
+    5-5     "11 Beastmen, 1 Beastman Sentry (120 Gold Crowns)"
+    6-6     "11 Beastmen, 1 Beastman Sentry (125 Gold Crowns)"
+    7-7     "11 Beastmen, 1 Beastman Sentry (130 Gold Crowns)"
+    8-8     "12 Beastmen, 1 Beastman Sentry (135 Gold Crowns)"
+    9-9     "10 Beastmen, 2 Beastmen Sentries (140 Gold Crowns)"
+    10-10   "13 Beastmen, 1 Beastman Sentry (145 Gold Crowns)"
+    11-11   "11 Beastmen, 2 Beastmen Sentries (150 Gold Crowns)"
+    12-12   "12 Beastmen, 2 Beastmen Sentries (160 Gold Crowns)"
+)
+

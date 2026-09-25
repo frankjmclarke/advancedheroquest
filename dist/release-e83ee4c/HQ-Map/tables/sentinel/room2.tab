@@ -1,0 +1,80 @@
+; Sentinel V - layout for the lower decks (3 and 4).
+;
+; Cramped plant rooms and sealed command corridors. More patrols, more
+; lairs, and the objective rooms are trapped.
+
+Passage-Length
+(   1D12
+    1-4     Section1
+    5-10    Section2
+   11-12    Section3
+)
+
+Passage-End
+(   2D12
+    2-4     T-Junction
+    5-9     Dead-End
+   10-12    Right-Turn
+   13-14    T-Junction
+   15-17    Left-Turn
+   18-22    Stairs-Out
+   23-24    T-Junction
+)
+
+Passage-Feature
+(   2D12
+    2-10    Wandering-Monsters
+   11-15    Nothing
+   16-19    Door1
+   20-21    Door2
+   22-24    Wandering-Monsters
+)
+
+Room-Type
+(   1D12
+    1-4     Normal
+    5-7     Hazard
+    8-10    Lair
+   11-12    Quest
+)
+
+Room-Doors
+(   1D12
+    1-5     None
+    6-9     Door1
+   10-12    Door2
+)
+
+Secret-Doors
+(   1D12
+    1-1     None ;"1-Objective-Counter"
+    2-6     None
+    7-12    Door1
+)
+
+Room-or-Passage
+(   1D6
+    1-4     Room
+    5-6     Passage
+)
+
+Normal
+(   1D12
+    1-12    Room-Furnish() & Hidden-Treasure()
+)
+
+Hazard
+(   1D12
+    1-12    Hazards-Matrix() & Hidden-Treasure()
+)
+
+Lair
+(   1D12
+    1-6     Chest & Lairs-Matrix() & Supply-Crate() & Hidden-Treasure()
+    7-12    Chest & Quest-Rooms-Matrix() & Supply-Crate() & Hidden-Treasure()
+)
+
+Quest
+(   1D12
+    1-12    Stairs_and_Chest & "Drop Shaft Down" & Quest-Rooms-Matrix() & Supply-Crate() & Hidden-Treasure() & Room-Trap()
+)

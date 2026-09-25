@@ -1,0 +1,13 @@
+#The Eyes of Chaos (Level 1)
+#---------------------------
+#
+
+define ROOM-FURNISH
+
+include eyes\room.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include terror\treasure.tab
+include standard\trap.tab
+include eyes\undead.tab
+

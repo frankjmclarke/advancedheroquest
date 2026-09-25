@@ -1,0 +1,88 @@
+; Deck 5 - the Sentinel Core. Eldar, and nothing else.
+;
+; Whatever the Orks took and the Silent Hand opened, the Eldar came for. A
+; warhost of the Sentinel Host holds the Core: Guardians in every approach,
+; weapon platforms sighted down the long galleries, and a Farseer at the
+; heart of the machine finishing something that was begun long before the
+; Imperium put a station here.
+;
+; Every entry in this file is an Eldar model. Guardians, the four Eldar
+; Attack weapon variants, and the Eldar Leader miniature standing in for
+; each named character in turn.
+
+Wandering-Monsters
+(   1D12
+    1-2     "2 Eldar Guardians (40 Points)"
+    3-3     "3 Eldar Guardians (60 Points)"
+    4-4     "2 Eldar Guardians, 1 with Shuriken Cannon (70 Points)"
+    5-6     "4 Eldar Guardians (80 Points)"
+    7-7     "2 Eldar Guardians, 1 with Missile Launcher (75 Points)"
+    8-8     "3 Eldar Guardians, 1 with Shuriken Cannon (90 Points)"
+    9-9     "2 Eldar Guardians, 1 with Las-Cannon (80 Points)"
+   10-10    "5 Eldar Guardians (100 Points)"
+   11-11    "4 Eldar Guardians, 1 with Shuriken Cannon (110 Points)"
+   12-12    "3 Eldar Guardians, 1 Eldar Leader (130 Points)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "5 Eldar Guardians (100 Points)"
+    2-2     "4 Eldar Guardians, 1 with Shuriken Cannon (110 Points)"
+    3-3     "4 Eldar Guardians, 1 with Missile Launcher (115 Points)"
+    4-4     "6 Eldar Guardians (120 Points)"
+    5-5     "4 Eldar Guardians, 1 with Las-Cannon (120 Points)"
+    6-6     "5 Eldar Guardians, 1 with Shuriken Cannon (130 Points)"
+    7-7     "6 Eldar Guardians, 1 with Missile Launcher (155 Points)" & Specialist-Xenos()
+    8-8     "5 Eldar Guardians, 2 with Shuriken Cannon (160 Points)" & Specialist-Xenos()
+    9-9     "8 Eldar Guardians (160 Points)" & Specialist-Xenos()
+   10-10    "6 Eldar Guardians, 1 with Las-Cannon, 1 with Shuriken Cannon (190 Points)" & Specialist-Xenos()
+   11-11    "6 Eldar Guardians, 2 with Missile Launcher (190 Points)" & Specialist-Xenos()
+   12-12    "9 Eldar Guardians, 1 with Las-Cannon (220 Points)" & Specialist-Xenos()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "8 Eldar Guardians, 1 with Shuriken Cannon (190 Points)" & Specialist-Xenos()
+    2-2     "6 Eldar Guardians, 2 with Las-Cannon (200 Points)" & Specialist-Xenos()
+    3-3     "10 Eldar Guardians (200 Points)" & Specialist-Xenos()
+    4-4     "8 Eldar Guardians, 1 with Missile Launcher, 1 with Shuriken Cannon (225 Points)" & Specialist-Xenos()
+    5-5     "9 Eldar Guardians, 2 with Shuriken Cannon (240 Points)" & Specialist-Xenos()
+    6-6     "8 Eldar Guardians, 2 with Missile Launcher (230 Points)" & Specialist-Xenos()
+    7-7     "10 Eldar Guardians, 2 with Las-Cannon (280 Points)" & Specialist-Xenos-Double()
+    8-8     "9 Eldar Guardians, 2 with Shuriken Cannon, 1 with Missile Launcher (275 Points)" & Specialist-Xenos-Double()
+    9-9     "12 Eldar Guardians, 1 with Las-Cannon (280 Points)" & Specialist-Xenos-Double()
+   10-10    "9 Eldar Guardians, 2 with Missile Launcher, 2 with Las-Cannon (330 Points)" & Specialist-Xenos-Double()
+   11-11    "12 Eldar Guardians, 2 with Shuriken Cannon, 1 with Las-Cannon (340 Points)" & Specialist-Xenos-Double()
+   12-12    "12 Eldar Guardians, 2 with Las-Cannon, 2 with Shuriken Cannon (380 Points)" & Specialist-Xenos-Double()
+)
+
+; The Eldar Leader miniature and the heavy weapon Guardians are what a squad
+; meets when the Host stops giving ground. Wraithlord entries are optional -
+; see README.md.
+
+Specialist-Xenos
+(   1D12
+    1-2     Eldar-Shuriken-Cannon()
+    3-4     Eldar-Missile-Launcher()
+    5-6     Eldar-Las-Cannon()
+    7-9     Eldar-Leader()
+   10-11    Eldar-Leader()
+   12-12    Eldar-Wraithlord()
+)
+
+Specialist-Xenos-Double
+(   1D12
+    1-2     Eldar-Leader() & Eldar-Shuriken-Cannon()
+    3-4     Eldar-Leader() & Eldar-Missile-Launcher()
+    5-6     Eldar-Leader() & Eldar-Las-Cannon()
+    7-8     Eldar-Leader() & Eldar-Leader()
+    9-10    Eldar-Wraithlord() & Eldar-Las-Cannon()
+   11-12    Eldar-Wraithlord() & Eldar-Leader()
+)
+
+Lurker
+(   1D12
+    1-8     Eldar-Guardian()
+    9-11    Eldar-Shuriken-Cannon()
+   12-12    Eldar-Leader()
+)

@@ -1,0 +1,12 @@
+#The Dungeon of the Priests of Pleasure (Level 1)
+#------------------------------------------------
+#
+
+define ROOM-FURNISH
+
+include priests\room1.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include standard\treasure.tab
+include standard\trap.tab
+include priests\chaos1.tab

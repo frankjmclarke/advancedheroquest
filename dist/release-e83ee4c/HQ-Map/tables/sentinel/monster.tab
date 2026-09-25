@@ -1,0 +1,181 @@
+; Sentinel V - the models, one table each.
+;
+; Every entry here is a miniature from Milton Bradley's Space Crusade or one
+; of its two expansions, Eldar Attack and Mission Dreadnought. The four bands
+; on each table are how well armed and how well supplied that particular
+; model is, and so what killing it is worth in Points.
+;
+; Profiles for all of these are in README.md in this folder.
+
+Xenos-Wargear
+(   1D12
+    1-1     "Refractor Field (T +1)"
+    2-2     "Targeter (BS +1)"
+    3-4     "Medi-Pack (heals 4 Wounds)"
+    5-5     "Combat Stimms (S +1 and Sp +2 for 1D6 turns)"
+    6-6     "Displacer Field (1 automatic escape)"
+    7-7     "Data-Slate:" & Data-Slate()
+    8-8     "Suspensor Harness (no Speed penalty for a heavy weapon)"
+    9-10    "Power Cell (2 extra shots for one heavy weapon)"
+   11-11    "Master-Crafted Bolter (BS +1, DD +1)"
+   12-12    "Auto-Repair Unit (restores 1 Wound per turn)"
+)
+
+; ---- Space Crusade (1990) ------------------------------------------------
+
+Gretchin
+(   1D12
+    1-4     "Gretchin (0 Points)"
+    5-8     "Gretchin (5 Points)"
+    9-11    "Gretchin (5 Points)"
+   12-12    "Gretchin (10 Points)"
+)
+
+Ork
+(   1D12
+    1-4     "Ork (5 Points)"
+    5-8     "Ork (10 Points)"
+    9-11    "Ork (15 Points)"
+   12-12    "Ork (20 Points)"
+)
+
+Ork-Heavy-Weapon
+(   1D12
+    1-4     "Ork with Heavy Bolter (15 Points)"
+    5-8     "Ork with Missile Launcher (20 Points)"
+    9-11    "Ork with Assault Cannon (25 Points)"
+   12-12    "Ork with Plasma Gun (30 Points)" & Xenos-Wargear()
+)
+
+Ork-Nob
+(   1D12
+    1-4     "Ork Nob (20 Points)"
+    5-8     "Ork Nob (30 Points)"
+    9-11    "Ork Nob (40 Points)" & Xenos-Wargear()
+   12-12    "Ork Nob (50 Points)" & Xenos-Wargear()
+)
+
+Chaos-Android
+(   1D12
+    1-4     "Chaos Android (10 Points)"
+    5-8     "Chaos Android (15 Points)"
+    9-11    "Chaos Android (20 Points)"
+   12-12    "Chaos Android (25 Points)"
+)
+
+Genestealer
+(   1D12
+    1-4     "Genestealer (20 Points)"
+    5-8     "Genestealer (25 Points)"
+    9-11    "Genestealer (30 Points)"
+   12-12    "Genestealer, Broodlord markings (40 Points)" & Xenos-Wargear()
+)
+
+Chaos-Space-Marine
+(   1D12
+    1-4     "Chaos Space Marine with Bolter (20 Points)"
+    5-8     "Chaos Space Marine with Bolter (25 Points)"
+    9-11    "Chaos Space Marine with Bolter (30 Points)"
+   12-12    "Chaos Space Marine with Bolter (35 Points)" & Xenos-Wargear()
+)
+
+Chaos-Space-Marine-Heavy
+(   1D12
+    1-4     "Chaos Space Marine with Heavy Bolter (30 Points)"
+    5-8     "Chaos Space Marine with Missile Launcher (35 Points)"
+    9-11    "Chaos Space Marine with Heavy Bolter (40 Points)" & Xenos-Wargear()
+   12-12    "Chaos Space Marine with Missile Launcher (45 Points)" & Xenos-Wargear()
+)
+
+Chaos-Space-Marine-Commander
+(   1D12
+    1-4     "Chaos Space Marine Commander (50 Points)"
+    5-8     "Chaos Space Marine Commander (60 Points)" & Xenos-Wargear()
+    9-11    "Chaos Space Marine Commander (80 Points)" & Xenos-Wargear()
+   12-12    "Chaos Space Marine Commander (100 Points)" & Xenos-Wargear() & Rare-Equipment()
+)
+
+Dreadnought
+(   1D12
+    1-4     "Dreadnought (40 Points)"
+    5-8     "Dreadnought (50 Points)"
+    9-11    "Dreadnought (60 Points)" & Xenos-Wargear()
+   12-12    "Dreadnought (70 Points)" & Xenos-Wargear()
+)
+
+; ---- Mission Dreadnought (1991) ------------------------------------------
+
+Advanced-Dreadnought
+(   1D12
+    1-4     "Advanced Dreadnought (60 Points)"
+    5-8     "Advanced Dreadnought (80 Points)"
+    9-11    "Advanced Dreadnought (100 Points)" & Xenos-Wargear()
+   12-12    "Advanced Dreadnought (120 Points)" & Xenos-Wargear() & Rare-Equipment()
+)
+
+Tarantula
+(   1D12
+    1-4     "Tarantula Turret, turned against you (20 Points)"
+    5-8     "Tarantula Turret, turned against you (30 Points)"
+    9-11    "Tarantula Turret with Conversion Beam (40 Points)"
+   12-12    "Tarantula Turret with Las-Cannon (50 Points)"
+)
+
+; ---- Eldar Attack (1991) -------------------------------------------------
+
+Eldar-Guardian
+(   1D12
+    1-4     "Eldar Guardian with Shuriken Catapult (15 Points)"
+    5-8     "Eldar Guardian with Shuriken Catapult (20 Points)"
+    9-11    "Eldar Guardian with Shuriken Catapult (25 Points)"
+   12-12    "Eldar Guardian with Shuriken Catapult (30 Points)" & Xenos-Wargear()
+)
+
+Eldar-Shuriken-Cannon
+(   1D12
+    1-4     "Eldar Guardian with Shuriken Cannon (25 Points)"
+    5-8     "Eldar Guardian with Shuriken Cannon (30 Points)"
+    9-11    "Eldar Guardian with Shuriken Cannon (35 Points)"
+   12-12    "Eldar Guardian with Shuriken Cannon (40 Points)" & Xenos-Wargear()
+)
+
+Eldar-Missile-Launcher
+(   1D12
+    1-4     "Eldar Guardian with Missile Launcher (30 Points)"
+    5-8     "Eldar Guardian with Missile Launcher (35 Points)"
+    9-11    "Eldar Guardian with Missile Launcher (40 Points)"
+   12-12    "Eldar Guardian with Missile Launcher (45 Points)" & Xenos-Wargear()
+)
+
+Eldar-Las-Cannon
+(   1D12
+    1-4     "Eldar Guardian with Las-Cannon (35 Points)"
+    5-8     "Eldar Guardian with Las-Cannon (40 Points)"
+    9-11    "Eldar Guardian with Las-Cannon (45 Points)" & Xenos-Wargear()
+   12-12    "Eldar Guardian with Las-Cannon (50 Points)" & Xenos-Wargear()
+)
+
+; The Eldar Leader model. Space Crusade gives one leader figure and a deck of
+; commander cards; the same is done here, so each of these is that miniature
+; with a different card behind it.
+
+Eldar-Leader
+(   1D12
+    1-2     "Warlock Aedryn, Eldar Leader (60 Points)" & Xenos-Wargear()
+    3-4     "Exarch Ythrannor of the Shrouded Blade, Eldar Leader (70 Points)" & Xenos-Wargear()
+    5-6     "Spiritseer Nuadhu, Eldar Leader (70 Points)" & Xenos-Wargear()
+    7-8     "Exarch Maeliss the Patient, Eldar Leader (80 Points)" & Xenos-Wargear()
+    9-10    "Autarch Kaelyth Duilan, Eldar Leader (90 Points)" & Rare-Equipment()
+   11-12    "Farseer Ulvaneth of the Sentinel Host, Eldar Leader (120 Points)" & Xenos-Wargear() & Rare-Equipment()
+)
+
+; Optional: the Dreadnought miniature, repainted in wraithbone, stands in for
+; an Eldar Wraithlord. Deck 5 plays perfectly well without it - see README.md.
+
+Eldar-Wraithlord
+(   1D12
+    1-4     "Eldar Wraithlord (70 Points)"
+    5-8     "Eldar Wraithlord (80 Points)"
+    9-11    "Eldar Wraithlord (100 Points)" & Xenos-Wargear()
+   12-12    "Eldar Wraithlord (120 Points)" & Xenos-Wargear() & Rare-Equipment()
+)

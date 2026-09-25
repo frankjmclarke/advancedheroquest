@@ -1,0 +1,53 @@
+Wandering-Monsters
+(   1D12
+    1-2     "1 Beastman (10 Gold Crowns)"
+    3-4     "1 Beastman Sentry (20 Gold Crowns)"
+    5-6     "1 Beastman, 1 Orc (20 Gold Crowns)"
+    7-8     "1 Beastman, 2 Goblins (30 Gold Crowns)"
+    9-9     "1 Beastmen (30 Gold Crowns)"
+    10-10   "1 Beastman Champion (40 Gold Crowns)"
+    11-11   "2 Beastmen, 1 Orc (40 Gold Crowns)"
+    12-12   "3 Beastmen (50 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "2 Beastmen (30 Gold Crowns)"
+    2-2     "2 Beastmen Sentries (40 Gold Crowns)"
+    3-3     "1 Beastman Champion, 1 Orc (40 Gold Crowns)"
+    4-4     "1 Beastman Champion, 2 Goblins (50 Gold Crowns)"
+    5-5     "1 Beastman Champion, 2 Beastmen (40 Gold Crowns)"
+    6-6     "1 Beastman Champion, 1 Beastman Sentry (50 Gold Crowns)"
+    7-7     "3 Beastmen (60 Gold Crowns)"
+    8-8     "2 Beastmen, 2 Orcs (70 Gold Crowns)"
+    9-9     "1 Beastman Warlord, 1 Beastman (60 Gold Crowns)" & Specialist-Monster()
+    10-10   "1 Beastman Warlord, 2 Orcs (70 Gold Crowns)" & Specialist-Monster()
+    11-11   "4 Beastmen (80 Gold Crowns)" & Specialist-Monster()
+    12-12   "1 Beastman Warlord, 2 Beastmen (100 Gold Crowns)" & Specialist-Monster()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "5 Beastmen (80 Gold Crowns)"
+    2-2     "2 Beastmen Champions, 1 Beastman (100 Gold Crowns)"
+    3-3     "1 Beastman Warlord, 2 Beastmen (120 Gold Crowns)"
+    4-4     "6 Beastmen (90 Gold Crowns)"
+    5-5     "1 Beastman Warlord, 3 Beastmen (100 Gold Crowns)"
+    6-6     "3 Beastmen Champions (120 Gold Crowns)"
+    7-7     "2 Beastmen Warlords (140 Gold Crowns)"
+    8-8     "7 Beastmen (120 Gold Crowns)"
+    9-9     "1 Beastman Warlord, 4 Beastmen (140 Gold Crowns)" & Specialist-Monster()
+    10-10   "1 Beastman Warlord, 2 Beastmen Champions (150 Gold Crowns)" & Specialist-Monster()
+    11-11   "2 Beastmen Champions, 3 Beastmen (160 Gold Crowns)" & Specialist-Monster()
+    12-12   "2 Beastmen Warlords, 2 Beastmen (160 Gold Crowns)" & Specialist-Monster()
+)
+
+Specialist-Monster
+(   1D12
+    1-7     None
+    8-8     Beastman-Warlord()
+    9-9     Beastman-Warlord() & "Potion of Healing"
+    10-10   Beastman-Warlord() & "Sword (DD +1)"
+    11-11   Beastman-Warlord() & "Potion of Prowess"
+    12-12   Beastman-Warlord() & Beastman-Warlord()
+)

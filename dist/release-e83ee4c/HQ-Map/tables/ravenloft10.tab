@@ -1,0 +1,13 @@
+#Ravenloft (Undead)
+#-----------------------------
+#
+
+define ROOM-FURNISH
+
+include ravenloft\room1.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include ravenloft\treasure.tab
+include standard\trap.tab
+include ravenloft\monster.tab
+include ravenloft\undead.tab

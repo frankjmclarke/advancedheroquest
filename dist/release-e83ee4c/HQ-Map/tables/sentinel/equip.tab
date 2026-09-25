@@ -1,0 +1,212 @@
+; Sentinel V - salvage, supply crates and wargear.
+;
+; Sentinel V pays in Points, the scoring unit of Space Crusade: a squad's
+; total decides its promotions between missions. Anything a Marine can carry
+; off the deck is worth Points, and the better finds are worth keeping.
+
+Hidden-Treasure
+(   2D12
+    2-6     "Hidden Salvage:" & "1 Objective-Counter"
+    7-16    Nothing
+   17-23    "Hidden Salvage:" & Salvage()
+   24-24    "Hidden Salvage:" & Rare-Equipment()
+)
+
+Salvage
+(   1D12
+    1-1     "Stripped power cabling (5 Points)"
+    2-2     "Ammunition hopper (10 Points)"
+    3-3     "Sealed ration crate (15 Points)"
+    4-4     "Intact cogitator bank (20 Points)"
+    5-5     "Adeptus tool kit (25 Points)"
+    6-6     "Promethium canisters (30 Points)"
+    7-7     "Servo-skull, still logging (35 Points)"
+    8-8     "Machine-spirit core (40 Points)"
+    9-9     "Reliquary of the station shrine (45 Points)"
+   10-10    "Sealed weapon crate (50 Points)"
+   11-11    "Astropathic relay crystal (55 Points)"
+   12-12    "Purity-sealed archeotech casing (60 Points)"
+)
+
+Rare-Equipment
+(   2D12
+    2-2     Relic()
+    3-4     Field-Generator()
+    5-6     Targeting-Array()
+    7-8     Bionic()
+    9-10    Armour-Upgrade()
+   11-11    Heavy-Weapon()
+   12-13    Data-Slate()
+   14-16    Medicae()
+   17-17    Grenades()
+   18-19    Sidearm()
+   20-21    Close-Combat-Weapon()
+   22-24    Power-Armour()
+)
+
+Relic
+(   1D12
+    1-1     "Relic of the Chapter (1 Fate Point)"
+    2-2     "Relic of the Chapter (2 Fate Points)"
+    3-3     "Relic of the Chapter (3 Fate Points)"
+    4-4     "Relic of the Chapter (4 Fate Points)"
+    5-5     "Relic of the Chapter (5 Fate Points)"
+    6-6     "Relic of the Chapter (6 Fate Points)"
+    7-7     "Relic of the Chapter (7 Fate Points)"
+    8-8     "Relic of the Chapter (8 Fate Points)"
+    9-9     "Relic of the Chapter (9 Fate Points)"
+   10-10    "Relic of the Chapter (10 Fate Points)"
+   11-11    "Relic of the Chapter (11 Fate Points)"
+   12-12    "Relic of the Chapter (12 Fate Points)"
+)
+
+Field-Generator
+(   1D12
+    1-3     "Refractor Field (T +1)"
+    4-5     "Refractor Field (T +2)"
+    6-6     "Conversion Field (T +3, blinds adjacent models on a 12)"
+    7-9     "Rosarius (Psychic Protection, Level 1)"
+   10-11    "Rosarius (Psychic Protection, Level 2)"
+   12-12    "Displacer Field (1 automatic escape per mission)"
+)
+
+Targeting-Array
+(   1D12
+    1-6     "Targeter (BS +1)"
+    7-8     "Auspex (spot hidden enemies on 4+)"
+    9-9     "Infra-Sight (ignores darkness and smoke)"
+   10-11    "Motion Tracker (no ambush may be sprung on the bearer)"
+   12-12    "Cyclops Targeter (BS +2)"
+)
+
+Bionic
+(   1D12
+    1-3     "Bionic Arm (S +1)"
+    4-5     "Bionic Legs (Sp +2)"
+    6-6     "Bionic Eye (BS +1)"
+    7-9     "Reinforced Ribcage (T +1)"
+   10-11    "Bionic Heart (W +1)"
+   12-12    "Black Carapace Relay (Sp +1, WS +1)"
+)
+
+Armour-Upgrade
+(   1D12
+    1-3     "Ceramite Plating (Sp 0, BS -1, T +1)"
+    4-5     "Terminator Shoulder Guards (Sp -1, BS -2, T +2)"
+    6-6     "Storm Shield (Sp 0, BS -2, T +2)"
+   7-8     "Helm of the Chapter (Sp 0, BS 0, T +1)"
+    9-9     "Iron Halo (Sp 0, BS 0, T +2)"
+   10-11    "Reactive Plate (Sp 0, BS 0, T +1, S +1)"
+   12-12    "Artificer Helm (Sp 0, BS -1, T +2)"
+)
+
+Heavy-Weapon
+(   1D12
+    1-3     "Heavy Bolter (R 40, DD 6, 3 shots)"
+    4-5     "Missile Launcher (R 48, DD 7, blast)"
+    6-8     "Assault Cannon (R 32, DD 6, 4 shots)"
+    9-9     "Plasma Gun (R 40, DD 7, overheats on a 1)"
+   10-10    "Conversion Beamer (R 48, DD 5 at short, DD 9 at long)"
+   11-11    "Fusion Gun (R 16, DD 10)"
+   12-12    "Las-Cannon (R 48, DD 9)"
+)
+
+Data-Slate
+(   1D12
+    1-12    "Data-Slate holding:" &
+            (   1D12
+                1-6     Archive-Record()
+                7-9     Archive-Record() & Archive-Record()
+               10-11    Archive-Record() & Archive-Record() & Archive-Record()
+               12-12    Archive-Record() & Archive-Record() & Archive-Record() & Archive-Record()
+            )
+)
+
+Archive-Record
+(   2D12
+    2-3     "the Sentinel's final augur sweep"
+    4-4     "a Mechanicus override rite (opens one sealed door)"
+    5-5     "deck plans of this level (reveal 3 unexplored sections)"
+    6-6     "the roster of the lost garrison"
+    7-8     "a reactor shutdown litany"
+    9-10    "coordinates of a hidden armoury"
+   11-11    "a vox cipher (listen in on one enemy patrol)"
+   12-12    "the station's distress beacon key"
+   13-13    "an Inquisitorial seal, unbroken"
+   14-14    "a xenos linguistic primer (Eldar)"
+   15-15    "the Magos Rubrica of the Core"
+   16-17    "damage reports from Deck 5"
+   18-19    "a tally of the dead"
+   20-21    "Chapter honours owed to this station"
+   22-22    "a warning, in High Gothic, not to go below"
+   23-24    "the true name of what sleeps in the Core"
+)
+
+Medicae
+(   1D12
+    1-4     "Medi-Pack (heals 4 Wounds)"
+    5-8     "Combat Stimms (S +1 and Sp +2 for 1D6 turns)"
+    9-10    "Narthecium Vial (heals 6 Wounds)"
+   11-11    "Pain Suppressor (ignore the next 3 Wounds taken)"
+   12-12    "Apothecary's Reductor (revive one fallen Marine on a 10+)"
+)
+
+Grenades
+(   1D12
+    1-4     "4 Frag Grenades (DD 4, blast)"
+    5-5     "2 Krak Grenades (DD 8, single target)"
+    6-7     "2 Melta Bombs (DD 12 against Dreadnoughts and doors)"
+    8-8     "1 Vortex Grenade (removes anything it hits)"
+    9-11    "4 Smoke Grenades (block line of sight for 1D6 turns)"
+   12-12    "2 Photon Flash Grenades (blind all in the section)"
+)
+
+Sidearm
+(   1D12
+    1-4     "Bolt Pistol (R 16, DD 4)"
+    5-7     "Plasma Pistol (R 20, DD 6, overheats on a 1)"
+    8-9     "Inferno Pistol (R 8, DD 9)"
+   10-11    "Hand Flamer (R 12, DD 5, template)"
+   12-12    "Master-Crafted Bolt Pistol (R 20, DD 5, BS +1)"
+)
+
+Close-Combat-Weapon
+(   1D12
+    1-3     "Combat Knife (WS 0, S 0)"
+    4-6     "Chainsword (WS 0, S +1)"
+    7-8     "Power Axe (WS +1, S +1)"
+    9-9     "Power Sword (WS +2, S +1)"
+   10-10    "Power Glove (WS +1, S +2)"
+   11-11    "Thunder Hammer (WS +1, S +3, target loses next turn)"
+   12-12    "Relic Blade of the Chapter (WS +2, S +2)"
+)
+
+Power-Armour
+(   2D12
+    2-6     "Scout Carapace (Sp 0, BS -1, T +1)"
+    7-10    "Mark VI Corvus Plate (Sp -1, BS -1, T +2)"
+   11-13    "Mark VII Aquila Plate (Sp -2, BS -1, T +3)"
+   14-15    "Mark VII Aquila Plate (Sp -1, BS -1, T +2)"
+   16-17    "Mark IV Maximus Plate (Sp 0, BS 0, T +1)"
+   18-19    "Terminator Plate (Sp -2, BS -2, T +4)"
+   20-20    "Artificer Plate (Sp 0, BS 0, T +3)"
+   21-21    "Sanctified Plate of the Chapter (Sp 0, BS 0, T +5)"
+   22-22    "Tactical Dreadnought Plate (Sp -2, BS -2, T +5)"
+   23-24    "Eldar Wraithbone Harness (Sp -1, BS 0, T +4)"
+)
+
+Supply-Crate
+(   1D12
+    1-1     "Supply Crate:" & "Deck plans of Sentinel V"
+    2-2     "Supply Crate:" & "1 Heavy Weapon reload and 20 Points"
+    3-3     "Supply Crate:" & "40 Feet of Cable and 30 Points"
+    4-4     "Supply Crate:" & "2 Flamer Canisters"
+    5-5     "Supply Crate:" & "50 Points"
+    6-6     "Supply Crate:" & "100 Points"
+    7-7     "Supply Crate:" & "150 Points"
+    8-8     "Supply Crate:" & "Auspex Scanner and 50 Points"
+    9-9     "Supply Crate:" & "Anti-Toxin Injector and 50 Points"
+   10-10    "Supply Crate:" & "200 Points"
+   11-11    "Supply Crate:" & Medicae() & "and 50 Points"
+   12-12    "Supply Crate:" & Rare-Equipment()
+)

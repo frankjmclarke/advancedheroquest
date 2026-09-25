@@ -1,0 +1,88 @@
+; Sentinel V - what is bolted to the deck.
+;
+; Same furniture markers HQ-Map already draws, read as station fittings.
+
+if ROOM-FURNISH
+
+Room-Furnish
+(   1D12
+    1-5     Nothing
+    6-7     Weapons-Rack()
+    8-8     Cupboard()
+    9-9     Table()
+   10-10    Fireplace()
+   11-11    Bookcase()
+   12-12    Rack()
+)
+
+else
+
+Room-Furnish
+(   1D12
+    1-12    Nothing
+)
+
+endif
+
+Table
+(   1D12
+    1-12    Table & "Workbench"
+)
+
+Rack
+(   1D12
+    1-12    Rack & "Servitor Cradle"
+)
+
+Fireplace
+(   1D12
+    1-12    Fireplace & "Plasma Vent"
+)
+
+Cupboard
+(   1D12
+    1-1     Cupboard & "Supply Locker: spoiled rations (T -1 until healed)"
+    2-8     Cupboard & "Supply Locker: empty"
+    9-10    Cupboard & "Supply Locker: 25 Points"
+   11-11    Cupboard & "Supply Locker:" & Medicae()
+   12-12    Cupboard & "Supply Locker:" & Grenades()
+)
+
+Weapons-Rack
+(   1D12
+    1-2     Weapons-Rack & "Weapon Rack: stripped"
+    3-4     Weapons-Rack & "Weapon Rack:" & "1 Bolter (R 24, DD 4)"
+    5-5     Weapons-Rack & "Weapon Rack:" & "3 Bolters (R 24, DD 4)"
+    6-7     Weapons-Rack & "Weapon Rack:" & "6 Bolter Magazines"
+    8-8     Weapons-Rack & "Weapon Rack:" & "12 Bolter Magazines"
+    9-10    Weapons-Rack & "Weapon Rack:" & "1 Chainsword"
+   11-11    Weapons-Rack & "Weapon Rack:" & "1 Power Axe"
+   12-12    Weapons-Rack & "Weapon Rack:" &
+            (   1D12
+                1-2     Nothing
+                3-4     "1 Bolter (R 24, DD 4)"
+                5-5     "3 Bolters (R 24, DD 4)"
+                6-7     "6 Bolter Magazines"
+                8-8     "12 Bolter Magazines"
+                9-10    "1 Chainsword"
+               11-11    "1 Power Axe"
+               12-12    Heavy-Weapon()
+            ) &
+            (   1D12
+                1-2     Nothing
+                3-4     "1 Bolt Pistol (R 16, DD 4)"
+                5-5     "2 Frag Grenades (DD 4, blast)"
+                6-7     "6 Bolter Magazines"
+                8-8     "1 Flamer Canister"
+                9-10    "1 Combat Knife"
+               11-11    "1 Power Glove"
+               12-12    Heavy-Weapon()
+            )
+)
+
+Bookcase
+(   1D12
+    1-9     Bookcase & "Data Stack: purged"
+   10-11    Bookcase & "Data Stack:" & Data-Slate()
+   12-12    Bookcase & "Data Stack:" & "Deck plans of Sentinel V"
+)

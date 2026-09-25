@@ -1,0 +1,43 @@
+Wandering-Monsters
+(   1D12
+    1-2     "4 Zombies (15 Gold Crowns)"
+    3-4     "3 Zombies, 1 Skeleton (20 Gold Crowns)"
+    5-6     "4 Zombies, 1 Skeleton (25 Gold Crowns)"
+    7-8     "5 Zombies, 1 Skeleton (30 Gold Crowns)"
+    9-9     "6 Zombies, 1 Skeleton (35 Gold Crowns)"
+    10-10   "6 Zombies (40 Gold Crowns)"
+    11-11   "5 Zombies, 1 Skeleton (50 Gold Crowns)"
+    12-12   "8 Zombies (60 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "6 Zombies (35 Gold Crowns)"
+    2-2     "4 Zombies, 1 Skeleton (40 Gold Crowns)"
+    3-3     "7 Zombies (45 Gold Crowns)"
+    4-4     "5 Zombies, 1 Skeleton (50 Gold Crowns)"
+    5-5     "8 Zombies (55 Gold Crowns)"
+    6-6     "1 Skeleton (60 Gold Crowns)"
+    7-7     "4 Zombies, 2 Skeletons (65 Gold Crowns)"
+    8-8     "4 Skeletons (70 Gold Crowns)"
+    9-9     "10 Zombies (75 Gold Crowns)"
+    10-10   "8 Zombies, 1 Skeleton (80 Gold Crowns)"
+    11-11   "6 Zombies, 2 Skeletons (90 Gold Crowns)"
+    12-12   "6 Zombies, 3 Skeletons (100 Gold Crowns)"
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "12 Zombies (95 Gold Crowns)"
+    2-2     "10 Zombies, 1 Skeleton (100 Gold Crowns)"
+    3-3     "8 Zombies, 2 Skeletons (110 Gold Crowns)"
+    4-4     "14 Zombies (115 Gold Crowns)"
+    5-5     "10 Zombies, 2 Skeletons (120 Gold Crowns)"
+    6-6     "8 Zombies, 3 Skeletons (120 Gold Crowns)"
+    7-7     "6 Zombies, 4 Skeletons (125 Gold Crowns)"
+    8-8     "2 Zombies, 7 Skeletons (130 Gold Crowns)"
+    9-9     "4 Zombies, 6 Skeletons (135 Gold Crowns)"
+    10-10   "6 Zombies, 5 Skeletons (140 Gold Crowns)"
+    11-11   "8 Zombies, 4 Skeletons (150 Gold Crowns)"
+    12-12   "9 Skeletons (160 Gold Crowns)"
+)

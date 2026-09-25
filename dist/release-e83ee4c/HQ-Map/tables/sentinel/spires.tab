@@ -1,0 +1,72 @@
+; Deck 1 - the Docking Spires.
+;
+; An Ork scavenger mob got aboard through the mooring clamps and has been
+; stripping the upper spires ever since. Gretchin everywhere, Orks behind
+; them, and nothing yet that a full squad should fear.
+
+Wandering-Monsters
+(   1D12
+    1-2     "3 Gretchin (15 Points)"
+    3-4     "4 Gretchin (20 Points)"
+    5-6     "2 Orks (20 Points)"
+    7-7     "2 Gretchin, 1 Ork (20 Points)"
+    8-8     "3 Orks (30 Points)"
+    9-9     "4 Gretchin, 1 Ork (30 Points)"
+   10-10    "2 Orks, 1 Ork with Heavy Bolter (35 Points)"
+   11-11    "3 Gretchin, 2 Orks (35 Points)"
+   12-12    "1 Ork Nob, 2 Gretchin (40 Points)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "6 Gretchin (30 Points)"
+    2-2     "4 Gretchin, 2 Orks (40 Points)"
+    3-3     "4 Orks (40 Points)"
+    4-4     "6 Gretchin, 1 Ork (45 Points)"
+    5-5     "3 Orks, 1 Ork with Heavy Bolter (50 Points)"
+    6-6     "2 Orks, 4 Gretchin (50 Points)"
+    7-7     "4 Orks, 2 Gretchin (60 Points)" & Specialist-Xenos()
+    8-8     "3 Orks, 1 Ork with Missile Launcher (65 Points)" & Specialist-Xenos()
+    9-9     "6 Gretchin, 3 Orks (70 Points)" & Specialist-Xenos()
+   10-10    "4 Orks, 1 Ork with Assault Cannon (80 Points)" & Specialist-Xenos()
+   11-11    "2 Orks, 2 Ork Heavy Weapons, 4 Gretchin (90 Points)" & Specialist-Xenos()
+   12-12    "5 Orks, 5 Gretchin (100 Points)" & Specialist-Xenos()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "4 Orks, 4 Gretchin (70 Points)" & Specialist-Xenos()
+    2-2     "5 Orks, 2 Gretchin (80 Points)" & Specialist-Xenos()
+    3-3     "4 Orks, 1 Ork with Heavy Bolter, 2 Gretchin (90 Points)" & Specialist-Xenos()
+    4-4     "6 Orks (90 Points)" & Specialist-Xenos()
+    5-5     "3 Orks, 2 Ork Heavy Weapons, 4 Gretchin (100 Points)" & Specialist-Xenos()
+    6-6     "8 Gretchin, 3 Orks (100 Points)" & Specialist-Xenos()
+    7-7     "5 Orks, 1 Ork with Missile Launcher (130 Points)" & Specialist-Xenos-Double()
+    8-8     "6 Orks, 4 Gretchin (140 Points)" & Specialist-Xenos-Double()
+    9-9     "4 Orks, 2 Ork Heavy Weapons, 6 Gretchin (150 Points)" & Specialist-Xenos-Double()
+   10-10    "6 Orks, 1 Ork with Assault Cannon, 2 Gretchin (160 Points)" & Specialist-Xenos-Double()
+   11-11    "8 Orks, 4 Gretchin (180 Points)" & Specialist-Xenos-Double()
+   12-12    "6 Orks, 3 Ork Heavy Weapons, 8 Gretchin (200 Points)" & Specialist-Xenos-Double()
+)
+
+Specialist-Xenos
+(   1D12
+    1-5     Ork-Nob()
+    6-9     Ork-Heavy-Weapon()
+   10-12    Ork-Nob()
+)
+
+Specialist-Xenos-Double
+(   1D12
+    1-4     Ork-Nob() & Ork-Heavy-Weapon()
+    5-8     Ork-Nob() & Ork-Heavy-Weapon()
+    9-11    Ork-Nob() & Ork-Nob()
+   12-12    Ork-Nob() & Ork-Nob() & Ork-Heavy-Weapon()
+)
+
+Lurker
+(   1D12
+    1-6     Gretchin()
+    7-11    Ork()
+   12-12    Ork-Nob()
+)

@@ -1,0 +1,45 @@
+Wandering-Monsters
+(   1D12
+    1-2     "9 Goblins & 9 Goblin Archers (90 Gold Crowns)"
+    3-4     "7 Orcs, 1 Orc Champion (90 Gold Crowns)"
+    5-6     "10 Skaven (100 Gold Crowns)"
+    7-8     "8 Orcs, 1 Orc Champion (100 Gold Crowns)"
+    9-9     "11 Chaos Thugs (110 Gold Crowns)"
+    10-10   "9 Orcs, 1 Orc Champion (110 Gold Crowns)"
+    11-11   "6 Skaven Champions (120 Gold Crowns)"
+    12-12   "7 Orcs, 1 Orc Champion (130 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "9 Orcs, 1 Orc Champion (110 Gold Crowns)"
+    2-2     "7 Orcs, 2 Orc Champions (110 Gold Crowns)"
+    3-3     "10 Orcs, 1 Orc Champion (120 Gold Crowns)"
+    4-4     "8 Orc, 2 Orc Champions (120 Gold Crowns)"
+    5-5     "11 Orcs, 1 Orc Champion (130 Gold Crowns)"
+    6-6     "9 Orcs, 2 Orc Champions (130 Gold Crowns)"
+    7-7     "7 Orcs, 3 Orc Champions (130 Gold Crowns)"
+    8-8     "5 Orcs, 4 Orc Champions (130 Gold Crowns)"
+    9-9     "13 Orcs, 1 Orc Champion (150 Gold Crowns)"
+    10-10   "11 Orcs, 2 Orc Champions (150 Gold Crowns)"
+    11-11   "9 Orcs, 3 Orc Champions (150 Gold Crowns)"
+    12-12   "15 Orcs, 1 Orc Champion (170 Gold Crowns)"
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "15 Orcs 1 Orc Champion (170 Gold Crowns)"
+    2-2     "7 Orcs, 5 Orc Champions (170 Gold Crowns)"
+    3-3     "3 Orcs, 7 Orc Champions (170 Gold Crowns)"
+    4-4     "17 Orcs, 1 Orc Champion (190 Gold Crowns)"
+    5-5     "9 Orcs, 5 Orc Champions (190 Gold Crowns)"
+    6-6     "5 Orcs, 7 Orc Champions (190 Gold Crowns)"
+    7-7     "7 Orcs, 2 Orc Warlords (190 Gold Crowns)"
+    8-8     "9 Orcs, 2 Orc Warlords (210 Gold Crowns)"
+    9-9     "5 Orcs, 2 Orc Champions, 2 Orc Warlords (210 Gold Crowns)"
+    10-10   "11 Orcs, 2 Orc Champions, 1 Orc Warlord (210 Gold Crowns)"
+    11-11   "15 Orcs, 1 Orc Warlord (210 Gold Crowns)"
+    12-12   "17 Orcs, 1 Orc Warlord (230 Gold Crowns)"
+)
+
+

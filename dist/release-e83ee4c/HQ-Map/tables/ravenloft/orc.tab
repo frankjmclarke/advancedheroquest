@@ -1,0 +1,53 @@
+Wandering-Monsters
+(   1D12
+    1-2     "2 Orcs (10 Gold Crowns)"
+    3-4     "1 Orc, 2 Goblin Archers (20 Gold Crowns)"
+    5-6     "2 Orcs, 2 Goblins (20 Gold Crowns)"
+    7-8     "2 Orcs, 2 Goblin Archers (30 Gold Crowns)"
+    9-9     "2 Orcs, 4 Goblins (30 Gold Crowns)"
+    10-10   "1 Orc Champion, 1 Orc, 2 Goblins (40 Gold Crowns)"
+    11-11   "1 Orc Champion, 1 Orc, 4 Goblins (40 Gold Crowns)"
+    12-12   "2 Orc Champions, 2 Orcs (50 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "4 Orcs (30 Gold Crowns)"
+    2-2     "2 Orcs, 4 Goblins (40 Gold Crowns)"
+    3-3     "3 Orcs, 4 Goblins (40 Gold Crowns)"
+    4-4     "3 Orc, 2 Goblins, 2 Goblin Archers (50 Gold Crowns)"
+    5-5     "1 Orc Champion, 4 Orcs (40 Gold Crowns)"
+    6-6     "2 Orc Champions, 4 Goblins (50 Gold Crowns)"
+    7-7     "6 Orcs (60 Gold Crowns)"
+    8-8     "3 Orc Champions (70 Gold Crowns)"
+    9-9     "4 Orc Champions (60 Gold Crowns)" & Specialist-Monster()
+    10-10   "2 Orc Champion, 4 Orcs (80 Gold Crowns)" & Specialist-Monster()
+    11-11   "8 Orcs (100 Gold Crowns)" & Specialist-Monster()
+    12-12   "1 Orc Warlord, 4 Orcs (100 Gold Crowns)" & Specialist-Monster()
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "1 Orc Warlord, 4 Orcs (80 Gold Crowns)"
+    2-2     "1 Orc Warlord, 2 Orc Champions (100 Gold Crowns)"
+    3-3     "1 Orc Warlord, 1 Orc Champion, 3 Goblins (120 Gold Crowns)"
+    4-4     "4 Orc Champions, 4 Orcs (100 Gold Crowns)"
+    5-5     "1 Ogre, 4 Orcs (120 Gold Crowns)"
+    6-6     "1 Ogre, 1 Orc Champion, 2 Orcs (140 Gold Crowns)"
+    7-7     "3 Orc Champions, 6 Orcs (150 Gold Crowns)"
+    8-8     "1 Orc Warlord, 4 Orc Champion (120 Gold Crowns)"
+    9-9     "1 Orc Warlord, 2 Orc Champions, 4 Orcs (140 Gold Crowns)" & Specialist-Monster()
+    10-10   "1 Orc Warchief, 6 Orcs (150 Gold Crowns)" & Specialist-Monster()
+    11-11   "1 Orc Warchief, 2 Orc Champions, 2 Orcs (160 Gold Crowns)" & Specialist-Monster()
+    12-12   "1 Orc Warchief, 8 Orcs (180 Gold Crowns)" & Specialist-Monster()
+)
+
+Specialist-Monster
+(   1D12
+    1-7     None
+    8-8     Orc-Warlord()
+    9-9     Orc-Warchief()
+    10-10   Ogre()
+    11-11   Troll()
+    12-12   Ogre-Chieftain()
+)

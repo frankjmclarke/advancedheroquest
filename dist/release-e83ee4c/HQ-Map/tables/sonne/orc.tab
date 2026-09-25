@@ -1,0 +1,44 @@
+Wandering-Monsters
+(   1D12
+    1-2     "4 Goblins (15 Gold Crowns)"
+    3-4     "1 Orc, 2 Goblins (20 Gold Crowns)"
+    5-6     "2 Orcs, 2 Goblins, 2 Goblin Archers (25 Gold Crowns)"
+    7-8     "1 Orc, 1 Orc Champion (30 Gold Crowns)"
+    9-9     "2 Orcs, 1 Orc Champion (35 Gold Crowns)"
+    10-10   "1 Orc, 1 Orc Champion, 2 Goblins (40 Gold Crowns)"
+    11-11   "1 Orcs, 2 Goblins, 2 Goblin Archers, 1 Orc Champion (50 Gold Crowns)"
+    12-12   "1 Orcs, 2 Goblins, 2 Orc Champions (60 Gold Crowns)"
+)
+
+Lairs-Matrix
+(   1D12
+    1-1     "3 Orcs, 2 Goblins (35 Gold Crowns)"
+    2-2     "2 Orcs, 1 Orc Champion (40 Gold Crowns)"
+    3-3     "3 Orcs, 1 Orc Champion (45 Gold Crowns)"
+    4-4     "4 Orcs, 1 Orc Champion (50 Gold Crowns)"
+    5-5     "4 Orcs, 1 Orc Sentry (55 Gold Crowns)"
+    6-6     "2 Orcs, 1 Orc Sentry, 1 Orc Champion (60 Gold Crowns)"
+    7-7     "2 Orc Champions, 1 Orc Sentry (65 Gold Crowns)"
+    8-8     "3 Orc Champions (70 Gold Crowns)"
+    9-9     "8 Orcs (75 Gold Crowns)"
+    10-10   "6 Orcs, 1 Orc Champion (80 Gold Crowns)"
+    11-11   "4 Orcs, 2 Orc Champions (90 Gold Crowns)"
+    12-12   "4 Orcs, 1 Orc Sentry, 1 Orc Champion (100 Gold Crowns)"
+)
+
+Quest-Rooms-Matrix
+(   1D12
+    1-1     "10 Orcs (95 Gold Crowns)"
+    2-2     "8 Orcs, 1 Orc Champion (100 Gold Crowns)"
+    3-3     "6 Orcs, 2 Orc Champions (110 Gold Crowns)"
+    4-4     "6 Orcs, 1 Orc Sentry, 2 Orc Champions (115 Gold Crowns)"
+    5-5     "4 Orcs, 1 Orc Sentry, 3 Orc Champions (120 Gold Crowns)"
+    6-6     "2 Orcs, 1 Orc Sentry, 4 Orc Champions (120 Gold Crowns)"
+    7-7     "10 Orcs, 1 Orc Sentry (125 Gold Crowns)"
+    8-8     "10 Orcs, 1 Orc Sentry, 1 Orc Champion (130 Gold Crowns)"
+    9-9     "12 Orcs, 1 Orc Sentry (135 Gold Crowns)"
+    10-10   "1 Orc Warlord, 4 Orcs, 2 Orc Champions (140 Gold Crowns)"
+    11-11   "1 Orc Warlord, 2 Orcs, 1 Orc Champion, 1 Orc Sentry (150 Gold Crowns)"
+    12-12   "1 Orc Warlord, 4 Orcs, 1 Orc Champion, 1 Orc Sentry (160 Gold Crowns)"
+)
+

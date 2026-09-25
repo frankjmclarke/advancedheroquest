@@ -1,0 +1,12 @@
+#The Changing Faces of Tzeentch (Dungeon 1 / Level 2)
+#----------------------------------------------------
+#
+
+define ROOM-FURNISH
+
+include faces\room1_2.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include standard\treasure.tab
+include standard\trap.tab
+include faces\chaos.tab

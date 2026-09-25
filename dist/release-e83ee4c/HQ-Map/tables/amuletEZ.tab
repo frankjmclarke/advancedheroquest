@@ -1,0 +1,12 @@
+#The Quest for the Shattered Amulett (easy)
+#------------------------------------------
+#
+
+define ROOM-FURNISH
+
+include amuletEZ\room.tab
+include standard\furnish.tab
+include standard\hazard.tab
+include standard\treasure.tab
+include standard\trap.tab
+include amuletEZ\skaven.tab

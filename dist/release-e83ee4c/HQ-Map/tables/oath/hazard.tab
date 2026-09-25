@@ -1,0 +1,142 @@
+Hazards-Matrix
+(   1D12
+    1-1     Room-Furnish() & Wandering-Monsters() & Hidden-Treasure()
+    2-2     Room-Furnish() & Wandering-Monsters() & Hidden-Treasure()
+    3-3     Mould-Frames() & "1 Skaven Slave" & Hidden-Treasure()
+    4-4     Mould-Frames() & "4 Skaven Slaves, 1 Skaven Slavemaster" & Hidden-Treasure()
+    5-5     Dwarf-Slave()
+    6-6     Grate()
+    7-7     Rat-Coop()
+    8-8     Moulded-Rat-Kennel()
+    9-9     Bat-Coop()
+    10-10   Sewer-Drain() 
+    11-11   Pool()
+    12-12   Dwarven-Tomb()
+)
+
+Mould-Frames
+(   1D12
+    1-12    Mould & "Mould Frames"
+)
+
+Dwarf-Slave
+(   1D12
+    1-12    Mould-Frames() & "2 Skaven Slaves, 1 Skaven Slavemaster" &
+            "Dwarf Slave (WS 8, BS 5, S 7, T 8, SP 6, BR 8, I 5, W 2, DD 2)" &
+            "            (Target WS:   1  2  3  4  5  6  7  8  9 10 11 12 )" &
+            "            (Hit Roll:    2  2  2  3  4  5  6  7  8  9 10 10 )" &
+            Hidden-Treasure()
+)
+
+Grate
+(   1D12
+    1-12    Grate & "Grate" & "6 Skaven Slaves" & Hidden-Treasure()
+)
+
+Rat-Coop
+(   1D12
+    1-12    Rats & "Rat Coop" &
+            (   1D12
+                1-1     "1 Fat Rat"
+                2-2     "2 Fat Rats"
+                3-3     "3 Fat Rats"
+                4-4     "4 Fat Rats"
+                5-5     "5 Fat Rats"
+                6-6     "6 Fat Rats"
+                7-7     "7 Fat Rats"
+                8-8     "8 Fat Rats"
+                9-9     "9 Fat Rats"
+                10-10   "10 Fat Rats"
+                11-11   "11 Fat Rats"
+                12-12   "12 Fat Rats"
+            ) &
+            Hidden-Treasure()
+)
+
+Moulded-Rat-Kennel
+(   1D12
+    1-12    Rats & "Clan Moulder Rat Kennels" &
+            (   1D12
+                1-1     "1 Warp Rat"
+                2-2     "2 Warp Rats"
+                3-3     "3 Warp Rats"
+                4-4     "4 Warp Rats"
+                5-5     "5 Warp Rats"
+                6-6     "6 Warp Rats"
+                7-7     "7 Warp Rats"
+                8-8     "8 Warp Rats"
+                9-9     "9 Warp Rats"
+                10-10   "10 Warp Rats"
+                11-11   "11 Warp Rats"
+                12-12   "12 Warp Rats"
+            ) &
+            "(WS 4, BS 0, S 3, T 2, SP 8, BR 3, I 3, W 1, DD 2)" &
+            "(Target WS:   1  2  3  4  5  6  7  8  9 10 11 12 )" &
+            "(Hit Roll:    7  8  9 10 10 10 10 10 10 10 10 10 )" &
+            Hidden-Treasure()
+)
+
+Bat-Coop
+(   1D12
+    1-12    Bats & "Bat Coop" &
+            (   1D12
+                1-2     "Vampire Bats (1 Wound)"
+                3-4     "Vampire Bats (2 Wounds)"
+                5-6     "Vampire Bats (3 Wounds)"
+                7-8     "Vampire Bats (4 Wounds)"
+                9-10    "Vampire Bats (5 Wounds)"
+                11-12   "Vampire Bats (6 Wounds)"
+            ) &
+            Hidden-Treasure()
+)
+
+Sewer-Drain
+(   1D12
+    1-12    Chasm & "Sewer Drain and Dump" &
+            (   2D12
+                2-6     "Hidden Treasure:" & "1-GM-Dungeon-Counter"
+                7-16    Nothing
+                17-24   "Hidden Treasure in Sewer Drain:" &
+                        (   2D12
+                            2-6     "1-GM-Dungeon-Counter"
+                            7-16    "Nothing"
+                            17-24   "Dwarven Helm (BS -1, T +2)" & "25 Gold Crowns"
+                        )
+            )
+)
+
+Pool
+(   1D12
+    1-12    Pool & "Blind Cave Piranha (DD 4)" & "Hidden Treasure in Pool:" &
+            "1 Magic Crossbow Bolt of Death"
+)
+
+Dwarven-Tomb
+(   1D12
+    1-12    Tomb & "Dwarven Tomb" & 
+            (   2D12
+                2-6     "Hidden Tresure in Tomb:" & "1-GM-Dungeon-Counter"
+                7-16    Nothing
+                17-22   "Hidden Tresure in Tomb:" & 
+                        (   1D12
+                            1-1     "Jewel (5 Gold Crowns)"
+                            2-2     "Jewel (10 Gold Crowns)"
+                            3-3     "Jewel (15 Gold Crowns)"
+                            4-4     "Jewel (20 Gold Crowns)"
+                            5-5     "Jewel (25 Gold Crowns)"
+                            6-6     "Jewel (30 Gold Crowns)"
+                            7-7     "Jewel (35 Gold Crowns)"
+                            8-8     "Jewel (40 Gold Crowns)"
+                            9-9     "Jewel (45 Gold Crowns)"
+                            10-10   "Jewel (50 Gold Crowns)"
+                            11-11   "Jewel (55 Gold Crowns)"
+                            12-12   "Jewel (60 Gold Crowns)"
+                        ) & "Cursed by the Living Anchestors!"
+                23-23   &   ;Treasure Chest
+                        (   1D12
+                            1-6     Chest-Trap()
+                            7-12    Nothing
+                        ) & Treasure-Chest() & "Cursed by the Living Anchestors!"
+                24-24   Magic-Treasure() & "Cursed by the Living Anchestors!"
+            )
+)
