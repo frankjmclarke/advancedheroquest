@@ -127,10 +127,10 @@ arranged across eight A4 portrait pages. Open it in a browser and print at 100%,
 with browser headers and footers disabled. Duplicate profiles, printed combat
 rows, equipment notes and special-rule markers are retained.
 
-For contributors, **tools/ahq-monster-sheet.py** generates the HTML. Both the
-sheets and the application's embedded references use **data/ahq-monsters.json**;
-**tools/generate-ahq-reference.py** regenerates the C data. Python and the
-original PDF are not needed to run the Windows application.
+For contributors, **tools/ahq-monster-sheet.py** generates the HTML from
+**data/packs/fantasy.json**. **tools/generate-ahq-reference.py** regenerates the
+C reference data from that same source. Python and the original PDF are not
+needed to run the Windows application.
 
 ### Quest and table updates
 

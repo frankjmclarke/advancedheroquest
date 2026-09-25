@@ -16,10 +16,9 @@ use the built-in Old World pack.
 ## Authoring a pack
 
 The editable sources are `data/packs/fantasy.json` and
-`data/packs/sentinel.json`. Fantasy monster cards still come from the existing
-single source, `data/ahq-monsters.json`; `monster_source: "ahq-monsters"` selects
-that adapter. Existing printable Sentinel sheets remain historical reference
-documents; gameplay profiles are now in the Sentinel JSON file.
+`data/packs/sentinel.json`. Each file contains that theme's heroes, enemies,
+aliases, statistics, combat presets and reference text. Generated runtime
+resources, references and printable sheets all use the fantasy pack directly.
 
 Copy a pack JSON file to start another theme, for example `wwii.json`. Give the
 pack and its profiles new stable IDs, edit the presets and aliases, then run:
@@ -72,9 +71,10 @@ limited to 2047 bytes, monster reference text to 4095. Resources use Windows
 CP1252, matching the native application. A pack supports up to 256 hero presets
 and 256 monster profiles; the existing live-party and token limits are unchanged.
 
-`legacy_references: 1` is reserved for the fantasy transcription adapter. It
-preserves the original handling of printed fractions, special rows and source
-ambiguity. New themes should omit it and use structured profile values.
+Monster references with the same alias remain separate profiles when the
+printed source contains variants. Ambiguous references are displayed together;
+combat values are populated only where the printed values have an unambiguous
+structured interpretation.
 
 Sentinel's heavy-weapon variants have explicit profiles. Its six named Eldar
 leaders share the Eldar Leader characteristics but have separate IDs and point
@@ -97,11 +97,12 @@ Editing or removing the original resource does not change an adventure loaded
 from that save. Named enemy deaths use stable IDs even if their display names
 are edited. Manual characters retain the existing name-based identity behaviour.
 
-Versions 1–6 remain readable and migrate to the original fantasy definitions.
-Those saves contain no campaign-pack identity, so the loader deliberately does
-not guess a theme from a title. Start a new Sentinel dungeon to use Sentinel
-profiles. As before, generating the next dungeon requires the selected campaign
-tables; the save contains the current dungeon, not all quest-generation tables.
+Versions 1–6 remain readable. They contain no pack identity, so when loading
+one the application uses the campaign pack currently selected in **Load Tables**;
+without a selected campaign it falls back to the original fantasy pack. This
+lets existing Sentinel saves load with Sentinel profiles. As before, generating
+the next dungeon requires the selected campaign tables; a save contains the
+current dungeon, not all quest-generation tables.
 Older executables cannot read version 7 saves.
 
 Campaign Builder copies the starting campaign's complete resource into the new

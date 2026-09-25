@@ -72,6 +72,7 @@ const CHARACTER_PACK *pack_fantasy(void)
     return fantasy;
 }
 const CHARACTER_PACK *pack_current(void) { return active_pack?active_pack:pack_fantasy(); }
+const CHARACTER_PACK *pack_legacy_save(void) { return selected_pack?selected_pack:pack_fantasy(); }
 CHARACTER_PACK *pack_clone(const CHARACTER_PACK *p) { return p?pack_decode(p->bytes,p->size):NULL; }
 void pack_adopt(CHARACTER_PACK *p) { pack_free(active_pack); active_pack=p; }
 int pack_activate(const CHARACTER_PACK *p)
@@ -119,8 +120,15 @@ CHARACTER_PACK *pack_read_campaign(const char *quest,char error[256])
 }
 int pack_select_campaign(const char *quest,char error[256])
 {
-    CHARACTER_PACK *p=pack_read_campaign(quest,error); if(!p) return 0;
-    pack_free(selected_pack); selected_pack=p; return 1;
+    CHARACTER_PACK *p=pack_read_campaign(quest,error),*active;
+    if(!p) return 0;
+    active=pack_clone(p);
+    if(!active) { pack_free(p); strcpy(error,"Not enough memory for character profiles."); return 0; }
+    pack_free(selected_pack); selected_pack=p;
+    /* Selecting a campaign changes the registry immediately. This keeps room
+       inspection and Heroes & Reserve aligned before map generation begins. */
+    pack_adopt(active);
+    return 1;
 }
 static int alias_equal(const char *a,size_t n,const char *b)
 {

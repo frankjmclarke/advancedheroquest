@@ -1,1021 +1,1255 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Advanced HeroQuest - monster reference sheets</title>
-<style>
-@page { size: A4 portrait; margin: 7mm; }
-* { box-sizing: border-box; }
-body { margin: 0; color: #111; font-family: Georgia, 'Times New Roman', serif; }
-.intro { max-width: 196mm; margin: 15px auto; font: 14px/1.5 sans-serif; }
-.page { width: 196mm; height: 283mm; display: grid; gap: 3mm;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(4, minmax(0, 1fr)); break-after: page; }
-.page:last-child { break-after: auto; }
-.card { border: 1.5px solid #111; padding: 1.5mm; min-width: 0;
-  display: flex; flex-direction: column; break-inside: avoid; }
-.heading { height: 9mm; flex-shrink: 0; display: flex; flex-direction: column;
-  justify-content: center; }
-h2 { margin: 0; font-size: 10pt; line-height: 1.05; }
-.source { font: 6.5pt/1.25 sans-serif; color: #555; margin-top: .5mm; }
-table { border-collapse: collapse; table-layout: fixed; width: 100%; }
-td, th { border: 1px solid #444; text-align: center; padding: 0; height: 4mm;
-  font-size: 8pt; font-weight: normal; }
-th { font-size: 6.7pt; background: #eee; }
-.stats td { font-weight: bold; font-size: 9pt; }
-.bar { background: #252525; color: white; text-align: center; font-weight: bold;
-  font-size: 7pt; line-height: 3.5mm; height: 3.5mm; margin-top: 1mm; }
-.label { width: 10mm; font-size: 6pt; line-height: 1; }
-.damage { width: 10mm; }
-.combat td { font-weight: bold; }
-.notes { font-size: 7.5pt; line-height: 1.15; padding: 1mm .4mm 0; }
-@media screen {
- body { background: #ececec; padding: 12px; }
- .page { margin: 0 auto 20px; background: white; box-shadow: 0 2px 10px #bbb; }
-}
-@media print {
- .intro { display: none; }
- * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-}
-</style></head><body>
-<div class="intro"><strong>Advanced HeroQuest monster reference sheets</strong><br>
-64 cards transcribed from AHQ - Monsters 1.pdf. Print at 100% on A4 portrait 
-with browser headers/footers off. Source variants and printed combat rows are 
-preserved; blanks are not inferred, and * refers to the source special rules. 
-The White Skaven Sorcerer damage cell is blank in the scan. 
-Card numbers run left-to-right, then top-to-bottom on each source page.</div>
-<section class="page" aria-label="Source page 1">
-<article class="card" id="p1-c1">
-<header class="heading"><h2>Skaven Warrior</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>5</td><td>5</td><td>7</td><td>10</td><td>6</td><td>6</td><td>3</td><td>1</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armour; shield; sword.</div>
-</article>
-<article class="card" id="p1-c2">
-<header class="heading"><h2>Skaven Sentry</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>5</td><td>6</td><td>11</td><td>6</td><td>6</td><td>3</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Shield; sword.</div>
-</article>
-<article class="card" id="p1-c3">
-<header class="heading"><h2>Skaven Champion</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>5</td><td>6</td><td>8</td><td>9</td><td>8</td><td>6</td><td>3</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain armour; shield; sword.</div>
-</article>
-<article class="card" id="p1-c4">
-<header class="heading"><h2>Skaven Warlord</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>5</td><td>7</td><td>8</td><td>9</td><td>9</td><td>7</td><td>4</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>6</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Magic halberd.</div>
-</article>
-<article class="card" id="p1-c5">
-<header class="heading"><h2>Skaven Gutter Runner</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>5</td><td>5</td><td>12</td><td>6</td><td>6</td><td>3</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Poisoned dagger (counts as a sword).</div>
-</article>
-<article class="card" id="p1-c6">
-<header class="heading"><h2>Skaven Night Runner</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>7</td><td>5</td><td>5</td><td>12</td><td>6</td><td>6</td><td>3</td><td>3</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Poisoned dagger (counts as a sword).</div>
-</article>
-<article class="card" id="p1-c7">
-<header class="heading"><h2>Skaven Poisoned Wind Globadier</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>3</td><td>5</td><td>10</td><td>6</td><td>6</td><td>3</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>*</td><td>*</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Halberd. * See special rules.</div>
-</article>
-<article class="card" id="p1-c8">
-<header class="heading"><h2>Skaven Jezzailachis Team</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 1, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>6</td><td>4</td><td>10</td><td>6</td><td>6</td><td>3</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>*</td><td>*</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Sword. * See special rules.</div>
-</article>
+<!doctype html><meta charset="utf-8"><title>Fantasy monster reference sheets</title>
+<style>@page{size:A4 portrait;margin:7mm}*{box-sizing:border-box}body{font-family:Georgia,serif}
+.page{width:196mm;height:283mm;display:grid;gap:3mm;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);break-after:page}
+.card{border:1.5px solid;padding:2mm;overflow:hidden}h2{margin:0 0 2mm;font-size:11pt}pre{white-space:pre-wrap;font:7pt/1.15 monospace;margin:0}</style>
+<section class="page">
+<article class="card"><h2>Skaven Warrior</h2><pre>SKAVEN WARRIOR
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    5    5    7   10    6    6    3    1
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Skaven Sentry</h2><pre>SKAVEN SENTRY
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    5    6   11    6    6    3    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Shield; sword.
+</pre></article>
+<article class="card"><h2>Skaven Champion</h2><pre>SKAVEN CHAMPION
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    5    6    8    9    8    6    3    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Skaven Warlord</h2><pre>SKAVEN WARLORD
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    5    7    8    9    9    7    4    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 6
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Magic halberd.
+</pre></article>
+<article class="card"><h2>Skaven Gutter Runner</h2><pre>SKAVEN GUTTER RUNNER (variant 1 of 2)
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    5    5   12    6    6    3    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Poisoned dagger (counts as a sword).
+</pre></article>
+<article class="card"><h2>Skaven Night Runner</h2><pre>SKAVEN NIGHT RUNNER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    7    5    5   12    6    6    3    3
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Poisoned dagger (counts as a sword).
+</pre></article>
+<article class="card"><h2>Skaven Poisoned Wind Globadier</h2><pre>SKAVEN POISONED WIND GLOBADIER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    3    5   10    6    6    3    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        6       7       8       9      10
+Max range: *    Damage dice: *
+* See source special rules.
+
+EQUIPMENT / NOTES
+Halberd. * See special rules.
+</pre></article>
+<article class="card"><h2>Skaven Jezzailachis Team</h2><pre>SKAVEN JEZZAILACHIS TEAM
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    6    4   10    6    6    3    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        6       7       8       9      10
+Max range: *    Damage dice: *
+* See source special rules.
+
+EQUIPMENT / NOTES
+Sword. * See special rules.
+</pre></article>
 </section>
-<section class="page" aria-label="Source page 2">
-<article class="card" id="p2-c1">
-<header class="heading"><h2>Beastman</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>4</td><td>5</td><td>7</td><td>7</td><td>7</td><td>5</td><td>4</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Sword.</div>
-</article>
-<article class="card" id="p2-c2">
-<header class="heading"><h2>Beastman Champion</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>5</td><td>6</td><td>9</td><td>6</td><td>8</td><td>6</td><td>5</td><td>4</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armour; shield; sword.</div>
-</article>
-<article class="card" id="p2-c3">
-<header class="heading"><h2>Beastman Sentry</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>5</td><td>5</td><td>7</td><td>8</td><td>7</td><td>6</td><td>4</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Sword.</div>
-</article>
-<article class="card" id="p2-c4">
-<header class="heading"><h2>Beastman Warlord</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>6</td><td>7</td><td>10</td><td>6</td><td>9</td><td>7</td><td>6</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>5</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain armour; shield; sword.</div>
-</article>
-<article class="card" id="p2-c5">
-<header class="heading"><h2>Wight</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>4</td><td>6</td><td>9</td><td>7</td><td>10</td><td>6</td><td>6</td><td>8</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain mail; sword. Strength drain; fearsome monster; invulnerable monster.</div>
-</article>
-<article class="card" id="p2-c6">
-<header class="heading"><h2>Liche</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>7</td><td>7</td><td>9</td><td>7</td><td>10</td><td>10</td><td>8</td><td>12</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Staff (= spear). Fearsome monster; hypnotizes. Spells: Flesh Flaying, Strengthen Undead, Fire Ball (x2), Flight, Inferno of Doom.</div>
-</article>
-<article class="card" id="p2-c7">
-<header class="heading"><h2>Ghoul</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>2</td><td>5</td><td>6</td><td>6</td><td>8</td><td>2</td><td>4</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Club (counts as warhammer). Fearsome monster.</div>
-</article>
-<article class="card" id="p2-c8">
-<header class="heading"><h2>Vampire</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 2, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>8</td><td>7</td><td>9</td><td>8</td><td>10</td><td>10</td><td>6</td><td>14</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>5</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Fearsome, regenerating, invulnerable monster. 2 attacks (claws, fangs). Hypnotizes; strength drain. Spells: Fire Ball, Flight, Inferno of Doom.</div>
-</article>
+<section class="page">
+<article class="card"><h2>Beastman</h2><pre>BEASTMAN
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    4    5    7    7    7    5    4    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Sword.
+</pre></article>
+<article class="card"><h2>Beastman Champion</h2><pre>BEASTMAN CHAMPION
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    5    6    9    6    8    6    5    4
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Beastman Sentry</h2><pre>BEASTMAN SENTRY
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    5    5    7    8    7    6    4    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Sword.
+</pre></article>
+<article class="card"><h2>Beastman Warlord</h2><pre>BEASTMAN WARLORD
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    6    7   10    6    9    7    6    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 5
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Wight</h2><pre>WIGHT (variant 1 of 2)
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    4    6    9    7   10    6    6    8
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain mail; sword. Strength drain; fearsome monster; invulnerable
+monster.
+</pre></article>
+<article class="card"><h2>Liche</h2><pre>LICHE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    7    7    9    7   10   10    8   12
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Staff (= spear). Fearsome monster; hypnotizes. Spells: Flesh
+Flaying, Strengthen Undead, Fire Ball (x2), Flight, Inferno of
+Doom.
+</pre></article>
+<article class="card"><h2>Ghoul</h2><pre>GHOUL (variant 1 of 2)
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    2    5    6    6    8    2    4    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Club (counts as warhammer). Fearsome monster.
+</pre></article>
+<article class="card"><h2>Vampire</h2><pre>VAMPIRE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    8    7    9    8   10   10    6   14
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 5
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Fearsome, regenerating, invulnerable monster. 2 attacks (claws,
+fangs). Hypnotizes; strength drain. Spells: Fire Ball, Flight,
+Inferno of Doom.
+</pre></article>
 </section>
-<section class="page" aria-label="Source page 3">
-<article class="card" id="p3-c1">
-<header class="heading"><h2>Clan Mors Warlord Shaffat</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>5</td><td>7</td><td>8</td><td>9</td><td>9</td><td>7</td><td>4</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>6</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Magic halberd (fumble 1-2, critical 11-12).</div>
-</article>
-<article class="card" id="p3-c2">
-<header class="heading"><h2>Clan Skryre Sorceror Tsekkaz</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>7</td><td>5</td><td>5</td><td>10</td><td>6</td><td>10</td><td>4</td><td>10</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>1</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Dagger; ring of magic protection; Black Hand of Death (see Character Monsters earlier). Spells: Choke x1, Flaming Skull of Terror x1, Fireball x2.</div>
-</article>
-<article class="card" id="p3-c3">
-<header class="heading"><h2>Skaven Beastmaster</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>5</td><td>6</td><td>6</td><td>10</td><td>7</td><td>5</td><td>3</td><td>3</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armor. Poisoned whip (as axe or warhammer, except fumble on 1-2 and critical on 11-12; specialist weapon cannot be used by Heroes).</div>
-</article>
-<article class="card" id="p3-c4">
-<header class="heading"><h2>Skaven Slavemaster</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>5</td><td>5</td><td>5</td><td>10</td><td>6</td><td>5</td><td>3</td><td>3</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>12</td><td>3</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Poisoned whip (as axe or warhammer, except fumble on 1-2 and critical on 11-12; specialist weapon cannot be used by Heroes).</div>
-</article>
-<article class="card" id="p3-c5">
-<header class="heading"><h2>Rat Ogre</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>3</td><td>8</td><td>8</td><td>7</td><td>8</td><td>4</td><td>7</td><td>7</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>6</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Fights with claws and fangs. Fearsome monster; large monster. May run amok without Beastmaster.</div>
-</article>
-<article class="card" id="p3-c6">
-<header class="heading"><h2>Skaven Slave</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>5</td><td>5</td><td>7</td><td>11</td><td>5</td><td>5</td><td>3</td><td>.5</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>1</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Unless a Slavemaster is within six squares or in line of sight, a Slave must roll his Bravery or less or run from combat.</div>
-</article>
-<article class="card" id="p3-c7">
-<header class="heading"><h2>Cave Troll</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>1</td><td>9</td><td>9</td><td>7</td><td>4</td><td>3</td><td>9</td><td>9</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>7</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Fights with claws and fangs. Fearsome monster; large monster; regenerates. May run amok without Beastmaster.</div>
-</article>
-<article class="card" id="p3-c8">
-<header class="heading"><h2>Skaven Gutter Runner</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 3, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>6</td><td>5</td><td>5</td><td>10</td><td>6</td><td>6</td><td>3</td><td>3</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>12</td><td>3</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Sword; sling. +1 to surprise.</div>
-</article>
+<section class="page">
+<article class="card"><h2>Clan Mors Warlord Shaffat</h2><pre>CLAN MORS WARLORD SHAFFAT
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    5    7    8    9    9    7    4    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 6
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Magic halberd (fumble 1-2, critical 11-12).
+</pre></article>
+<article class="card"><h2>Clan Skryre Sorceror Tsekkaz</h2><pre>CLAN SKRYRE SORCEROR TSEKKAZ
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    7    5    5   10    6   10    4   10
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 1
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Dagger; ring of magic protection; Black Hand of Death (see
+Character Monsters earlier). Spells: Choke x1, Flaming Skull of
+Terror x1, Fireball x2.
+</pre></article>
+<article class="card"><h2>Skaven Beastmaster</h2><pre>SKAVEN BEASTMASTER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    5    6    6   10    7    5    3    3
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armor. Poisoned whip (as axe or warhammer, except fumble
+on 1-2 and critical on 11-12; specialist weapon cannot be used by
+Heroes).
+</pre></article>
+<article class="card"><h2>Skaven Slavemaster</h2><pre>SKAVEN SLAVEMASTER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    5    5    5   10    6    5    3    3
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        6       7       8       9      10
+Max range: 12    Damage dice: 3
+
+EQUIPMENT / NOTES
+Poisoned whip (as axe or warhammer, except fumble on 1-2 and
+critical on 11-12; specialist weapon cannot be used by Heroes).
+</pre></article>
+<article class="card"><h2>Rat Ogre</h2><pre>RAT OGRE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    3    8    8    7    8    4    7    7
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 6
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Fights with claws and fangs. Fearsome monster; large monster. May
+run amok without Beastmaster.
+</pre></article>
+<article class="card"><h2>Skaven Slave</h2><pre>SKAVEN SLAVE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    5    5    7   11    5    5    3   .5
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 1
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Unless a Slavemaster is within six squares or in line of sight, a
+Slave must roll his Bravery or less or run from combat.
+</pre></article>
+<article class="card"><h2>Cave Troll</h2><pre>CAVE TROLL
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    1    9    9    7    4    3    9    9
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 7
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Fights with claws and fangs. Fearsome monster; large monster;
+regenerates. May run amok without Beastmaster.
+</pre></article>
+<article class="card"><h2>Skaven Gutter Runner</h2><pre>SKAVEN GUTTER RUNNER (variant 2 of 2)
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    6    5    5   10    6    6    3    3
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        6       7       8       9      10
+Max range: 12    Damage dice: 3
+
+EQUIPMENT / NOTES
+Sword; sling. +1 to surprise.
+</pre></article>
 </section>
-<section class="page" aria-label="Source page 4">
-<article class="card" id="p4-c1">
-<header class="heading"><h2>Chaos Lord</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>12</td><td>3</td><td>6</td><td>10</td><td>6</td><td>10</td><td>8</td><td>5</td><td>12</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>4+4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Plate armour; two axes.</div>
-</article>
-<article class="card" id="p4-c2">
-<header class="heading"><h2>Daemonette</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>1</td><td>5</td><td>7</td><td>10</td><td>10</td><td>6</td><td>4</td><td>12</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>3+3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Claws; fearsome monster; invulnerable; two attacks. Can cast: Flaming Skull of Terror x1.</div>
-</article>
-<article class="card" id="p4-c3">
-<header class="heading"><h2>Undead Champion</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>1</td><td>6</td><td>8</td><td>6</td><td>10</td><td>3</td><td>4</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain armour; sword; fearsome monster.</div>
-</article>
-<article class="card" id="p4-c4">
-<header class="heading"><h2>Greater Daemon of Tzeentch</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>1</td><td>8</td><td>9</td><td>8</td><td>10</td><td>-</td><td>10</td><td>20</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>6+6</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Claws; fearsome monster; invulnerable; large monster; two attacks. Can cast: Choke x2, Fireball x2, Flaming Skull of Terror x2.</div>
-</article>
-<article class="card" id="p4-c5">
-<header class="heading"><h2>Minotaur Lord</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>4</td><td>8</td><td>9</td><td>8</td><td>9</td><td>6</td><td>10</td><td>11</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>8</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Huge club; berserker; fearsome monster; large monster.</div>
-</article>
-<article class="card" id="p4-c6">
-<header class="heading"><h2>Chaos Sorcerer</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>3</td><td>5</td><td>7</td><td>8</td><td>9</td><td>10</td><td>4</td><td>11</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Scythe (counts as halberd). Can cast: Choke x1, Fireball x1, Flaming Skull of Terror x1.</div>
-</article>
-<article class="card" id="p4-c7">
-<header class="heading"><h2>Orc Warchief</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>3</td><td>6</td><td>9</td><td>6</td><td>10</td><td>7</td><td>4</td><td>8</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain armour; double-handed weapon (fumble 1-2, critical 11-12).</div>
-</article>
-<article class="card" id="p4-c8">
-<header class="heading"><h2>Ogre Chieftain</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 4, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>1</td><td>9</td><td>10</td><td>5</td><td>8</td><td>6</td><td>10</td><td>10</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>9</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain armour; huge sword (counts as huge club).</div>
-</article>
+<section class="page">
+<article class="card"><h2>Chaos Lord</h2><pre>CHAOS LORD
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+   12    3    6   10    6   10    8    5   12
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   2   2   2   3   4   5   6   7
+Damage dice: 4+4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Plate armour; two axes.
+</pre></article>
+<article class="card"><h2>Daemonette</h2><pre>DAEMONETTE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    1    5    7   10   10    6    4   12
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 3+3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Claws; fearsome monster; invulnerable; two attacks. Can cast:
+Flaming Skull of Terror x1.
+</pre></article>
+<article class="card"><h2>Undead Champion</h2><pre>UNDEAD CHAMPION
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    1    6    8    6   10    3    4    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain armour; sword; fearsome monster.
+</pre></article>
+<article class="card"><h2>Greater Daemon of Tzeentch</h2><pre>GREATER DAEMON OF TZEENTCH
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    1    8    9    8   10    -   10   20
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 6+6
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Claws; fearsome monster; invulnerable; large monster; two attacks.
+Can cast: Choke x2, Fireball x2, Flaming Skull of Terror x2.
+</pre></article>
+<article class="card"><h2>Minotaur Lord</h2><pre>MINOTAUR LORD
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    4    8    9    8    9    6   10   11
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 8
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Huge club; berserker; fearsome monster; large monster.
+</pre></article>
+<article class="card"><h2>Chaos Sorcerer</h2><pre>CHAOS SORCERER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    3    5    7    8    9   10    4   11
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Scythe (counts as halberd). Can cast: Choke x1, Fireball x1,
+Flaming Skull of Terror x1.
+</pre></article>
+<article class="card"><h2>Orc Warchief</h2><pre>ORC WARCHIEF
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    3    6    9    6   10    7    4    8
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain armour; double-handed weapon (fumble 1-2, critical 11-12).
+</pre></article>
+<article class="card"><h2>Ogre Chieftain</h2><pre>OGRE CHIEFTAIN
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    1    9   10    5    8    6   10   10
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 9
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain armour; huge sword (counts as huge club).
+</pre></article>
 </section>
-<section class="page" aria-label="Source page 5">
-<article class="card" id="p5-c1">
-<header class="heading"><h2>Zombie</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>1</td><td>5</td><td>4</td><td>6</td><td>10</td><td>2</td><td>3</td><td>1</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Cleaver (counts as a sword). Fearsome monster.</div>
-</article>
-<article class="card" id="p5-c2">
-<header class="heading"><h2>Skeleton</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>4</td><td>5</td><td>5</td><td>6</td><td>10</td><td>2</td><td>3</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Scythe (counts as a halberd). Fearsome monster.</div>
-</article>
-<article class="card" id="p5-c3">
-<header class="heading"><h2>Mummy</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>1</td><td>6</td><td>8</td><td>6</td><td>10</td><td>5</td><td>4</td><td>10</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Claws; cause disease; fearsome monster.</div>
-</article>
-<article class="card" id="p5-c4">
-<header class="heading"><h2>Fimir</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>2</td><td>5</td><td>7</td><td>6</td><td>8</td><td>5</td><td>4</td><td>7</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3+2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armor; axe; two attacks.</div>
-</article>
-<article class="card" id="p5-c5">
-<header class="heading"><h2>Ogre</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>3</td><td>8</td><td>8</td><td>7</td><td>7</td><td>4</td><td>9</td><td>8</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>8</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Huge club; fearsome monster; large monster.</div>
-</article>
-<article class="card" id="p5-c6">
-<header class="heading"><h2>Troll</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>1</td><td>9</td><td>8</td><td>7</td><td>6</td><td>4</td><td>9</td><td>9</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>9</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Huge club; fearsome monster; large monster; regenerates.</div>
-</article>
-<article class="card" id="p5-c7">
-<header class="heading"><h2>Minotaur</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>4</td><td>7</td><td>8</td><td>8</td><td>8</td><td>4</td><td>9</td><td>9</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>7</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Huge club; berserker; fearsome monster; large monster.</div>
-</article>
-<article class="card" id="p5-c8">
-<header class="heading"><h2>Bloodthirster</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 5, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>3</td><td>8</td><td>10</td><td>10</td><td>8</td><td>5</td><td>6</td><td>12</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>6</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Invulnerable; flight; fearsome monster; large monster; claws.</div>
-</article>
+<section class="page">
+<article class="card"><h2>Zombie</h2><pre>ZOMBIE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    1    5    4    6   10    2    3    1
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Cleaver (counts as a sword). Fearsome monster.
+</pre></article>
+<article class="card"><h2>Skeleton</h2><pre>SKELETON
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    4    5    5    6   10    2    3    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Scythe (counts as a halberd). Fearsome monster.
+</pre></article>
+<article class="card"><h2>Mummy</h2><pre>MUMMY
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    1    6    8    6   10    5    4   10
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Claws; cause disease; fearsome monster.
+</pre></article>
+<article class="card"><h2>Fimir</h2><pre>FIMIR
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    2    5    7    6    8    5    4    7
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3+2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armor; axe; two attacks.
+</pre></article>
+<article class="card"><h2>Ogre</h2><pre>OGRE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    3    8    8    7    7    4    9    8
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 8
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Huge club; fearsome monster; large monster.
+</pre></article>
+<article class="card"><h2>Troll</h2><pre>TROLL
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    1    9    8    7    6    4    9    9
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 9
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Huge club; fearsome monster; large monster; regenerates.
+</pre></article>
+<article class="card"><h2>Minotaur</h2><pre>MINOTAUR
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    4    7    8    8    8    4    9    9
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 7
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Huge club; berserker; fearsome monster; large monster.
+</pre></article>
+<article class="card"><h2>Bloodthirster</h2><pre>BLOODTHIRSTER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    3    8   10   10    8    5    6   12
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 6
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Invulnerable; flight; fearsome monster; large monster; claws.
+</pre></article>
 </section>
-<section class="page" aria-label="Source page 6">
-<article class="card" id="p6-c1">
-<header class="heading"><h2>Goblin</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>5</td><td>4</td><td>5</td><td>6</td><td>5</td><td>5</td><td>2</td><td>1/2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Sword.</div>
-</article>
-<article class="card" id="p6-c2">
-<header class="heading"><h2>Goblin Archer</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>5</td><td>4</td><td>5</td><td>6</td><td>5</td><td>5</td><td>2</td><td>1/2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>1</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>7</td><td>8</td><td>9</td><td>10</td><td>11*</td><td>24</td><td>3</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Dagger; short bow. * No critical hit at this range.</div>
-</article>
-<article class="card" id="p6-c3">
-<header class="heading"><h2>Orc</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>5</td><td>5</td><td>7</td><td>6</td><td>7</td><td>5</td><td>4</td><td>1</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armour; shield; sword.</div>
-</article>
-<article class="card" id="p6-c4">
-<header class="heading"><h2>Orc Champion</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>5</td><td>6</td><td>7</td><td>5</td><td>8</td><td>5</td><td>4</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armour; shield; sword.</div>
-</article>
-<article class="card" id="p6-c5">
-<header class="heading"><h2>Orc Warlord</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>5</td><td>6</td><td>9</td><td>6</td><td>9</td><td>6</td><td>4</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain armour; shield; sword.</div>
-</article>
-<article class="card" id="p6-c6">
-<header class="heading"><h2>Chaos Thug</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>5</td><td>5</td><td>7</td><td>7</td><td>8</td><td>6</td><td>3</td><td>1</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armour; shield; sword.</div>
-</article>
-<article class="card" id="p6-c7">
-<header class="heading"><h2>Chaos Warrior</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>4</td><td>6</td><td>9</td><td>6</td><td>9</td><td>8</td><td>4</td><td>4</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>6</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Plate armour; shield; axe.</div>
-</article>
-<article class="card" id="p6-c8">
-<header class="heading"><h2>Chaos Champion</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 6, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>10</td><td>4</td><td>6</td><td>10</td><td>6</td><td>10</td><td>8</td><td>4</td><td>8</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>5</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Plate armour; shield; double-handed axe (fumble 1-2, critical 11-12).</div>
-</article>
+<section class="page">
+<article class="card"><h2>Goblin</h2><pre>GOBLIN
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    5    4    5    6    5    5    2  1/2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Sword.
+</pre></article>
+<article class="card"><h2>Goblin Archer</h2><pre>GOBLIN ARCHER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    5    4    5    6    5    5    2  1/2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 1
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        7       8       9      10     11*
+Max range: 24    Damage dice: 3
+* See source special rules.
+
+EQUIPMENT / NOTES
+Dagger; short bow. * No critical hit at this range.
+</pre></article>
+<article class="card"><h2>Orc</h2><pre>ORC
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    5    5    7    6    7    5    4    1
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Orc Champion</h2><pre>ORC CHAMPION
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    5    6    7    5    8    5    4    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  11  12
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Orc Warlord</h2><pre>ORC WARLORD
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    5    6    9    6    9    6    4    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Chaos Thug</h2><pre>CHAOS THUG
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    5    5    7    7    8    6    3    1
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armour; shield; sword.
+</pre></article>
+<article class="card"><h2>Chaos Warrior</h2><pre>CHAOS WARRIOR
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    4    6    9    6    9    8    4    4
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 6
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Plate armour; shield; axe.
+</pre></article>
+<article class="card"><h2>Chaos Champion</h2><pre>CHAOS CHAMPION
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+   10    4    6   10    6   10    8    4    8
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   2   3   4   5   6   7   8   9
+Damage dice: 5
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Plate armour; shield; double-handed axe (fumble 1-2, critical
+11-12).
+</pre></article>
 </section>
-<section class="page" aria-label="Source page 7">
-<article class="card" id="p7-c1">
-<header class="heading"><h2>Skaven Warpfire-Thrower Team</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>4</td><td>4</td><td>10</td><td>6</td><td>6</td><td>3</td><td>10</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>*</td><td>*</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Sword. * See special rules.</div>
-</article>
-<article class="card" id="p7-c2">
-<header class="heading"><h2>Clan Skryre Warpweaver</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>6</td><td>4</td><td>5</td><td>10</td><td>6</td><td>9</td><td>3</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>1</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Dagger. Can cast: Fireball x1, Flaming Skull of Terror x1.</div>
-</article>
-<article class="card" id="p7-c3">
-<header class="heading"><h2>Clan Skryre White Skaven Sorcerer</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>7</td><td>5</td><td>5</td><td>10</td><td>6</td><td>10</td><td>4</td><td>10</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td></td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Dagger; ring of magic protection. Can cast: Choke x1, Flaming Skull of Terror x1, Fireball x2.</div>
-</article>
-<article class="card" id="p7-c4">
-<header class="heading"><h2>Clan Pestilens Plague Censer Bearer</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>4</td><td>5</td><td>10</td><td>6</td><td>6</td><td>3</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>*</td><td>*</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Staff (counts as a sword). * See special rules.</div>
-</article>
-<article class="card" id="p7-c5">
-<header class="heading"><h2>Clan Pestilens Plague Monk</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>4</td><td>5</td><td>10</td><td>6</td><td>8</td><td>3</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Dagger; warp scroll.</div>
-</article>
-<article class="card" id="p7-c6">
-<header class="heading"><h2>Clan Mors Warlord</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8+2</td><td>5</td><td>7+2</td><td>8</td><td>9</td><td>9</td><td>7</td><td>4</td><td>10</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>7</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Chain armour; shield; runesword (+2 WS, +2 S).</div>
-</article>
-<article class="card" id="p7-c7">
-<header class="heading"><h2>Clan Eshin Assassin</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>9</td><td>5</td><td>7</td><td>12</td><td>9</td><td>7</td><td>4</td><td>8</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Poisoned dagger (counts as a sword).</div>
-</article>
-<article class="card" id="p7-c8">
-<header class="heading"><h2>Praznagar Prince of Agony</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 7, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>9</td><td>7</td><td>6+2</td><td>8</td><td>9</td><td>9</td><td>9</td><td>5</td><td>-</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>6</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Leather armour; chaos sword (never fumbles, +2 S); fearsome monster.</div>
-</article>
+<section class="page">
+<article class="card"><h2>Skaven Warpfire-Thrower Team</h2><pre>SKAVEN WARPFIRE-THROWER TEAM
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    4    4   10    6    6    3   10
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        6       7       8       9      10
+Max range: *    Damage dice: *
+* See source special rules.
+
+EQUIPMENT / NOTES
+Sword. * See special rules.
+</pre></article>
+<article class="card"><h2>Clan Skryre Warpweaver</h2><pre>CLAN SKRYRE WARPWEAVER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    6    4    5   10    6    9    3    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 1
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Dagger. Can cast: Fireball x1, Flaming Skull of Terror x1.
+</pre></article>
+<article class="card"><h2>Clan Skryre White Skaven Sorcerer</h2><pre>CLAN SKRYRE WHITE SKAVEN SORCERER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    7    5    5   10    6   10    4   10
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: (blank in source)
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Dagger; ring of magic protection. Can cast: Choke x1, Flaming
+Skull of Terror x1, Fireball x2.
+</pre></article>
+<article class="card"><h2>Clan Pestilens Plague Censer Bearer</h2><pre>CLAN PESTILENS PLAGUE CENSER BEARER
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    4    5   10    6    6    3    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        6       7       8       9      10
+Max range: *    Damage dice: *
+* See source special rules.
+
+EQUIPMENT / NOTES
+Staff (counts as a sword). * See special rules.
+</pre></article>
+<article class="card"><h2>Clan Pestilens Plague Monk</h2><pre>CLAN PESTILENS PLAGUE MONK
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    4    5   10    6    8    3    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Dagger; warp scroll.
+</pre></article>
+<article class="card"><h2>Clan Mors Warlord</h2><pre>CLAN MORS WARLORD
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+  8+2    5  7+2    8    9    9    7    4   10
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   2   3   4   5   6   7   8   9
+Damage dice: 7
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Chain armour; shield; runesword (+2 WS, +2 S).
+</pre></article>
+<article class="card"><h2>Clan Eshin Assassin</h2><pre>CLAN ESHIN ASSASSIN
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    9    5    7   12    9    7    4    8
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   3   4   5   6   7   8   9  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Poisoned dagger (counts as a sword).
+</pre></article>
+<article class="card"><h2>Praznagar Prince of Agony</h2><pre>PRAZNAGAR PRINCE OF AGONY
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    9    7  6+2    8    9    9    9    5    -
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   2   2   3   4   5   6   7   8   9
+Damage dice: 6
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Leather armour; chaos sword (never fumbles, +2 S); fearsome
+monster.
+</pre></article>
 </section>
-<section class="page" aria-label="Source page 8">
-<article class="card" id="p8-c1">
-<header class="heading"><h2>Orc Sentry</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 1</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>6</td><td>5</td><td>7</td><td>7</td><td>7</td><td>5</td><td>4</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Shield; sword (fumble 1, critical 12).</div>
-</article>
-<article class="card" id="p8-c2">
-<header class="heading"><h2>Chaos Thug Sentry</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 2</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>6</td><td>5</td><td>6</td><td>8</td><td>8</td><td>6</td><td>3</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Shield; sword.</div>
-</article>
-<article class="card" id="p8-c3">
-<header class="heading"><h2>Wight</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 3</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>1</td><td>5</td><td>5</td><td>5</td><td>10</td><td>2</td><td>3</td><td>6</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Fearsome monster; invulnerable (fumble 1, critical 12).</div>
-</article>
-<article class="card" id="p8-c4">
-<header class="heading"><h2>Giant Rat</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 4</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>5</td><td>-</td><td>3</td><td>5</td><td>10</td><td>6</td><td>6</td><td>1</td><td>1/2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>1</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Bite.</div>
-</article>
-<article class="card" id="p8-c5">
-<header class="heading"><h2>Sorcerer of Nurgle</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 5</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>7</td><td>3</td><td>5</td><td>7</td><td>8</td><td>9</td><td>10</td><td>4</td><td>11</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Sword (fumble 1, critical 12). Has a spellbook containing The Green Eye, The Pool of Many Places, The Cloak of Dainne and The Emerald Waterfall.</div>
-</article>
-<article class="card" id="p8-c6">
-<header class="heading"><h2>Wolf</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 6</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>8</td><td>-</td><td>4</td><td>7</td><td>9</td><td>8</td><td>7</td><td>4</td><td>3</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>3</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Bite.</div>
-</article>
-<article class="card" id="p8-c7">
-<header class="heading"><h2>Ghoul</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 7</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>2</td><td>5</td><td>6</td><td>6</td><td>8</td><td>2</td><td>4</td><td>2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>4</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Claw attack; fearsome monster.</div>
-</article>
-<article class="card" id="p8-c8">
-<header class="heading"><h2>Giant Vampire Bat</h2>
-<div class="source">AHQ - Monsters 1.pdf · page 8, card 8</div></header>
-<table class="stats" aria-label="Characteristics"><tr><th>WS</th><th>BS</th><th>S</th><th>T</th><th>Sp</th><th>Br</th><th>Int</th><th>W</th><th>PV</th></tr>
-<tr><td>6</td><td>-</td><td>3</td><td>6</td><td>12</td><td>8</td><td>7</td><td>1</td><td>1/2</td></tr></table>
-<div class="bar">Hand-to-Hand Combat</div>
-<table class="combat" aria-label="Hand-to-hand hit rolls">
-<tr><th class="label">Target WS</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th class="damage">Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>10</td><td>10</td><td>10</td><td>2</td></tr></table>
-<div class="bar">Ranged Combat</div>
-<table class="combat" aria-label="Ranged hit rolls">
-<tr><th class="label">Range</th><th>1-3</th><th>4-12</th><th>13-24</th><th>25-36</th><th>37+</th><th>Max range</th><th>Dam. dice</th></tr>
-<tr><th class="label">Hit roll</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
-<div class="bar">Equipment / Notes</div><div class="notes">Bloodsucking bite.</div>
-</article>
+<section class="page">
+<article class="card"><h2>Orc Sentry</h2><pre>ORC SENTRY
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    6    5    7    7    7    5    4    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Shield; sword (fumble 1, critical 12).
+</pre></article>
+<article class="card"><h2>Chaos Thug Sentry</h2><pre>CHAOS THUG SENTRY
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    6    5    6    8    8    6    3    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:        -       -       -       -       -
+Max range: -    Damage dice: -
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Shield; sword.
+</pre></article>
+<article class="card"><h2>Wight</h2><pre>WIGHT (variant 2 of 2)
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    1    5    5    5   10    2    3    6
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Fearsome monster; invulnerable (fumble 1, critical 12).
+</pre></article>
+<article class="card"><h2>Giant Rat</h2><pre>GIANT RAT
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    5    -    3    5   10    6    6    1  1/2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    3   4   5   6   7   8   9  10  10  10  10  10
+Damage dice: 1
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Bite.
+</pre></article>
+<article class="card"><h2>Sorcerer of Nurgle</h2><pre>SORCERER OF NURGLE
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    7    3    5    7    8    9   10    4   11
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   3   4   5   6   7   8   9  10  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Sword (fumble 1, critical 12). Has a spellbook containing The
+Green Eye, The Pool of Many Places, The Cloak of Dainne and The
+Emerald Waterfall.
+</pre></article>
+<article class="card"><h2>Wolf</h2><pre>WOLF
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    8    -    4    7    9    8    7    4    3
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   2   2   3   4   5   6   7   8   9  10  10
+Damage dice: 3
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Bite.
+</pre></article>
+<article class="card"><h2>Ghoul</h2><pre>GHOUL (variant 2 of 2)
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    2    5    6    6    8    2    4    2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 4
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Claw attack; fearsome monster.
+</pre></article>
+<article class="card"><h2>Giant Vampire Bat</h2><pre>GIANT VAMPIRE BAT
+
+   WS   BS    S    T   Sp   Br  Int    W   PV
+    6    -    3    6   12    8    7    1  1/2
+
+HAND-TO-HAND COMBAT
+Target WS:   1   2   3   4   5   6   7   8   9  10  11  12
+Hit roll:    2   3   4   5   6   7   8   9  10  10  10  10
+Damage dice: 2
+
+RANGED COMBAT
+Range:         1-3    4-12   13-24   25-36     37+
+Hit roll:
+Max range: (blank)    Damage dice: (blank)
+No ranged attack listed.
+
+EQUIPMENT / NOTES
+Bloodsucking bite.
+</pre></article>
 </section>
-</body></html>

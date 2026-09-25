@@ -262,8 +262,9 @@ labelled with variant numbers. Unrecognized counted
 creatures are marked as missing; their original encounter text is retained.
 The reference area uses a fixed-width font with horizontal and vertical scrolling.
 
-The shared source is `data/ahq-monsters.json`. To update it, edit the profile or
-its explicit aliases, then regenerate both outputs:
+The fantasy pack source is `data/packs/fantasy.json`. Edit a monster profile or
+its explicit aliases there, then regenerate the printable sheet and runtime
+reference header:
 
 ```powershell
 python tools/ahq-monster-sheet.py

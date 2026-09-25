@@ -337,7 +337,10 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
             s=get_string(&b,63); if(!s) goto bad; strcpy(d->monsters.tokens[i].character_id,s); free(s);
         }
     } else {
-        d->pack=pack_clone(pack_fantasy()); if(!d->pack) goto bad;
+        /* Pre-v7 saves carry no campaign identity. Honor the campaign the
+           player explicitly selected for this load; otherwise retain the
+           historical Old World fallback. */
+        d->pack=pack_clone(pack_legacy_save()); if(!d->pack) goto bad;
         for(i=0;i<d->hero_count;i++) {
             HERO *h=&d->heroes[i]; const PACK_PROFILE *p;
             if(h->kind<0 || h->kind>=HERO_CLASS_COUNT) goto bad;

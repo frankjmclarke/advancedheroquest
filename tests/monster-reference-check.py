@@ -7,15 +7,13 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'tools'))
-from ahq_monsters import PAGES, ROOT, c_header, reference
+generate = runpy.run_path(str(ROOT / 'tools/generate-ahq-reference.py'))
+c_header = generate['c_header']
 
 assert (ROOT / 'ahq-reference-data.h').read_text(encoding='ascii') == c_header()
-assert PAGES[6][2]['damage'] == ''
-assert PAGES[5][3]['hits'][-2:] == ['11', '12']
-assert 'blank in source' in reference(PAGES[6][2], 7, 3)
 
 HARNESS = r'''
 #include <assert.h>

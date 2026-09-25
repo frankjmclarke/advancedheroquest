@@ -1,6 +1,21 @@
 """Generate/check the checked-in C reference table; Python is not needed to build or run HQ-Map."""
 import argparse
-from ahq_monsters import ROOT, c_header
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def c_header():
+    pack = json.loads((ROOT / 'data/packs/fantasy.json').read_text(encoding='utf-8'))
+    lines = ['/* Generated from data/packs/fantasy.json. */',
+             'typedef struct { const char *aliases; const char *text; } AHQ_REFERENCE;',
+             'static const AHQ_REFERENCE ahq_references[] = {']
+    for monster in pack['monsters']:
+        lines.append('  { ' + json.dumps('|'.join(monster['aliases'])) + ',')
+        lines.append('    ' + json.dumps(monster['text']) + ' },')
+    lines += ['};', '#define AHQ_REFERENCE_COUNT (sizeof(ahq_references) / sizeof(ahq_references[0]))', '']
+    return '\n'.join(lines)
 
 
 def main():

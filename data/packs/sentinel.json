@@ -492,7 +492,9 @@
       "name": "Ork",
       "aliases": [
         "ork",
-        "orks"
+        "orks",
+        "orc",
+        "orcs"
       ],
       "stats": [
         7,

@@ -7,9 +7,12 @@ New work is on `codex/campaign-character-packs`; keep it separate from main.
 Implemented runtime character packs in `pack.c` / `pack.h`, JSON sources in
 `data/packs/`, and `tools/compile-packs.py`. Each Sentinel quest declares
 `;character-pack sentinel/characters.hqp`. Undeclared quests use the generated
-fantasy fallback. Fantasy monster data still comes from `data/ahq-monsters.json`,
-with its original ambiguous/marked reference behaviour preserved. Nine fantasy
-hero definitions moved from C into the shared source format.
+fantasy fallback. Both fantasy heroes and all 64 monster profiles are now in
+`data/packs/fantasy.json`; runtime packs, references and the embedded fallback
+compile directly from that complete source. The duplicate transcription file
+and its adapter have been removed. Legacy saves without pack metadata now use
+the selected campaign pack, with fantasy as the no-selection fallback. Nine
+fantasy hero definitions moved from C into the shared source format.
 
 Sentinel has nine hero equipment presets, 34 enemy profiles including weapon
 variants, and six individually identified Eldar leaders. Its table shorthand was

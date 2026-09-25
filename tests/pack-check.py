@@ -49,10 +49,21 @@ int main(int argc,char **argv) {
     _UBYTE *leaders[]={"2 Farseer Ulvaneth of the Sentinel Host (120 Points)",NULL};
     _UBYTE *troops[]={"2 Chaos Androids (30 Points)",NULL};
     assert(mem_alloc(100,100,1000,4096)); heap_clear(); assert(SetCurrentDirectoryA(argv[1]));
+    assert(!strcmp(pack_legacy_save()->id,"fantasy"));
     assert(pack_find_monster(pack_fantasy(),"  GOBLIN--ARCHERS  ")==pack_find_monster(pack_fantasy(),"goblin archer"));
     assert(pack_find_monster(pack_fantasy(),"goblin archer"));
-    assert(pack_select_campaign("sentinel1.tab",error)); assert(pack_start_dungeon());
+    assert(pack_select_campaign("sentinel1.tab",error));
+    assert(!strcmp(pack_current()->id,"sentinel"));
+    dialog=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGPARTY),NULL,party_proc,0); assert(dialog);
+    assert(SendDlgItemMessage(dialog,GPCLASS,CB_GETCOUNT,0,0)==pack_current()->hero_count);
+    { char label[100];
+      assert(SendDlgItemMessageA(dialog,GPCLASS,CB_GETLBTEXT,0,(LPARAM)label)>=0);
+      assert(!strcmp(label,"Space Marine Commander"));
+    }
+    DestroyWindow(dialog);
+    assert(pack_start_dungeon());
     assert(!strcmp(pack_current()->id,"sentinel")); validate_encounters();
+    assert(pack_monster("Orcs")==pack_monster("Ork"));
     /* Every truncation is rejected before any active state changes. */
     pack=pack_clone(pack_current()); assert(pack);
     for(i=0;i<(int)pack->size;i++) assert(!pack_decode(pack->bytes,i));
@@ -81,6 +92,12 @@ int main(int argc,char **argv) {
     hero_count=0; selected=-1;
     dialog=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGPARTY),NULL,party_proc,0); assert(dialog);
     assert(SendDlgItemMessage(dialog,GPCLASS,CB_GETCOUNT,0,0)==pack_current()->hero_count);
+    { char label[100];
+      assert(SendDlgItemMessageA(dialog,GPCLASS,CB_GETLBTEXT,0,(LPARAM)label)>=0);
+      assert(!strcmp(label,"Space Marine Commander"));
+      assert(SendDlgItemMessageA(dialog,GPCLASS,CB_GETLBTEXT,1,(LPARAM)label)>=0);
+      assert(!strcmp(label,"Space Marine - Bolter"));
+    }
     for(i=0;i<pack_current()->hero_count;i++) {
         SendDlgItemMessage(dialog,GPCLASS,CB_SETCURSEL,i,0); SendMessage(dialog,WM_COMMAND,GPADD,0);
         assert(heroes[i].stats[3]>=10 && !strncmp(heroes[i].profile_id,"sentinel:",9));
@@ -126,8 +143,8 @@ int main(int argc,char **argv) {
     assert(capture(&d)); assert(game_encode(&d,&bytes,&size)); free(d.cells);
     old_size=size-pack_extension(&d); bytes[8]=6; crc_fix(bytes,old_size);
     assert(pack_start_dungeon()); decoded=game_decode(bytes,old_size);
-    assert(decoded && !strcmp(decoded->pack->id,"fantasy"));
-    assert(!strcmp(decoded->heroes[0].profile_id,"fantasy:elf") && decoded->heroes[0].ranged.kind==1);
+    assert(decoded && !strcmp(decoded->pack->id,"sentinel"));
+    assert(!strcmp(decoded->heroes[0].profile_id,"sentinel:space-marine-heavy-bolter") && decoded->heroes[0].ranged.kind==1);
     game_data_free(decoded); free(bytes);
     /* Selecting another campaign never mutates an existing party. */
     heroes[0]=preserved; assert(pack_select_campaign("sonne2.tab",error)); game_new_dungeon("Fantasy next map");

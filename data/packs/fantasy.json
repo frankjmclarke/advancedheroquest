@@ -445,6 +445,3286 @@
       }
     }
   ],
-  "legacy_references": 1,
-  "monster_source": "ahq-monsters"
+  "monsters": [
+    {
+      "id": "fantasy:skaven-warrior-1-1",
+      "name": "Skaven Warrior",
+      "aliases": [
+        "skaven warrior",
+        "skaven warriors"
+      ],
+      "text": "SKAVEN WARRIOR\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    5    5    7   10    6    6    3    1\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armour; shield; sword.\r\n\r\n",
+      "stats": [
+        6,
+        5,
+        5,
+        7,
+        10,
+        6,
+        6,
+        3,
+        1
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-sentry-1-2",
+      "name": "Skaven Sentry",
+      "aliases": [
+        "skaven sentry",
+        "skaven sentries"
+      ],
+      "text": "SKAVEN SENTRY\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    5    6   11    6    6    3    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nShield; sword.\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        5,
+        6,
+        11,
+        6,
+        6,
+        3,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-champion-1-3",
+      "name": "Skaven Champion",
+      "aliases": [
+        "skaven champion",
+        "skaven champions"
+      ],
+      "text": "SKAVEN CHAMPION\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    5    6    8    9    8    6    3    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain armour; shield; sword.\r\n\r\n",
+      "stats": [
+        7,
+        5,
+        6,
+        8,
+        9,
+        8,
+        6,
+        3,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-warlord-1-4",
+      "name": "Skaven Warlord",
+      "aliases": [
+        "skaven warlord",
+        "skaven warlords"
+      ],
+      "text": "SKAVEN WARLORD\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    5    7    8    9    9    7    4    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nMagic halberd.\r\n\r\n",
+      "stats": [
+        8,
+        5,
+        7,
+        8,
+        9,
+        9,
+        7,
+        4,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-gutter-runner-1-5",
+      "name": "Skaven Gutter Runner",
+      "aliases": [
+        "skaven gutter runner",
+        "skaven gutter runners"
+      ],
+      "text": "SKAVEN GUTTER RUNNER (variant 1 of 2)\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    5    5   12    6    6    3    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nPoisoned dagger (counts as a sword).\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        5,
+        5,
+        12,
+        6,
+        6,
+        3,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-night-runner-1-6",
+      "name": "Skaven Night Runner",
+      "aliases": [
+        "skaven night runner",
+        "skaven night runners"
+      ],
+      "text": "SKAVEN NIGHT RUNNER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    7    5    5   12    6    6    3    3\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nPoisoned dagger (counts as a sword).\r\n\r\n",
+      "stats": [
+        7,
+        7,
+        5,
+        5,
+        12,
+        6,
+        6,
+        3,
+        3
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-poisoned-wind-globadier-1-7",
+      "name": "Skaven Poisoned Wind Globadier",
+      "aliases": [
+        "skaven poisoned wind globadier",
+        "skaven poisoned wind globadiers",
+        "poisoned wind globadier",
+        "poisoned wind globadiers"
+      ],
+      "text": "SKAVEN POISONED WIND GLOBADIER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    3    5   10    6    6    3    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        6       7       8       9      10\r\nMax range: *    Damage dice: *\r\n* See source special rules.\r\n\r\nEQUIPMENT / NOTES\r\nHalberd. * See special rules.\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        3,
+        5,
+        10,
+        6,
+        6,
+        3,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 2,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-jezzailachis-team-1-8",
+      "name": "Skaven Jezzailachis Team",
+      "aliases": [
+        "skaven jezzailachis team",
+        "skaven jezzailachis teams",
+        "jezzailachis team",
+        "jezzailachis teams"
+      ],
+      "text": "SKAVEN JEZZAILACHIS TEAM\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    6    4   10    6    6    3    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        6       7       8       9      10\r\nMax range: *    Damage dice: *\r\n* See source special rules.\r\n\r\nEQUIPMENT / NOTES\r\nSword. * See special rules.\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        6,
+        4,
+        10,
+        6,
+        6,
+        3,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 2,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:beastman-2-1",
+      "name": "Beastman",
+      "aliases": [
+        "beastman",
+        "beastmen"
+      ],
+      "text": "BEASTMAN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    4    5    7    7    7    5    4    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nSword.\r\n\r\n",
+      "stats": [
+        6,
+        4,
+        5,
+        7,
+        7,
+        7,
+        5,
+        4,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:beastman-champion-2-2",
+      "name": "Beastman Champion",
+      "aliases": [
+        "beastman champion",
+        "beastman champions"
+      ],
+      "text": "BEASTMAN CHAMPION\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    5    6    9    6    8    6    5    4\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armour; shield; sword.\r\n\r\n",
+      "stats": [
+        8,
+        5,
+        6,
+        9,
+        6,
+        8,
+        6,
+        5,
+        4
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:beastman-sentry-2-3",
+      "name": "Beastman Sentry",
+      "aliases": [
+        "beastman sentry",
+        "beastman sentries"
+      ],
+      "text": "BEASTMAN SENTRY\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    5    5    7    8    7    6    4    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nSword.\r\n\r\n",
+      "stats": [
+        6,
+        5,
+        5,
+        7,
+        8,
+        7,
+        6,
+        4,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:beastman-warlord-2-4",
+      "name": "Beastman Warlord",
+      "aliases": [
+        "beastman warlord",
+        "beastman warlords"
+      ],
+      "text": "BEASTMAN WARLORD\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    6    7   10    6    9    7    6    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain armour; shield; sword.\r\n\r\n",
+      "stats": [
+        9,
+        6,
+        7,
+        10,
+        6,
+        9,
+        7,
+        6,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:wight-2-5",
+      "name": "Wight",
+      "aliases": [
+        "wight",
+        "wights"
+      ],
+      "text": "WIGHT (variant 1 of 2)\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    4    6    9    7   10    6    6    8\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain mail; sword. Strength drain; fearsome monster; invulnerable\r\nmonster.\r\n\r\n",
+      "stats": [
+        9,
+        4,
+        6,
+        9,
+        7,
+        10,
+        6,
+        6,
+        8
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:liche-2-6",
+      "name": "Liche",
+      "aliases": [
+        "liche",
+        "liches"
+      ],
+      "text": "LICHE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    7    7    9    7   10   10    8   12\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nStaff (= spear). Fearsome monster; hypnotizes. Spells: Flesh\r\nFlaying, Strengthen Undead, Fire Ball (x2), Flight, Inferno of\r\nDoom.\r\n\r\n",
+      "stats": [
+        9,
+        7,
+        7,
+        9,
+        7,
+        10,
+        10,
+        8,
+        12
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:ghoul-2-7",
+      "name": "Ghoul",
+      "aliases": [
+        "ghoul",
+        "ghouls"
+      ],
+      "text": "GHOUL (variant 1 of 2)\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    2    5    6    6    8    2    4    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nClub (counts as warhammer). Fearsome monster.\r\n\r\n",
+      "stats": [
+        6,
+        2,
+        5,
+        6,
+        6,
+        8,
+        2,
+        4,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:vampire-2-8",
+      "name": "Vampire",
+      "aliases": [
+        "vampire",
+        "vampires"
+      ],
+      "text": "VAMPIRE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    8    7    9    8   10   10    6   14\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nFearsome, regenerating, invulnerable monster. 2 attacks (claws,\r\nfangs). Hypnotizes; strength drain. Spells: Fire Ball, Flight,\r\nInferno of Doom.\r\n\r\n",
+      "stats": [
+        9,
+        8,
+        7,
+        9,
+        8,
+        10,
+        10,
+        6,
+        14
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-mors-warlord-shaffat-3-1",
+      "name": "Clan Mors Warlord Shaffat",
+      "aliases": [
+        "clan mors warlord shaffat",
+        "clan mors warlord shaffats"
+      ],
+      "text": "CLAN MORS WARLORD SHAFFAT\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    5    7    8    9    9    7    4    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nMagic halberd (fumble 1-2, critical 11-12).\r\n\r\n",
+      "stats": [
+        8,
+        5,
+        7,
+        8,
+        9,
+        9,
+        7,
+        4,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-skryre-sorceror-tsekkaz-3-2",
+      "name": "Clan Skryre Sorceror Tsekkaz",
+      "aliases": [
+        "clan skryre sorceror tsekkaz",
+        "clan skryre sorceror tsekkazs"
+      ],
+      "text": "CLAN SKRYRE SORCEROR TSEKKAZ\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    7    5    5   10    6   10    4   10\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 1\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nDagger; ring of magic protection; Black Hand of Death (see\r\nCharacter Monsters earlier). Spells: Choke x1, Flaming Skull of\r\nTerror x1, Fireball x2.\r\n\r\n",
+      "stats": [
+        5,
+        7,
+        5,
+        5,
+        10,
+        6,
+        10,
+        4,
+        10
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 1,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-beastmaster-3-3",
+      "name": "Skaven Beastmaster",
+      "aliases": [
+        "skaven beastmaster",
+        "skaven beastmasters"
+      ],
+      "text": "SKAVEN BEASTMASTER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    5    6    6   10    7    5    3    3\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armor. Poisoned whip (as axe or warhammer, except fumble\r\non 1-2 and critical on 11-12; specialist weapon cannot be used by\r\nHeroes).\r\n\r\n",
+      "stats": [
+        7,
+        5,
+        6,
+        6,
+        10,
+        7,
+        5,
+        3,
+        3
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-slavemaster-3-4",
+      "name": "Skaven Slavemaster",
+      "aliases": [
+        "skaven slavemaster",
+        "skaven slavemasters"
+      ],
+      "text": "SKAVEN SLAVEMASTER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    5    5    5   10    6    5    3    3\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        6       7       8       9      10\r\nMax range: 12    Damage dice: 3\r\n\r\nEQUIPMENT / NOTES\r\nPoisoned whip (as axe or warhammer, except fumble on 1-2 and\r\ncritical on 11-12; specialist weapon cannot be used by Heroes).\r\n\r\n",
+      "stats": [
+        7,
+        5,
+        5,
+        5,
+        10,
+        6,
+        5,
+        3,
+        3
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Printed ranged profile",
+        "kind": 4,
+        "range": 12,
+        "dice": 3,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "fantasy:rat-ogre-3-5",
+      "name": "Rat Ogre",
+      "aliases": [
+        "rat ogre",
+        "rat ogres"
+      ],
+      "text": "RAT OGRE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    3    8    8    7    8    4    7    7\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nFights with claws and fangs. Fearsome monster; large monster. May\r\nrun amok without Beastmaster.\r\n\r\n",
+      "stats": [
+        7,
+        3,
+        8,
+        8,
+        7,
+        8,
+        4,
+        7,
+        7
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-slave-3-6",
+      "name": "Skaven Slave",
+      "aliases": [
+        "skaven slave",
+        "skaven slaves"
+      ],
+      "text": "SKAVEN SLAVE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    5    5    7   11    5    5    3   .5\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 1\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nUnless a Slavemaster is within six squares or in line of sight, a\r\nSlave must roll his Bravery or less or run from combat.\r\n\r\n",
+      "stats": [
+        5,
+        5,
+        5,
+        7,
+        11,
+        5,
+        5,
+        3,
+        0
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 1,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:cave-troll-3-7",
+      "name": "Cave Troll",
+      "aliases": [
+        "cave troll",
+        "cave trolls"
+      ],
+      "text": "CAVE TROLL\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    1    9    9    7    4    3    9    9\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 7\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nFights with claws and fangs. Fearsome monster; large monster;\r\nregenerates. May run amok without Beastmaster.\r\n\r\n",
+      "stats": [
+        5,
+        1,
+        9,
+        9,
+        7,
+        4,
+        3,
+        9,
+        9
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 7,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-gutter-runner-3-8",
+      "name": "Skaven Gutter Runner",
+      "aliases": [
+        "skaven gutter runner",
+        "skaven gutter runners"
+      ],
+      "text": "SKAVEN GUTTER RUNNER (variant 2 of 2)\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    6    5    5   10    6    6    3    3\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        6       7       8       9      10\r\nMax range: 12    Damage dice: 3\r\n\r\nEQUIPMENT / NOTES\r\nSword; sling. +1 to surprise.\r\n\r\n",
+      "stats": [
+        5,
+        6,
+        5,
+        5,
+        10,
+        6,
+        6,
+        3,
+        3
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Printed ranged profile",
+        "kind": 4,
+        "range": 12,
+        "dice": 3,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "fantasy:chaos-lord-4-1",
+      "name": "Chaos Lord",
+      "aliases": [
+        "chaos lord",
+        "chaos lords"
+      ],
+      "text": "CHAOS LORD\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12    3    6   10    6   10    8    5   12\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 4+4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nPlate armour; two axes.\r\n\r\n",
+      "stats": [
+        12,
+        3,
+        6,
+        10,
+        6,
+        10,
+        8,
+        5,
+        12
+      ],
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:daemonette-4-2",
+      "name": "Daemonette",
+      "aliases": [
+        "daemonette",
+        "daemonettes"
+      ],
+      "text": "DAEMONETTE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    1    5    7   10   10    6    4   12\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 3+3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nClaws; fearsome monster; invulnerable; two attacks. Can cast:\r\nFlaming Skull of Terror x1.\r\n\r\n",
+      "stats": [
+        8,
+        1,
+        5,
+        7,
+        10,
+        10,
+        6,
+        4,
+        12
+      ],
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:undead-champion-4-3",
+      "name": "Undead Champion",
+      "aliases": [
+        "undead champion",
+        "undead champions"
+      ],
+      "text": "UNDEAD CHAMPION\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    1    6    8    6   10    3    4    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain armour; sword; fearsome monster.\r\n\r\n",
+      "stats": [
+        8,
+        1,
+        6,
+        8,
+        6,
+        10,
+        3,
+        4,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:greater-daemon-of-tzeentch-4-4",
+      "name": "Greater Daemon of Tzeentch",
+      "aliases": [
+        "greater daemon of tzeentch",
+        "greater daemon of tzeentchs"
+      ],
+      "text": "GREATER DAEMON OF TZEENTCH\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    1    8    9    8   10    -   10   20\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 6+6\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nClaws; fearsome monster; invulnerable; large monster; two attacks.\r\nCan cast: Choke x2, Fireball x2, Flaming Skull of Terror x2.\r\n\r\n",
+      "stats": [
+        7,
+        1,
+        8,
+        9,
+        8,
+        10,
+        0,
+        10,
+        20
+      ],
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:minotaur-lord-4-5",
+      "name": "Minotaur Lord",
+      "aliases": [
+        "minotaur lord",
+        "minotaur lords"
+      ],
+      "text": "MINOTAUR LORD\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    4    8    9    8    9    6   10   11\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 8\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nHuge club; berserker; fearsome monster; large monster.\r\n\r\n",
+      "stats": [
+        9,
+        4,
+        8,
+        9,
+        8,
+        9,
+        6,
+        10,
+        11
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 8,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:chaos-sorcerer-4-6",
+      "name": "Chaos Sorcerer",
+      "aliases": [
+        "chaos sorcerer",
+        "chaos sorcerers"
+      ],
+      "text": "CHAOS SORCERER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    3    5    7    8    9   10    4   11\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nScythe (counts as halberd). Can cast: Choke x1, Fireball x1,\r\nFlaming Skull of Terror x1.\r\n\r\n",
+      "stats": [
+        7,
+        3,
+        5,
+        7,
+        8,
+        9,
+        10,
+        4,
+        11
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:orc-warchief-4-7",
+      "name": "Orc Warchief",
+      "aliases": [
+        "orc warchief",
+        "orc warchiefs"
+      ],
+      "text": "ORC WARCHIEF\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    3    6    9    6   10    7    4    8\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain armour; double-handed weapon (fumble 1-2, critical 11-12).\r\n\r\n",
+      "stats": [
+        9,
+        3,
+        6,
+        9,
+        6,
+        10,
+        7,
+        4,
+        8
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:ogre-chieftain-4-8",
+      "name": "Ogre Chieftain",
+      "aliases": [
+        "ogre chieftain",
+        "ogre chieftains"
+      ],
+      "text": "OGRE CHIEFTAIN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    1    9   10    5    8    6   10   10\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 9\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain armour; huge sword (counts as huge club).\r\n\r\n",
+      "stats": [
+        9,
+        1,
+        9,
+        10,
+        5,
+        8,
+        6,
+        10,
+        10
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 9,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:zombie-5-1",
+      "name": "Zombie",
+      "aliases": [
+        "zombie",
+        "zombies"
+      ],
+      "text": "ZOMBIE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    1    5    4    6   10    2    3    1\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nCleaver (counts as a sword). Fearsome monster.\r\n\r\n",
+      "stats": [
+        6,
+        1,
+        5,
+        4,
+        6,
+        10,
+        2,
+        3,
+        1
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skeleton-5-2",
+      "name": "Skeleton",
+      "aliases": [
+        "skeleton",
+        "skeletons"
+      ],
+      "text": "SKELETON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    4    5    5    6   10    2    3    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nScythe (counts as a halberd). Fearsome monster.\r\n\r\n",
+      "stats": [
+        6,
+        4,
+        5,
+        5,
+        6,
+        10,
+        2,
+        3,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:mummy-5-3",
+      "name": "Mummy",
+      "aliases": [
+        "mummy",
+        "mummies"
+      ],
+      "text": "MUMMY\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    1    6    8    6   10    5    4   10\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nClaws; cause disease; fearsome monster.\r\n\r\n",
+      "stats": [
+        7,
+        1,
+        6,
+        8,
+        6,
+        10,
+        5,
+        4,
+        10
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:fimir-5-4",
+      "name": "Fimir",
+      "aliases": [
+        "fimir",
+        "fimirs"
+      ],
+      "text": "FIMIR\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    2    5    7    6    8    5    4    7\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3+2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armor; axe; two attacks.\r\n\r\n",
+      "stats": [
+        6,
+        2,
+        5,
+        7,
+        6,
+        8,
+        5,
+        4,
+        7
+      ],
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:ogre-5-5",
+      "name": "Ogre",
+      "aliases": [
+        "ogre",
+        "ogres"
+      ],
+      "text": "OGRE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    3    8    8    7    7    4    9    8\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 8\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nHuge club; fearsome monster; large monster.\r\n\r\n",
+      "stats": [
+        7,
+        3,
+        8,
+        8,
+        7,
+        7,
+        4,
+        9,
+        8
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 8,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:troll-5-6",
+      "name": "Troll",
+      "aliases": [
+        "troll",
+        "trolls"
+      ],
+      "text": "TROLL\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    1    9    8    7    6    4    9    9\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 9\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nHuge club; fearsome monster; large monster; regenerates.\r\n\r\n",
+      "stats": [
+        5,
+        1,
+        9,
+        8,
+        7,
+        6,
+        4,
+        9,
+        9
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 9,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:minotaur-5-7",
+      "name": "Minotaur",
+      "aliases": [
+        "minotaur",
+        "minotaurs"
+      ],
+      "text": "MINOTAUR\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    4    7    8    8    8    4    9    9\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 7\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nHuge club; berserker; fearsome monster; large monster.\r\n\r\n",
+      "stats": [
+        7,
+        4,
+        7,
+        8,
+        8,
+        8,
+        4,
+        9,
+        9
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 7,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:bloodthirster-5-8",
+      "name": "Bloodthirster",
+      "aliases": [
+        "bloodthirster",
+        "bloodthirsters"
+      ],
+      "text": "BLOODTHIRSTER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    3    8   10   10    8    5    6   12\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nInvulnerable; flight; fearsome monster; large monster; claws.\r\n\r\n",
+      "stats": [
+        5,
+        3,
+        8,
+        10,
+        10,
+        8,
+        5,
+        6,
+        12
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 6,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:goblin-6-1",
+      "name": "Goblin",
+      "aliases": [
+        "goblin",
+        "goblins"
+      ],
+      "text": "GOBLIN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    5    4    5    6    5    5    2  1/2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nSword.\r\n\r\n",
+      "stats": [
+        5,
+        5,
+        4,
+        5,
+        6,
+        5,
+        5,
+        2,
+        0
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 2,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:goblin-archer-6-2",
+      "name": "Goblin Archer",
+      "aliases": [
+        "goblin archer",
+        "goblin archers"
+      ],
+      "text": "GOBLIN ARCHER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    5    4    5    6    5    5    2  1/2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 1\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        7       8       9      10     11*\r\nMax range: 24    Damage dice: 3\r\n* See source special rules.\r\n\r\nEQUIPMENT / NOTES\r\nDagger; short bow. * No critical hit at this range.\r\n\r\n",
+      "stats": [
+        5,
+        5,
+        4,
+        5,
+        6,
+        5,
+        5,
+        2,
+        0
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 1,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Printed ranged profile",
+        "kind": 1,
+        "range": 24,
+        "dice": 3,
+        "hit": [
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": "fantasy:orc-6-3",
+      "name": "Orc",
+      "aliases": [
+        "orc",
+        "orcs"
+      ],
+      "text": "ORC\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    5    5    7    6    7    5    4    1\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armour; shield; sword.\r\n\r\n",
+      "stats": [
+        6,
+        5,
+        5,
+        7,
+        6,
+        7,
+        5,
+        4,
+        1
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:orc-champion-6-4",
+      "name": "Orc Champion",
+      "aliases": [
+        "orc champion",
+        "orc champions"
+      ],
+      "text": "ORC CHAMPION\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    5    6    7    5    8    5    4    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  11  12\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armour; shield; sword.\r\n\r\n",
+      "stats": [
+        7,
+        5,
+        6,
+        7,
+        5,
+        8,
+        5,
+        4,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:orc-warlord-6-5",
+      "name": "Orc Warlord",
+      "aliases": [
+        "orc warlord",
+        "orc warlords"
+      ],
+      "text": "ORC WARLORD\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    5    6    9    6    9    6    4    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain armour; shield; sword.\r\n\r\n",
+      "stats": [
+        8,
+        5,
+        6,
+        9,
+        6,
+        9,
+        6,
+        4,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:chaos-thug-6-6",
+      "name": "Chaos Thug",
+      "aliases": [
+        "chaos thug",
+        "chaos thugs"
+      ],
+      "text": "CHAOS THUG\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    5    5    7    7    8    6    3    1\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armour; shield; sword.\r\n\r\n",
+      "stats": [
+        7,
+        5,
+        5,
+        7,
+        7,
+        8,
+        6,
+        3,
+        1
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:chaos-warrior-6-7",
+      "name": "Chaos Warrior",
+      "aliases": [
+        "chaos warrior",
+        "chaos warriors"
+      ],
+      "text": "CHAOS WARRIOR\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    4    6    9    6    9    8    4    4\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nPlate armour; shield; axe.\r\n\r\n",
+      "stats": [
+        8,
+        4,
+        6,
+        9,
+        6,
+        9,
+        8,
+        4,
+        4
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:chaos-champion-6-8",
+      "name": "Chaos Champion",
+      "aliases": [
+        "chaos champion",
+        "chaos champions"
+      ],
+      "text": "CHAOS CHAMPION\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   10    4    6   10    6   10    8    4    8\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   2   3   4   5   6   7   8   9\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nPlate armour; shield; double-handed axe (fumble 1-2, critical\r\n11-12).\r\n\r\n",
+      "stats": [
+        10,
+        4,
+        6,
+        10,
+        6,
+        10,
+        8,
+        4,
+        8
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:skaven-warpfire-thrower-team-7-1",
+      "name": "Skaven Warpfire-Thrower Team",
+      "aliases": [
+        "skaven warpfire-thrower team",
+        "skaven warpfire-thrower teams",
+        "warpfire-thrower team",
+        "warpfire-thrower teams"
+      ],
+      "text": "SKAVEN WARPFIRE-THROWER TEAM\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    4    4   10    6    6    3   10\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        6       7       8       9      10\r\nMax range: *    Damage dice: *\r\n* See source special rules.\r\n\r\nEQUIPMENT / NOTES\r\nSword. * See special rules.\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        4,
+        4,
+        10,
+        6,
+        6,
+        3,
+        10
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 2,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-skryre-warpweaver-7-2",
+      "name": "Clan Skryre Warpweaver",
+      "aliases": [
+        "clan skryre warpweaver",
+        "clan skryre warpweavers",
+        "warpweaver",
+        "warpweavers"
+      ],
+      "text": "CLAN SKRYRE WARPWEAVER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    6    4    5   10    6    9    3    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 1\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nDagger. Can cast: Fireball x1, Flaming Skull of Terror x1.\r\n\r\n",
+      "stats": [
+        5,
+        6,
+        4,
+        5,
+        10,
+        6,
+        9,
+        3,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 1,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-skryre-white-skaven-sorcerer-7-3",
+      "name": "Clan Skryre White Skaven Sorcerer",
+      "aliases": [
+        "clan skryre white skaven sorcerer",
+        "clan skryre white skaven sorcerers",
+        "white skaven sorcerer",
+        "white skaven sorcerers"
+      ],
+      "text": "CLAN SKRYRE WHITE SKAVEN SORCERER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    7    5    5   10    6   10    4   10\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: (blank in source)\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nDagger; ring of magic protection. Can cast: Choke x1, Flaming\r\nSkull of Terror x1, Fireball x2.\r\n\r\n",
+      "stats": [
+        5,
+        7,
+        5,
+        5,
+        10,
+        6,
+        10,
+        4,
+        10
+      ],
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-pestilens-plague-censer-bearer-7-4",
+      "name": "Clan Pestilens Plague Censer Bearer",
+      "aliases": [
+        "clan pestilens plague censer bearer",
+        "clan pestilens plague censer bearers",
+        "plague censer bearer",
+        "plague censer bearers"
+      ],
+      "text": "CLAN PESTILENS PLAGUE CENSER BEARER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    4    5   10    6    6    3    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        6       7       8       9      10\r\nMax range: *    Damage dice: *\r\n* See source special rules.\r\n\r\nEQUIPMENT / NOTES\r\nStaff (counts as a sword). * See special rules.\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        4,
+        5,
+        10,
+        6,
+        6,
+        3,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 2,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-pestilens-plague-monk-7-5",
+      "name": "Clan Pestilens Plague Monk",
+      "aliases": [
+        "clan pestilens plague monk",
+        "clan pestilens plague monks",
+        "plague monk",
+        "plague monks"
+      ],
+      "text": "CLAN PESTILENS PLAGUE MONK\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    4    5   10    6    8    3    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nDagger; warp scroll.\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        4,
+        5,
+        10,
+        6,
+        8,
+        3,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 2,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-mors-warlord-7-6",
+      "name": "Clan Mors Warlord",
+      "aliases": [
+        "clan mors warlord",
+        "clan mors warlords"
+      ],
+      "text": "CLAN MORS WARLORD\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n  8+2    5  7+2    8    9    9    7    4   10\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   2   3   4   5   6   7   8   9\r\nDamage dice: 7\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nChain armour; shield; runesword (+2 WS, +2 S).\r\n\r\n",
+      "stats": [
+        0,
+        5,
+        0,
+        8,
+        9,
+        9,
+        7,
+        4,
+        10
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 7,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:clan-eshin-assassin-7-7",
+      "name": "Clan Eshin Assassin",
+      "aliases": [
+        "clan eshin assassin",
+        "clan eshin assassins",
+        "skaven assassin",
+        "skaven assassins"
+      ],
+      "text": "CLAN ESHIN ASSASSIN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    9    5    7   12    9    7    4    8\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nPoisoned dagger (counts as a sword).\r\n\r\n",
+      "stats": [
+        9,
+        9,
+        5,
+        7,
+        12,
+        9,
+        7,
+        4,
+        8
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:praznagar-prince-of-agony-7-8",
+      "name": "Praznagar Prince of Agony",
+      "aliases": [
+        "praznagar prince of agony",
+        "praznagar prince of agonys"
+      ],
+      "text": "PRAZNAGAR PRINCE OF AGONY\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    7  6+2    8    9    9    9    5    -\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   2   2   3   4   5   6   7   8   9\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nLeather armour; chaos sword (never fumbles, +2 S); fearsome\r\nmonster.\r\n\r\n",
+      "stats": [
+        9,
+        7,
+        0,
+        8,
+        9,
+        9,
+        9,
+        5,
+        0
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:orc-sentry-8-1",
+      "name": "Orc Sentry",
+      "aliases": [
+        "orc sentry",
+        "orc sentries"
+      ],
+      "text": "ORC SENTRY\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    6    5    7    7    7    5    4    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nShield; sword (fumble 1, critical 12).\r\n\r\n",
+      "stats": [
+        6,
+        6,
+        5,
+        7,
+        7,
+        7,
+        5,
+        4,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:chaos-thug-sentry-8-2",
+      "name": "Chaos Thug Sentry",
+      "aliases": [
+        "chaos thug sentry",
+        "chaos thug sentries"
+      ],
+      "text": "CHAOS THUG SENTRY\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    6    5    6    8    8    6    3    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:        -       -       -       -       -\r\nMax range: -    Damage dice: -\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nShield; sword.\r\n\r\n",
+      "stats": [
+        7,
+        6,
+        5,
+        6,
+        8,
+        8,
+        6,
+        3,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:wight-8-3",
+      "name": "Wight",
+      "aliases": [
+        "wight",
+        "wights"
+      ],
+      "text": "WIGHT (variant 2 of 2)\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    1    5    5    5   10    2    3    6\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nFearsome monster; invulnerable (fumble 1, critical 12).\r\n\r\n",
+      "stats": [
+        6,
+        1,
+        5,
+        5,
+        5,
+        10,
+        2,
+        3,
+        6
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:giant-rat-8-4",
+      "name": "Giant Rat",
+      "aliases": [
+        "giant rat",
+        "giant rats"
+      ],
+      "text": "GIANT RAT\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    5    -    3    5   10    6    6    1  1/2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    3   4   5   6   7   8   9  10  10  10  10  10\r\nDamage dice: 1\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nBite.\r\n\r\n",
+      "stats": [
+        5,
+        0,
+        3,
+        5,
+        10,
+        6,
+        6,
+        1,
+        0
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 1,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:sorcerer-of-nurgle-8-5",
+      "name": "Sorcerer of Nurgle",
+      "aliases": [
+        "sorcerer of nurgle",
+        "sorcerer of nurgles"
+      ],
+      "text": "SORCERER OF NURGLE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    3    5    7    8    9   10    4   11\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nSword (fumble 1, critical 12). Has a spellbook containing The\r\nGreen Eye, The Pool of Many Places, The Cloak of Dainne and The\r\nEmerald Waterfall.\r\n\r\n",
+      "stats": [
+        7,
+        3,
+        5,
+        7,
+        8,
+        9,
+        10,
+        4,
+        11
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:wolf-8-6",
+      "name": "Wolf",
+      "aliases": [
+        "wolf",
+        "wolves"
+      ],
+      "text": "WOLF\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    -    4    7    9    8    7    4    3\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nBite.\r\n\r\n",
+      "stats": [
+        8,
+        0,
+        4,
+        7,
+        9,
+        8,
+        7,
+        4,
+        3
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:ghoul-8-7",
+      "name": "Ghoul",
+      "aliases": [
+        "ghoul",
+        "ghouls"
+      ],
+      "text": "GHOUL (variant 2 of 2)\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    2    5    6    6    8    2    4    2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nClaw attack; fearsome monster.\r\n\r\n",
+      "stats": [
+        6,
+        2,
+        5,
+        6,
+        6,
+        8,
+        2,
+        4,
+        2
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 4,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:giant-vampire-bat-8-8",
+      "name": "Giant Vampire Bat",
+      "aliases": [
+        "giant vampire bat",
+        "giant vampire bats"
+      ],
+      "text": "GIANT VAMPIRE BAT\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    6    -    3    6   12    8    7    1  1/2\r\n\r\nHAND-TO-HAND COMBAT\r\nTarget WS:   1   2   3   4   5   6   7   8   9  10  11  12\r\nHit roll:    2   3   4   5   6   7   8   9  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nRange:         1-3    4-12   13-24   25-36     37+\r\nHit roll:                                         \r\nMax range: (blank)    Damage dice: (blank)\r\nNo ranged attack listed.\r\n\r\nEQUIPMENT / NOTES\r\nBloodsucking bite.\r\n\r\n",
+      "stats": [
+        6,
+        0,
+        3,
+        6,
+        12,
+        8,
+        7,
+        1,
+        0
+      ],
+      "melee": {
+        "weapon": "Printed melee profile",
+        "dice": 2,
+        "hit": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
 }

@@ -12,33 +12,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def fantasy_monsters():
-    """Adapt the existing single-source printed catalogue without changing it."""
-    from ahq_monsters import PAGES, reference
-    result = []
-    for page, cards in enumerate(PAGES, 1):
-        for slot, card in enumerate(cards, 1):
-            text = reference(card, page, slot)
-            slug = re.sub('[^a-z0-9]+', '-', card['name'].lower()).strip('-')
-            melee = dict(weapon='', dice=0, hit=[0]*12)
-            ranged = dict(weapon='', kind=0, range=0, dice=0, hit=[0]*5)
-            if all(v.isdecimal() and 1 <= int(v) <= 12 for v in card['hits']) and card['damage'].isdecimal() and 1 <= int(card['damage']) <= 99:
-                melee = dict(weapon='Printed melee profile', dice=int(card['damage']), hit=list(map(int, card['hits'])))
-            rr = card['ranged']
-            if rr[5].isdecimal() and rr[6].isdecimal() and 1 <= int(rr[5]) <= 480 and 1 <= int(rr[6]) <= 99:
-                ran = int(rr[5])
-                hits = [int(v.rstrip('*')) for start, v in zip([1,4,13,25,37], rr[:5])
-                        if re.fullmatch(r'\d+\*?', v) and 1 <= int(v.rstrip('*')) <= 12 and not ('*' in v and start <= ran)]
-                if len(hits) == 5:
-                    ranged = dict(weapon='Printed ranged profile', kind=2 if 'crossbow' in text else 1 if 'bow' in text else 4,
-                                  range=ran, dice=int(rr[6]), hit=hits)
-            result.append(dict(id=f'fantasy:{slug}-{page}-{slot}', name=card['name'],
-                               aliases=[a.lower() for a in card['aliases']], text=text,
-                               stats=[int(v) if v.isdecimal() else 0 for v in card['stats']],
-                               melee=melee, ranged=ranged))
-    return result
-
-
 def compile_pack(pack):
     out = bytearray(b'HQPACK1\n')
 
@@ -107,8 +80,6 @@ def compile_pack(pack):
 def outputs():
     for source in sorted((ROOT / 'data/packs').glob('*.json')):
         pack = json.loads(source.read_text(encoding='utf-8'))
-        if pack.get('monster_source') == 'ahq-monsters':
-            pack['monsters'] = fantasy_monsters()
         data = compile_pack(pack)
         yield ROOT / 'tables' / pack['id'] / 'characters.hqp', data
         if pack['id'] == 'fantasy':

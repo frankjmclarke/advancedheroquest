@@ -19,6 +19,7 @@ typedef struct character_pack {
 } CHARACTER_PACK;
 const CHARACTER_PACK *pack_fantasy(void);
 const CHARACTER_PACK *pack_current(void);
+const CHARACTER_PACK *pack_legacy_save(void);
 CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size);
 CHARACTER_PACK *pack_clone(const CHARACTER_PACK *pack);
 void pack_free(CHARACTER_PACK *pack);
