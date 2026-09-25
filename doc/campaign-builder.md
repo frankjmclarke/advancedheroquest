@@ -70,3 +70,10 @@ cross-campaign combinations, copying a generated campaign, furnishing options,
 dependency copying, parser failures, path/collision protection, and independent
 loading after source files are removed. It also renders the actual dialog to
 `obj/campaign-builder-preview.bmp` for visual review.
+
+## Character packs
+
+The starting campaign's character pack is copied with its tables, so a Sentinel
+copy keeps its Marine heroes and alien profiles without depending on the original
+folder. Monster-table sources from a different known pack are rejected; choose
+a starting campaign with the matching pack. See [Character packs](character-packs.md).

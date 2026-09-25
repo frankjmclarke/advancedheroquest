@@ -121,7 +121,7 @@ static int shot_apply(SHOT *s)
 {
     MONSTER *victim=&monsters.tokens[s->m];
     if(!s->resolved || shot_blocked(s)) return 0;
-    if(!s->side && s->old_wounds && !s->new_wounds && victim->unique && !character_dead(victim->name) && monsters.dead_count==CHARACTER_LIMIT) return 0;
+    if(!s->side && s->old_wounds && !s->new_wounds && victim->unique && !character_dead(monster_identity(victim)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
     remember();
     heroes[s->h].ranged=s->hero.ranged; heroes[s->h].moved=s->hero.moved;
     monsters.tokens[s->m].ranged=s->monster.ranged; monsters.tokens[s->m].moved=s->monster.moved;

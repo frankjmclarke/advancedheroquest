@@ -25,6 +25,11 @@ then click or drag onto an enemy: orthogonal neighbours use hand-to-hand combat;
 other targets use the separate **Ranged weapon** profile. Both use one **Roll attack** button for hit, damage and calculation. Use **Party → Next Turn** to reset movement for shooting. Apply the result, Cancel, or Undo the exchange.
 See the [Heroes and saved games guide](doc/hero-sessions.md).
 
+Campaigns can supply their own hero and enemy profiles. Sentinel V now offers
+Space Marines in Heroes & Reserve and places its aliens when rooms are revealed,
+using the same AHQ combat rules. See [Character packs](doc/character-packs.md)
+for adding another theme, campaign copying and save compatibility.
+
 Writing your own adventures: **[Guide to creating and editing table
 files](doc/TABLE-GUIDE.md)**.
 

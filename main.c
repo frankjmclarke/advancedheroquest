@@ -21,6 +21,7 @@
 #include <table.h>
 #include "campaign.h"
 #include "game.h"
+#include "pack.h"
 #include "rsh/game.rh"
 #include "rsh/campaign.rh"
 #include <mem.h>
@@ -585,6 +586,7 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init, _BOOL quiet)
 	DIALOG *ptr;
 	_BOOL ok;
 	PATH old;
+    char pack_error[256];
 	
 	if (init && !F_File_Exists(file->pathname))
 	{
@@ -606,6 +608,10 @@ LOCAL _BOOL do_table(PATH *file, _BOOL init, _BOOL quiet)
 			ptr = show_string("Reading reference table");
 			ok = read_table(file->filename, "errors.txt");
 			hide_string(ptr);
+            if(ok && !pack_select_campaign(file->filename,pack_error)) {
+                if(!quiet) Form_Ok("%s",pack_error);
+                Wind_Menu_Enable(MKARTE,FALSE); F_Path_Set(old.path); return FALSE;
+            }
 			
 			if (ok)
 			{
@@ -1675,6 +1681,11 @@ _WORD WindFormMain(_WORD argc, CONST _UBYTE **argv)
 		if (!mem_alloc(16, 16, 25, 4096)) return 2;
 		heap_clear();
 		valid = read_table((_UBYTE *)argv[2], (_UBYTE *)argv[3]);
+        if(valid) {
+            char error[256]; CHARACTER_PACK *p=pack_read_campaign(argv[2],error);
+            if(!p) { FILE *fp=fopen(argv[3],"ab"); if(fp) { fprintf(fp,"%s\n",error); fclose(fp); } valid=FALSE; }
+            pack_free(p);
+        }
 		mem_freeall();
 		return valid ? 0 : 1;
 	}

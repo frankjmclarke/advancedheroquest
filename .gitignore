@@ -24,3 +24,7 @@ bin/*.1999-original.exe
 dist/HQ-Map/
 dist/*.zip
 dist/*setup.exe
+
+# Python caches and local investigation outputs
+__pycache__/
+/tmp/

@@ -26,6 +26,8 @@ prefix = r'''#include <assert.h>
 #define MALLOC(n,label) malloc(n)
 #define FREE(p,n) free(p)
 #define ICON_SCALE 8
+#define PACK_LIMIT 256
+static int pack_nonmonster(const char *name) { (void)name; return 0; }
 #define FROOMCONTENTS 11
 #define ROOMCONTENTSTEXT 170
 #define DO_EXIT -2
@@ -90,6 +92,7 @@ with tempfile.TemporaryDirectory() as temp:
     root = Path(temp)
     logic = (repo / "liste.c").read_text(encoding="cp1252")
     logic = logic[logic.index("/* Room reference expansion"):]
+    logic = logic[:logic.index("/* Reuse the contents viewer") ]
     generated = (repo / "ahq-reference-data.h").read_text(encoding="ascii")
     (root / "check.c").write_text(prefix + generated + logic + handler + suffix)
     subprocess.run(["cl", "/nologo", "check.c", "/Fe:check.exe"], cwd=root, check=True)

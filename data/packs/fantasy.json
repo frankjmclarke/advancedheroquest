@@ -1,0 +1,450 @@
+{
+  "version": 1,
+  "id": "fantasy",
+  "name": "Old World",
+  "heroes": [
+    {
+      "id": "fantasy:warrior",
+      "name": "Warrior",
+      "kind": 0,
+      "fate": 2,
+      "stats": [
+        7,
+        6,
+        6,
+        6,
+        8,
+        8,
+        6,
+        4,
+        0
+      ],
+      "text": "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.",
+      "melee": {
+        "weapon": "Sword (Heinrich)",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:dwarf",
+      "name": "Dwarf",
+      "kind": 1,
+      "fate": 2,
+      "stats": [
+        7,
+        5,
+        6,
+        7,
+        6,
+        9,
+        6,
+        4,
+        0
+      ],
+      "text": "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.",
+      "melee": {
+        "weapon": "Warhammer (Sven)",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:elf",
+      "name": "Elf",
+      "kind": 2,
+      "fate": 2,
+      "stats": [
+        6,
+        8,
+        5,
+        5,
+        9,
+        8,
+        8,
+        4,
+        0
+      ],
+      "text": "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.",
+      "melee": {
+        "weapon": "Sword (Torallion)",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Long bow (Torallion)",
+        "kind": 1,
+        "range": 48,
+        "dice": 4,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "fantasy:wizard",
+      "name": "Wizard",
+      "kind": 3,
+      "fate": 2,
+      "stats": [
+        4,
+        5,
+        4,
+        5,
+        8,
+        7,
+        9,
+        4,
+        0
+      ],
+      "text": "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.",
+      "melee": {
+        "weapon": "Dagger (Magnus / Telor)",
+        "dice": 1,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Throwing dagger (Telor)",
+        "kind": 3,
+        "range": 4,
+        "dice": 1,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "fantasy:henchman",
+      "name": "Henchman",
+      "kind": 4,
+      "fate": 0,
+      "stats": [
+        5,
+        5,
+        5,
+        5,
+        8,
+        7,
+        5,
+        2,
+        0
+      ],
+      "text": "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.",
+      "melee": {
+        "weapon": "Short sword (suggested)",
+        "dice": 2,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          11,
+          12
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:warrior-priest",
+      "name": "Warrior Priest",
+      "kind": 5,
+      "fate": 2,
+      "stats": [
+        7,
+        6,
+        5,
+        6,
+        8,
+        9,
+        6,
+        4,
+        0
+      ],
+      "text": "Warrior Priest\n\nStarting adjustment: Strength -1, Bravery +1.\n\nHealing spells equal total Fate points (two for a beginning priest).\n\nHolding a holy symbol in one hand can frighten Undead in the priest's death zone: at the start of their turn they must pass a Bravery roll, modified by the priest's total Fate, or be unable to act. The other hand may hold a one-handed weapon or shield.\n\nOnly crushing or bruising weapons; no blades.\n\nApply abilities manually during play.",
+      "melee": {
+        "weapon": "Warhammer (suggested)",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:rogue",
+      "name": "Rogue",
+      "kind": 6,
+      "fate": 2,
+      "stats": [
+        6,
+        7,
+        6,
+        6,
+        9,
+        7,
+        6,
+        4,
+        0
+      ],
+      "text": "Rogue\n\nStarting adjustments: WS -1, Bravery -1, Speed +1, BS +1.\n\n+1 to rolls for secret doors, treasure, spotting traps and surprise. With thieves' tools, add total Fate to disarm-trap rolls (initially +2).\n\nTools also allow locking/unlocking doors or chests and setting traps, rolling against current Speed.\n\nNo more than +1 from any single armour piece; shields allowed.\n\nApply abilities manually during play.",
+      "melee": {
+        "weapon": "Short sword (suggested)",
+        "dice": 2,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          11,
+          12
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:fighter",
+      "name": "Fighter",
+      "kind": 7,
+      "fate": 2,
+      "stats": [
+        7,
+        6,
+        6,
+        6,
+        8,
+        8,
+        6,
+        4,
+        0
+      ],
+      "text": "Fighter\n\nUse the racial profile. If WS is below 7, add 1; if Strength is below 4, add 1. Deduct the same total from Intelligence and/or Speed.\n\nAttack rerolls per expedition equal total Fate. Each rerolls one attack die just rolled.\n\nOptional berserker: Intelligence -2, BS -2, WS -1 only if this would not take WS below 7. Record the choice in the hero's name and edit the stats; use the rulebook's berserker rules.\n\nAny weapons and armour permitted. Apply abilities manually during play.",
+      "melee": {
+        "weapon": "Sword (suggested)",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "fantasy:mage",
+      "name": "Mage",
+      "kind": 8,
+      "fate": 2,
+      "stats": [
+        6,
+        6,
+        6,
+        6,
+        8,
+        8,
+        7,
+        4,
+        0
+      ],
+      "text": "Mage\n\nUse the racial profile. If Intelligence is below 7, you may add up to 2, deducting the same total from Strength and/or WS. This preset uses a human suggestion with WS -1 and Intelligence +1.\n\nHuman and Elf mages start with their college's first four spells. Dwarf mages start with one chosen spell and pay double to learn new spells.\n\nNo armour; only daggers or a staff in combat.\n\nEdit stats for your chosen race and apply spells manually during play.",
+      "melee": {
+        "weapon": "Staff (suggested)",
+        "dice": 2,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "legacy_references": 1,
+  "monster_source": "ahq-monsters"
+}

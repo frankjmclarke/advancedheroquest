@@ -31,6 +31,13 @@ _BOOL error_abort(const char *fmt,...) { fprintf(stderr,"Map error: %s\n",fmt); 
 void game_loaded_title(const char *title) { }
 #undef assert
 #define assert(x) do { if(!(x)) { fprintf(stderr,"Assertion failed: %s, line %d\n",#x,__LINE__); exit(3); } } while(0)
+/* Size of the v7-only extension, for constructing authentic older layouts. */
+static size_t pack_extension(const GAME_DATA *d) {
+    int i; size_t n=4+(d->pack?d->pack:pack_fantasy())->size;
+    for(i=0;i<d->hero_count;i++) n+=12+strlen(d->heroes[i].profile_id)+strlen(d->heroes[i].class_name)+strlen(d->heroes[i].class_rules);
+    for(i=0;i<d->monsters.count;i++) n+=8+strlen(d->monsters.tokens[i].profile_id)+strlen(d->monsters.tokens[i].character_id);
+    return n;
+}
 static void generate(void) {
     int i,x,y; PICE *p;
     new_rand(1234); assert(makemap(52,32,26,16,North));
@@ -120,7 +127,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=7; assert(!game_decode(bytes,size)); bytes[8]=6;
+    bytes[8]=8; assert(!game_decode(bytes,size)); bytes[8]=7;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;

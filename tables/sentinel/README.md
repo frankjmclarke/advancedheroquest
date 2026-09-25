@@ -18,6 +18,13 @@ Five quests appear in *Options → Load Tables*:
 Generate one map per deck and play them in order. A deck ends at a Drop Shaft
 Down; the Core ends at the webway portal.
 
+The application now loads this campaign's character pack. **Heroes and Reserve**
+offers Marine and Commander equipment presets, and revealed rooms place alien
+tokens with their combat profiles. All use the existing AHQ ranged and
+hand-to-hand rules, without the special science-fiction weapon abilities on the
+historical printable sheets. Gameplay definitions are in
+`data/packs/sentinel.json`; see [Character packs](../../doc/character-packs.md).
+
 ---
 
 ## The mission

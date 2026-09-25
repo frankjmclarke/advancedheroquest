@@ -195,6 +195,7 @@ int main(int argc,char **argv) {
     decoded=game_decode(bytes,size); assert(decoded && decoded->heroes[0].fired && decoded->heroes[0].moved && decoded->monsters.tokens[0].focus==1);
     assert(game_encode(decoded,&again,&again_size) && size==again_size && !memcmp(bytes,again,size));
     free(again); game_data_free(decoded);
+    size-=pack_extension(&data);
     size-=4*data.hero_count;
     bytes[8]=5; fix_crc(bytes,size); decoded=game_decode(bytes,size);
     assert(decoded && !decoded->heroes[0].fired); game_data_free(decoded);

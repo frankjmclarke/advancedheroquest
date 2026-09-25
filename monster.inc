@@ -37,14 +37,22 @@ static int monster_place(int index)
 static void monster_add_reference(const char *name,const int *stats,int count,void *context)
 {
     int room=*(int*)context,i; MONSTER *m;
-    if(character_dead(name)) return;
-    for(i=0;i<monsters.count;i++) if(monsters.tokens[i].unique && monsters.tokens[i].wounds && !_stricmp(name,monsters.tokens[i].name)) return;
-    for(i=0;i<count;i++) {
+    const PACK_PROFILE *profile=pack_monster(name);
+    const char *identity=profile && profile->unique?profile->id:name;
+    if(character_dead(identity)) return;
+    for(i=0;i<monsters.count;i++) if(monsters.tokens[i].unique && monsters.tokens[i].wounds && !_stricmp(identity,monster_identity(&monsters.tokens[i]))) return;
+    for(i=0;i<(profile && profile->unique?1:count);i++) {
         if(monsters.count==MONSTER_LIMIT) { monsters.seen[room]=2; return; }
         m=&monsters.tokens[monsters.count]; memset(m,0,sizeof(*m));
-        strcpy(m->name,name); memcpy(m->stats,stats,sizeof(m->stats)); m->wounds=stats[7];
+        strcpy(m->name,name);
+        if(profile) {
+            strcpy(m->profile_id,profile->id); m->unique=profile->unique;
+            if(m->unique) strcpy(m->character_id,profile->id);
+        }
+        memcpy(m->stats,stats,sizeof(m->stats)); m->wounds=stats[7];
         if(room_melee(name,&m->melee.dice,m->melee.hit)) strcpy(m->melee.weapon,"Printed melee profile");
         monster_ranged_defaults(&m->ranged,name);
+        if(profile) { m->melee=profile->melee; m->ranged=profile->ranged; }
         m->room=room; m->x=m->y=-1; monsters.count++; monster_place(monsters.count-1);
     }
 }
@@ -66,10 +74,10 @@ static void monster_kill(int index)
     MONSTER *m=&monsters.tokens[index]; int i;
     if(!m->wounds) {
         m->x=m->y=-1;
-        if(m->unique && !character_dead(m->name)) {
-            strcpy(monsters.dead[monsters.dead_count++],m->name);
+        if(m->unique && !character_dead(monster_identity(m))) {
+            strcpy(monsters.dead[monsters.dead_count++],monster_identity(m));
             /* The same unique character cannot remain alive elsewhere. */
-            for(i=0;i<monsters.count;i++) if(!_stricmp(m->name,monsters.tokens[i].name)) {
+            for(i=0;i<monsters.count;i++) if(!_stricmp(monster_identity(m),monster_identity(&monsters.tokens[i]))) {
                 monsters.tokens[i].wounds=0; monsters.tokens[i].x=monsters.tokens[i].y=-1;
             }
         }
@@ -80,7 +88,7 @@ static int monster_damage(int index)
     MONSTER *m;
     if(index<0 || index>=monsters.count || !monsters.tokens[index].wounds) return 0;
     m=&monsters.tokens[index];
-    if(m->wounds==1 && m->unique && !character_dead(m->name) && monsters.dead_count==CHARACTER_LIMIT) {
+    if(m->wounds==1 && m->unique && !character_dead(monster_identity(m)) && monsters.dead_count==CHARACTER_LIMIT) {
         message("Character death record is full. Save this adventure before making further changes."); return 0;
     }
     remember(); m->wounds--;

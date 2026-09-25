@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "ahq-reference-data.h"
+#include "pack.h"
+#define AHQ_REFERENCE_COUNT (pack_current()->monster_count)
+#define ahq_references (pack_current()->monsters)
 
 /******************************************************************************/
 /*** ---------------------------------------------------------------------- ***/
@@ -163,6 +165,7 @@ static int room_nonmonster(const char *name)
         "treasure", "hidden treasure", "potion", "potions", "attack", "attacks"
     };
     size_t i, len;
+    if(pack_nonmonster(name)) return 1;
     for (i = 0; i < sizeof(items) / sizeof(items[0]); i++) {
         len = strlen(items[i]);
         if (strncmp(name, items[i], len) == 0 && (!name[len] || name[len] == ' ')) return 1;
@@ -245,7 +248,7 @@ GLOBAL _UBYTE *room_contents_text(_UBYTE **lines)
     ROOM_BUFFER buf = { NULL, 0, 0, 0 };
     const char *line, *start, *p;
     int depth, separator;
-    unsigned char seen[AHQ_REFERENCE_COUNT];
+    unsigned char seen[PACK_LIMIT];
     if (lines == NULL || *lines == NULL)
         room_append(&buf, "No contents recorded for this room.");
     else for (; *lines != NULL && !buf.failed; lines++) {
@@ -282,7 +285,7 @@ GLOBAL _UBYTE *room_contents_text(_UBYTE **lines)
 /* Reuse the contents viewer's exact alias matching for encounter rosters. */
 int room_monsters(_UBYTE **lines,void (*add)(const char *,const int *,int,void *),void *context)
 {
-    const char *start,*p,*end,*s,*profile; char *name;
+    const char *start,*p,*end,*s; char *name;
     int depth,sep,count,counted,stats[9],review=0; size_t i,match,matches;
     if(!lines) return 0;
     for(;*lines;lines++) {
@@ -311,16 +314,14 @@ int room_monsters(_UBYTE **lines,void (*add)(const char *,const int *,int,void *
                 matches=0; match=0;
                 for(i=0;i<AHQ_REFERENCE_COUNT;i++) if(room_alias(name,ahq_references[i].aliases)) { match=i; matches++; }
                 if(matches==1 && count>0 && count<=512) {
-                    profile=strstr(ahq_references[match].text,"   WS");
-                    profile=profile?strchr(profile,'\n'):NULL;
-                    if(profile && sscanf(profile,"%d %d %d %d %d %d %d %d %d",&stats[0],&stats[1],&stats[2],&stats[3],&stats[4],&stats[5],&stats[6],&stats[7],&stats[8])==9 && stats[7]>0) {
+                    if(pack_monster_stats((int)match,stats)) {
                         /* Canonical singular alias makes plural encounters share identity. */
                         const char *alias=ahq_references[match].aliases; char canonical[64];
                         size_t len=strcspn(alias,"|"); if(len>63) len=63;
                         memcpy(canonical,alias,len); canonical[len]=0;
                         add(canonical,stats,count,context);
                     } else review=1;
-                } else if(matches || ((counted || room_contains(s,p,"Gold Crowns") || room_contains(s,p,"WS ")) && !room_nonmonster(name))) review=1;
+                } else if(matches || ((counted || room_contains(s,p,"Gold Crowns") || room_contains(s,p,"Points") || room_contains(s,p,"WS ")) && !room_nonmonster(name))) review=1;
                 free(name);
                 if(!*p) break;
                 p+=sep; start=p;
@@ -334,6 +335,11 @@ int room_melee(const char *name,int *dice,int hits[12])
 {
     char *clean=room_name(name,name+strlen(name)),*end;
     const char *text=NULL,*p; size_t i; int matches=0,j,n,row[12]; long v;
+    if(!pack_current()->legacy_references) {
+        const PACK_PROFILE *entry=pack_monster(name); free(clean);
+        if(!entry || !entry->melee.dice) return 0;
+        *dice=entry->melee.dice; memcpy(hits,entry->melee.hit,sizeof(entry->melee.hit)); return 1;
+    }
     if(!clean) return 0;
     for(i=0;i<AHQ_REFERENCE_COUNT;i++) if(room_alias(clean,ahq_references[i].aliases)) {
         text=ahq_references[i].text; matches++;
@@ -362,6 +368,12 @@ int room_ranged(const char *name,int *range,int *dice,int hits[5],int *kind)
 {
     char *clean=room_name(name,name+strlen(name)),*end; const char *text=NULL,*p,*max;
     size_t i; int matches=0,j,row[5],r,d,starts[5]={1,4,13,25,37}; long v;
+    if(!pack_current()->legacy_references) {
+        const PACK_PROFILE *entry=pack_monster(name); free(clean);
+        if(!entry || !entry->ranged.kind) return 0;
+        *range=entry->ranged.range; *dice=entry->ranged.dice; *kind=entry->ranged.kind;
+        memcpy(hits,entry->ranged.hit,sizeof(entry->ranged.hit)); return 1;
+    }
     if(!clean) return 0;
     for(i=0;i<AHQ_REFERENCE_COUNT;i++) if(room_alias(clean,ahq_references[i].aliases)) { text=ahq_references[i].text; matches++; }
     free(clean); if(matches!=1) return 0;

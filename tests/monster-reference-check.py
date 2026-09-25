@@ -96,5 +96,5 @@ with tempfile.TemporaryDirectory() as tmp:
     work = Path(tmp)
     (work / 'check.c').write_text(HARNESS)
     subprocess.run(['cl', '/nologo', '/I' + str(ROOT), '/I' + str(ROOT / 'my_lib'),
-                    str(ROOT / 'liste.c'), 'check.c', '/Fe:check.exe'], cwd=work, check=True)
+                    '/I' + str(ROOT / 'my_lib/windows'), str(ROOT / 'pack.c'), str(ROOT / 'liste.c'), 'check.c', '/Fe:check.exe'], cwd=work, check=True)
     subprocess.run([str(work / 'check.exe')], cwd=work, check=True)

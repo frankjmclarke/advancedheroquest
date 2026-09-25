@@ -1,4 +1,39 @@
-## Current update — 23 September 2026
+## Current update — 25 September 2026
+
+The user requested publishing the previous branch and all unignored files to
+GitHub main. Completed at `31e6436` (includes the staged v1.0 release archive).
+New work is on `codex/campaign-character-packs`; keep it separate from main.
+
+Implemented runtime character packs in `pack.c` / `pack.h`, JSON sources in
+`data/packs/`, and `tools/compile-packs.py`. Each Sentinel quest declares
+`;character-pack sentinel/characters.hqp`. Undeclared quests use the generated
+fantasy fallback. Fantasy monster data still comes from `data/ahq-monsters.json`,
+with its original ambiguous/marked reference behaviour preserved. Nine fantasy
+hero definitions moved from C into the shared source format.
+
+Sentinel has nine hero equipment presets, 34 enemy profiles including weapon
+variants, and six individually identified Eldar leaders. Its table shorthand was
+expanded into explicit creature names. All use the existing AHQ melee/ranged
+rules; the user expressly rejected separate science-fiction or WWII rules.
+No new combat mechanics were added.
+
+Version 7 saves embed the full pack and retain party identity/class notes and
+named-monster IDs. Versions 1–6 migrate to fantasy without guessing a theme.
+Saved packs work without their source files, including unrevealed encounters.
+Campaign Builder materializes the base pack into independent campaign copies
+and rejects known incompatible monster-pack selections.
+
+See `doc/character-packs.md` for format, limitations and tests. Build using
+`build-msvc.bat`; run native checks with `tools/test-msvc.bat` and test basenames.
+The new `pack` check covers all five decks, every listed encounter, native party
+creation, no duplicate reveals, unique deaths, corruption, missing-source loads,
+legacy migration and preserving heroes when switching themes. Existing game,
+monster, combat, ranged, reference, builder, fog, rendering and recovery checks
+are also relevant. Do not run package.bat over the local playable copy.
+
+---
+
+## Previous update — 23 September 2026
 
 Branch: `codex/orthogonal-melee-combat`, based on main at `236476a`.
 The user authorized implementation after creating this feature branch.

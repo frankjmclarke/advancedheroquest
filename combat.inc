@@ -3,6 +3,8 @@
 static int melee_reference(const char *name,MELEE_PROFILE *p)
 {
     MELEE_PROFILE next={0};
+    const PACK_PROFILE *entry=pack_profile(name);
+    if(entry) { *p=entry->melee; return 1; }
     if(!room_melee(name,&next.dice,next.hit)) return 0;
     strcpy(next.weapon,"Printed melee profile"); *p=next; return 1;
 }
@@ -181,7 +183,7 @@ static int combat_calculate(HWND hwnd,COMBAT *c)
 static int combat_apply(COMBAT *c)
 {
     if(!c->steps || !melee_adjacent(c->h,c->m)) return 0;
-    if(!c->monster.wounds && c->monster.unique && !character_dead(c->monster.name) && monsters.dead_count==CHARACTER_LIMIT) return 0;
+    if(!c->monster.wounds && c->monster.unique && !character_dead(monster_identity(&c->monster)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
     remember(); heroes[c->h]=c->hero; monsters.tokens[c->m]=c->monster;
     if(!c->hero.wounds && c->hero.kind==4) heroes[c->h].x=heroes[c->h].y=-1;
     if(!c->monster.wounds) monster_kill(c->m);

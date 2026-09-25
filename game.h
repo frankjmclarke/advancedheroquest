@@ -14,6 +14,7 @@ typedef struct {
     int kind, stats[HERO_STATS], wounds, fate, x, y;
     MELEE_PROFILE melee;
     RANGED_PROFILE ranged;
+    char profile_id[64],class_name[64],class_rules[2048];
     int fired; /* normal ranged attack used this turn */
     int moved,focus; /* focus: opposing roster index + 1, or zero */
 } HERO;
@@ -22,6 +23,7 @@ typedef struct {
 #define ENCOUNTER_LIMIT 8192
 typedef struct {
     char name[64];
+    char profile_id[64],character_id[64];
     int stats[HERO_STATS], wounds, x, y, room, unique;
     MELEE_PROFILE melee;
     RANGED_PROFILE ranged;
@@ -34,6 +36,7 @@ typedef struct {
     unsigned char seen[ENCOUNTER_LIMIT];
 } MONSTER_STATE;
 typedef struct {
+    struct character_pack *pack; /* owned by decoded games, borrowed by capture */
     char title[160];
     int width, height, count, hero_count;
     int player_view; /* -1: legacy save with no recorded view; 0: GM; 1: player */
@@ -53,6 +56,7 @@ int game_valid_square(const GAME_DATA *data,int hero,int x,int y);
 int game_encode(const GAME_DATA *data,unsigned char **bytes,size_t *size);
 GAME_DATA *game_decode(const unsigned char *bytes,size_t size);
 void game_data_free(GAME_DATA *data);
+const char *monster_identity(const MONSTER *monster);
 void game_initialize(void);
 void game_shutdown(void);
 void game_party(void);

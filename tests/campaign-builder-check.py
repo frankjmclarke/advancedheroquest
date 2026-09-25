@@ -91,7 +91,7 @@ with tempfile.TemporaryDirectory(prefix='hq-builder-test-') as tmp:
     harness.write_text(HARNESS)
     runner = tmp / 'check.exe'
     subprocess.run(['cl', '/nologo', '/W3', '/D_CRT_SECURE_NO_WARNINGS',
-                    f'/I{ROOT}', str(harness), f'/Fe{runner}',
+                    f'/I{ROOT}', f'/I{ROOT / "my_lib"}', f'/I{ROOT / "my_lib/windows"}', str(ROOT / 'pack.c'), str(harness), f'/Fe{runner}',
                     str(ROOT / 'obj/msvc/menu.res'), 'user32.lib', 'gdi32.lib'], cwd=tmp, check=True)
     tables = tmp / 'tables'
     shutil.copytree(ROOT / 'tables', tables)
@@ -109,6 +109,11 @@ with tempfile.TemporaryDirectory(prefix='hq-builder-test-') as tmp:
     create('faces1_1.tab', 'goblinfort', r'dark\orc1.tab')
     create('faces1_1.tab', 'barefort', r'dark\orc1.tab', furnish=0)
     create('goblinfort.tab', 'copyfort')
+    create('sentinel5.tab', 'sentinelcopy')
+    assert (tables/'sentinelcopy/characters.hqp').read_bytes() == original[Path('sentinel/characters.hqp')]
+    assert ';character-pack sentinelcopy\\characters.hqp' in (tables/'sentinelcopy.tab').read_text()
+    create('sentinelcopy.tab', 'sentinelcopyagain')
+    create('faces1_1.tab', 'wrongpack', r'sentinel\core.tab', success=False, contains='different character pack')
     create('ritual1.tab', 'ritualcopy')
     create('terror4.tab', 'terrorcopy')
     create('sonne2.tab', 'lichemaster', r'terror\beastman.tab', mixed=True)
@@ -161,7 +166,7 @@ with tempfile.TemporaryDirectory(prefix='hq-builder-test-') as tmp:
     # Remove the sources; generated campaigns must stand on their own.
     for relative in original:
         (tables / relative).unlink()
-    for slug in ['goblinfort', 'barefort', 'copyfort', 'ritualcopy', 'terrorcopy', 'nestedfort', 'lichemaster', 'lichecopy']:
+    for slug in ['goblinfort', 'barefort', 'copyfort', 'ritualcopy', 'terrorcopy', 'nestedfort', 'lichemaster', 'lichecopy', 'sentinelcopy', 'sentinelcopyagain']:
         p = subprocess.run([str(EXE), '--check-campaign', slug + '.tab', 'check-errors.txt'],
                            cwd=tables, timeout=15)
         assert p.returncode == 0, (slug, (tables / 'check-errors.txt').read_text())

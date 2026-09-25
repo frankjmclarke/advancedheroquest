@@ -68,7 +68,7 @@ Genestealer
     1-4     "Genestealer (20 Points)"
     5-8     "Genestealer (25 Points)"
     9-11    "Genestealer (30 Points)"
-   12-12    "Genestealer, Broodlord markings (40 Points)" & Xenos-Wargear()
+   12-12    "Genestealer with Broodlord markings (40 Points)" & Xenos-Wargear()
 )
 
 Chaos-Space-Marine
@@ -115,8 +115,8 @@ Advanced-Dreadnought
 
 Tarantula
 (   1D12
-    1-4     "Tarantula Turret, turned against you (20 Points)"
-    5-8     "Tarantula Turret, turned against you (30 Points)"
+    1-4     "Tarantula Turret turned against you (20 Points)"
+    5-8     "Tarantula Turret turned against you (30 Points)"
     9-11    "Tarantula Turret with Conversion Beam (40 Points)"
    12-12    "Tarantula Turret with Las-Cannon (50 Points)"
 )
@@ -161,12 +161,12 @@ Eldar-Las-Cannon
 
 Eldar-Leader
 (   1D12
-    1-2     "Warlock Aedryn, Eldar Leader (60 Points)" & Xenos-Wargear()
-    3-4     "Exarch Ythrannor of the Shrouded Blade, Eldar Leader (70 Points)" & Xenos-Wargear()
-    5-6     "Spiritseer Nuadhu, Eldar Leader (70 Points)" & Xenos-Wargear()
-    7-8     "Exarch Maeliss the Patient, Eldar Leader (80 Points)" & Xenos-Wargear()
-    9-10    "Autarch Kaelyth Duilan, Eldar Leader (90 Points)" & Rare-Equipment()
-   11-12    "Farseer Ulvaneth of the Sentinel Host, Eldar Leader (120 Points)" & Xenos-Wargear() & Rare-Equipment()
+    1-2     "Warlock Aedryn (60 Points)" & Xenos-Wargear()
+    3-4     "Exarch Ythrannor of the Shrouded Blade (70 Points)" & Xenos-Wargear()
+    5-6     "Spiritseer Nuadhu (70 Points)" & Xenos-Wargear()
+    7-8     "Exarch Maeliss the Patient (80 Points)" & Xenos-Wargear()
+    9-10    "Autarch Kaelyth Duilan (90 Points)" & Rare-Equipment()
+   11-12    "Farseer Ulvaneth of the Sentinel Host (120 Points)" & Xenos-Wargear() & Rare-Equipment()
 )
 
 ; Optional: the Dreadnought miniature, repainted in wraithbone, stands in for

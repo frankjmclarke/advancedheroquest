@@ -1,0 +1,2419 @@
+{
+  "version": 1,
+  "id": "sentinel",
+  "name": "Sentinel V",
+  "heroes": [
+    {
+      "id": "sentinel:space-marine-commander",
+      "name": "Space Marine Commander",
+      "stats": [
+        11,
+        9,
+        6,
+        11,
+        6,
+        12,
+        9,
+        6,
+        0
+      ],
+      "fate": 3,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Power Glove",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "ranged": {
+        "weapon": "Bolt Pistol",
+        "kind": 4,
+        "range": 12,
+        "dice": 4,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-bolter",
+      "name": "Space Marine - Bolter",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        6,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Bolter",
+        "kind": 4,
+        "range": 36,
+        "dice": 4,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-heavy-bolter",
+      "name": "Space Marine - Heavy Bolter",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        4,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Heavy Bolter",
+        "kind": 4,
+        "range": 48,
+        "dice": 6,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-assault-cannon",
+      "name": "Space Marine - Assault Cannon",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        4,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Assault Cannon",
+        "kind": 4,
+        "range": 24,
+        "dice": 6,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-missile-launcher",
+      "name": "Space Marine - Missile Launcher",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        4,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Missile Launcher",
+        "kind": 4,
+        "range": 48,
+        "dice": 7,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-plasma-gun",
+      "name": "Space Marine - Plasma Gun",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        4,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Plasma Gun",
+        "kind": 4,
+        "range": 36,
+        "dice": 7,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-las-cannon",
+      "name": "Space Marine - Las-Cannon",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        4,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Las-Cannon",
+        "kind": 4,
+        "range": 48,
+        "dice": 9,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-conversion-beamer",
+      "name": "Space Marine - Conversion Beamer",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        4,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used. Conversion Beam starts at 5 damage dice; edit damage manually if desired.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Conversion Beam (near)",
+        "kind": 4,
+        "range": 48,
+        "dice": 5,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:space-marine-fusion-gun",
+      "name": "Space Marine - Fusion Gun",
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        4,
+        12,
+        8,
+        3,
+        0
+      ],
+      "fate": 1,
+      "text": "Uses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.",
+      "melee": {
+        "weapon": "Combat Knife",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Fusion Gun",
+        "kind": 4,
+        "range": 12,
+        "dice": 10,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    }
+  ],
+  "monsters": [
+    {
+      "id": "sentinel:gretchin",
+      "name": "Gretchin",
+      "aliases": [
+        "gretchin"
+      ],
+      "stats": [
+        4,
+        4,
+        2,
+        4,
+        6,
+        3,
+        4,
+        1,
+        5
+      ],
+      "text": "GRETCHIN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    4    4    2    4    6    3    4    1    5\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    4   5   6   7   8   9  10  10  10  10  10  10\r\nDamage dice: 2\r\n\r\nRANGED COMBAT\r\nHit roll:        8       9      10      11      12\r\nMax range: 24    Damage dice: 2\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 2,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 24,
+        "dice": 2,
+        "hit": [
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      }
+    },
+    {
+      "id": "sentinel:ork",
+      "name": "Ork",
+      "aliases": [
+        "ork",
+        "orks"
+      ],
+      "stats": [
+        7,
+        5,
+        4,
+        8,
+        6,
+        8,
+        5,
+        1,
+        10
+      ],
+      "text": "ORK\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    5    4    8    6    8    5    1   10\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nHit roll:        7       8       9      10      11\r\nMax range: 36    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 36,
+        "dice": 4,
+        "hit": [
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": "sentinel:ork-with-heavy-weapon",
+      "name": "Ork with Heavy Weapon",
+      "aliases": [
+        "ork with heavy weapon",
+        "ork with heavy weapons",
+        "ork heavy weapons",
+        "orks with heavy weapons",
+        "orks with heavy weapon"
+      ],
+      "stats": [
+        7,
+        6,
+        4,
+        8,
+        4,
+        8,
+        5,
+        1,
+        15
+      ],
+      "text": "ORK WITH HEAVY WEAPON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    6    4    8    4    8    5    1   15\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nHit roll:        6       7       8       9      10\r\nMax range: 48    Damage dice: 6\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 48,
+        "dice": 6,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "sentinel:ork-nob",
+      "name": "Ork Nob",
+      "aliases": [
+        "ork nob",
+        "ork nobs",
+        "ork nobz"
+      ],
+      "stats": [
+        9,
+        6,
+        5,
+        10,
+        6,
+        10,
+        6,
+        2,
+        20
+      ],
+      "text": "ORK NOB\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    6    5   10    6   10    6    2   20\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        6       7       8       9      10\r\nMax range: 36    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 36,
+        "dice": 4,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-android",
+      "name": "Chaos Android",
+      "aliases": [
+        "chaos android",
+        "chaos androids"
+      ],
+      "stats": [
+        8,
+        7,
+        5,
+        12,
+        4,
+        12,
+        4,
+        2,
+        15
+      ],
+      "text": "CHAOS ANDROID\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    8    7    5   12    4   12    4    2   15\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   3   4   5   6   7   8   9  10  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        5       6       7       8       9\r\nMax range: 36    Damage dice: 5\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 36,
+        "dice": 5,
+        "hit": [
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    },
+    {
+      "id": "sentinel:genestealer",
+      "name": "Genestealer",
+      "aliases": [
+        "genestealer",
+        "genestealers",
+        "genestealer with broodlord markings"
+      ],
+      "stats": [
+        11,
+        0,
+        5,
+        10,
+        12,
+        12,
+        6,
+        2,
+        25
+      ],
+      "text": "GENESTEALER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   11    0    5   10   12   12    6    2   25\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   3   4   5   6   7   8\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        0       0       0       0       0\r\nMax range: 0    Damage dice: 0\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "ranged": {
+        "weapon": "",
+        "kind": 0,
+        "range": 0,
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-space-marine",
+      "name": "Chaos Space Marine",
+      "aliases": [
+        "chaos space marine",
+        "chaos space marines",
+        "chaos space marine with bolter",
+        "chaos space marines with bolters"
+      ],
+      "stats": [
+        9,
+        8,
+        5,
+        10,
+        6,
+        11,
+        8,
+        2,
+        25
+      ],
+      "text": "CHAOS SPACE MARINE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    8    5   10    6   11    8    2   25\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        4       5       6       7       8\r\nMax range: 36    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 36,
+        "dice": 4,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-space-marine-with-heavy-weapon",
+      "name": "Chaos Space Marine with Heavy Weapon",
+      "aliases": [
+        "chaos space marine with heavy weapon",
+        "chaos space marine with heavy weapons",
+        "chaos space marine heavy weapons",
+        "chaos space marines with heavy weapons",
+        "chaos space marines with heavy weapon"
+      ],
+      "stats": [
+        9,
+        9,
+        5,
+        10,
+        4,
+        11,
+        8,
+        2,
+        30
+      ],
+      "text": "CHAOS SPACE MARINE WITH HEAVY WEAPON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    9    5   10    4   11    8    2   30\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 48    Damage dice: 7\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 48,
+        "dice": 7,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-space-marine-commander",
+      "name": "Chaos Space Marine Commander",
+      "aliases": [
+        "chaos space marine commander",
+        "chaos space marine commanders"
+      ],
+      "stats": [
+        11,
+        9,
+        6,
+        11,
+        6,
+        12,
+        9,
+        4,
+        50
+      ],
+      "text": "CHAOS SPACE MARINE COMMANDER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   11    9    6   11    6   12    9    4   50\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   3   4   5   6   7   8\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 12    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 12,
+        "dice": 4,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:tarantula-turret",
+      "name": "Tarantula Turret",
+      "aliases": [
+        "tarantula turret",
+        "tarantula turrets",
+        "tarantula turret turned against you"
+      ],
+      "stats": [
+        2,
+        8,
+        0,
+        10,
+        0,
+        0,
+        0,
+        3,
+        20
+      ],
+      "text": "TARANTULA TURRET\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    2    8    0   10    0    0    0    3   20\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    0   0   0   0   0   0   0   0   0   0   0   0\r\nDamage dice: 0\r\n\r\nRANGED COMBAT\r\nHit roll:        4       5       6       7       8\r\nMax range: 48    Damage dice: 6\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\nNo hand-to-hand attack; Speed 0.\r\n",
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 48,
+        "dice": 6,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:dreadnought",
+      "name": "Dreadnought",
+      "aliases": [
+        "dreadnought",
+        "dreadnoughts"
+      ],
+      "stats": [
+        9,
+        8,
+        8,
+        18,
+        4,
+        12,
+        6,
+        6,
+        40
+      ],
+      "text": "DREADNOUGHT\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    8    8   18    4   12    6    6   40\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 8\r\n\r\nRANGED COMBAT\r\nHit roll:        4       5       6       7       8\r\nMax range: 24    Damage dice: 8\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 8,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 24,
+        "dice": 8,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:advanced-dreadnought",
+      "name": "Advanced Dreadnought",
+      "aliases": [
+        "advanced dreadnought",
+        "advanced dreadnoughts"
+      ],
+      "stats": [
+        10,
+        9,
+        9,
+        20,
+        4,
+        12,
+        6,
+        8,
+        60
+      ],
+      "text": "ADVANCED DREADNOUGHT\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   10    9    9   20    4   12    6    8   60\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   3   4   5   6   7   8   9\r\nDamage dice: 10\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 48    Damage dice: 10\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 10,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 48,
+        "dice": 10,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:eldar-guardian",
+      "name": "Eldar Guardian",
+      "aliases": [
+        "eldar guardian",
+        "eldar guardians",
+        "eldar guardian with shuriken catapult"
+      ],
+      "stats": [
+        7,
+        8,
+        3,
+        6,
+        8,
+        8,
+        9,
+        1,
+        20
+      ],
+      "text": "ELDAR GUARDIAN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    8    3    6    8    8    9    1   20\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nHit roll:        4       5       6       7       8\r\nMax range: 24    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 24,
+        "dice": 4,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:eldar-guardian-with-shuriken-cannon",
+      "name": "Eldar Guardian with Shuriken Cannon",
+      "aliases": [
+        "eldar guardian with shuriken cannon",
+        "eldar guardian with shuriken cannons",
+        "eldar guardians with shuriken cannon"
+      ],
+      "stats": [
+        7,
+        9,
+        3,
+        6,
+        6,
+        8,
+        9,
+        1,
+        30
+      ],
+      "text": "ELDAR GUARDIAN WITH SHURIKEN CANNON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    9    3    6    6    8    9    1   30\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 36    Damage dice: 6\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 36,
+        "dice": 6,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:eldar-guardian-with-missile-launcher",
+      "name": "Eldar Guardian with Missile Launcher",
+      "aliases": [
+        "eldar guardian with missile launcher",
+        "eldar guardian with missile launchers",
+        "eldar guardians with missile launcher"
+      ],
+      "stats": [
+        7,
+        9,
+        3,
+        6,
+        6,
+        8,
+        9,
+        1,
+        35
+      ],
+      "text": "ELDAR GUARDIAN WITH MISSILE LAUNCHER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    9    3    6    6    8    9    1   35\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 48    Damage dice: 7\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 48,
+        "dice": 7,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:eldar-guardian-with-las-cannon",
+      "name": "Eldar Guardian with Las-Cannon",
+      "aliases": [
+        "eldar guardian with las-cannon",
+        "eldar guardian with las-cannons",
+        "eldar guardians with las-cannon"
+      ],
+      "stats": [
+        7,
+        9,
+        3,
+        6,
+        6,
+        8,
+        9,
+        1,
+        40
+      ],
+      "text": "ELDAR GUARDIAN WITH LAS-CANNON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    9    3    6    6    8    9    1   40\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 3\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 48    Damage dice: 8\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 3,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 48,
+        "dice": 8,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:eldar-leader",
+      "name": "Eldar Leader",
+      "aliases": [
+        "eldar leader",
+        "eldar leaders"
+      ],
+      "stats": [
+        12,
+        10,
+        4,
+        8,
+        10,
+        11,
+        11,
+        3,
+        60
+      ],
+      "text": "ELDAR LEADER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12   10    4    8   10   11   11    3   60\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       3       4       5       6\r\nMax range: 16    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 16,
+        "dice": 4,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "id": "sentinel:eldar-wraithlord",
+      "name": "Eldar Wraithlord",
+      "aliases": [
+        "eldar wraithlord",
+        "eldar wraithlords"
+      ],
+      "stats": [
+        10,
+        9,
+        8,
+        16,
+        6,
+        12,
+        8,
+        6,
+        70
+      ],
+      "text": "ELDAR WRAITHLORD\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   10    9    8   16    6   12    8    6   70\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   3   4   5   6   7   8   9\r\nDamage dice: 9\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 48    Damage dice: 8\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 9,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 48,
+        "dice": 8,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:ork-with-heavy-bolter",
+      "name": "Ork with Heavy Bolter",
+      "aliases": [
+        "ork with heavy bolter",
+        "orks with heavy bolter"
+      ],
+      "stats": [
+        7,
+        6,
+        4,
+        8,
+        4,
+        8,
+        5,
+        1,
+        15
+      ],
+      "text": "ORK WITH HEAVY BOLTER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    6    4    8    4    8    5    1   15\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nHit roll:        6       7       8       9      10\r\nMax range: 48    Damage dice: 6\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Heavy Bolter",
+        "kind": 4,
+        "range": 48,
+        "dice": 6,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "sentinel:ork-with-missile-launcher",
+      "name": "Ork with Missile Launcher",
+      "aliases": [
+        "ork with missile launcher",
+        "orks with missile launcher"
+      ],
+      "stats": [
+        7,
+        6,
+        4,
+        8,
+        4,
+        8,
+        5,
+        1,
+        15
+      ],
+      "text": "ORK WITH MISSILE LAUNCHER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    6    4    8    4    8    5    1   15\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nHit roll:        6       7       8       9      10\r\nMax range: 48    Damage dice: 7\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Missile Launcher",
+        "kind": 4,
+        "range": 48,
+        "dice": 7,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "sentinel:ork-with-assault-cannon",
+      "name": "Ork with Assault Cannon",
+      "aliases": [
+        "ork with assault cannon",
+        "orks with assault cannon"
+      ],
+      "stats": [
+        7,
+        6,
+        4,
+        8,
+        4,
+        8,
+        5,
+        1,
+        15
+      ],
+      "text": "ORK WITH ASSAULT CANNON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    6    4    8    4    8    5    1   15\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nHit roll:        6       7       8       9      10\r\nMax range: 24    Damage dice: 6\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Assault Cannon",
+        "kind": 4,
+        "range": 24,
+        "dice": 6,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "sentinel:ork-with-plasma-gun",
+      "name": "Ork with Plasma Gun",
+      "aliases": [
+        "ork with plasma gun",
+        "orks with plasma gun"
+      ],
+      "stats": [
+        7,
+        6,
+        4,
+        8,
+        4,
+        8,
+        5,
+        1,
+        15
+      ],
+      "text": "ORK WITH PLASMA GUN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    7    6    4    8    4    8    5    1   15\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   3   4   5   6   7   8   9  10  10  10\r\nDamage dice: 4\r\n\r\nRANGED COMBAT\r\nHit roll:        6       7       8       9      10\r\nMax range: 36    Damage dice: 7\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 4,
+        "hit": [
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Plasma Gun",
+        "kind": 4,
+        "range": 36,
+        "dice": 7,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-space-marine-with-heavy-bolter",
+      "name": "Chaos Space Marine with Heavy Bolter",
+      "aliases": [
+        "chaos space marine with heavy bolter",
+        "chaos space marines with heavy bolter"
+      ],
+      "stats": [
+        9,
+        9,
+        5,
+        10,
+        4,
+        11,
+        8,
+        2,
+        30
+      ],
+      "text": "CHAOS SPACE MARINE WITH HEAVY BOLTER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    9    5   10    4   11    8    2   30\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 48    Damage dice: 6\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Heavy Bolter",
+        "kind": 4,
+        "range": 48,
+        "dice": 6,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-space-marine-with-missile-launcher",
+      "name": "Chaos Space Marine with Missile Launcher",
+      "aliases": [
+        "chaos space marine with missile launcher",
+        "chaos space marines with missile launcher"
+      ],
+      "stats": [
+        9,
+        9,
+        5,
+        10,
+        4,
+        11,
+        8,
+        2,
+        30
+      ],
+      "text": "CHAOS SPACE MARINE WITH MISSILE LAUNCHER\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    9    5   10    4   11    8    2   30\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 48    Damage dice: 7\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Missile Launcher",
+        "kind": 4,
+        "range": 48,
+        "dice": 7,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-space-marine-with-assault-cannon",
+      "name": "Chaos Space Marine with Assault Cannon",
+      "aliases": [
+        "chaos space marine with assault cannon",
+        "chaos space marines with assault cannon"
+      ],
+      "stats": [
+        9,
+        9,
+        5,
+        10,
+        4,
+        11,
+        8,
+        2,
+        30
+      ],
+      "text": "CHAOS SPACE MARINE WITH ASSAULT CANNON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    9    5   10    4   11    8    2   30\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 24    Damage dice: 6\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Assault Cannon",
+        "kind": 4,
+        "range": 24,
+        "dice": 6,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:chaos-space-marine-with-plasma-gun",
+      "name": "Chaos Space Marine with Plasma Gun",
+      "aliases": [
+        "chaos space marine with plasma gun",
+        "chaos space marines with plasma gun"
+      ],
+      "stats": [
+        9,
+        9,
+        5,
+        10,
+        4,
+        11,
+        8,
+        2,
+        30
+      ],
+      "text": "CHAOS SPACE MARINE WITH PLASMA GUN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    9    9    5   10    4   11    8    2   30\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   3   4   5   6   7   8   9  10\r\nDamage dice: 5\r\n\r\nRANGED COMBAT\r\nHit roll:        3       4       5       6       7\r\nMax range: 36    Damage dice: 7\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 5,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "ranged": {
+        "weapon": "Plasma Gun",
+        "kind": 4,
+        "range": 36,
+        "dice": 7,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "id": "sentinel:tarantula-turret-with-conversion-beam",
+      "name": "Tarantula Turret with Conversion Beam",
+      "aliases": [
+        "tarantula turret with conversion beam",
+        "tarantula turrets with conversion beam"
+      ],
+      "stats": [
+        2,
+        8,
+        0,
+        10,
+        0,
+        0,
+        0,
+        3,
+        20
+      ],
+      "text": "TARANTULA TURRET WITH CONVERSION BEAM\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    2    8    0   10    0    0    0    3   20\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    0   0   0   0   0   0   0   0   0   0   0   0\r\nDamage dice: 0\r\n\r\nRANGED COMBAT\r\nHit roll:        4       5       6       7       8\r\nMax range: 48    Damage dice: 5\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\nNo hand-to-hand attack; Speed 0.\r\n",
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "Conversion Beam",
+        "kind": 4,
+        "range": 48,
+        "dice": 5,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:tarantula-turret-with-las-cannon",
+      "name": "Tarantula Turret with Las-Cannon",
+      "aliases": [
+        "tarantula turret with las-cannon",
+        "tarantula turrets with las-cannon"
+      ],
+      "stats": [
+        2,
+        8,
+        0,
+        10,
+        0,
+        0,
+        0,
+        3,
+        20
+      ],
+      "text": "TARANTULA TURRET WITH LAS-CANNON\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n    2    8    0   10    0    0    0    3   20\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    0   0   0   0   0   0   0   0   0   0   0   0\r\nDamage dice: 0\r\n\r\nRANGED COMBAT\r\nHit roll:        4       5       6       7       8\r\nMax range: 48    Damage dice: 9\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\nNo hand-to-hand attack; Speed 0.\r\n",
+      "melee": {
+        "weapon": "",
+        "dice": 0,
+        "hit": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ranged": {
+        "weapon": "Las-Cannon",
+        "kind": 4,
+        "range": 48,
+        "dice": 9,
+        "hit": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "sentinel:warlock-aedryn",
+      "name": "Warlock Aedryn",
+      "aliases": [
+        "warlock aedryn"
+      ],
+      "stats": [
+        12,
+        10,
+        4,
+        8,
+        10,
+        11,
+        11,
+        3,
+        60
+      ],
+      "text": "WARLOCK AEDRYN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12   10    4    8   10   11   11    3   60\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       3       4       5       6\r\nMax range: 16    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 16,
+        "dice": 4,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "unique": 1
+    },
+    {
+      "id": "sentinel:exarch-ythrannor-of-the-shrouded-blade",
+      "name": "Exarch Ythrannor of the Shrouded Blade",
+      "aliases": [
+        "exarch ythrannor of the shrouded blade"
+      ],
+      "stats": [
+        12,
+        10,
+        4,
+        8,
+        10,
+        11,
+        11,
+        3,
+        70
+      ],
+      "text": "EXARCH YTHRANNOR OF THE SHROUDED BLADE\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12   10    4    8   10   11   11    3   70\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       3       4       5       6\r\nMax range: 16    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 16,
+        "dice": 4,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "unique": 1
+    },
+    {
+      "id": "sentinel:spiritseer-nuadhu",
+      "name": "Spiritseer Nuadhu",
+      "aliases": [
+        "spiritseer nuadhu"
+      ],
+      "stats": [
+        12,
+        10,
+        4,
+        8,
+        10,
+        11,
+        11,
+        3,
+        70
+      ],
+      "text": "SPIRITSEER NUADHU\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12   10    4    8   10   11   11    3   70\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       3       4       5       6\r\nMax range: 16    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 16,
+        "dice": 4,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "unique": 1
+    },
+    {
+      "id": "sentinel:exarch-maeliss-the-patient",
+      "name": "Exarch Maeliss the Patient",
+      "aliases": [
+        "exarch maeliss the patient"
+      ],
+      "stats": [
+        12,
+        10,
+        4,
+        8,
+        10,
+        11,
+        11,
+        3,
+        80
+      ],
+      "text": "EXARCH MAELISS THE PATIENT\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12   10    4    8   10   11   11    3   80\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       3       4       5       6\r\nMax range: 16    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 16,
+        "dice": 4,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "unique": 1
+    },
+    {
+      "id": "sentinel:autarch-kaelyth-duilan",
+      "name": "Autarch Kaelyth Duilan",
+      "aliases": [
+        "autarch kaelyth duilan"
+      ],
+      "stats": [
+        12,
+        10,
+        4,
+        8,
+        10,
+        11,
+        11,
+        3,
+        90
+      ],
+      "text": "AUTARCH KAELYTH DUILAN\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12   10    4    8   10   11   11    3   90\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       3       4       5       6\r\nMax range: 16    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 16,
+        "dice": 4,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "unique": 1
+    },
+    {
+      "id": "sentinel:farseer-ulvaneth-of-the-sentinel-host",
+      "name": "Farseer Ulvaneth of the Sentinel Host",
+      "aliases": [
+        "farseer ulvaneth of the sentinel host"
+      ],
+      "stats": [
+        12,
+        10,
+        4,
+        8,
+        10,
+        11,
+        11,
+        3,
+        120
+      ],
+      "text": "FARSEER ULVANETH OF THE SENTINEL HOST\r\n\r\n   WS   BS    S    T   Sp   Br  Int    W   PV\r\n   12   10    4    8   10   11   11    3  120\r\n\r\nHAND-TO-HAND COMBAT\r\nHit roll:    2   2   2   2   2   2   2   3   4   5   6   7\r\nDamage dice: 6\r\n\r\nRANGED COMBAT\r\nHit roll:        3       3       4       5       6\r\nMax range: 16    Damage dice: 4\r\n\r\nUses the existing AHQ hand-to-hand and ranged combat rules. Weapon special abilities from the original printed cards are not used.\r\n\r\n",
+      "melee": {
+        "weapon": "Hand-to-hand",
+        "dice": 6,
+        "hit": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ranged": {
+        "weapon": "Ranged weapon",
+        "kind": 4,
+        "range": 16,
+        "dice": 4,
+        "hit": [
+          3,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "unique": 1
+    }
+  ],
+  "nonmonsters": [
+    " ",
+    "a crawlspace below",
+    "a dead rating",
+    "a mechanicus override rite",
+    "a reactor shutdown litany",
+    "a tally of the dead",
+    "a vox cipher",
+    "a warning",
+    "a xenos linguistic primer",
+    "accelerant",
+    "access hatch",
+    "adeptus tool kit",
+    "ammunition hopper",
+    "an inquisitorial seal",
+    "and 50 points",
+    "anti toxin injector",
+    "apothecary's reductor",
+    "artificer helm",
+    "artificer plate",
+    "assault cannon",
+    "astropathic relay crystal",
+    "auspex",
+    "auspex scanner",
+    "auto repair unit",
+    "automated crossfire",
+    "bionic arm",
+    "bionic eye",
+    "bionic heart",
+    "bionic legs",
+    "black carapace relay",
+    "blast door slams",
+    "bolt pistol",
+    "bolter",
+    "bolter magazines",
+    "bolters",
+    "burnt out",
+    "ceramite plating",
+    "chainsword",
+    "chapter honours owed to this station",
+    "collapsed bulkhead",
+    "combat knife",
+    "combat stimms",
+    "command throne of the sentinel",
+    "compactor walls",
+    "conversion beamer",
+    "conversion field",
+    "coolant pool",
+    "coolant pool: a sealed crate at the bottom",
+    "coolant pool: contaminated",
+    "coolant pool: something surfaces",
+    "coordinates of a hidden armoury",
+    "corrosive fungus",
+    "cyclops targeter",
+    "damage reports from deck 5",
+    "dangerous",
+    "data slate holding:",
+    "data slate:",
+    "data stack:",
+    "data stack: purged",
+    "deadly toxin",
+    "deck collapse",
+    "deck grating",
+    "deck plans of sentinel v",
+    "deck plans of this level",
+    "displacer field",
+    "drop shaft down",
+    "eldar wraithbone harness",
+    "empty",
+    "feet of cable",
+    "flamer canister",
+    "flamer canisters",
+    "frag grenades",
+    "fungal spores",
+    "fusion gun",
+    "gantry bridge over the shaft",
+    "guillotine shutter",
+    "hallucinogen",
+    "hand flamer",
+    "hazard:",
+    "heavy bolter",
+    "heavy weapon reload",
+    "helm of the chapter",
+    "hidden salvage:",
+    "hull breach   open to vacuum below",
+    "imperial guardsman",
+    "in high gothic",
+    "inert",
+    "inferno pistol",
+    "infra sight",
+    "intact cogitator bank",
+    "iron halo",
+    "klaxon alarm",
+    "krak grenades",
+    "lair:",
+    "las cannon",
+    "lightning arc",
+    "machine spirit core",
+    "maintenance crawl:",
+    "mark iv maximus plate",
+    "mark vi corvus plate",
+    "mark vii aquila plate",
+    "master crafted bolt pistol",
+    "master crafted bolter",
+    "medi pack",
+    "melta bombs",
+    "mild toxin",
+    "mindscrambler",
+    "missile launcher",
+    "motion tracker",
+    "narthecium vial",
+    "nausea gas",
+    "needle spike",
+    "nerve agent",
+    "no power",
+    "normal:",
+    "not to go below",
+    "nothing",
+    "nothing more",
+    "objective counter",
+    "objective room:",
+    "one jump to any explored section",
+    "opened from inside",
+    "pain suppressor",
+    "phosgex   deadly",
+    "photon flash grenades",
+    "plasma gun",
+    "plasma pistol",
+    "plasma vent",
+    "pleading",
+    "points",
+    "points on the body",
+    "power axe",
+    "power cell",
+    "power discharge",
+    "power glove",
+    "power sword",
+    "preserved",
+    "promethium burst",
+    "promethium canisters",
+    "psyber moth swarm",
+    "psychic detonation",
+    "psychic ward",
+    "purity sealed archeotech casing",
+    "reactivating",
+    "reactive plate",
+    "reactor shaft: a working service lift",
+    "reactor shaft: radiation leak",
+    "reactor shaft: sealed",
+    "reactor shaft: something is climbing up it",
+    "refractor field",
+    "regenerative",
+    "reinforced ribcage",
+    "relic blade of the chapter",
+    "relic of the chapter",
+    "reliquary of the station shrine",
+    "replayed",
+    "rogue psyker",
+    "rosarius",
+    "sanctified plate of the chapter",
+    "scout carapace",
+    "scrap bats",
+    "sealed ration crate",
+    "sealed weapon crate",
+    "sentinel servitor",
+    "sentinel servitor: broadcasts your position",
+    "sentinel servitor: dead machinery",
+    "sentinel servitor: it fires on anything that moves",
+    "servitor cradle",
+    "servo clamp",
+    "servo skull",
+    "smoke grenades",
+    "something is waiting in the crawl:",
+    "soporific spores",
+    "soul blast",
+    "spike bolt",
+    "spore pod:",
+    "spore pods:",
+    "stasis casket: a dead marine of an unknown chapter",
+    "stasis casket: empty",
+    "stasis casket: it opens as you pass",
+    "stasis casket: the station magos",
+    "station servitor",
+    "still logging",
+    "still obeying orders",
+    "stimulant",
+    "storm shield",
+    "stripped power cabling",
+    "sub section",
+    "supply crate:",
+    "supply locker:",
+    "supply locker: 25 points",
+    "supply locker: empty",
+    "supply locker: spoiled rations",
+    "suspensor harness",
+    "tactical dreadnought plate",
+    "targeter",
+    "tech adept of the sentinel",
+    "teleport pad: a direct line to the strike cruiser",
+    "teleport pad: dead",
+    "teleport pad: it brings something in",
+    "teleport pad: live",
+    "teleport pad: mechanicus shrine attached",
+    "teleport pad: misfires",
+    "terminator plate",
+    "terminator shoulder guards",
+    "the magos rubrica of the core",
+    "the roster of the lost garrison",
+    "the sentinel's final augur sweep",
+    "the station's distress beacon key",
+    "the true name of what sleeps in the core",
+    "thick on every surface",
+    "thunder hammer",
+    "toxin vent",
+    "unbroken",
+    "vermin",
+    "vice of terror",
+    "vortex grenade",
+    "warp echo: a farseer projection",
+    "warp echo: a voice on the vox that has no source",
+    "warp echo: the last stand of the garrison",
+    "warp echo: the machine spirit of the sentinel",
+    "waste sump",
+    "watching in silence",
+    "weapon rack:",
+    "weapon rack: stripped",
+    "witchfire",
+    "workbench",
+    "xenos residue"
+  ]
+}

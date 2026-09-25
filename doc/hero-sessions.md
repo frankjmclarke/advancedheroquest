@@ -38,6 +38,10 @@ room descriptions, party records, token positions and explored rooms. Opening
 the saved dungeon does not require regenerating it from its campaign tables.
 The save does not bundle those tables: select the desired quest through
 **Options > Load Tables** when continuing into a different campaign.
+Character packs are bundled: version 7 saves retain hero and enemy definitions
+even if the original pack is edited or removed. Sentinel quests offer Marine
+presets and alien encounters using the same combat rules. See
+[Character packs](character-packs.md) for authoring other themes.
 
 A generated dungeon starts a persistent session with an empty board. Hero changes, monster changes, door reveals and new dungeons write a separate
 recovery file under `%LOCALAPPDATA%\HQ-Map`. This does not overwrite your named
@@ -48,8 +52,8 @@ written and flushed. A failed dungeon generation cannot overwrite recovery.
 
 Keep named saves for campaigns you want to retain: recovery holds the latest
 session and its previous revision, not an unlimited history. Existing map/image
-exports remain separate from saved games. Custom classes, equipment records and
-custom resource counters are outside this first version.
+exports remain separate from saved games. Character packs can supply custom
+presets; custom resource counters remain outside the current implementation.
 
 ## Development checks
 
@@ -159,7 +163,7 @@ another adventure replaces the ledger. Keep separate named saves for separate ad
 
 Saved games and recovery include monster profiles, remaining Wounds, positions,
 unplaced/dead records, already-populated encounters and character deaths. The new
-version-6 format reads earlier version-1 through version-5 saves.
+version-7 format reads earlier version-1 through version-6 saves.
 Revealed encounters in version-1 saves are populated on load. New saves require
 this updated executable.
 

@@ -12,6 +12,7 @@
 #include <defs.h>
 #include "game.h"
 #include "liste.h"
+#include "pack.h"
 #include "rsh/game.rh"
 
 static MONSTER_STATE monsters,undo_monsters;
@@ -39,6 +40,7 @@ static int capture(GAME_DATA *d)
     d->pieces=Pice; d->count=MAX_PICE; d->width=Xsize; d->height=Ysize;
     d->visible=game_fog(); if(!d->visible) return 0;
     d->player_view=preferred_player_view;
+    d->pack=(CHARACTER_PACK*)pack_current();
     d->monsters=monsters;
     d->hero_count=hero_count; memcpy(d->heroes,heroes,sizeof(heroes)); strcpy(d->title,session_title);
     d->cells=(int*)malloc(sizeof(int)*Xsize*Ysize); if(!d->cells) return 0;
@@ -146,15 +148,18 @@ int game_before_replace(void)
 }
 int game_load(int recovery)
 {
-    char path[MAX_PATH]; GAME_DATA *d;
+    char path[MAX_PATH]; GAME_DATA *d; CHARACTER_PACK *next_pack;
     if(!recovery) { path[0]=0; if(!choose_path(path,0)) return 0; }
     else strcpy(path,recovery_path);
     d=read_game(path);
     if(!d && recovery) d=read_game(previous_path);
     if(!d) { if(recovery!=2) message("This saved game is damaged, unsupported, or unavailable. The current game has not changed."); return 0; }
     if(recovery!=2 && !game_before_replace()) { game_data_free(d); return 0; }
+    next_pack=pack_clone(d->pack);
+    if(!next_pack) { game_data_free(d); message("Not enough memory for character profiles."); return 0; }
     /* map_restore allocates first, so even allocation failure preserves play. */
-    if(!map_restore(d->pieces,d->count,d->width,d->height,d->cells)) { game_data_free(d); if(recovery!=2) message("Not enough memory to load the game."); return 0; }
+    if(!map_restore(d->pieces,d->count,d->width,d->height,d->cells)) { pack_free(next_pack); game_data_free(d); if(recovery!=2) message("Not enough memory to load the game."); return 0; }
+    pack_adopt(next_pack);
     close_all_windows(FALSE);
     game_data_free(loaded_owner); loaded_owner=d;
     if(d->player_view>=0) preferred_player_view=d->player_view;
@@ -195,7 +200,9 @@ void game_discard_dungeon(void)
 }
 void game_new_dungeon(const char *title)
 {
-    int i; map_ready=1; active=1;
+    int i;
+    if(!pack_start_dungeon()) { map_ready=0; message("Not enough memory for character profiles."); return; }
+    map_ready=1; active=1;
     game_data_free(loaded_owner); loaded_owner=NULL;
     game_reset_fog();
     monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
@@ -209,6 +216,7 @@ void game_shutdown(void)
 {
     game_data_free(loaded_owner); loaded_owner=NULL;
     game_reset_fog();
+    pack_shutdown();
 }
 static void reserve_party(void)
 {
@@ -463,7 +471,8 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
     int id=LOWORD(wp),n,i;
     if(msg==WM_INITDIALOG) {
-        for(i=0;i<HERO_CLASS_COUNT;i++) SendDlgItemMessageA(hwnd,GPCLASS,CB_ADDSTRING,0,(LPARAM)hero_classes[i]);
+        SendDlgItemMessage(hwnd,GPCLASS,CB_SETDROPPEDWIDTH,300,0);
+        for(i=0;i<pack_current()->hero_count;i++) SendDlgItemMessageA(hwnd,GPCLASS,CB_ADDSTRING,0,(LPARAM)pack_current()->heroes[i].name);
         SendDlgItemMessage(hwnd,GPCLASS,CB_SETCURSEL,0,0); SendDlgItemMessage(hwnd,GPNAME,EM_LIMITTEXT,39,0);
         party_selection=selected>=0?selected:hero_count?0:-1; party_list(hwnd); party_fields(hwnd); return TRUE;
     }
@@ -482,7 +491,7 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     }
     if(id==GPRANGED && party_selection>=0) {
         HERO next; if(!party_apply(hwnd)) return TRUE; next=heroes[party_selection];
-        if(edit_ranged(hwnd,&next.ranged,&next.moved,next.kind,NULL) && memcmp(&next,&heroes[party_selection],sizeof(next))) {
+        if(edit_ranged(hwnd,&next.ranged,&next.moved,strncmp(next.profile_id,"fantasy:",8)?-1:next.kind,next.profile_id) && memcmp(&next,&heroes[party_selection],sizeof(next))) {
             remember(); heroes[party_selection]=next; active=1; game_changed();
         }
         party_fields(hwnd); return TRUE;
@@ -491,14 +500,19 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         HERO next;
         if(!party_apply(hwnd)) return TRUE;
         next=heroes[party_selection];
-        if(edit_profile(hwnd,&next.melee,next.stats,NULL,next.kind) && memcmp(&next,&heroes[party_selection],sizeof(next))) {
+        if(edit_profile(hwnd,&next.melee,next.stats,next.profile_id,strncmp(next.profile_id,"fantasy:",8)?-1:next.kind) && memcmp(&next,&heroes[party_selection],sizeof(next))) {
             remember(); heroes[party_selection]=next; active=1; game_changed();
         }
         party_fields(hwnd); return TRUE;
     }
     if(id==GPRULES) {
-        n=party_selection>=0?heroes[party_selection].kind:(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0);
-        if(n>=0 && n<HERO_CLASS_COUNT) MessageBoxA(hwnd,hero_class_rules(n),hero_classes[n],MB_OK|MB_ICONINFORMATION);
+        if(party_selection>=0) {
+            const HERO *h=&heroes[party_selection];
+            MessageBoxA(hwnd,h->class_rules[0]?h->class_rules:hero_class_rules(h->kind),h->class_name[0]?h->class_name:hero_classes[h->kind],MB_OK|MB_ICONINFORMATION);
+        } else {
+            n=(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0);
+            if(n>=0 && n<pack_current()->hero_count) MessageBoxA(hwnd,pack_current()->heroes[n].text,pack_current()->heroes[n].name,MB_OK|MB_ICONINFORMATION);
+        }
         return TRUE;
     }
     if(id!=GPADD && id!=GPAPPLY && id!=GPMOVE && id!=GPRESERVE && id!=IDOK && id!=IDCANCEL) return FALSE;
@@ -506,7 +520,7 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     if(id==GPADD) {
         if(hero_count==HERO_LIMIT) { message("This party already has 16 heroes, including reserve."); return TRUE; }
         n=(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0); if(n<0) return TRUE;
-        remember(); hero_defaults(&heroes[hero_count],n,hero_count+1); party_selection=hero_count++; active=1; game_changed();
+        remember(); pack_hero(&heroes[hero_count],&pack_current()->heroes[n],hero_count+1); party_selection=hero_count++; active=1; game_changed();
     } else if(id==GPRESERVE && party_selection>=0) {
         remember(); heroes[party_selection].x=heroes[party_selection].y=-1; move_mode=0; game_changed();
     } else if(id==GPMOVE && party_selection>=0) {

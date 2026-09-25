@@ -42,16 +42,17 @@ static int monster_editor_apply(HWND hwnd,int add)
     next.stats[7]=(int)GetDlgItemInt(hwnd,GMMAX,&ok1,FALSE);
     next.wounds=(int)GetDlgItemInt(hwnd,GMWOUNDS,&ok2,FALSE);
     next.unique=IsDlgButtonChecked(hwnd,GMUNIQUE)==BST_CHECKED;
+    if(!next.unique) next.character_id[0]=0;
     if(!next.name[0] || !ok1 || !ok2 || next.stats[7]<1 || next.stats[7]>99 || next.wounds<0 || next.wounds>next.stats[7]) {
         message("Enter a name, Max Wounds from 1 to 99, and remaining Wounds from 0 to Max."); return 0;
     }
-    if(next.wounds && character_dead(next.name)) { message("That character is dead in this adventure. Use Undo to reverse an accidental killing."); return 0; }
+    if(next.wounds && character_dead(monster_identity(&next))) { message("That character is dead in this adventure. Use Undo to reverse an accidental killing."); return 0; }
     if(next.wounds) for(i=0;i<monsters.count;i++) {
-        if((add || i!=selected_monster) && monsters.tokens[i].wounds && (next.unique || monsters.tokens[i].unique) && !_stricmp(next.name,monsters.tokens[i].name)) {
+        if((add || i!=selected_monster) && monsters.tokens[i].wounds && (next.unique || monsters.tokens[i].unique) && !_stricmp(monster_identity(&next),monster_identity(&monsters.tokens[i]))) {
             message("A unique character can have only one living token. Give it its individual encounter name."); return 0;
         }
     }
-    if(!next.wounds && next.unique && !character_dead(next.name) && monsters.dead_count==CHARACTER_LIMIT) { message("Character death record is full."); return 0; }
+    if(!next.wounds && next.unique && !character_dead(monster_identity(&next)) && monsters.dead_count==CHARACTER_LIMIT) { message("Character death record is full."); return 0; }
     if(!add && !memcmp(&next,&monsters.tokens[selected_monster],sizeof(next))) return 1;
     remember();
     if(add) selected_monster=monsters.count++;

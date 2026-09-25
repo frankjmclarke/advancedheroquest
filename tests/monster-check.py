@@ -103,6 +103,7 @@ int main(int argc,char **argv) {
     decoded=game_decode(bytes,size); assert(decoded && decoded->player_view==1);
     decoded->player_view=2; assert(!game_encode(decoded,&bytes2,&size2)); game_data_free(decoded);
     /* Strip v5 ranged/turn data to build a genuine v4 save. */
+    size-=pack_extension(&d);
     size-=4*d.hero_count;
     for(i=0;i<d.hero_count;i++) size-=44+strlen(d.heroes[i].ranged.weapon);
     for(i=0;i<d.monsters.count;i++) size-=44+strlen(d.monsters.tokens[i].ranged.weapon);
@@ -118,6 +119,7 @@ int main(int argc,char **argv) {
     game_data_free(decoded); free(bytes);
     /* Real version-1 layout, with no monster extension, remains readable. */
     memset(&monsters,0,sizeof(monsters)); assert(capture(&d)); assert(game_encode(&d,&bytes,&size)); free(d.cells);
+    size-=pack_extension(&d);
     size-=4*d.hero_count;
     for(i=0;i<d.hero_count;i++) size-=44+strlen(d.heroes[i].ranged.weapon);
     for(i=0;i<d.hero_count;i++) size-=56+strlen(d.heroes[i].melee.weapon);

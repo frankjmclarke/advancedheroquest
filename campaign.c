@@ -7,6 +7,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "campaign.h"
+#include "pack.h"
 #include "rsh/campaign.rh"
 
 #define LIMIT 1024
@@ -400,8 +401,31 @@ static int stage_campaign(Builder *b,const char *stage)
 {
     int i; char path[MAX_PATH],rel[MAX_PATH],inc[MAX_PATH]; FILE *fp;
     char *entry=(char*)calloc(1,TEXT_LIMIT); int ok=0;
+    CHARACTER_PACK *pack=NULL; char pack_error[256];
     if(!entry) return fail(b,"Out of memory.",NULL);
     sprintf(entry,"#%s\r\n# Created with HQ-Map Campaign Builder\r\n\r\n%s%s",b->title,b->furnish ? "define ROOM-FURNISH\r\n" : "",b->directives);
+    if(!join(path,b->root,b->files[b->base].path)) { fail(b,"Campaign path too long.",NULL); goto done; }
+    pack=pack_read_campaign(path,pack_error);
+    if(!pack) { fail(b,"Cannot copy character pack.",pack_error); goto done; }
+    /* The base campaign defines the roster. Reject incompatible monster
+       sources instead of creating encounters that cannot resolve. */
+    for(i=0;i<b->count;i++) if(!strchr(b->files[i].path,'\\') && i!=b->base &&
+        contains_file(b,i,b->selected[1],0) && !contains_file(b,b->base,b->selected[1],0)) {
+        CHARACTER_PACK *other;
+        if(!join(path,b->root,b->files[i].path)) continue;
+        other=pack_read_campaign(path,pack_error);
+        if(!other) { fail(b,"Cannot read monster source pack.",pack_error); goto done; }
+        if(strcmp(other->id,pack->id)) {
+            pack_free(other); fail(b,"Monster tables use a different character pack. Choose a starting campaign with that pack.",b->files[i].path); goto done;
+        }
+        pack_free(other);
+    }
+    sprintf(rel,"%s\\characters.hqp",b->slug);
+    if(!join(path,stage,rel) || !make_parents(path)) { fail(b,"Cannot create character-pack folder.",NULL); goto done; }
+    fp=fopen(path,"wb"); if(!fp) { fail(b,"Cannot copy character pack.",NULL); goto done; }
+    { int bad=fwrite(pack->bytes,1,pack->size,fp)!=pack->size; if(fclose(fp)) bad=1;
+      if(bad) { fail(b,"Cannot finish character pack.",NULL); goto done; } }
+    strcat(entry,";character-pack "); strcat(entry,rel); strcat(entry,"\r\n");
     /* Copy each dependency once. Explicit nested includes retain their location
        and conditions; only roots are also listed in the campaign entry. */
     for(i=0;i<b->nordered;i++) {
@@ -428,7 +452,7 @@ static int stage_campaign(Builder *b,const char *stage)
     sprintf(rel,"%s\\description.txt",b->slug);
     if(!join(path,stage,rel) || !write_text(path,b->description)) { fail(b,"Cannot write campaign description.",NULL); goto done; }
     ok=1;
-done: free(entry); return ok;
+done: pack_free(pack); free(entry); return ok;
 }
 static int validate_stage(Builder *b,const char *stage)
 {
