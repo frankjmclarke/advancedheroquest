@@ -8,6 +8,20 @@ Press a couple of keys and it rolls you a whole dungeon — rooms, corridors, do
 
 Written by Jürgen Albuschies in 1999. This version runs on today's Windows, in English, in colour, and fills the screen.
 
+## September 25 update: campaign character packs
+
+Campaigns now select their own hero and monster definitions. Sentinel V uses
+Space Marine presets and its complete enemy roster, including named Eldar
+leaders, for Heroes & Reserve, room references and monster placement. The
+fantasy campaign's heroes and monsters now share one source file, and the
+duplicate monster catalogue has been removed.
+
+All campaigns continue to use the existing AHQ hand-to-hand and ranged combat
+rules. Saved adventures preserve their campaign pack; older saves without pack
+metadata use the campaign selected in **Load Tables**, or the fantasy pack when
+no campaign has been selected. Campaign Builder copies pack dependencies with
+the campaign.
+
 ## September 23 update: heroes, monsters and combat
 
 The ZIP and setup EXE now include the combat features described below, built
