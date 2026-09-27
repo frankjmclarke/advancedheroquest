@@ -17,7 +17,8 @@ setlocal
 set "ROOT=%~dp0"
 if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
 set "DIST=%ROOT%\dist"
-set "STAGE=%DIST%\HQ-Map"
+set "STAGE_ROOT=%DIST%\release-stage"
+set "STAGE=%STAGE_ROOT%\HQ-Map"
 
 rem --- build first -----------------------------------------------------------
 call "%ROOT%\build-msvc.bat"
@@ -39,16 +40,37 @@ echo.
 echo Packaging HQ-Map %VER%
 
 rem --- stage -----------------------------------------------------------------
-if exist "%STAGE%" rd /s /q "%STAGE%"
+if exist "%STAGE%" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+      "$root = [System.IO.Path]::GetFullPath('%STAGE_ROOT%');" ^
+      "$target = [System.IO.Path]::GetFullPath('%STAGE%');" ^
+      "if (-not $target.StartsWith($root + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe package stage path' };" ^
+      "Remove-Item -LiteralPath $target -Recurse -Force"
+    if errorlevel 1 exit /b 1
+)
 md "%STAGE%"
+if errorlevel 1 exit /b 1
 md "%STAGE%\maps"
+if errorlevel 1 exit /b 1
 
 copy /y "%ROOT%\bin\hq_map.exe" "%STAGE%\" >nul
+if errorlevel 1 exit /b 1
 xcopy /e /i /q /y "%ROOT%\tables" "%STAGE%\tables" >nul
+if errorlevel 1 exit /b 1
 copy /y "%ROOT%\NOTICE.md" "%STAGE%\NOTICE.txt" >nul
+if errorlevel 1 exit /b 1
 copy /y "%ROOT%\doc\TABLE-GUIDE.md" "%STAGE%\TABLE-GUIDE.md" >nul
+if errorlevel 1 exit /b 1
 copy /y "%ROOT%\doc\campaign-builder.md" "%STAGE%\CAMPAIGN-BUILDER.md" >nul
-if exist "%ROOT%\dist\README.txt" copy /y "%ROOT%\dist\README.txt" "%STAGE%\" >nul
+if errorlevel 1 exit /b 1
+copy /y "%ROOT%\doc\hero-sessions.md" "%STAGE%\HERO-SESSIONS.md" >nul
+if errorlevel 1 exit /b 1
+copy /y "%ROOT%\doc\hero-weapons.md" "%STAGE%\HERO-WEAPONS.md" >nul
+if errorlevel 1 exit /b 1
+if exist "%ROOT%\dist\README.txt" (
+    copy /y "%ROOT%\dist\README.txt" "%STAGE%\" >nul
+    if errorlevel 1 exit /b 1
+)
 
 rem  rsh\ is NOT shipped: the tile bitmaps are compiled into the executable as
 rem  resources by rc, so they are not read from disk at run time.

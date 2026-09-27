@@ -8,6 +8,22 @@ Press a couple of keys and it rolls you a whole dungeon — rooms, corridors, do
 
 Written by Jürgen Albuschies in 1999. This version runs on today's Windows, in English, in colour, and fills the screen.
 
+## September 27 update: guided turns and combat panel
+
+A combat panel now stays beside the map. Select a hero or monster to see its
+wounds, remaining movement, normal attack allowance, and what to do next.
+**Move**, **Attack**, **Run**, **End phase**, and **Undo** are available there,
+along with a control to start or leave guided turns. The panel reports the
+latest movement, attack, run, or phase change.
+
+Guided combat alternates Hero and GM phases. Each model can move up to its
+Speed and make one normal attack, in either order, or run instead of attacking.
+Free melee attacks remain part of the same combat resolution. The GM ends each
+phase manually; the Party menu shows how many normal attacks that side has used.
+GM override can bypass action limits. Saves preserve phase and action state,
+while older saves start in free play. See `HERO-SESSIONS.md` in the portable ZIP
+or installer for the full guide.
+
 ## September 25 update: campaign character packs
 
 Campaigns now select their own hero and monster definitions. Sentinel V uses
@@ -24,8 +40,7 @@ the campaign.
 
 ## September 23 update: heroes, monsters and combat
 
-The ZIP and setup EXE now include the combat features described below, built
-from commit `e83ee4c` on `codex/orthogonal-melee-combat`.
+The September 23 build introduced the combat features described below.
 
 ### Click or drag to attack
 
@@ -52,16 +67,16 @@ attacker to remain stationary; thrown weapons allow movement. Intervening
 figures and obvious walls or closed doors block shots. Corner visibility is
 generous: players can cancel a shot they disallow.
 
-A blocked attack displays its reason. **Next Turn** is always visible in the
-ranged dialog and resets movement and heroes' normal ranged attacks for everyone,
-just like the Party menu command. It is disabled while a rolled preview awaits
-Apply or Cancel. A hero's applied shot, including a miss or fumble, uses their
-normal ranged attack for that turn; cancelling a preview does not. Melee free
-attacks remain available. Turn resets happen immediately and can be undone.
+A blocked attack displays its reason. In free play, **Next Turn** in the ranged
+dialog resets movement and heroes' normal ranged attacks for everyone, like the
+Party menu command. During guided turns it advances to the next phase. It is
+disabled while a rolled preview awaits Apply or Cancel. An applied shot,
+including a miss or fumble, uses that model's normal attack; cancelling a
+preview does not. Melee free attacks remain available. Phase changes and turn
+resets can be undone.
 
-Ranged criticals halve target Toughness, rounding down. A fumble displays a
-**Friendly fire** notice only after rolling; players resolve any friendly-model
-damage manually. There is no advance friendly-fire question or selector.
+Ranged criticals halve target Toughness, rounding down. On a fumble, the target's
+controller can choose an eligible friendly model for the resulting attack.
 
 ### Tokens, saved adventures and fog of war
 

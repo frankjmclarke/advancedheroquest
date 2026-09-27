@@ -21,8 +21,18 @@ edit their stats, move their markers, and save the exact dungeon and explored ro
 Revealed encounters place monster tokens automatically: drag to move, double-click
 to wound, and use **Party → Monsters...** to correct the roster. Character deaths
 persist within the saved adventure. Configure a hero's **Weapon / combat** profile,
-then click or drag onto an enemy: orthogonal neighbours use hand-to-hand combat;
-other targets use the separate **Ranged weapon** profile. Both use one **Roll attack** button for hit, damage and calculation. Use **Party → Next Turn** to reset movement for shooting. Apply the result, Cancel, or Undo the exchange.
+then click or drag onto an enemy: adjacent enemies use hand-to-hand combat,
+including diagonal squares when the weapon has diagonal reach. Other targets
+use the separate **Ranged weapon** profile. Both use one **Roll attack**
+button for hit, damage and calculation. Apply the result, Cancel, or Undo the exchange.
+
+The combat panel stays beside the map. Select a hero or monster to see its wounds,
+remaining movement, normal attack allowance, and the next action to take. Use its
+**Move**, **Attack**, **Run**, **End phase**, and **Undo** buttons during guided turns.
+Guided turns alternate Hero and GM phases; each model may move up to its Speed and
+make one normal attack, or run instead of attacking. The panel also reports the
+latest move, attack, or phase change. Start guided turns from the panel or the
+Party menu. In free play, **Party → Next Turn** resets movement and ranged shots.
 See the [Heroes and saved games guide](doc/hero-sessions.md).
 
 Campaigns can supply their own hero and enemy profiles. Sentinel V now offers

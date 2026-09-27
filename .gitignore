@@ -22,6 +22,7 @@ rsh/menu.msvc.rc
 bin/*.prebuild.exe
 bin/*.1999-original.exe
 dist/HQ-Map/
+dist/release-stage/
 dist/*.zip
 dist/*setup.exe
 

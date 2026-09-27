@@ -55,6 +55,36 @@ int main(int argc,char **argv) {
     RANGED_PROFILE p; RANGED_EDIT edit; SHOT s; HWND dialog; int i,x,y,kind,range,dice,row[5];
     GAME_DATA data,*decoded; unsigned char *bytes,*again; size_t size,again_size; UINT_PTR timer;
     assert(mem_alloc(40,40,1000,4096)); heap_clear(); room_fixture();
+    /* The persistent panel reserves map space and follows phase and selection. */
+    {
+        HWND frame=CreateWindowExA(0,"STATIC","Panel frame",WS_OVERLAPPEDWINDOW,
+            0,0,900,650,NULL,NULL,GetModuleHandle(NULL),NULL);
+        RECT map_rect,frame_rect; char label[160];
+        assert(frame); GlMainHwnd=frame;
+        MdiClientHwnd=CreateWindowExA(0,"STATIC","Map area",WS_CHILD|WS_VISIBLE,
+            0,0,900,600,frame,NULL,GetModuleHandle(NULL),NULL);
+        assert(MdiClientHwnd); panel_attach(); assert(panel_hwnd);
+        ShowWindow(frame,SW_SHOW); UpdateWindow(frame);
+        GetClientRect(frame,&frame_rect); GetWindowRect(MdiClientHwnd,&map_rect);
+        assert(map_rect.right-map_rect.left<frame_rect.right);
+        SetWindowPos(frame,NULL,0,0,1100,700,SWP_NOMOVE|SWP_NOZORDER);
+        GetClientRect(frame,&frame_rect); GetWindowRect(MdiClientHwnd,&map_rect);
+        assert(map_rect.right-map_rect.left==frame_rect.right-panel_width);
+        GetDlgItemTextA(panel_hwnd,CPPHASE,label,sizeof(label)); assert(!strcmp(label,"FREE PLAY"));
+        game_command(MGAMEGUIDED); selected=0; panel_update();
+        GetDlgItemTextA(panel_hwnd,CPPHASE,label,sizeof(label)); assert(strstr(label,"HERO PHASE") && strstr(label,"attacks used"));
+        GetDlgItemTextA(panel_hwnd,CPMODEL,label,sizeof(label)); assert(strstr(label,heroes[0].name));
+        screenshot(panel_hwnd,argv[3]);
+        assert(IsWindowEnabled(GetDlgItem(panel_hwnd,CPATTACK)));
+        SendMessage(panel_hwnd,WM_COMMAND,CPATTACK,0); assert(move_mode && selected==0);
+        SendMessage(panel_hwnd,WM_COMMAND,CPENDPHASE,0); assert(turn_phase==2);
+        assert(!IsWindowEnabled(GetDlgItem(panel_hwnd,CPATTACK)));
+        selected=-1; selected_monster=0; monsters.tokens[0].stats[4]=3; panel_update();
+        SendMessage(panel_hwnd,WM_COMMAND,CPMOVE,0); assert(monster_move_mode);
+        SendMessage(panel_hwnd,WM_COMMAND,CPGUIDED,0); assert(!turn_phase);
+        DestroyWindow(frame); GlMainHwnd=MdiClientHwnd=NULL;
+        selected=-1; move_mode=0; room_fixture();
+    }
     /* Guided phases cap each move, preserve undo, and give one normal attack. */
     monsters.count=0; heroes[0].stats[4]=3;
     game_command(MGAMEGUIDED); assert(turn_phase==1);
@@ -288,6 +318,9 @@ int main(int argc,char **argv) {
         SendMessage(test_map_hwnd,WM_LBUTTONDOWN,MK_LBUTTON,mouse_at(1,1));
         SendMessage(test_map_hwnd,WM_LBUTTONUP,0,mouse_at(5,1)); assert(ranged_dialogs==i*3+3);
     }
+    selected=-1; selected_monster=0; monster_move_mode=1;
+    click_square(4,1); assert(monsters.tokens[0].x==4 && !monster_move_mode);
+    game_command(MGAMEUNDO); assert(monsters.tokens[0].x==5);
     click_square(5,1);
     SendMessage(test_map_hwnd,WM_RBUTTONDOWN,0,mouse_at(0,0));
     click_square(1,1); assert(ranged_dialogs==6 && selected==0);
@@ -328,4 +361,4 @@ with tempfile.TemporaryDirectory(prefix='hq-ranged-test-') as temp:
                     '/I'+str(ROOT/'my_lib/windows'),'/I'+str(ROOT/'rsh'),'check.c','/Fe:check.exe',*objects,
                     str(ROOT/'obj/msvc/menu.res'),str(ROOT/'obj/msvc/grafic.res'),'user32.lib','gdi32.lib',
                     'shell32.lib','comdlg32.lib','version.lib','winspool.lib','ole32.lib','advapi32.lib'],cwd=work,check=True)
-    subprocess.run([str(work/'check.exe'),str(ROOT/'obj/ranged-preview.bmp'),str(ROOT/'obj/ranged-profile-preview.bmp')],cwd=work,check=True,timeout=60)
+    subprocess.run([str(work/'check.exe'),str(ROOT/'obj/ranged-preview.bmp'),str(ROOT/'obj/ranged-profile-preview.bmp'),str(ROOT/'obj/combat-panel-preview.bmp')],cwd=work,check=True,timeout=60)

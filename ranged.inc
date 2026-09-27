@@ -176,6 +176,7 @@ static int shot_calculate(HWND hwnd,SHOT *s)
 static int shot_apply(SHOT *s)
 {
     MONSTER *victim=&monsters.tokens[s->m];
+    char note[160];
     if(!s->resolved || shot_blocked(s)) return 0;
     if((!s->fumble || s->friendly_index>=0) && s->friendly_side==1 && s->fumble) victim=&monsters.tokens[s->friendly_index];
     if((!s->side || (s->fumble && s->friendly_side==1)) && s->old_wounds && !s->new_wounds && victim->unique && !character_dead(monster_identity(victim)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
@@ -197,6 +198,9 @@ static int shot_apply(SHOT *s)
     }
     if(!s->side) heroes[s->h].fired=1;
     if(s->side) monsters.tokens[s->m].attacked=1; else heroes[s->h].attacked=1;
+    sprintf(note,"Ranged: %s fired at %s. Attack %s.",s->side?s->monster.name:s->hero.name,
+        s->side?s->hero.name:s->monster.name,s->fumble?"fumbled":s->new_wounds<s->old_wounds?"hit":"resolved");
+    panel_note(note);
     active=1; game_changed(); return 1;
 }
 static int shot_roll_damage(HWND hwnd,SHOT *s)

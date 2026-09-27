@@ -339,6 +339,14 @@ the number of normal attacks used. The phase does not end automatically:
 choose the End phase command when that side is finished, even if some models
 have unused actions. **Party → How combat turns work...** gives the controls
 and sequence inside the application.
+
+The combat panel stays beside the map during play. Click a hero or monster to
+see its wounds, remaining movement, and normal attack allowance. Its **Move**
+and **Attack** buttons prepare the map for a destination or target click; tokens
+can still be dragged. **Run**, **End phase**, **Undo**, and **Start/Leave guided
+turns** use the same commands as the Party menu. The panel gives the next step
+and reports the last move, attack, run, or phase change. A right-click cancels
+a prepared map action.
 Each placed model can move up to its Speed in orthogonal squares and make one
 normal melee or ranged attack, in either order. A miss or fumble uses that
 attack. Melee free attacks in the same combat resolution do not use another

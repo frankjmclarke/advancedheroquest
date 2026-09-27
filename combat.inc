@@ -211,12 +211,15 @@ static int combat_calculate(HWND hwnd,COMBAT *c)
 }
 static int combat_apply(COMBAT *c)
 {
+    char note[160];
     if(!c->steps || turn_attack_reason(c->opening_side,c->h,c->m) || !melee_reachable(c->h,c->m,c->opening_side)) return 0;
     if(!c->monster.wounds && c->monster.unique && !character_dead(monster_identity(&c->monster)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
     remember(); heroes[c->h]=c->hero; monsters.tokens[c->m]=c->monster;
     if(c->opening_side) monsters.tokens[c->m].attacked=1; else heroes[c->h].attacked=1;
     if(HERO_DEAD(&heroes[c->h])) heroes[c->h].x=heroes[c->h].y=-1;
     if(!c->monster.wounds) monster_kill(c->m);
+    sprintf(note,"Melee resolved. Hero: %d wounds; monster: %d wounds.",c->hero.wounds,c->monster.wounds);
+    panel_note(note);
     active=1; game_changed(); return 1;
 }
 static INT_PTR CALLBACK combat_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)

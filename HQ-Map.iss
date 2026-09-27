@@ -64,14 +64,16 @@ FinishedLabelNoIcons=To make your first dungeon: open HQ-Map, press Ctrl+K, then
 Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription: "Additional shortcuts:"
 
 [Files]
-Source: "dist\HQ-Map\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "dist\HQ-Map\README.txt";      DestDir: "{app}"; Flags: ignoreversion
-Source: "dist\HQ-Map\NOTICE.txt";      DestDir: "{app}"; Flags: ignoreversion
-Source: "dist\HQ-Map\tables\*";        DestDir: "{app}\tables"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\release-stage\HQ-Map\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\release-stage\HQ-Map\README.txt";      DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\release-stage\HQ-Map\NOTICE.txt";      DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\release-stage\HQ-Map\HERO-SESSIONS.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\release-stage\HQ-Map\HERO-WEAPONS.md";  DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\release-stage\HQ-Map\tables\*";        DestDir: "{app}\tables"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Settings file: never overwrite an existing one, and leave it behind on
 ; uninstall so a reinstall keeps the user's preferences.
-Source: "dist\HQ-Map\ahq_map.ini";     DestDir: "{app}"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "dist\release-stage\HQ-Map\ahq_map.ini";     DestDir: "{app}"; Flags: onlyifdoesntexist uninsneveruninstall
 
 [Dirs]
 ; Default output folder for saved maps. Left in place on uninstall so a

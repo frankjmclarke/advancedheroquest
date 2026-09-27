@@ -37,6 +37,12 @@ USING IT
     Map  >  Save Map...         Ctrl+A      write it out
     Options > Load Tables...    Ctrl+T      pick a different quest
 
+The combat panel stays beside the map. Select a hero or monster to see its
+wounds and available actions. Start guided turns there to alternate Hero and
+GM phases. Use Move, Attack, Run, End phase and Undo in the panel. A short
+message tells you what to do next and what happened most recently. See
+HERO-SESSIONS.md for the full party and combat guide.
+
     View >  Zoom In             Ctrl +
             Zoom Out            Ctrl -
             Actual Size         Ctrl 0
