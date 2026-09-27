@@ -12,16 +12,6 @@ base = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.As
 monster = (ROOT/'tests/monster-check.py').read_text()
 start = monster.index('static void screenshot')
 screenshot = monster[start:monster.index('int main(int argc',start)]
-# Intercept only this test process's friendly-fire notification.
-base = base.replace('#include "game.c"', r'''static int friendly_fire_notices;
-static int WINAPI test_message(HWND h,LPCSTR text,LPCSTR title,UINT flags) {
-    if(!lstrcmpA(title,"Friendly fire")) friendly_fire_notices++;
-    return IDOK;
-}
-#define MessageBoxA test_message
-#include "game.c"
-#undef MessageBoxA
-''')
 HARNESS = base[:base.index('int main(int argc')] + screenshot + r''' 
 static void room_fixture(void) {
     PICE pieces[3]; int cells[144],i; unsigned char fog[3]={1,0,0};
@@ -98,6 +88,45 @@ int main(int argc,char **argv) {
     monsters.tokens[1].x=2; monsters.tokens[1].y=0; monsters.tokens[1].focus=0;
     assert(!ranged_eligibility(0,0,0,&heroes[0].ranged,0));
     room_fixture();
+    /* Weapon-specific ranged critical/fumble thresholds affect resolution. */
+    heroes[0].ranged.critical=11; heroes[0].ranged.fumble=2; heroes[0].ranged.dice=1;
+    shot_draft(&s,0); dialog=shot_dialog(&s); SetDlgItemInt(dialog,RSHIT,11,FALSE);
+    SetDlgItemTextA(dialog,RSDAMAGE,"3"); assert(shot_calculate(dialog,&s) && strstr(s.result,"Critical")); DestroyWindow(dialog);
+    shot_draft(&s,0); dialog=shot_dialog(&s); SetDlgItemInt(dialog,RSHIT,2,FALSE);
+    assert(shot_calculate(dialog,&s) && s.fumble && s.resolved && strstr(s.result,"misses")); DestroyWindow(dialog);
+    /* Long reach permits diagonal hand-to-hand combat and extends the death zone. */
+    heroes[0].x=1; heroes[0].y=1; monsters.tokens[0].x=2; monsters.tokens[0].y=2;
+    assert(!melee_reachable(0,0,0)); heroes[0].melee.reach=2;
+    assert(melee_reachable(0,0,0));
+    assert(strstr(ranged_eligibility(0,0,0,&heroes[0].ranged,0),"melee reach"));
+    /* Diagonal reach crosses map-piece boundaries in either direction. */
+    {
+        TYPE layouts[3][2]={{PASSAGE,NORMAL_ROOM},{NORMAL_ROOM,PASSAGE},{NORMAL_ROOM,SMALL_ROOM}};
+        int layout,j;
+        for(layout=0;layout<3;layout++) {
+            PICE pieces[3]; int cells[36];
+            memset(pieces,0,sizeof(pieces)); for(j=0;j<36;j++) cells[j]=-1;
+            pieces[0].type=layouts[layout][0]; pieces[1].type=layouts[layout][1]; pieces[2].type=EMPTY;
+            pieces[0].x=pieces[0].y=1; pieces[1].x=pieces[1].y=2;
+            pieces[0].w=pieces[0].h=pieces[1].w=pieces[1].h=1;
+            cells[1*6+1]=0; cells[2*6+2]=1;
+            assert(map_restore(pieces,3,6,6,cells)); memset(game_fog(),0,MAX_PICE);
+            game_fog()[0]=game_fog()[1]=1;
+            heroes[0].x=heroes[0].y=1; heroes[0].melee.reach=2;
+            monsters.tokens[0].x=monsters.tokens[0].y=2;
+            assert(melee_reachable(0,0,0));
+        }
+    }
+    room_fixture();
+    heroes[0].melee.reach=1; monsters.tokens[0].x=5; monsters.tokens[0].y=1;
+    monsters.count=2; monsters.tokens[1]=monsters.tokens[0];
+    monsters.tokens[1].x=2; monsters.tokens[1].y=2; monsters.tokens[1].melee.reach=2;
+    assert(strstr(ranged_eligibility(0,0,0,&heroes[0].ranged,0),"death zone"));
+    monsters.tokens[1].melee.reach=1;
+    assert(!ranged_eligibility(0,0,0,&heroes[0].ranged,0));
+    monsters.count=1; monsters.tokens[0].x=2; monsters.tokens[0].y=2;
+    heroes[0].melee.reach=2; assert(strstr(ranged_eligibility(0,0,0,&heroes[0].ranged,0),"melee reach"));
+    room_fixture();
     /* Movement stops at first zone, focuses its owner, and can be undone. */
     monsters.tokens[0].x=4; x=7; y=1;
     assert(battle_destination(0,0,&x,&y) && x==3 && y==1);
@@ -135,25 +164,31 @@ int main(int argc,char **argv) {
     shot_draft(&s,0); dialog=shot_dialog(&s); SetDlgItemInt(dialog,RSHIT,12,FALSE);
     SetDlgItemTextA(dialog,RSDAMAGE,"7 7 7 7"); assert(shot_calculate(dialog,&s));
     SendMessage(dialog,WM_COMMAND,IDCANCEL,0); assert(monsters.tokens[0].wounds==8); DestroyWindow(dialog);
-    /* Nothing about friendly fire before a fumble. Notify once after a 1,
-       without changing the intended target or any nearby friendly model. */
-    hero_count=2; hero_defaults(&heroes[1],4,2); heroes[1].x=5; heroes[1].y=3;
-    friendly_fire_notices=0; shot_draft(&s,0); dialog=shot_dialog(&s);
-    assert(!friendly_fire_notices && GetDlgItem(dialog,RSALLY)==NULL);
+    /* A fumble without an eligible ally is a clean miss. */
+    room_fixture(); shot_draft(&s,0); dialog=shot_dialog(&s);
     assert(!GetDlgItem(dialog,RSROLLDAMAGE) && !GetDlgItem(dialog,RSCALC));
     SetDlgItemInt(dialog,RSHIT,1,FALSE);
-    assert(!friendly_fire_notices);
-    assert(shot_roll_damage(dialog,&s) && friendly_fire_notices==1 && s.resolved);
-    assert(shot_apply(&s) && monsters.tokens[0].wounds==8 && heroes[1].wounds==2);
-    assert(!shot_calculate(dialog,&s) && friendly_fire_notices==1); DestroyWindow(dialog);
-    game_command(MGAMETURN);
-    shot_draft(&s,0); dialog=shot_dialog(&s); SetDlgItemInt(dialog,RSHIT,2,FALSE);
-    assert(shot_calculate(dialog,&s) && friendly_fire_notices==1); DestroyWindow(dialog);
-    /* Monster-side fumbles also only notify, and do not remove friendly models. */
+    assert(shot_calculate(dialog,&s) && s.resolved && s.fumble && s.friendly_index==-1);
+    assert(strstr(s.result,"misses") && shot_apply(&s) && monsters.tokens[0].wounds==8); DestroyWindow(dialog);
+    /* The target's controller can choose a nearby monster for a hero's fumble. */
+    room_fixture(); monsters.count=2; monsters.tokens[1]=monsters.tokens[0];
+    strcpy(monsters.tokens[1].name,"orc ally"); monsters.tokens[1].x=5; monsters.tokens[1].y=3;
+    monsters.tokens[1].stats[3]=1; monsters.tokens[1].stats[7]=monsters.tokens[1].wounds=2;
+    heroes[0].ranged.dice=1; shot_draft(&s,0); dialog=shot_dialog(&s); SetDlgItemInt(dialog,RSHIT,1,FALSE);
+    assert(!shot_calculate(dialog,&s) && !s.resolved && (GetWindowLong(GetDlgItem(dialog,RSALLY),GWL_STYLE)&WS_VISIBLE));
+    assert(SendDlgItemMessage(dialog,RSALLY,CB_GETCOUNT,0,0)==1);
+    SendDlgItemMessage(dialog,RSALLY,CB_SETCURSEL,0,0);
+    assert(shot_roll_damage(dialog,&s) && s.resolved && s.friendly_index==1);
+    assert(shot_apply(&s) && monsters.tokens[0].wounds==8 && monsters.tokens[1].wounds<2); DestroyWindow(dialog);
+    /* Monster fumbles use the target controller's nearby hero choices too. */
+    room_fixture(); hero_count=2; hero_defaults(&heroes[1],4,2); heroes[1].x=1; heroes[1].y=2;
+    heroes[1].stats[3]=1; heroes[1].wounds=2;
     assert(monster_ranged_defaults(&monsters.tokens[0].ranged,"goblin archer"));
     shot_draft(&s,1); dialog=shot_dialog(&s); SetDlgItemInt(dialog,RSHIT,1,FALSE);
-    assert(shot_calculate(dialog,&s) && friendly_fire_notices==2 && shot_apply(&s));
-    assert(heroes[0].wounds==4 && monsters.tokens[0].wounds==8); DestroyWindow(dialog);
+    assert(!shot_calculate(dialog,&s) && !s.resolved);
+    SendDlgItemMessage(dialog,RSALLY,CB_SETCURSEL,0,0);
+    assert(shot_roll_damage(dialog,&s) && s.resolved && s.friendly_index==1);
+    assert(shot_apply(&s) && heroes[0].wounds==4 && heroes[1].wounds<2); DestroyWindow(dialog);
     /* The movement warning must always have a visible, usable Next Turn button. */
     for(i=0;i<2;i++) {
         char status[256]; room_fixture();
@@ -203,16 +238,19 @@ int main(int argc,char **argv) {
     for(i=0;i<data.monsters.count;i++) size-=44+strlen(data.monsters.tokens[i].ranged.weapon);
     bytes[8]=4; fix_crc(bytes,size); decoded=game_decode(bytes,size);
     assert(decoded && decoded->heroes[0].ranged.range==48 && !decoded->heroes[0].moved); game_data_free(decoded); free(bytes);
-    data.heroes[0].ranged.kind=0; assert(game_encode(&data,&bytes,&size)); decoded=game_decode(bytes,size);
-    assert(decoded && !decoded->heroes[0].ranged.kind); game_data_free(decoded); free(bytes);
+    data.heroes[0].ranged.kind=0; data.heroes[0].ranged.critical=11; data.heroes[0].ranged.fumble=2;
+    assert(game_encode(&data,&bytes,&size)); decoded=game_decode(bytes,size);
+    assert(decoded && !decoded->heroes[0].ranged.kind && decoded->heroes[0].ranged.critical==11 && decoded->heroes[0].ranged.fumble==2); game_data_free(decoded); free(bytes);
     data.heroes[0].ranged.hit[2]=13; assert(!game_encode(&data,&bytes,&size)); free(data.cells);
     /* Profile dialog round trip, no default replacement without request. */
     memset(&edit,0,sizeof(edit)); edit.hero_kind=2;
     dialog=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGRANGEDPROFILE),NULL,ranged_profile_proc,(LPARAM)&edit);
     assert(dialog); SendMessage(dialog,WM_COMMAND,RPDEFAULT,0);
     assert(GetDlgItemInt(dialog,RPRANGE,NULL,FALSE)==48 && !edit.profile.range);
+    assert(GetDlgItemInt(dialog,RPCRIT,NULL,FALSE)==12 && GetDlgItemInt(dialog,RPFUMBLE,NULL,FALSE)==1);
+    SetDlgItemInt(dialog,RPCRIT,11,FALSE); SetDlgItemInt(dialog,RPFUMBLE,2,FALSE);
     CheckDlgButton(dialog,RPMOVED,BST_CHECKED); screenshot(dialog,argv[2]);
-    SendMessage(dialog,WM_COMMAND,IDOK,0); assert(edit.profile.range==48 && edit.moved); DestroyWindow(dialog);
+    SendMessage(dialog,WM_COMMAND,IDOK,0); assert(edit.profile.range==48 && edit.profile.critical==11 && edit.profile.fumble==2 && edit.moved); DestroyWindow(dialog);
     /* Click-select and drag routing, both directions, in both GM/player views. */
     room_fixture(); test_map_hwnd=CreateWindowExA(0,"STATIC","Ranged test map",WS_POPUP,0,0,800,800,NULL,NULL,GetModuleHandle(NULL),NULL);
     assert(test_map_hwnd); game_attach((WINDOW_DEF*)1,0); display_zoom=4; test_document.xx=test_document.yy=0;
@@ -230,6 +268,10 @@ int main(int argc,char **argv) {
     SendMessage(test_map_hwnd,WM_RBUTTONDOWN,0,mouse_at(0,0));
     monsters.tokens[0].x=2; monsters.tokens[0].y=2; click_square(1,1); click_square(2,2); assert(ranged_dialogs==7);
     monsters.tokens[0].y=1; click_square(1,1); click_square(2,1); assert(melee_dialogs==1);
+    /* A checked diagonal-reach profile attacks across adjacent cells in a room. */
+    monsters.tokens[0].x=2; monsters.tokens[0].y=2; heroes[0].melee.reach=2;
+    click_square(1,1); click_square(2,2); assert(melee_dialogs==2);
+    heroes[0].melee.reach=1;
     assert(heroes[0].x==1 && heroes[0].y==1 && !heroes[0].moved);
     KillTimer(NULL,timer); DestroyWindow(test_map_hwnd); test_map_hwnd=NULL;
     /* Walls block, a revealed connecting door opens the ray; no unseen shots. */

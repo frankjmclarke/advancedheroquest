@@ -28,9 +28,9 @@ void pack_free(CHARACTER_PACK *p)
 }
 CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
 {
-    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total,format2; PACK_PROFILE *q;
+    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total,format2,format3; PACK_PROFILE *q;
     if(!bytes || size<24 || size>PACK_BYTES_LIMIT) return NULL;
-    format2=!memcmp(bytes,"HQPACK2\n",8);
+    format3=!memcmp(bytes,"HQPACK3\n",8); format2=format3 || !memcmp(bytes,"HQPACK2\n",8);
     if(!format2 && memcmp(bytes,"HQPACK1\n",8)) return NULL;
     r.p=bytes; r.size=size; r.pos=8; r.ok=1;
     p=(CHARACTER_PACK*)calloc(1,sizeof(*p)); if(!p) return NULL;
@@ -53,12 +53,15 @@ CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
         for(j=0;j<12;j++) q->melee.hit[j]=number(&r,12);
         q->melee.critical=12; q->melee.fumble=1; /* Preserve legacy pack behavior. */
         if(format2) {
-            q->melee.critical=number(&r,12); q->melee.fumble=number(&r,12); q->melee.diagonal=number(&r,1);
+            q->melee.critical=number(&r,12); q->melee.fumble=number(&r,12);
+            q->melee.reach=format3?number(&r,2):number(&r,1)+1;
             if(q->melee.critical<1 || q->melee.fumble<1 || q->melee.fumble>=q->melee.critical) goto bad;
         }
         string(&r,q->ranged.weapon,sizeof(q->ranged.weapon)); q->ranged.kind=number(&r,4);
         q->ranged.range=number(&r,480); q->ranged.dice=number(&r,99);
         for(j=0;j<5;j++) q->ranged.hit[j]=number(&r,12);
+        q->ranged.critical=format3?number(&r,12):12; q->ranged.fumble=format3?number(&r,12):1;
+        if(q->ranged.critical<1 || q->ranged.fumble<1 || q->ranged.fumble>=q->ranged.critical) goto bad;
         if(!*q->name || !*q->aliases || strncmp(q->id,p->id,strlen(p->id)) || q->id[strlen(p->id)]!=':') goto bad;
         if((i<p->hero_count || !p->legacy_references) && !q->stats[7]) goto bad;
         if(i<p->hero_count && strlen(q->text)>=sizeof(((HERO*)0)->class_rules)) goto bad;

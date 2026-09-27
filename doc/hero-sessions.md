@@ -238,8 +238,10 @@ the same combat workflow and retain the selected view.
 2. Choose **Roll attack**. It rolls the hit die, all required damage dice and
    bonus dice from twelves, then calculates the result in one action. The dice
    and result are displayed for review. Each melee profile sets its critical
-   threshold (default 12), fumble threshold (default 1), and optional diagonal
-   reach. Existing profiles keep their former thresholds and orthogonal reach.
+   threshold (default 12), fumble threshold (default 1), and normal or long
+   reach. Ranged profiles also store critical and fumble thresholds. A ranged
+   fumble redirects the missile to an eligible friendly model within two
+   squares of the intended target, selected by that target's controller.
 3. **Take free attack** continues
    with the attacker after a critical, or the defender after a fumble, provided
    both remain alive. These attacks share the same preview and Undo operation.

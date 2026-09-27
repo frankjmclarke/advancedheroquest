@@ -8,6 +8,12 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
+for pack_file in [ROOT / 'data/packs/fantasy.json', ROOT / 'data/packs/sentinel.json']:
+    pack_source = json.loads(pack_file.read_text(encoding='utf-8'))
+    for profile in pack_source['heroes'] + pack_source['monsters']:
+        melee, ranged = profile['melee'], profile['ranged']
+        assert 1 <= melee['fumble'] < melee['critical'] <= 12 and melee['reach'] in (1, 2)
+        assert 1 <= ranged['fumble'] < ranged['critical'] <= 12
 tree = ast.parse((ROOT / 'tests/game-check.py').read_text())
 base = next(ast.literal_eval(n.value) for n in tree.body
             if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'HARNESS' for t in n.targets))
@@ -63,7 +69,7 @@ int main(int argc,char **argv) {
     DestroyWindow(dialog);
     assert(pack_start_dungeon());
     assert(!strcmp(pack_current()->id,"sentinel")); validate_encounters();
-    for(i=0;i<pack_current()->hero_count;i++) assert(pack_current()->heroes[i].melee.critical==12 && pack_current()->heroes[i].melee.fumble==1 && !pack_current()->heroes[i].melee.diagonal);
+    for(i=0;i<pack_current()->hero_count;i++) assert(pack_current()->heroes[i].melee.critical==12 && pack_current()->heroes[i].melee.fumble==1 && pack_current()->heroes[i].melee.reach==1 && pack_current()->heroes[i].ranged.critical==12 && pack_current()->heroes[i].ranged.fumble==1);
     assert(pack_monster("Orcs")==pack_monster("Ork"));
     /* Every truncation is rejected before any active state changes. */
     pack=pack_clone(pack_current()); assert(pack);

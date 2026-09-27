@@ -31,12 +31,17 @@ _BOOL error_abort(const char *fmt,...) { fprintf(stderr,"Map error: %s\n",fmt); 
 void game_loaded_title(const char *title) { }
 #undef assert
 #define assert(x) do { if(!(x)) { fprintf(stderr,"Assertion failed: %s, line %d\n",#x,__LINE__); exit(3); } } while(0)
-/* Size of the v7/v8 suffix, for constructing authentic older layouts. */
+static void version8_crc(unsigned char *bytes,size_t size) {
+    unsigned long crc=0xffffffffUL; size_t i; int j;
+    for(i=16;i<size;i++) { crc^=bytes[i]; for(j=0;j<8;j++) crc=(crc>>1)^((crc&1)?0xedb88320UL:0); }
+    crc=~crc; for(j=0;j<4;j++) bytes[12+j]=(unsigned char)(crc>>(8*j));
+}
+/* Size of the v7-v9 suffix, for constructing authentic older layouts. */
 static size_t pack_extension(const GAME_DATA *d) {
     int i; size_t n=4+(d->pack?d->pack:pack_fantasy())->size;
     for(i=0;i<d->hero_count;i++) n+=12+strlen(d->heroes[i].profile_id)+strlen(d->heroes[i].class_name)+strlen(d->heroes[i].class_rules);
     for(i=0;i<d->monsters.count;i++) n+=8+strlen(d->monsters.tokens[i].profile_id)+strlen(d->monsters.tokens[i].character_id);
-    n+=16*d->hero_count+12*d->monsters.count;
+    n+=16*d->hero_count+12*d->monsters.count+8*(d->hero_count+d->monsters.count);
     return n;
 }
 static void generate(void) {
@@ -109,7 +114,7 @@ static void mouse_checks(void) {
 }
 int main(int argc,char **argv) {
     GAME_DATA snapshot,*decoded,*again; unsigned char *bytes,*other; size_t size,other_size;
-    int i,j,x,y,old_count; HWND dialog; PICE *p; char path[MAX_PATH];
+    int i,j,x,y,old_count; HWND dialog; PICE *p; char path[MAX_PATH]; size_t version8_size,version8_tail,version8_pos; unsigned char *version8_bytes;
     assert(mem_alloc(100,100,1000,4096)); heap_clear();
     assert(SetCurrentDirectoryA(argv[1]));
     assert(read_table("sonne2.tab",NULL));
@@ -118,6 +123,8 @@ int main(int argc,char **argv) {
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM || Pice[i].type==HAZARD) { game_fog()[i]=1; break; }
     monsters_reveal();
     heroes[1].wounds=1; heroes[3].stats[6]=11; strcpy(heroes[0].name,"Aldric");
+    heroes[0].melee.critical=11; heroes[0].melee.fumble=2; heroes[0].melee.reach=2;
+    heroes[0].ranged.critical=11; heroes[0].ranged.fumble=2;
     assert(capture(&snapshot));
     assert(game_encode(&snapshot,&bytes,&size)); free(snapshot.cells);
     decoded=game_decode(bytes,size); assert(decoded);
@@ -125,10 +132,20 @@ int main(int argc,char **argv) {
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type!=EMPTY && !Pice[i].text) assert(!decoded->pieces[i].text);
     assert(game_encode(decoded,&other,&other_size)); assert(size==other_size && !memcmp(bytes,other,size)); free(other);
     for(i=0;i<5;i++) { assert(!strcmp(heroes[i].name,decoded->heroes[i].name)); assert(!memcmp(&heroes[i].kind,&decoded->heroes[i].kind,sizeof(HERO)-40)); }
+    /* Version 8 keeps melee thresholds/reach and supplies standard ranged thresholds. */
+    version8_size=size-8*(snapshot.hero_count+snapshot.monsters.count); version8_bytes=(unsigned char*)malloc(version8_size); assert(version8_bytes);
+    memcpy(version8_bytes,bytes,version8_size); version8_bytes[8]=8;
+    version8_tail=version8_size-(16*snapshot.hero_count+12*snapshot.monsters.count);
+    for(i=0;i<snapshot.hero_count;i++) { version8_pos=version8_tail+12*i+8; version8_bytes[version8_pos]=(unsigned char)(version8_bytes[version8_pos]==2); }
+    version8_tail+=12*snapshot.hero_count;
+    for(i=0;i<snapshot.monsters.count;i++) { version8_pos=version8_tail+12*i+8; version8_bytes[version8_pos]=(unsigned char)(version8_bytes[version8_pos]==2); }
+    version8_crc(version8_bytes,version8_size); again=game_decode(version8_bytes,version8_size);
+    assert(again && again->heroes[0].melee.critical==11 && again->heroes[0].melee.fumble==2 && again->heroes[0].melee.reach==2);
+    assert(again->heroes[0].ranged.critical==12 && again->heroes[0].ranged.fumble==1); game_data_free(again); free(version8_bytes);
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=9; assert(!game_decode(bytes,size)); bytes[8]=8;
+    bytes[8]=10; assert(!game_decode(bytes,size)); bytes[8]=9;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;

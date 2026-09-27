@@ -4,12 +4,14 @@ static void ranged_profile_fields(HWND hwnd,const RANGED_EDIT *p)
     int i; SetDlgItemTextA(hwnd,RPWEAPON,p->profile.weapon);
     SendDlgItemMessage(hwnd,RPKIND,CB_SETCURSEL,p->profile.kind,0);
     SetDlgItemInt(hwnd,RPRANGE,p->profile.range,FALSE); SetDlgItemInt(hwnd,RPDICE,p->profile.dice,FALSE);
+    SetDlgItemInt(hwnd,RPCRIT,p->profile.critical?p->profile.critical:12,FALSE);
+    SetDlgItemInt(hwnd,RPFUMBLE,p->profile.fumble?p->profile.fumble:1,FALSE);
     for(i=0;i<5;i++) SetDlgItemInt(hwnd,RPHIT+i,p->profile.hit[i],FALSE);
 }
 static INT_PTR CALLBACK ranged_profile_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
     RANGED_EDIT *p=(RANGED_EDIT*)GetWindowLongPtr(hwnd,DWLP_USER),next;
-    int i,n,id=LOWORD(wp); BOOL ok;
+    int i,n,id=LOWORD(wp),critical,fumble; BOOL ok;
     static const char *kinds[]={"None equipped","Bow","Crossbow","Thrown weapon","Other (manual movement)"};
     if(msg==WM_INITDIALOG) {
         p=(RANGED_EDIT*)lp; SetWindowLongPtr(hwnd,DWLP_USER,lp);
@@ -34,6 +36,11 @@ static INT_PTR CALLBACK ranged_profile_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM 
     next=*p; GetDlgItemTextA(hwnd,RPWEAPON,next.profile.weapon,40);
     next.profile.kind=(int)SendDlgItemMessage(hwnd,RPKIND,CB_GETCURSEL,0,0);
     next.moved=IsDlgButtonChecked(hwnd,RPMOVED)==BST_CHECKED;
+    critical=(int)GetDlgItemInt(hwnd,RPCRIT,&ok,FALSE);
+    if(!ok || critical<1 || critical>12) { SetDlgItemTextA(hwnd,RPINFO,"Critical threshold must be 1-12."); return TRUE; }
+    fumble=(int)GetDlgItemInt(hwnd,RPFUMBLE,&ok,FALSE);
+    if(!ok || fumble<1 || fumble>=critical) { SetDlgItemTextA(hwnd,RPINFO,"Fumble must be 1-12 and below the critical threshold."); return TRUE; }
+    next.profile.critical=critical; next.profile.fumble=fumble;
     for(i=0;i<7;i++) {
         n=(int)GetDlgItemInt(hwnd,i<5?RPHIT+i:i==5?RPRANGE:RPDICE,&ok,FALSE);
         if(!ok || n<0 || n>(i<5?12:i==5?480:99)) {
@@ -51,11 +58,51 @@ static int edit_ranged(HWND owner,RANGED_PROFILE *profile,int *moved,int kind,co
     *profile=p.profile; *moved=p.moved; return 1;
 }
 typedef struct {
-    HERO hero; MONSTER monster; int h,m,side,resolved,fumble_notified,new_wounds,old_wounds,new_condition;
+    HERO hero; MONSTER monster; int h,m,side,resolved,new_wounds,old_wounds,new_condition;
+    int fumble,friendly_index,friendly_side,ally_options;
     char result[2600];
 } SHOT;
 static RANGED_PROFILE *shot_profile(SHOT *s) { return s->side?&s->monster.ranged:&s->hero.ranged; }
+static int shot_critical(SHOT *s) { return shot_profile(s)->critical?shot_profile(s)->critical:12; }
+static int shot_fumble(SHOT *s) { return shot_profile(s)->fumble?shot_profile(s)->fumble:1; }
 static int shot_range(const SHOT *s) { return abs(s->hero.x-s->monster.x)+abs(s->hero.y-s->monster.y); }
+static int shot_candidates(const SHOT *s)
+{
+    int i,n=0,x=s->side?s->hero.x:s->monster.x,y=s->side?s->hero.y:s->monster.y;
+    if(s->side) {
+        for(i=0;i<hero_count;i++) if(i!=s->h && HERO_ACTIVE(&heroes[i]) && heroes[i].x>=0 &&
+            abs(heroes[i].x-x)+abs(heroes[i].y-y)<=2) n++;
+    } else {
+        for(i=0;i<monsters.count;i++) if(i!=s->m && monsters.tokens[i].wounds && monsters.tokens[i].x>=0 &&
+            abs(monsters.tokens[i].x-x)+abs(monsters.tokens[i].y-y)<=2) n++;
+    }
+    return n;
+}
+static void shot_ally_options(HWND hwnd,SHOT *s)
+{
+    int i,x=s->side?s->hero.x:s->monster.x,y=s->side?s->hero.y:s->monster.y;
+    char label[96]; HWND combo=GetDlgItem(hwnd,RSALLY);
+    SendMessage(combo,CB_RESETCONTENT,0,0);
+    if(s->side) {
+        for(i=0;i<hero_count;i++) if(i!=s->h && HERO_ACTIVE(&heroes[i]) && heroes[i].x>=0 && abs(heroes[i].x-x)+abs(heroes[i].y-y)<=2) {
+            sprintf(label,"%s (%d Wounds)",heroes[i].name,heroes[i].wounds);
+            { int at=(int)SendMessageA(combo,CB_ADDSTRING,0,(LPARAM)label); SendMessage(combo,CB_SETITEMDATA,at,(LPARAM)i); }
+        }
+    } else {
+        for(i=0;i<monsters.count;i++) if(i!=s->m && monsters.tokens[i].wounds && monsters.tokens[i].x>=0 && abs(monsters.tokens[i].x-x)+abs(monsters.tokens[i].y-y)<=2) {
+            sprintf(label,"%s (%d Wounds)",monsters.tokens[i].name,monsters.tokens[i].wounds);
+            { int at=(int)SendMessageA(combo,CB_ADDSTRING,0,(LPARAM)label); SendMessage(combo,CB_SETITEMDATA,at,(LPARAM)i); }
+        }
+    }
+    SendMessage(combo,CB_SETCURSEL,(WPARAM)-1,0); s->ally_options=1;
+    ShowWindow(combo,SW_SHOW); ShowWindow(GetDlgItem(hwnd,RSALLYLABEL),SW_SHOW);
+}
+static void shot_ally_clear(HWND hwnd,SHOT *s)
+{
+    s->ally_options=0; s->friendly_index=-1;
+    SendDlgItemMessage(hwnd,RSALLY,CB_RESETCONTENT,0,0);
+    ShowWindow(GetDlgItem(hwnd,RSALLY),SW_HIDE); ShowWindow(GetDlgItem(hwnd,RSALLYLABEL),SW_HIDE);
+}
 static const char *shot_blocked(SHOT *s)
 {
     if(!s->side && heroes[s->h].fired) return "This hero has already fired this turn. Choose Next Turn to fire again.";
@@ -65,10 +112,10 @@ static void shot_fields(HWND hwnd,SHOT *s)
 {
     char info[600]; const char *blocked=shot_blocked(s); RANGED_PROFILE *p=shot_profile(s);
     int d=shot_range(s),i; const int inputs[]={RSHIT,RSDAMAGE,RSPROFILE,RSROLL};
-    sprintf(info,"%s fires at %s\r\n%s | Distance %d / range %d | Hit %d+ | Damage %d D12\r\nTarget Toughness %d; %d Wounds. %s",
+    sprintf(info,"%s fires at %s\r\n%s | Distance %d / range %d | Hit %d+ | Damage %d D12\r\nCritical %d+; fumble %d or less. Target T %d; %d Wounds. %s",
         s->side?s->monster.name:s->hero.name,s->side?s->hero.name:s->monster.name,
         p->weapon[0]?p->weapon:"No ranged weapon",d,p->range,p->hit[ranged_band(d)],p->dice,
-        s->side?s->hero.stats[3]:s->monster.stats[3],s->side?s->hero.wounds:s->monster.wounds,
+        p->critical?p->critical:12,p->fumble?p->fumble:1,s->side?s->hero.stats[3]:s->monster.stats[3],s->side?s->hero.wounds:s->monster.wounds,
         s->side?s->monster.moved?"Attacker moved.":"Attacker stationary.":s->hero.moved?"Attacker moved.":"Attacker stationary.");
     SetDlgItemTextA(hwnd,RSINFO,info);
     for(i=0;i<sizeof(inputs)/sizeof(inputs[0]);i++) EnableWindow(GetDlgItem(hwnd,inputs[i]),!s->resolved);
@@ -78,56 +125,67 @@ static void shot_fields(HWND hwnd,SHOT *s)
     SetDlgItemTextA(hwnd,RSSTATUS,blocked?blocked:s->resolved?"Preview ready. Apply or Cancel.":"Choose Roll attack to preview the result.");
     SetDlgItemTextA(hwnd,RSRESULT,s->result);
 }
-static int shot_victim(HWND hwnd,SHOT *s,int hit,int *t,int *w,const char **name)
+static void shot_victim(SHOT *s,int *t,int *w,const char **name)
 {
     *t=s->side?s->hero.stats[3]:s->monster.stats[3]; *w=s->side?s->hero.wounds:s->monster.wounds;
     *name=s->side?s->hero.name:s->monster.name;
-    if(hit==12) *t=*t/2;
-    if(hit==1) {
-        *name="Friendly fire: resolve possible friendly-model damage manually"; *w=0;
-        if(!s->fumble_notified) {
-            s->fumble_notified=1;
-            MessageBoxA(hwnd,"Fumble! You may have hit a friendly model. Resolve friendly fire manually.","Friendly fire",MB_OK|MB_ICONINFORMATION);
-        }
-    }
-    return 1;
 }
 static int shot_calculate(HWND hwnd,SHOT *s)
 {
-    int hit,required=shot_profile(s)->hit[ranged_band(shot_range(s))],t,w,damage=0,needs_damage;
+    int hit,required=shot_profile(s)->hit[ranged_band(shot_range(s))],t,w,damage=0,needs_damage,n;
     BOOL ok; const char *name,*blocked=shot_blocked(s); char dice[2048];
     if(s->resolved) return 0;
     if(blocked) { SetDlgItemTextA(hwnd,RSSTATUS,blocked); return 0; }
     hit=(int)GetDlgItemInt(hwnd,RSHIT,&ok,FALSE);
     if(!ok || hit<1 || hit>12) { SetDlgItemTextA(hwnd,RSSTATUS,"Enter a hit roll from 1 to 12."); return 0; }
-    if(!shot_victim(hwnd,s,hit,&t,&w,&name)) return 0;
-    needs_damage=hit!=1 && hit>=required;
+    s->fumble=hit<=shot_fumble(s); s->friendly_index=-1; s->friendly_side=s->side?0:1;
+    if(!s->fumble || !shot_candidates(s)) shot_ally_clear(hwnd,s);
+    if(s->fumble && shot_candidates(s)) {
+        if(!s->ally_options) shot_ally_options(hwnd,s);
+        n=(int)SendDlgItemMessage(hwnd,RSALLY,CB_GETCURSEL,0,0);
+        if(n<0) { SetDlgItemTextA(hwnd,RSSTATUS,"The intended target's controller must choose a nearby friendly model."); return 0; }
+        s->friendly_index=(int)SendDlgItemMessage(hwnd,RSALLY,CB_GETITEMDATA,n,0);
+    }
+    if(s->fumble && s->friendly_index<0) {
+        t=0; w=0; name=shot_candidates(s)?"Defender chose no friendly victim; the missile misses":"No friendly model within two squares; the missile misses";
+    } else if(s->fumble && s->friendly_side==0) {
+        t=heroes[s->friendly_index].stats[3]; w=heroes[s->friendly_index].wounds; name=heroes[s->friendly_index].name;
+    } else if(s->fumble) {
+        t=monsters.tokens[s->friendly_index].stats[3]; w=monsters.tokens[s->friendly_index].wounds; name=monsters.tokens[s->friendly_index].name;
+    } else shot_victim(s,&t,&w,&name);
+    if(!s->fumble && hit>=shot_critical(s)) t=t/2;
+    needs_damage=!s->fumble && hit>=required;
+    if(s->fumble && s->friendly_index>=0) needs_damage=1;
     GetDlgItemTextA(hwnd,RSDAMAGE,dice,sizeof(dice));
     if(needs_damage && !damage_auto(dice,sizeof(dice),shot_profile(s)->dice,t,&damage)) {
         SetDlgItemTextA(hwnd,RSSTATUS,"Enter the initial damage dice, each from 1 to 12. Bonus dice are automatic. If rolling fails, retry."); return 0;
     }
     SetDlgItemTextA(hwnd,RSDAMAGE,dice);
-    s->old_wounds=w; s->new_wounds=damage>w?0:w-damage; s->new_condition=s->side?s->hero.condition:0;
-    if(s->side && needs_damage && damage>=w) s->new_condition=damage>w?2:1;
+    s->old_wounds=w; s->new_wounds=damage>w?0:w-damage;
+    s->new_condition=(s->fumble && s->friendly_index>=0 && s->friendly_side==0)?heroes[s->friendly_index].condition:s->side?s->hero.condition:0;
+    if((s->side || (s->fumble && s->friendly_side==0)) && needs_damage && damage>=w) s->new_condition=damage>w?2:1;
     sprintf(s->result,"Hit %d vs %d: %s. %s\r\n%s: T %d; dice %s; %d wounds (%d -> %d W).",
-        hit,required,hit==1?"Friendly fire":hit>=required?"Hit":"Miss",hit==12?"Critical: target Toughness halved (rounded down); no free attack.":"",
+        hit,required,s->fumble?"Fumble":hit>=required?"Hit":"Miss",!s->fumble && hit>=shot_critical(s)?"Critical: target Toughness halved (rounded down); no free attack.":"",
         name,t,needs_damage?dice:"none",damage,w,s->new_wounds);
-    if(hit==1) {
-        strcpy(s->result,"Fumble. Friendly fire may have occurred.\r\nThe intended target was not hit. Resolve friendly fire manually.");
-        SetDlgItemTextA(hwnd,RSDAMAGE,"");
-    }
+    if(s->fumble && s->friendly_index<0) { damage=0; s->new_wounds=0; SetDlgItemTextA(hwnd,RSDAMAGE,""); }
     s->resolved=1; shot_fields(hwnd,s); return 1;
 }
 static int shot_apply(SHOT *s)
 {
     MONSTER *victim=&monsters.tokens[s->m];
     if(!s->resolved || shot_blocked(s)) return 0;
-    if(!s->side && s->old_wounds && !s->new_wounds && victim->unique && !character_dead(monster_identity(victim)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
+    if((!s->fumble || s->friendly_index>=0) && s->friendly_side==1 && s->fumble) victim=&monsters.tokens[s->friendly_index];
+    if((!s->side || (s->fumble && s->friendly_side==1)) && s->old_wounds && !s->new_wounds && victim->unique && !character_dead(monster_identity(victim)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
     remember();
     heroes[s->h].ranged=s->hero.ranged; heroes[s->h].moved=s->hero.moved;
     monsters.tokens[s->m].ranged=s->monster.ranged; monsters.tokens[s->m].moved=s->monster.moved;
-    /* Friendly fire is a notice only: never apply damage to a guessed model. */
-    if(s->side && (s->new_condition!=s->hero.condition || (s->old_wounds>0 && s->new_wounds!=s->old_wounds))) {
+    if(s->fumble && s->friendly_index<0) { /* No eligible ally: a clean miss. */ }
+    else if(s->fumble && s->friendly_side==0) {
+        HERO *h=&heroes[s->friendly_index]; h->wounds=s->new_wounds; h->condition=s->new_condition;
+        if(HERO_DEAD(h)) h->x=h->y=-1;
+    } else if(s->fumble) {
+        victim->wounds=s->new_wounds; if(!s->new_wounds) monster_kill(s->friendly_index);
+    } else if(s->side && (s->new_condition!=s->hero.condition || (s->old_wounds>0 && s->new_wounds!=s->old_wounds))) {
         HERO *h=&heroes[s->h]; h->wounds=s->new_wounds; h->condition=s->new_condition;
         if(HERO_DEAD(h)) h->x=h->y=-1;
     } else if(s->old_wounds) {
@@ -139,12 +197,16 @@ static int shot_apply(SHOT *s)
 }
 static int shot_roll_damage(HWND hwnd,SHOT *s)
 {
-    HCRYPTPROV provider; int hit,t,w,left,count=0,roll; BOOL ok; const char *name;
+    HCRYPTPROV provider; int hit,left,count=0,roll,choice; BOOL ok;
     char dice[2048]="",part[8];
     hit=(int)GetDlgItemInt(hwnd,RSHIT,&ok,FALSE);
     if(!ok || hit<1 || hit>12) { SetDlgItemTextA(hwnd,RSSTATUS,"Enter or roll a hit first."); return 0; }
-    if(!shot_victim(hwnd,s,hit,&t,&w,&name)) return 0;
-    if(hit==1 || (hit!=1 && hit<shot_profile(s)->hit[ranged_band(shot_range(s))])) return shot_calculate(hwnd,s);
+    if(hit<=shot_fumble(s)) {
+        if(!shot_candidates(s)) return shot_calculate(hwnd,s);
+        if(!s->ally_options) { shot_ally_options(hwnd,s); SetDlgItemTextA(hwnd,RSSTATUS,"The intended target's controller must choose a nearby friendly model."); return 0; }
+        choice=(int)SendDlgItemMessage(hwnd,RSALLY,CB_GETCURSEL,0,0);
+        if(choice<0) { SetDlgItemTextA(hwnd,RSSTATUS,"The intended target's controller must choose a nearby friendly model."); return 0; }
+    } else if(hit<shot_profile(s)->hit[ranged_band(shot_range(s))]) return shot_calculate(hwnd,s);
     if(!CryptAcquireContext(&provider,NULL,NULL,PROV_RSA_FULL,CRYPT_VERIFYCONTEXT)) { SetDlgItemTextA(hwnd,RSSTATUS,"Dice generator unavailable. Try Roll attack again."); return 0; }
     left=shot_profile(s)->dice;
     while(left && count++<MELEE_ROLL_LIMIT) {
@@ -162,6 +224,7 @@ static INT_PTR CALLBACK shot_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     if(msg==WM_INITDIALOG) {
         s=(SHOT*)lp; SetWindowLongPtr(hwnd,DWLP_USER,lp);
         SendDlgItemMessage(hwnd,RSHIT,EM_LIMITTEXT,2,0); SendDlgItemMessage(hwnd,RSDAMAGE,EM_LIMITTEXT,2047,0);
+        ShowWindow(GetDlgItem(hwnd,RSALLY),SW_HIDE); ShowWindow(GetDlgItem(hwnd,RSALLYLABEL),SW_HIDE);
         shot_fields(hwnd,s); return TRUE;
     }
     if(msg==WM_CLOSE || (msg==WM_COMMAND && id==IDCANCEL)) { EndDialog(hwnd,0); return TRUE; }
@@ -172,13 +235,17 @@ static INT_PTR CALLBACK shot_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     else if(id==RSNEXTTURN) {
         game_command(MGAMETURN);
         s->hero.moved=s->hero.fired=s->monster.moved=0;
+        shot_ally_clear(hwnd,s);
         SetDlgItemTextA(hwnd,RSHIT,""); SetDlgItemTextA(hwnd,RSDAMAGE,"");
         shot_fields(hwnd,s);
     }
     else if(id==RSPROFILE) {
+        shot_ally_clear(hwnd,s);
         if(s->side) edit_ranged(hwnd,&s->monster.ranged,&s->monster.moved,-1,s->monster.name);
         else edit_ranged(hwnd,&s->hero.ranged,&s->hero.moved,s->hero.kind,NULL);
         SetDlgItemTextA(hwnd,RSHIT,""); SetDlgItemTextA(hwnd,RSDAMAGE,""); shot_fields(hwnd,s);
+    } else if(id==RSALLY && HIWORD(wp)==CBN_SELCHANGE) {
+        if(shot_candidates(s)) shot_roll_damage(hwnd,s); else shot_calculate(hwnd,s);
     } else if(id==RSROLL) {
         const char *blocked=shot_blocked(s);
         if(blocked) { SetDlgItemTextA(hwnd,RSSTATUS,blocked); return TRUE; }
@@ -197,7 +264,7 @@ static void attack_open(HWND owner,int h,int m,int side)
     if(h<0 || h>=hero_count || m<0 || m>=monsters.count || (side?HERO_DEAD(&heroes[h]):!HERO_ACTIVE(&heroes[h])) || !monsters.tokens[m].wounds ||
        heroes[h].x<0 || monsters.tokens[m].x<0 || hero_at(heroes[h].x,heroes[h].y,game_fog())!=h || monster_at(monsters.tokens[m].x,monsters.tokens[m].y)!=m) { MessageBeep(MB_ICONWARNING); return; }
     distance=abs(heroes[h].x-monsters.tokens[m].x)+abs(heroes[h].y-monsters.tokens[m].y);
-    if(distance==1) combat_open(owner,h,m,side);
+    if(distance==1 || melee_reachable(h,m,side)) combat_open(owner,h,m,side);
     else {
         memset(&s,0,sizeof(s)); s.h=h; s.m=m; s.side=side;
         s.hero=heroes[h]; s.monster=monsters.tokens[m]; move_mode=0;

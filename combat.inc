@@ -6,7 +6,7 @@ static int melee_reference(const char *name,MELEE_PROFILE *p)
     const PACK_PROFILE *entry=pack_profile(name);
     if(entry) { *p=entry->melee; return 1; }
     if(!room_melee(name,&next.dice,next.hit)) return 0;
-    strcpy(next.weapon,"Printed melee profile"); next.critical=12; next.fumble=1; *p=next; return 1;
+    strcpy(next.weapon,"Printed melee profile"); next.critical=12; next.fumble=1; next.reach=1; *p=next; return 1;
 }
 typedef struct { MELEE_PROFILE profile; int ws,t,hero_kind; const char *reference; } PROFILE_EDIT;
 static void profile_fields(HWND hwnd,const PROFILE_EDIT *p)
@@ -16,7 +16,7 @@ static void profile_fields(HWND hwnd,const PROFILE_EDIT *p)
     SetDlgItemInt(hwnd,MPDICE,p->profile.dice,FALSE);
     SetDlgItemInt(hwnd,MPWS,p->ws,FALSE); SetDlgItemInt(hwnd,MPT,p->t,FALSE);
     SetDlgItemInt(hwnd,MPCRIT,p->profile.critical,FALSE); SetDlgItemInt(hwnd,MPFUMBLE,p->profile.fumble,FALSE);
-    CheckDlgButton(hwnd,MPDIAGONAL,p->profile.diagonal?BST_CHECKED:BST_UNCHECKED);
+    CheckDlgButton(hwnd,MPREACH,p->profile.reach>=2?BST_CHECKED:BST_UNCHECKED);
     for(i=0;i<12;i++) SetDlgItemInt(hwnd,MPHIT+i,p->profile.hit[i],FALSE);
 }
 static INT_PTR CALLBACK profile_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
@@ -68,7 +68,7 @@ static INT_PTR CALLBACK profile_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     if(!ok || next.profile.critical<1 || next.profile.critical>12) { SetDlgItemTextA(hwnd,MPINFO,"Critical threshold must be 1-12."); return TRUE; }
     next.profile.fumble=(int)GetDlgItemInt(hwnd,MPFUMBLE,&ok,FALSE);
     if(!ok || next.profile.fumble<1 || next.profile.fumble>12 || next.profile.fumble>=next.profile.critical) { SetDlgItemTextA(hwnd,MPINFO,"Fumble must be 1-12 and below the critical threshold."); return TRUE; }
-    next.profile.diagonal=IsDlgButtonChecked(hwnd,MPDIAGONAL)==BST_CHECKED;
+    next.profile.reach=IsDlgButtonChecked(hwnd,MPREACH)==BST_CHECKED?2:1;
     *p=next; EndDialog(hwnd,1); return TRUE;
 }
 static int edit_profile(HWND owner,MELEE_PROFILE *profile,int *stats,const char *reference,int hero_kind)
@@ -83,14 +83,9 @@ static int edit_profile(HWND owner,MELEE_PROFILE *profile,int *stats,const char 
 static int melee_reachable(int h,int m,int side)
 {
     const MELEE_PROFILE *weapon;
-    int dx,dy;
     if(h<0 || h>=hero_count || m<0 || m>=monsters.count || (side?!HERO_KO(&heroes[h]) && !HERO_ACTIVE(&heroes[h]):!HERO_ACTIVE(&heroes[h])) || HERO_DEAD(&heroes[h]) || !monsters.tokens[m].wounds || heroes[h].x<0 || monsters.tokens[m].x<0) return 0;
     weapon=side?&monsters.tokens[m].melee:&heroes[h].melee;
-    if(battle_edge(heroes[h].x,heroes[h].y,monsters.tokens[m].x,monsters.tokens[m].y)) return 1;
-    dx=abs(heroes[h].x-monsters.tokens[m].x); dy=abs(heroes[h].y-monsters.tokens[m].y);
-    return weapon->diagonal && dx==1 && dy==1 &&
-        ((battle_edge(heroes[h].x,heroes[h].y,monsters.tokens[m].x,heroes[h].y) && battle_edge(monsters.tokens[m].x,heroes[h].y,monsters.tokens[m].x,monsters.tokens[m].y)) ||
-         (battle_edge(heroes[h].x,heroes[h].y,heroes[h].x,monsters.tokens[m].y) && battle_edge(heroes[h].x,monsters.tokens[m].y,monsters.tokens[m].x,monsters.tokens[m].y)));
+    return battle_reach(heroes[h].x,heroes[h].y,monsters.tokens[m].x,monsters.tokens[m].y,weapon->reach);
 }
 /* Return 1 only for the complete pool, including exploding twelves. */
 static int melee_damage(const char *text,int dice,int toughness,int *wounds)
@@ -166,8 +161,8 @@ static void combat_fields(HWND hwnd,COMBAT *c)
     const MELEE_PROFILE *p=c->side?&c->monster.melee:&c->hero.melee;
     int ws=c->side?(HERO_KO(&c->hero)?1:c->hero.stats[0]):c->monster.stats[0],t=c->side?c->hero.stats[3]:c->monster.stats[3];
     int required=combat_required(c),can_roll=!c->resolved && required>0;
-    sprintf(text,"%s attacks %s\r\nWeapon: %s | Damage: %d D12 | Required hit: %d\r\nCritical %d+; fumble %d or less; diagonal reach %s\r\nTarget WS %d, T %d | Remaining Wounds: %s %d; %s %d",
-        attacker,defender,p->weapon[0]?p->weapon:"not configured",p->dice,required,p->critical,p->fumble,p->diagonal?"yes":"no",ws,t,c->hero.name,c->hero.wounds,c->monster.name,c->monster.wounds);
+    sprintf(text,"%s attacks %s\r\nWeapon: %s | Damage: %d D12 | Required hit: %d\r\nCritical %d+; fumble %d or less; %s reach\r\nTarget WS %d, T %d | Remaining Wounds: %s %d; %s %d",
+        attacker,defender,p->weapon[0]?p->weapon:"not configured",p->dice,required,p->critical,p->fumble,p->reach>=2?"long":"normal",ws,t,c->hero.name,c->hero.wounds,c->monster.name,c->monster.wounds);
     SetDlgItemTextA(hwnd,MCINFO,text);
     EnableWindow(GetDlgItem(hwnd,MCHIT),!c->resolved); EnableWindow(GetDlgItem(hwnd,MCDAMAGE),!c->resolved);
     EnableWindow(GetDlgItem(hwnd,MCROLLHIT),can_roll);

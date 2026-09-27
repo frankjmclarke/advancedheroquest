@@ -35,7 +35,10 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Bolt Pistol",
@@ -48,7 +51,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -83,7 +88,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Bolter",
@@ -96,7 +104,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -131,7 +141,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Heavy Bolter",
@@ -144,7 +157,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -179,7 +194,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Assault Cannon",
@@ -192,7 +210,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -227,7 +247,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Missile Launcher",
@@ -240,7 +263,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -275,7 +300,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Plasma Gun",
@@ -288,7 +316,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -323,7 +353,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Las-Cannon",
@@ -336,7 +369,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -371,7 +406,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Conversion Beam (near)",
@@ -384,7 +422,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -419,7 +459,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Fusion Gun",
@@ -432,7 +475,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     }
   ],
@@ -471,7 +516,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -484,7 +532,9 @@
           10,
           11,
           12
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -524,7 +574,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -537,7 +590,9 @@
           9,
           10,
           11
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -578,7 +633,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -591,7 +649,9 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -630,7 +690,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -643,7 +706,9 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -681,7 +746,10 @@
           9,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -694,7 +762,9 @@
           7,
           8,
           9
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -733,7 +803,10 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "",
@@ -746,7 +819,9 @@
           0,
           0,
           0
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -786,7 +861,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -799,7 +877,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -840,7 +920,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -853,7 +936,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -891,7 +976,10 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -904,7 +992,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -943,7 +1033,10 @@
           0,
           0,
           0
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -956,7 +1049,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -994,7 +1089,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1007,7 +1105,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1045,7 +1145,10 @@
           7,
           8,
           9
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1058,7 +1161,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1097,7 +1202,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1110,7 +1218,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1149,7 +1259,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1162,7 +1275,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1201,7 +1316,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1214,7 +1332,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1253,7 +1373,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1266,7 +1389,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1304,7 +1429,10 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1317,7 +1445,9 @@
           4,
           5,
           6
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1355,7 +1485,10 @@
           7,
           8,
           9
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1368,7 +1501,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1406,7 +1541,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Heavy Bolter",
@@ -1419,7 +1557,9 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1457,7 +1597,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Missile Launcher",
@@ -1470,7 +1613,9 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1508,7 +1653,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Assault Cannon",
@@ -1521,7 +1669,9 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1559,7 +1709,10 @@
           10,
           10,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Plasma Gun",
@@ -1572,7 +1725,9 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1610,7 +1765,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Heavy Bolter",
@@ -1623,7 +1781,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1661,7 +1821,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Missile Launcher",
@@ -1674,7 +1837,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1712,7 +1877,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Assault Cannon",
@@ -1725,7 +1893,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1763,7 +1933,10 @@
           8,
           9,
           10
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Plasma Gun",
@@ -1776,7 +1949,9 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1814,7 +1989,10 @@
           0,
           0,
           0
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Conversion Beam",
@@ -1827,7 +2005,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1865,7 +2045,10 @@
           0,
           0,
           0
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Las-Cannon",
@@ -1878,7 +2061,9 @@
           6,
           7,
           8
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       }
     },
     {
@@ -1915,7 +2100,10 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1928,7 +2116,9 @@
           4,
           5,
           6
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       },
       "unique": 1
     },
@@ -1966,7 +2156,10 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -1979,7 +2172,9 @@
           4,
           5,
           6
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       },
       "unique": 1
     },
@@ -2017,7 +2212,10 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -2030,7 +2228,9 @@
           4,
           5,
           6
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       },
       "unique": 1
     },
@@ -2068,7 +2268,10 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -2081,7 +2284,9 @@
           4,
           5,
           6
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       },
       "unique": 1
     },
@@ -2119,7 +2324,10 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -2132,7 +2340,9 @@
           4,
           5,
           6
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       },
       "unique": 1
     },
@@ -2170,7 +2380,10 @@
           5,
           6,
           7
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
       },
       "ranged": {
         "weapon": "Ranged weapon",
@@ -2183,7 +2396,9 @@
           4,
           5,
           6
-        ]
+        ],
+        "critical": 12,
+        "fumble": 1
       },
       "unique": 1
     }

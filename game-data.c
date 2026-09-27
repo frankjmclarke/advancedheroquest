@@ -29,7 +29,7 @@ int monster_ranged_defaults(RANGED_PROFILE *p,const char *name)
     const PACK_PROFILE *entry=pack_profile(name);
     if(entry) { *p=entry->ranged; return 1; }
     if(!room_ranged(name,&next.range,&next.dice,next.hit,&next.kind)) return 0;
-    strcpy(next.weapon,"Printed ranged profile"); *p=next; return 1;
+    strcpy(next.weapon,"Printed ranged profile"); next.critical=12; next.fumble=1; *p=next; return 1;
 }
 static int melee_blank(const MELEE_PROFILE *p)
 {
@@ -60,14 +60,16 @@ int game_valid_square(const GAME_DATA *d,int hero,int x,int y)
 static int valid_ranged(const RANGED_PROFILE *p,int moved,int focus,int opponents)
 {
     int i;
-    if(!memchr(p->weapon,0,40) || p->kind<0 || p->kind>4 || p->range<0 || p->range>480 || p->dice<0 || p->dice>99 || moved<0 || moved>1 || focus<0 || focus>opponents) return 0;
+    if(!memchr(p->weapon,0,40) || p->kind<0 || p->kind>4 || p->range<0 || p->range>480 || p->dice<0 || p->dice>99 ||
+       (p->critical && (p->critical<1 || p->critical>12)) || (p->fumble && (p->fumble<1 || p->fumble>= (p->critical?p->critical:12))) || moved<0 || moved>1 || focus<0 || focus>opponents) return 0;
     for(i=0;i<5;i++) if(p->hit[i]<0 || p->hit[i]>12) return 0;
     return 1;
 }
 static int valid_melee(const MELEE_PROFILE *p)
 {
     int i,critical=p->critical?p->critical:12,fumble=p->fumble?p->fumble:1;
-    if(!memchr(p->weapon,0,sizeof(p->weapon)) || p->dice<0 || p->dice>99 || critical<1 || critical>12 || fumble<1 || fumble>=critical || p->diagonal<0 || p->diagonal>1) return 0;
+    if(!memchr(p->weapon,0,sizeof(p->weapon)) || p->dice<0 || p->dice>99 || critical<1 || critical>12 || fumble<1 || fumble>=critical || (p->reach && (p->reach<1 || p->reach>2))) return 0;
+    if(p->fumble && p->critical && p->fumble>=p->critical) return 0;
     for(i=0;i<12;i++) if(p->hit[i]<0 || p->hit[i]>12) return 0;
     return 1;
 }
@@ -196,7 +198,7 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d)) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,8); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,9); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -240,9 +242,12 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
             put_string(&b,d->monsters.tokens[i].character_id,63);
         }
     }
-    for(i=0;i<d->hero_count;i++) { const MELEE_PROFILE *p=&d->heroes[i].melee; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); put32(&b,p->diagonal); }
-    for(i=0;i<d->monsters.count;i++) { const MELEE_PROFILE *p=&d->monsters.tokens[i].melee; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); put32(&b,p->diagonal); }
+    for(i=0;i<d->hero_count;i++) { const MELEE_PROFILE *p=&d->heroes[i].melee; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); put32(&b,p->reach?p->reach:1); }
+    for(i=0;i<d->monsters.count;i++) { const MELEE_PROFILE *p=&d->monsters.tokens[i].melee; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); put32(&b,p->reach?p->reach:1); }
     for(i=0;i<d->hero_count;i++) { const HERO *h=&d->heroes[i]; put32(&b,!h->wounds?(h->kind==4?2:h->condition==2?2:1):h->condition); }
+    /* Append v9 ranged thresholds after the complete v8 suffix for migration. */
+    for(i=0;i<d->hero_count;i++) { const RANGED_PROFILE *p=&d->heroes[i].ranged; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); }
+    for(i=0;i<d->monsters.count;i++) { const RANGED_PROFILE *p=&d->monsters.tokens[i].ranged; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); }
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -280,7 +285,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version<1 || version>8) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version<1 || version>9) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -355,17 +360,27 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
         }
     }
     if(version>=8) {
-        for(i=0;i<d->hero_count && b.ok;i++) { d->heroes[i].melee.critical=get32(&b); d->heroes[i].melee.fumble=get32(&b); d->heroes[i].melee.diagonal=get32(&b); }
-        for(i=0;i<d->monsters.count && b.ok;i++) { d->monsters.tokens[i].melee.critical=get32(&b); d->monsters.tokens[i].melee.fumble=get32(&b); d->monsters.tokens[i].melee.diagonal=get32(&b); }
+        for(i=0;i<d->hero_count && b.ok;i++) { d->heroes[i].melee.critical=get32(&b); d->heroes[i].melee.fumble=get32(&b); n=get32(&b); d->heroes[i].melee.reach=version>=9?n:n+1; }
+        for(i=0;i<d->monsters.count && b.ok;i++) { d->monsters.tokens[i].melee.critical=get32(&b); d->monsters.tokens[i].melee.fumble=get32(&b); n=get32(&b); d->monsters.tokens[i].melee.reach=version>=9?n:n+1; }
         for(i=0;i<d->hero_count && b.ok;i++) d->heroes[i].condition=get32(&b);
     } else for(i=0;i<d->hero_count;i++) d->heroes[i].condition=d->heroes[i].wounds?0:d->heroes[i].kind==4?2:1;
+    if(version>=9) {
+        for(i=0;i<d->hero_count && b.ok;i++) { d->heroes[i].ranged.critical=get32(&b); d->heroes[i].ranged.fumble=get32(&b); }
+        for(i=0;i<d->monsters.count && b.ok;i++) { d->monsters.tokens[i].ranged.critical=get32(&b); d->monsters.tokens[i].ranged.fumble=get32(&b); }
+    }
     for(i=0;i<d->hero_count;i++) {
         if(!d->heroes[i].melee.critical) d->heroes[i].melee.critical=12;
         if(!d->heroes[i].melee.fumble) d->heroes[i].melee.fumble=1;
+        if(!d->heroes[i].melee.reach) d->heroes[i].melee.reach=1;
+        if(!d->heroes[i].ranged.critical) d->heroes[i].ranged.critical=12;
+        if(!d->heroes[i].ranged.fumble) d->heroes[i].ranged.fumble=1;
     }
     for(i=0;i<d->monsters.count;i++) {
         if(!d->monsters.tokens[i].melee.critical) d->monsters.tokens[i].melee.critical=12;
         if(!d->monsters.tokens[i].melee.fumble) d->monsters.tokens[i].melee.fumble=1;
+        if(!d->monsters.tokens[i].melee.reach) d->monsters.tokens[i].melee.reach=1;
+        if(!d->monsters.tokens[i].ranged.critical) d->monsters.tokens[i].ranged.critical=12;
+        if(!d->monsters.tokens[i].ranged.fumble) d->monsters.tokens[i].ranged.fumble=1;
     }
     if(!b.ok || b.pos!=b.n || !valid_data(d)) goto bad;
     if(version<5) {

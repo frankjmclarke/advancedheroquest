@@ -88,7 +88,7 @@ BEGIN
     EDITTEXT MPCRIT,110,36,35,17,ES_NUMBER
     LTEXT "Fumble on / below",-1,160,38,100,12
     EDITTEXT MPFUMBLE,260,36,35,17,ES_NUMBER
-    CONTROL "Diagonal reach",MPDIAGONAL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,320,36,100,17
+    CONTROL "Long reach",MPREACH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,320,36,100,17
     LTEXT "Required hit roll against target Weapon Skill (editable):",-1,10,62,405,13
     LTEXT "1",-1,10,84,29,12,SS_CENTER
     EDITTEXT 370,10,98,29,17,ES_NUMBER | ES_CENTER
@@ -142,7 +142,7 @@ BEGIN
     PUSHBUTTON "Cancel",IDCANCEL,380,326,80,18
 END
 
-FGRANGEDPROFILE DIALOGEX 0,0,440,230
+FGRANGEDPROFILE DIALOGEX 0,0,440,276
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ranged weapon profile"
 FONT 9,"Segoe UI"
@@ -167,14 +167,18 @@ BEGIN
     EDITTEXT 426,180,114,65,18,ES_NUMBER
     EDITTEXT 427,265,114,65,18,ES_NUMBER
     EDITTEXT 428,350,114,65,18,ES_NUMBER
-    PUSHBUTTON "Load default / reference",RPDEFAULT,10,151,145,18
-    LTEXT "",RPINFO,165,145,265,40
-    LTEXT "None disables ranged attacks. Zero hit entries need configuration. Other: movement is adjudicated manually.",-1,10,182,420,25
-    DEFPUSHBUTTON "Save profile",IDOK,260,207,80,18
-    PUSHBUTTON "Cancel",IDCANCEL,350,207,80,18
+    LTEXT "Critical on / above",-1,10,148,100,12
+    EDITTEXT RPCRIT,110,145,35,18,ES_NUMBER
+    LTEXT "Fumble on / below",-1,160,148,100,12
+    EDITTEXT RPFUMBLE,260,145,35,18,ES_NUMBER
+    PUSHBUTTON "Load default / reference",RPDEFAULT,10,178,145,18
+    LTEXT "",RPINFO,165,174,265,38
+    LTEXT "None disables ranged attacks. Zero hit entries need configuration. Other: movement is adjudicated manually.",-1,10,215,420,22
+    DEFPUSHBUTTON "Save profile",IDOK,260,246,80,18
+    PUSHBUTTON "Cancel",IDCANCEL,350,246,75,18
 END
 
-FGRANGED DIALOGEX 0,0,480,292
+FGRANGED DIALOGEX 0,0,480,326
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ranged combat"
 FONT 9,"Segoe UI"
@@ -187,9 +191,11 @@ BEGIN
     EDITTEXT RSHIT,70,91,45,18,ES_NUMBER | ES_READONLY
     LTEXT "Damage rolls (bonus dice are rolled automatically)",-1,10,111,460,12
     EDITTEXT RSDAMAGE,10,126,460,30,ES_READONLY | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
-    LTEXT "",RSSTATUS,10,164,460,29
-    EDITTEXT RSRESULT,10,198,460,42,ES_MULTILINE | ES_READONLY | WS_VSCROLL
-    LTEXT "Generous corner visibility; intervening figures block. Cancel any shot you disallow.",-1,10,246,460,12
-    DEFPUSHBUTTON "Apply",IDOK,300,266,80,18
-    PUSHBUTTON "Cancel",IDCANCEL,390,266,80,18
+    LTEXT "Friendly model hit on a fumble (target's controller chooses):",RSALLYLABEL,10,162,460,12
+    COMBOBOX RSALLY,10,177,460,80,CBS_DROPDOWNLIST | WS_TABSTOP | WS_VSCROLL
+    LTEXT "",RSSTATUS,10,202,460,27
+    EDITTEXT RSRESULT,10,233,460,43,ES_MULTILINE | ES_READONLY | WS_VSCROLL
+    LTEXT "A ranged fumble hits an ally within two squares of the intended target; otherwise it misses.",-1,10,281,460,24
+    DEFPUSHBUTTON "Apply",IDOK,300,303,80,18
+    PUSHBUTTON "Cancel",IDCANCEL,390,303,80,18
 END

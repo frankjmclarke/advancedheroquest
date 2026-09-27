@@ -57,19 +57,22 @@ that could otherwise resemble a counted encounter. Profiles contain:
 | `aliases` | Explicit lowercase singular/plural encounter names; no fuzzy species matching |
 | `stats` | Nine values in WS, BS, S, T, Sp, Br, Int, W, PV order |
 | `text` | Reference text or hero class notes; does not execute rules |
-| `melee` | Weapon name, damage dice, twelve hit values indexed by target WS, and optional `critical`, `fumble`, `diagonal` properties |
-| `ranged` | Weapon name, kind, maximum range, damage dice and five hit values |
+| `melee` | Weapon name, damage dice, twelve hit values indexed by target WS, and optional `critical`, `fumble`, `reach` properties |
+| `ranged` | Weapon name, kind, maximum range, damage dice, five hit values, and optional `critical`, `fumble` properties |
 | `fate` | Hero starting Fate |
 | `kind` | Existing marker/preset code 0–8; defaults to 0. Code 4 retains Henchman death removal |
 | `unique` | `1` for a named enemy whose identity and death persist; otherwise `0` |
 
 `critical` is the hit roll that grants a free attack (default 12); `fumble` is
 the hit roll or lower that grants the defender a free attack (default 1). The
-fumble threshold must be below the critical threshold. `diagonal: 1` allows
-melee attacks against a diagonally adjacent square when both connecting floor
-routes are open; the default is `0`. These settings are editable on a character's
-melee profile and persist in saved games. Existing packs and profiles retain
-their former 12/1 thresholds and orthogonal reach.
+fumble threshold must be below the critical threshold. `reach: 2` is a long-
+reach weapon: it can attack a diagonally adjacent square when both connecting
+floor routes are open, and its death zone includes diagonal adjacent squares.
+`reach: 1` is normal reach (the default). Ranged weapons default to critical 12
+and fumble 1; a ranged critical halves target Toughness, while a fumble strikes
+a friendly model within two squares of the intended target if one is there.
+These settings are editable and persist in saved games. Older packs and saves
+retain their former 12/1 thresholds and orthogonal reach.
 
 Ranged kinds are 0 (none), 1 (bow), 2 (crossbow), 3 (thrown), and 4 (other,
 manual movement). Ranges use squares; the five bands are 1–3, 4–12, 13–24,
@@ -91,8 +94,8 @@ Guardians and Chaos Marines. Repeated reveals do not create duplicate tokens;
 repeated appearances of a living named leader do not create a second copy.
 
 No science-fiction combat rules have been added. Weapons use the existing
-damage and turn behaviour, with pack-defined melee critical/fumble thresholds
-and diagonal reach where needed. Multi-target fire, blast templates,
+damage and turn behaviour, with pack-defined melee and ranged critical/fumble
+thresholds and normal or long melee reach where needed. Multi-target fire, blast templates,
 jams and similar abilities on the original cards are not applied. Conversion
 Beam presets use the printed near damage (5 dice) with range 48; damage remains
 editable like other existing equipment. Generic heavy-weapon groups retain

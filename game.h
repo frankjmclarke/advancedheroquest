@@ -6,9 +6,10 @@
 #define HERO_STATS 9
 #define HERO_CLASS_COUNT 9
 /* Zero values mean not configured; presets use printed or labelled suggested rows. */
-typedef struct { char weapon[40]; int dice, hit[12]; int critical, fumble, diagonal; } MELEE_PROFILE;
+/* reach: 1 normal (edge-adjacent), 2 long (also diagonal; long-reach death zone). */
+typedef struct { char weapon[40]; int dice, hit[12]; int critical, fumble, reach; } MELEE_PROFILE;
 /* kind: none, bow, crossbow, thrown, other/manual. Hit bands: 1-3,4-12,13-24,25-36,37+. */
-typedef struct { char weapon[40]; int kind,range,dice,hit[5]; } RANGED_PROFILE;
+typedef struct { char weapon[40]; int kind,range,dice,hit[5],critical,fumble; } RANGED_PROFILE;
 typedef struct {
     char name[40];
     int kind, stats[HERO_STATS], wounds, fate, x, y;

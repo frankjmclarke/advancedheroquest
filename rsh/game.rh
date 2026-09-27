@@ -49,7 +49,7 @@
 #define MPINFO 365
 #define MPCRIT 382
 #define MPFUMBLE 383
-#define MPDIAGONAL 384
+#define MPREACH 384
 #define MPHIT 370
 #define FGCOMBAT 33
 #define MCINFO 400
@@ -90,3 +90,6 @@
 #define RSROLLDAMAGE 449
 
 #define RSNEXTTURN 450
+#define RPCRIT 451
+#define RPFUMBLE 452
+#define RSALLYLABEL 453

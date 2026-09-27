@@ -150,12 +150,12 @@ found:
     heroes[0].kind=4; draft(&c,1); c.hero.wounds=0; c.steps=1; c.resolved=1;
     assert(combat_apply(&c) && heroes[0].x==-1); game_command(MGAMEUNDO); heroes[0].kind=0;
     /* Round trip equipment and printed tables; invalid profiles fail encoding. */
-    heroes[0].melee.critical=11; heroes[0].melee.fumble=2; heroes[0].melee.diagonal=1;
+    heroes[0].melee.critical=11; heroes[0].melee.fumble=2; heroes[0].melee.reach=2;
     assert(capture(&data)); assert(game_encode(&data,&bytes,&size)); free(data.cells);
     decoded=game_decode(bytes,size); assert(decoded);
     assert(!strcmp(decoded->heroes[0].melee.weapon,heroes[0].melee.weapon));
     assert(decoded->heroes[0].melee.dice==heroes[0].melee.dice);
-    assert(decoded->heroes[0].melee.critical==11 && decoded->heroes[0].melee.fumble==2 && decoded->heroes[0].melee.diagonal);
+    assert(decoded->heroes[0].melee.critical==11 && decoded->heroes[0].melee.fumble==2 && decoded->heroes[0].melee.reach==2);
     assert(!memcmp(decoded->heroes[0].melee.hit,heroes[0].melee.hit,sizeof(heroes[0].melee.hit)));
     assert(!memcmp(&decoded->monsters.tokens[0].melee,&monsters.tokens[0].melee,sizeof(MELEE_PROFILE)));
     free(bytes); decoded->heroes[0].melee.hit[2]=13; assert(!game_encode(decoded,&bytes,&size)); game_data_free(decoded);
@@ -186,9 +186,9 @@ found:
     SetDlgItemTextA(dialog,MPWEAPON,"Sword and shield"); SetDlgItemInt(dialog,MPHIT+11,13,FALSE);
     SendMessage(dialog,WM_COMMAND,IDOK,0); assert(profile.profile.hit[11]==6);
     SetDlgItemInt(dialog,MPHIT+11,10,FALSE); SetDlgItemInt(dialog,MPCRIT,11,FALSE); SetDlgItemInt(dialog,MPFUMBLE,2,FALSE);
-    CheckDlgButton(dialog,MPDIAGONAL,BST_CHECKED); screenshot(dialog,argv[3]);
+    CheckDlgButton(dialog,MPREACH,BST_CHECKED); screenshot(dialog,argv[3]);
     SendMessage(dialog,WM_COMMAND,IDOK,0); assert(!strcmp(profile.profile.weapon,"Sword and shield") && profile.profile.hit[11]==10);
-    assert(profile.profile.critical==11 && profile.profile.fumble==2 && profile.profile.diagonal);
+    assert(profile.profile.critical==11 && profile.profile.fumble==2 && profile.profile.reach==2);
     DestroyWindow(dialog);
     /* Missing hero entries are previewed from defaults without overwriting
        existing values or changing the draft on Cancel. Reset leaves WS/T alone. */

@@ -22,6 +22,14 @@ static int battle_edge(int x,int y,int nx,int ny)
     }
     return strchr("PELRTCOD",p->type)!=NULL && strchr("PELRTCOD",q->type)!=NULL;
 }
+static int battle_reach(int x,int y,int nx,int ny,int reach)
+{
+    if(battle_edge(x,y,nx,ny)) return 1;
+    if(reach<2 || abs(x-nx)!=1 || abs(y-ny)!=1) return 0;
+    /* Diagonal reach is an explicit weapon rule; do not require either of
+       the two orthogonal routes between those adjacent squares to be open. */
+    return battle_floor(x,y) && battle_floor(nx,ny);
+}
 static void focus_prune(void)
 {
     int i,n;
@@ -29,12 +37,12 @@ static void focus_prune(void)
     for(i=0;i<hero_count;i++) {
         HERO *h=&heroes[i]; n=h->focus-1;
         if(n>=0 && (n>=monsters.count || h->x<0 || monsters.tokens[n].x<0 ||
-           !battle_edge(h->x,h->y,monsters.tokens[n].x,monsters.tokens[n].y))) h->focus=0;
+           !battle_reach(h->x,h->y,monsters.tokens[n].x,monsters.tokens[n].y,h->melee.reach))) h->focus=0;
     }
     for(i=0;i<monsters.count;i++) {
         MONSTER *m=&monsters.tokens[i]; n=m->focus-1;
         if(n>=0 && (n>=hero_count || m->x<0 || heroes[n].x<0 ||
-           !battle_edge(m->x,m->y,heroes[n].x,heroes[n].y))) m->focus=0;
+           !battle_reach(m->x,m->y,heroes[n].x,heroes[n].y,m->melee.reach))) m->focus=0;
     }
 }
 static int death_zone(int side,int index,int x,int y)
@@ -42,10 +50,10 @@ static int death_zone(int side,int index,int x,int y)
     int i;
     if(side) {
         for(i=0;i<hero_count;i++) if(HERO_ACTIVE(&heroes[i]) && heroes[i].x>=0 &&
-            (!heroes[i].focus || heroes[i].focus==index+1) && battle_edge(x,y,heroes[i].x,heroes[i].y)) return 1;
+            (!heroes[i].focus || heroes[i].focus==index+1) && battle_reach(x,y,heroes[i].x,heroes[i].y,heroes[i].melee.reach)) return 1;
     } else {
         for(i=0;i<monsters.count;i++) if(monsters.tokens[i].wounds && monsters.tokens[i].x>=0 &&
-            (!monsters.tokens[i].focus || monsters.tokens[i].focus==index+1) && battle_edge(x,y,monsters.tokens[i].x,monsters.tokens[i].y)) return 1;
+            (!monsters.tokens[i].focus || monsters.tokens[i].focus==index+1) && battle_reach(x,y,monsters.tokens[i].x,monsters.tokens[i].y,monsters.tokens[i].melee.reach)) return 1;
     }
     return 0;
 }
@@ -55,7 +63,8 @@ static int entered_zone(int side,int index,int px,int py,int x,int y)
     for(i=0;i<(side?hero_count:monsters.count);i++) {
         ex=side?heroes[i].x:monsters.tokens[i].x; ey=side?heroes[i].y:monsters.tokens[i].y;
         focus=side?heroes[i].focus:monsters.tokens[i].focus; alive=side?HERO_ACTIVE(&heroes[i]):monsters.tokens[i].wounds;
-        if(alive && ex>=0 && (!focus || focus==index+1) && battle_edge(x,y,ex,ey) && !battle_edge(px,py,ex,ey)) return 1;
+        { int reach=side?heroes[i].melee.reach:monsters.tokens[i].melee.reach;
+          if(alive && ex>=0 && (!focus || focus==index+1) && battle_reach(x,y,ex,ey,reach) && !battle_reach(px,py,ex,ey,reach)) return 1; }
     }
     return 0;
 }
@@ -64,9 +73,9 @@ static void focus_enter(int side,int index)
     int i,x=side?monsters.tokens[index].x:heroes[index].x,y=side?monsters.tokens[index].y:heroes[index].y;
     focus_prune();
     if(side) {
-        for(i=0;i<hero_count;i++) if(HERO_ACTIVE(&heroes[i]) && !heroes[i].focus && battle_edge(x,y,heroes[i].x,heroes[i].y)) heroes[i].focus=index+1;
+        for(i=0;i<hero_count;i++) if(HERO_ACTIVE(&heroes[i]) && !heroes[i].focus && battle_reach(x,y,heroes[i].x,heroes[i].y,heroes[i].melee.reach)) heroes[i].focus=index+1;
     } else {
-        for(i=0;i<monsters.count;i++) if(monsters.tokens[i].wounds && !monsters.tokens[i].focus && battle_edge(x,y,monsters.tokens[i].x,monsters.tokens[i].y)) monsters.tokens[i].focus=index+1;
+        for(i=0;i<monsters.count;i++) if(monsters.tokens[i].wounds && !monsters.tokens[i].focus && battle_reach(x,y,monsters.tokens[i].x,monsters.tokens[i].y,monsters.tokens[i].melee.reach)) monsters.tokens[i].focus=index+1;
     }
 }
 static int battle_occupied(int x,int y)
@@ -140,7 +149,7 @@ static const char *ranged_eligibility(int h,int m,int side,const RANGED_PROFILE 
     x=side?monsters.tokens[m].x:heroes[h].x; y=side?monsters.tokens[m].y:heroes[h].y;
     tx=side?heroes[h].x:monsters.tokens[m].x; ty=side?heroes[h].y:monsters.tokens[m].y;
     d=abs(tx-x)+abs(ty-y);
-    if(d<=1) return "Orthogonally adjacent targets require hand-to-hand combat.";
+    if(battle_reach(x,y,tx,ty,side?monsters.tokens[m].melee.reach:heroes[h].melee.reach)) return "Targets in the attacker's melee reach require hand-to-hand combat.";
     if(!p->kind) return "No ranged weapon equipped. Set the attacker ranged profile.";
     if(p->range && d>p->range) return "Target is out of range.";
     if(!p->range || !p->dice || !p->hit[ranged_band(d)]) return "Configure maximum range, damage and this range band's hit roll.";
