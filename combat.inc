@@ -211,9 +211,10 @@ static int combat_calculate(HWND hwnd,COMBAT *c)
 }
 static int combat_apply(COMBAT *c)
 {
-    if(!c->steps || !melee_reachable(c->h,c->m,c->opening_side)) return 0;
+    if(!c->steps || turn_attack_reason(c->opening_side,c->h,c->m) || !melee_reachable(c->h,c->m,c->opening_side)) return 0;
     if(!c->monster.wounds && c->monster.unique && !character_dead(monster_identity(&c->monster)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
     remember(); heroes[c->h]=c->hero; monsters.tokens[c->m]=c->monster;
+    if(c->opening_side) monsters.tokens[c->m].attacked=1; else heroes[c->h].attacked=1;
     if(HERO_DEAD(&heroes[c->h])) heroes[c->h].x=heroes[c->h].y=-1;
     if(!c->monster.wounds) monster_kill(c->m);
     active=1; game_changed(); return 1;
@@ -269,7 +270,7 @@ static INT_PTR CALLBACK combat_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 static void combat_open(HWND owner,int h,int m,int monster_attacks)
 {
     COMBAT c;
-    if(!melee_reachable(h,m,monster_attacks)) { MessageBeep(MB_ICONWARNING); return; }
+    if(turn_attack_reason(monster_attacks,h,m) || !melee_reachable(h,m,monster_attacks)) { MessageBeep(MB_ICONWARNING); return; }
     memset(&c,0,sizeof(c)); c.h=h; c.m=m; c.hero=heroes[h]; c.monster=monsters.tokens[m];
     c.side=c.opening_side=monster_attacks; c.pending=-1;
     /* Legacy saves have no profile. Hydrate only the draft; Cancel is inert. */

@@ -105,8 +105,10 @@ static void shot_ally_clear(HWND hwnd,SHOT *s)
 }
 static const char *shot_blocked(SHOT *s)
 {
-    if(!s->side && heroes[s->h].fired) return "This hero has already fired this turn. Choose Next Turn to fire again.";
-    return ranged_eligibility(s->h,s->m,s->side,shot_profile(s),s->side?s->monster.moved:s->hero.moved);
+    const char *turn=turn_attack_reason(s->side,s->h,s->m);
+    if(turn) return turn;
+    if(!s->side && heroes[s->h].fired && !(turn_phase && gm_override)) return "This hero has already fired this turn. Choose Next Turn to fire again.";
+    return ranged_eligibility(s->h,s->m,s->side,shot_profile(s),turn_phase && gm_override?0:s->side?s->monster.moved:s->hero.moved);
 }
 static void shot_fields(HWND hwnd,SHOT *s)
 {
@@ -122,6 +124,7 @@ static void shot_fields(HWND hwnd,SHOT *s)
     EnableWindow(GetDlgItem(hwnd,RSROLL),!s->resolved && !blocked);
     EnableWindow(GetDlgItem(hwnd,IDOK),s->resolved && !blocked);
     EnableWindow(GetDlgItem(hwnd,RSNEXTTURN),!s->resolved);
+    SetDlgItemTextA(hwnd,RSNEXTTURN,turn_phase?"Next phase":"Next Turn");
     SetDlgItemTextA(hwnd,RSSTATUS,blocked?blocked:s->resolved?"Preview ready. Apply or Cancel.":"Choose Roll attack to preview the result.");
     SetDlgItemTextA(hwnd,RSRESULT,s->result);
 }
@@ -193,6 +196,7 @@ static int shot_apply(SHOT *s)
         if(!s->new_wounds) monster_kill(s->m);
     }
     if(!s->side) heroes[s->h].fired=1;
+    if(s->side) monsters.tokens[s->m].attacked=1; else heroes[s->h].attacked=1;
     active=1; game_changed(); return 1;
 }
 static int shot_roll_damage(HWND hwnd,SHOT *s)
@@ -234,6 +238,7 @@ static INT_PTR CALLBACK shot_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     } else if(s->resolved) return TRUE;
     else if(id==RSNEXTTURN) {
         game_command(MGAMETURN);
+        if(turn_phase) { EndDialog(hwnd,0); return TRUE; }
         s->hero.moved=s->hero.fired=s->monster.moved=0;
         shot_ally_clear(hwnd,s);
         SetDlgItemTextA(hwnd,RSHIT,""); SetDlgItemTextA(hwnd,RSDAMAGE,"");
@@ -260,9 +265,10 @@ static INT_PTR CALLBACK shot_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 }
 static void attack_open(HWND owner,int h,int m,int side)
 {
-    SHOT s; int distance;
+    SHOT s; int distance; const char *blocked;
     if(h<0 || h>=hero_count || m<0 || m>=monsters.count || (side?HERO_DEAD(&heroes[h]):!HERO_ACTIVE(&heroes[h])) || !monsters.tokens[m].wounds ||
        heroes[h].x<0 || monsters.tokens[m].x<0 || hero_at(heroes[h].x,heroes[h].y,game_fog())!=h || monster_at(monsters.tokens[m].x,monsters.tokens[m].y)!=m) { MessageBeep(MB_ICONWARNING); return; }
+    blocked=turn_attack_reason(side,h,m); if(blocked) { message(blocked); return; }
     distance=abs(heroes[h].x-monsters.tokens[m].x)+abs(heroes[h].y-monsters.tokens[m].y);
     if(distance==1 || melee_reachable(h,m,side)) combat_open(owner,h,m,side);
     else {

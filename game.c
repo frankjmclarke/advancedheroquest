@@ -21,9 +21,11 @@ static void monsters_reveal(void);
 static void focus_prune(void);
 static void focus_enter(int side,int index);
 static int battle_destination(int side,int index,int *x,int *y);
+static int battle_destination_cost(int side,int index,int *x,int *y,int *cost);
 static int shot_h=-1,shot_m=-1;
 static int monster_at(int x,int y);
 static HERO heroes[HERO_LIMIT], undo_heroes[HERO_LIMIT];
+static int turn_phase,gm_override,undo_turn_phase,undo_gm_override;
 static int preferred_player_view,view_pause,recovery_checked;
 static int hero_count,undo_count,undo_valid,selected=-1,move_mode,active,dirty,ready,autosave_warned,map_ready;
 static char session_title[160],save_path[MAX_PATH],recovery_path[MAX_PATH],previous_path[MAX_PATH];
@@ -32,7 +34,72 @@ static WINDOW_DEF *preview_window;
 static int preview_hero=-1,preview_x,preview_y;
 extern void game_loaded_title(const char *title);
 static void message(const char *text) { MessageBoxA(GlMainHwnd,text,"HQ-Map game",MB_OK|MB_ICONINFORMATION); }
-static void remember(void) { memcpy(undo_heroes,heroes,sizeof(heroes)); undo_count=hero_count; undo_monsters=monsters; undo_valid=1; }
+static void remember(void) { memcpy(undo_heroes,heroes,sizeof(heroes)); undo_count=hero_count; undo_monsters=monsters; undo_turn_phase=turn_phase; undo_gm_override=gm_override; undo_valid=1; }
+static const char *turn_attack_reason(int side,int h,int m)
+{
+    if(!turn_phase || gm_override) return NULL;
+    if(turn_phase!=(side?2:1)) return side?"It is the Hero phase.":"It is the GM phase.";
+    if(side?monsters.tokens[m].attacked:heroes[h].attacked) return "This model has already made its normal attack or run this phase.";
+    return NULL;
+}
+static int turn_move_remaining(int side,int index)
+{
+    int speed=side?monsters.tokens[index].stats[4]:heroes[index].stats[4];
+    int bonus=side?monsters.tokens[index].run_bonus:heroes[index].run_bonus;
+    int spent=side?monsters.tokens[index].move_spent:heroes[index].move_spent;
+    return speed+bonus-spent;
+}
+static int turn_can_move(int side,int index)
+{
+    if(!turn_phase || gm_override) return 1;
+    if(turn_phase!=(side?2:1)) return 0;
+    if((side?monsters.tokens[index].x:heroes[index].x)<0) return 1; /* setup placement */
+    return turn_move_remaining(side,index)>0;
+}
+static void turn_reset_side(int side)
+{
+    int i;
+    if(side) for(i=0;i<monsters.count;i++) {
+        MONSTER *m=&monsters.tokens[i]; m->move_spent=m->attacked=m->run_bonus=m->moved=0;
+    } else for(i=0;i<hero_count;i++) {
+        HERO *h=&heroes[i]; h->move_spent=h->attacked=h->run_bonus=h->moved=h->fired=0;
+    }
+}
+static int turn_run_apply(int side,int index,int roll)
+{
+    if(!turn_phase || roll<1 || roll>12 || index<0 ||
+       (side?index>=monsters.count:index>=hero_count) ||
+       (!gm_override && turn_attack_reason(side,side?0:index,side?index:0))) return 0;
+    remember();
+    if(side) { monsters.tokens[index].attacked=1; monsters.tokens[index].run_bonus=roll==1?0:roll; }
+    else { heroes[index].attacked=1; heroes[index].run_bonus=roll==1?0:roll; }
+    game_changed(); return 1;
+}
+static void turn_menu_update(void)
+{
+    HMENU menu=GlMainHwnd?GetMenu(GlMainHwnd):NULL;
+    int i,used=0,total=0; char status[100];
+    if(!menu) return;
+    if(turn_phase==1) for(i=0;i<hero_count;i++) {
+        if(heroes[i].x<0 || !HERO_ACTIVE(&heroes[i])) continue;
+        total++; if(heroes[i].attacked) used++;
+    } else if(turn_phase==2) for(i=0;i<monsters.count;i++) {
+        if(monsters.tokens[i].x<0 || !monsters.tokens[i].wounds) continue;
+        total++; if(monsters.tokens[i].attacked) used++;
+    }
+    ModifyMenuA(menu,2,MF_BYPOSITION|MF_POPUP,(UINT_PTR)GetSubMenu(menu,2),
+        turn_phase==1?"&Party - Hero phase":turn_phase==2?"&Party - GM phase":"&Party - Free play");
+    if(turn_phase) sprintf(status,"%s phase: %d/%d normal attacks used%s",turn_phase==1?"Hero":"GM",used,total,gm_override?" (GM override)":"");
+    else strcpy(status,"Free play: no phase limits");
+    ModifyMenuA(menu,MGAMEPHASESTATUS,MF_BYCOMMAND|MF_STRING|MF_GRAYED,MGAMEPHASESTATUS,status);
+    CheckMenuItem(menu,MGAMEGUIDED,MF_BYCOMMAND|(turn_phase?MF_CHECKED:MF_UNCHECKED));
+    CheckMenuItem(menu,MGAMEOVERRIDE,MF_BYCOMMAND|(gm_override?MF_CHECKED:MF_UNCHECKED));
+    EnableMenuItem(menu,MGAMEOVERRIDE,MF_BYCOMMAND|(turn_phase?MF_ENABLED:MF_GRAYED));
+    EnableMenuItem(menu,MGAMERUN,MF_BYCOMMAND|(turn_phase?MF_ENABLED:MF_GRAYED));
+    ModifyMenuA(menu,MGAMETURN,MF_BYCOMMAND|MF_STRING,MGAMETURN,
+        turn_phase==1?"End Hero phase / Start GM phase":turn_phase==2?"End GM phase / Start Hero phase":"Next Turn (reset movement)");
+    DrawMenuBar(GlMainHwnd);
+}
 static int capture(GAME_DATA *d)
 {
     int x,y; PICE *p;
@@ -40,6 +107,7 @@ static int capture(GAME_DATA *d)
     d->pieces=Pice; d->count=MAX_PICE; d->width=Xsize; d->height=Ysize;
     d->visible=game_fog(); if(!d->visible) return 0;
     d->player_view=preferred_player_view;
+    d->turn_phase=turn_phase; d->gm_override=gm_override;
     d->pack=(CHARACTER_PACK*)pack_current();
     d->monsters=monsters;
     d->hero_count=hero_count; memcpy(d->heroes,heroes,sizeof(heroes)); strcpy(d->title,session_title);
@@ -112,6 +180,7 @@ void game_changed(void)
 {
     monsters_reveal();
     focus_prune();
+    turn_menu_update();
     if(!active || !map_ready) return;
     dirty=1; game_redraw();
     if(ready && !write_game(recovery_path,1) && !autosave_warned) {
@@ -165,11 +234,13 @@ int game_load(int recovery)
     if(d->player_view>=0) preferred_player_view=d->player_view;
     monsters=d->monsters; selected_monster=-1; attack_monster=-1;
     hero_count=d->hero_count; memcpy(heroes,d->heroes,sizeof(heroes));
+    turn_phase=d->turn_phase; gm_override=d->gm_override;
     { int i; for(i=0;i<hero_count;i++) if(HERO_DEAD(&heroes[i])) heroes[i].x=heroes[i].y=-1; }
     strcpy(session_title,d->title); game_set_fog(d->visible,d->count);
     selected=-1; move_mode=0; undo_valid=0; active=1; map_ready=1; dirty=recovery?1:0;
     if(recovery) save_path[0]=0; else strcpy(save_path,path);
     monsters_reveal(); focus_prune();
+    turn_menu_update();
     game_view_pause(1);
     game_loaded_title(session_title);
     game_view_pause(0);
@@ -195,7 +266,8 @@ void game_discard_dungeon(void)
 {
     int i; monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; map_ready=0; dirty=0; selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
+    turn_phase=gm_override=0; turn_menu_update();
     game_reset_fog();
 }
 void game_new_dungeon(const char *title)
@@ -208,7 +280,8 @@ void game_new_dungeon(const char *title)
     monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1;
     strncpy(session_title,title,sizeof(session_title)-1); session_title[sizeof(session_title)-1]=0;
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
+    turn_phase=gm_override=0; turn_menu_update();
     selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
     game_changed();
 }
@@ -221,7 +294,7 @@ void game_shutdown(void)
 static void reserve_party(void)
 {
     int i; if(!hero_count) return; remember();
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
     move_mode=0; game_changed();
 }
 /* Keep token locations on occupied map squares, with strictly one hero each. */
@@ -237,10 +310,12 @@ static int can_move(int index,int x,int y,const unsigned char *visible)
 }
 static int move_hero(int index,int x,int y,const unsigned char *visible)
 {
+    int cost=0;
     if(index<0 || index>=hero_count || !can_move(index,x,y,visible)) { MessageBeep(MB_ICONWARNING); return 0; }
     if(heroes[index].x==x && heroes[index].y==y) return 1;
-    if(!battle_destination(0,index,&x,&y)) { MessageBeep(MB_ICONWARNING); return 0; }
+    if(!turn_can_move(0,index) || !battle_destination_cost(0,index,&x,&y,&cost)) { MessageBeep(MB_ICONWARNING); return 0; }
     remember(); if(heroes[index].x>=0) heroes[index].moved=1;
+    if(turn_phase) heroes[index].move_spent+=cost;
     heroes[index].x=x; heroes[index].y=y; focus_enter(0,index); game_changed(); return 1;
 }
 static int hero_at(int x,int y,const unsigned char *visible)
@@ -369,8 +444,11 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         n=hook->monster_drag; hook->monster_drag=-1; ReleaseCapture();
         if(map_point(hook,lp,&x,&y) && (x!=hook->start_x || y!=hook->start_y)) {
             if((target=hero_at(x,y,visible))>=0) attack_open(hwnd,target,n,1);
-            else if(monster_can_move(n,x,y) && battle_destination(1,n,&x,&y)) {
+            else if(monster_can_move(n,x,y) && turn_can_move(1,n)) {
+                int cost=0;
+                if(!battle_destination_cost(1,n,&x,&y,&cost)) { MessageBeep(MB_ICONWARNING); return 0; }
                 attack_monster=-1; remember(); monsters.tokens[n].moved=1; monsters.tokens[n].x=x; monsters.tokens[n].y=y;
+                if(turn_phase) monsters.tokens[n].move_spent+=cost;
                 focus_enter(1,n); active=1; game_changed();
             }
             else MessageBeep(MB_ICONWARNING);
@@ -444,7 +522,9 @@ static void party_fields(HWND hwnd)
     if(h && HERO_DEAD(h)) strcpy(status,"Dead - model removed from the map.");
     else if(h && HERO_KO(h)) strcpy(status,"KO'd at zero Wounds. Another wound is fatal.");
     else if(h && h->x>=0) sprintf(status,"On map: square %d, %d",h->x+1,h->y+1); else strcpy(status,h?"In reserve - choose Place / Move to enter the dungeon.":"Choose a class and Add your first hero.");
+    if(h && turn_phase && !HERO_DEAD(h)) sprintf(status,"%s phase | Move %d/%d | %s%s",turn_phase==1?"Hero":"GM",h->move_spent,h->stats[4]+h->run_bonus,h->attacked?"Attack used":"Attack ready",gm_override?" | GM override":"");
     SetDlgItemTextA(hwnd,GPSTATUS,status); InvalidateRect(GetDlgItem(hwnd,GPPORTRAIT),NULL,TRUE);
+    SetDlgItemTextA(hwnd,GPGUIDE,turn_phase==1?"Hero phase: move and attack in either order. End phase in Party menu when ready.":turn_phase==2?"GM phase: move and attack with monsters, then end phase in Party menu.":"Free play. Enable Guided combat turns in the Party menu to use phases.");
 }
 static void party_list(HWND hwnd)
 {
@@ -557,11 +637,39 @@ void game_party(void)
 void game_command(int command)
 {
     if(!map_ready) return;
-    if(command==MGAMETURN) {
-        int i; remember();
-        for(i=0;i<hero_count;i++) heroes[i].moved=heroes[i].fired=0;
-        for(i=0;i<monsters.count;i++) monsters.tokens[i].moved=0;
-        game_changed();
+    if(command==MGAMEHELP) {
+        message("Guided combat turns: select Party > Guided combat turns to begin the Hero phase. Move each hero up to Speed by dragging it on the map; attack by selecting or dragging onto a target. Each hero gets one normal attack and may move before or after it. To run instead, select a model and choose Party > Run selected model; the D12 roll adds movement and uses its attack. When the heroes are done, choose Party > End Hero phase / Start GM phase. Do the same for monsters, then end the GM phase. The phase ends only when you choose that menu command. The Party menu shows how many normal attacks have been used. GM override bypasses limits when needed.");
+    }
+    else if(command==MGAMEGUIDED) {
+        remember(); turn_phase=turn_phase?0:1; gm_override=0;
+        if(turn_phase) { turn_reset_side(0); turn_reset_side(1); }
+        turn_menu_update(); game_changed();
+    }
+    else if(command==MGAMEOVERRIDE) {
+        if(!turn_phase) return;
+        remember(); gm_override=!gm_override; turn_menu_update(); game_changed();
+    }
+    else if(command==MGAMERUN) {
+        int side=selected>=0?0:1,index=side?selected_monster:selected,roll;
+        HCRYPTPROV provider; char note[120];
+        if(!turn_phase) { message("Enable Guided combat turns before running."); return; }
+        if(index<0 || (side?index>=monsters.count:index>=hero_count)) { message("Select a Hero or monster on the map first."); return; }
+        if(!gm_override && (turn_phase!=(side?2:1) || (side?monsters.tokens[index].attacked:heroes[index].attacked))) {
+            message("This model cannot run in the current phase after using its attack."); return;
+        }
+        if(!CryptAcquireContext(&provider,NULL,NULL,PROV_RSA_FULL,CRYPT_VERIFYCONTEXT)) { message("Dice generator unavailable."); return; }
+        if(!melee_d12(provider,&roll)) { CryptReleaseContext(provider,0); message("Dice generation failed."); return; }
+        CryptReleaseContext(provider,0);
+        if(!turn_run_apply(side,index,roll)) return;
+        sprintf(note,"Run roll: %d. Extra movement: %d squares. This model cannot make a normal attack this phase.",roll,roll==1?0:roll);
+        message(note);
+    }
+    else if(command==MGAMETURN) {
+        remember();
+        if(turn_phase==1) { turn_phase=2; turn_reset_side(1); }
+        else if(turn_phase==2) { turn_phase=1; turn_reset_side(0); }
+        else { turn_reset_side(0); turn_reset_side(1); }
+        turn_menu_update(); game_changed();
     }
     else if(command==MGAMELEAVE) reserve_party();
     else if(command==MGAMEUNDO && undo_valid) {
@@ -569,7 +677,10 @@ void game_command(int command)
         HERO swap[HERO_LIMIT]; int n=hero_count;
         monster_swap=monsters; monsters=undo_monsters; undo_monsters=monster_swap; selected_monster=-1;
         memcpy(swap,heroes,sizeof(heroes)); memcpy(heroes,undo_heroes,sizeof(heroes)); memcpy(undo_heroes,swap,sizeof(heroes));
+        { int state=turn_phase; turn_phase=undo_turn_phase; undo_turn_phase=state;
+          state=gm_override; gm_override=undo_gm_override; undo_gm_override=state; }
         hero_count=undo_count; undo_count=n; attack_monster=-1; selected=-1; move_mode=0; game_changed();
+        turn_menu_update();
     }
 }
 

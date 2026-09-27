@@ -76,6 +76,7 @@ static int valid_melee(const MELEE_PROFILE *p)
 static int valid_data(const GAME_DATA *d)
 {
     int i,j;
+    if(d->turn_phase<0 || d->turn_phase>2 || d->gm_override<0 || d->gm_override>1) return 0;
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) return 0;
     if(!d->pieces || !d->cells || !d->visible || d->player_view < -1 || d->player_view > 1) return 0;
     if(d->monsters.count<0 || d->monsters.count>MONSTER_LIMIT || d->monsters.dead_count<0 || d->monsters.dead_count>CHARACTER_LIMIT) return 0;
@@ -89,6 +90,7 @@ static int valid_data(const GAME_DATA *d)
         if(!memchr(m->profile_id,0,sizeof(m->profile_id)) || !memchr(m->character_id,0,sizeof(m->character_id))) return 0;
         if(!valid_ranged(&m->ranged,m->moved,m->focus,d->hero_count) || !valid_melee(&m->melee) || !memchr(m->name,0,64) || !m->name[0] || m->room<0 || m->room>=d->count ||
            m->unique<0 || m->unique>1 || m->wounds<0 || m->wounds>m->stats[7] || m->stats[7]<1) return 0;
+        if(m->move_spent<0 || m->move_spent>1000000 || m->attacked<0 || m->attacked>1 || m->run_bonus<0 || m->run_bonus>12) return 0;
         for(j=0;j<HERO_STATS;j++) if(m->stats[j]<0 || m->stats[j]>(j==8?9999:99)) return 0;
         if(!d->visible[m->room] || !d->monsters.seen[m->room] || d->pieces[m->room].type==EMPTY) return 0;
         for(j=0;j<d->monsters.dead_count;j++) if(m->wounds && !_stricmp(m->character_id[0]?m->character_id:m->name,d->monsters.dead[j])) return 0;
@@ -121,6 +123,7 @@ static int valid_data(const GAME_DATA *d)
         const HERO *h=&d->heroes[i];
         if(!memchr(h->profile_id,0,sizeof(h->profile_id)) || !memchr(h->class_name,0,sizeof(h->class_name)) || !memchr(h->class_rules,0,sizeof(h->class_rules))) return 0;
         if(h->fired<0 || h->fired>1 || h->condition<0 || h->condition>2 || !valid_ranged(&h->ranged,h->moved,h->focus,d->monsters.count) || !valid_melee(&h->melee) || !memchr(h->name,0,sizeof(h->name)) || !h->name[0] || h->kind<0 || h->kind>=HERO_CLASS_COUNT || h->wounds<0 || h->wounds>h->stats[7] || h->fate<0 || h->fate>99) return 0;
+        if(h->move_spent<0 || h->move_spent>1000000 || h->attacked<0 || h->attacked>1 || h->run_bonus<0 || h->run_bonus>12) return 0;
         if((h->condition==1 && h->wounds!=0) || (h->condition==2 && h->wounds!=0)) return 0;
         for(j=0;j<HERO_STATS;j++) if(h->stats[j]<0 || h->stats[j]>99) return 0;
         if(h->x==-1 && h->y==-1) continue;
@@ -198,7 +201,7 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d)) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,9); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,10); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -248,6 +251,10 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
     /* Append v9 ranged thresholds after the complete v8 suffix for migration. */
     for(i=0;i<d->hero_count;i++) { const RANGED_PROFILE *p=&d->heroes[i].ranged; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); }
     for(i=0;i<d->monsters.count;i++) { const RANGED_PROFILE *p=&d->monsters.tokens[i].ranged; put32(&b,p->critical?p->critical:12); put32(&b,p->fumble?p->fumble:1); }
+    /* Version 10 adds guided combat phases and per-model action state. */
+    put32(&b,d->turn_phase); put32(&b,d->gm_override);
+    for(i=0;i<d->hero_count;i++) { const HERO *h=&d->heroes[i]; put32(&b,h->move_spent); put32(&b,h->attacked); put32(&b,h->run_bonus); }
+    for(i=0;i<d->monsters.count;i++) { const MONSTER *m=&d->monsters.tokens[i]; put32(&b,m->move_spent); put32(&b,m->attacked); put32(&b,m->run_bonus); }
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -285,7 +292,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version<1 || version>9) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version<1 || version>10) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -367,6 +374,11 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(version>=9) {
         for(i=0;i<d->hero_count && b.ok;i++) { d->heroes[i].ranged.critical=get32(&b); d->heroes[i].ranged.fumble=get32(&b); }
         for(i=0;i<d->monsters.count && b.ok;i++) { d->monsters.tokens[i].ranged.critical=get32(&b); d->monsters.tokens[i].ranged.fumble=get32(&b); }
+    }
+    if(version>=10) {
+        d->turn_phase=get32(&b); d->gm_override=get32(&b);
+        for(i=0;i<d->hero_count && b.ok;i++) { HERO *h=&d->heroes[i]; h->move_spent=get32(&b); h->attacked=get32(&b); h->run_bonus=get32(&b); }
+        for(i=0;i<d->monsters.count && b.ok;i++) { MONSTER *m=&d->monsters.tokens[i]; m->move_spent=get32(&b); m->attacked=get32(&b); m->run_bonus=get32(&b); }
     }
     for(i=0;i<d->hero_count;i++) {
         if(!d->heroes[i].melee.critical) d->heroes[i].melee.critical=12;

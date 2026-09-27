@@ -107,16 +107,19 @@ static int ranged_los(int x,int y,int tx,int ty)
 }
 /* With opponents on the board, use a shortest open orthogonal path. A move
  * stops at its first new enemy zone. Reserve placement stays a creative action. */
-static int battle_destination(int side,int index,int *tx,int *ty)
+static int battle_destination_cost(int side,int index,int *tx,int *ty,int *cost)
 {
     int x=side?monsters.tokens[index].x:heroes[index].x,y=side?monsters.tokens[index].y:heroes[index].y;
-    int *parent,*queue,total=Xsize*Ysize,head=0,tail=0,i,j,n,nx,ny,start,goal,at,previous,opponents=0;
+    int *parent,*queue,total=Xsize*Ysize,head=0,tail=0,i,j,n,nx,ny,start,goal,at,previous,opponents=0,moved=0,remaining;
     const int dx[4]={1,-1,0,0},dy[4]={0,0,1,-1};
-    if(x<0) return 1;
+    *cost=0; if(x<0) return 1;
     if(side) { for(i=0;i<hero_count;i++) if(heroes[i].x>=0 && HERO_ACTIVE(&heroes[i])) opponents++; }
     else { for(i=0;i<monsters.count;i++) if(monsters.tokens[i].x>=0 && monsters.tokens[i].wounds) opponents++; }
-    if(!opponents) return 1;
+    if(!opponents && !turn_phase) return 1;
     if(*tx<0 || *ty<0 || *tx>=Xsize || *ty>=Ysize || total<1) return 0;
+    if(x==*tx && y==*ty) return 1;
+    remaining=turn_phase && !gm_override?turn_move_remaining(side,index):total;
+    if(remaining<=0) return 0;
     parent=(int*)malloc(total*sizeof(int)); queue=(int*)malloc(total*sizeof(int));
     if(!parent || !queue) { free(parent); free(queue); return 0; }
     for(i=0;i<total;i++) parent[i]=-1;
@@ -133,13 +136,18 @@ static int battle_destination(int side,int index,int *tx,int *ty)
     }
     if(parent[goal]<0) { free(parent); free(queue); return 0; }
     n=0; for(at=goal;at!=start;at=parent[at]) queue[n++]=at;
-    previous=start;
-    for(i=n-1;i>=0;i--) {
+    previous=goal=start;
+    for(i=n-1;i>=0 && moved<remaining;i--) {
         at=queue[i];
-        if(entered_zone(side,index,previous%Xsize,previous/Xsize,at%Xsize,at/Xsize)) { goal=at; break; }
+        moved++; goal=at;
+        if(entered_zone(side,index,previous%Xsize,previous/Xsize,at%Xsize,at/Xsize)) break;
         previous=at;
     }
-    *tx=goal%Xsize; *ty=goal/Xsize; free(parent); free(queue); return 1;
+    *tx=goal%Xsize; *ty=goal/Xsize; *cost=moved; free(parent); free(queue); return moved>0;
+}
+static int battle_destination(int side,int index,int *tx,int *ty)
+{
+    int cost; return battle_destination_cost(side,index,tx,ty,&cost);
 }
 static int ranged_band(int range) { return range<=3?0:range<=12?1:range<=24?2:range<=36?3:4; }
 static const char *ranged_eligibility(int h,int m,int side,const RANGED_PROFILE *p,int moved)

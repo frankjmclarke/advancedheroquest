@@ -331,6 +331,27 @@ moved flag; bows and crossbows cannot fire while it is set. Thrown weapons can.
 The ranged profile's **Moved this turn** checkbox permits manual correction.
 Reserve placement is treated as setup rather than movement.
 
+**Party → Guided combat turns** starts with the Hero phase. **End Hero phase /
+Start GM phase** and **End GM phase / Start Hero phase** advance the two sides;
+each side's movement and attack allowances reset at the start of its phase.
+The main menu reads **Party - Hero phase** or **Party - GM phase** and shows
+the number of normal attacks used. The phase does not end automatically:
+choose the End phase command when that side is finished, even if some models
+have unused actions. **Party → How combat turns work...** gives the controls
+and sequence inside the application.
+Each placed model can move up to its Speed in orthogonal squares and make one
+normal melee or ranged attack, in either order. A miss or fumble uses that
+attack. Melee free attacks in the same combat resolution do not use another
+allowance. Outside guided turns, the existing creative movement and Next Turn
+behaviour remains available.
+
+**Run selected model (D12)** spends its normal attack and adds the roll to its
+movement allowance; a roll of 1 adds nothing. The Party menu's **GM override**
+temporarily bypasses phase, movement and attack limits. Guided phase, override,
+and individual movement and attack state persist in version 10 saves. Older
+saves open in free play with fresh allowances. Undo restores the preceding
+phase or action state.
+
 With living opponents on the map, movement follows a shortest open orthogonal
 path through explored, unoccupied squares. It stops at the first newly entered
 enemy death zone, even if you dropped the token farther away. Move in shorter
@@ -348,7 +369,7 @@ heroes retained on the map are still models until explicitly removed.
 A shooter in an enemy's active death zone cannot fire. Diagonal proximity and
 long-reach exceptions do not prohibit ranged attacks in this implementation,
 following the user's generous diagonal ruling. The user retains the final say.
-Movement limits, attack counts, initiative and ammunition remain manual.
+Initiative and ammunition remain manual.
 
 Version 5 persists ranged profiles, moved flags, focused opponents and individual
 opened doors through saves and automatic recovery. New dungeons clear movement

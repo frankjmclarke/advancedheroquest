@@ -36,12 +36,13 @@ static void version8_crc(unsigned char *bytes,size_t size) {
     for(i=16;i<size;i++) { crc^=bytes[i]; for(j=0;j<8;j++) crc=(crc>>1)^((crc&1)?0xedb88320UL:0); }
     crc=~crc; for(j=0;j<4;j++) bytes[12+j]=(unsigned char)(crc>>(8*j));
 }
-/* Size of the v7-v9 suffix, for constructing authentic older layouts. */
+/* Size of the v7-v10 suffix, for constructing authentic older layouts. */
 static size_t pack_extension(const GAME_DATA *d) {
     int i; size_t n=4+(d->pack?d->pack:pack_fantasy())->size;
     for(i=0;i<d->hero_count;i++) n+=12+strlen(d->heroes[i].profile_id)+strlen(d->heroes[i].class_name)+strlen(d->heroes[i].class_rules);
     for(i=0;i<d->monsters.count;i++) n+=8+strlen(d->monsters.tokens[i].profile_id)+strlen(d->monsters.tokens[i].character_id);
     n+=16*d->hero_count+12*d->monsters.count+8*(d->hero_count+d->monsters.count);
+    n+=8+12*(d->hero_count+d->monsters.count);
     return n;
 }
 static void generate(void) {
@@ -125,15 +126,31 @@ int main(int argc,char **argv) {
     heroes[1].wounds=1; heroes[3].stats[6]=11; strcpy(heroes[0].name,"Aldric");
     heroes[0].melee.critical=11; heroes[0].melee.fumble=2; heroes[0].melee.reach=2;
     heroes[0].ranged.critical=11; heroes[0].ranged.fumble=2;
+    turn_phase=1; gm_override=1; heroes[0].move_spent=2; heroes[0].attacked=1;
+    monsters.tokens[0].move_spent=3; monsters.tokens[0].run_bonus=4;
     assert(capture(&snapshot));
     assert(game_encode(&snapshot,&bytes,&size)); free(snapshot.cells);
     decoded=game_decode(bytes,size); assert(decoded);
+    assert(decoded->turn_phase==1 && decoded->gm_override==1);
+    assert(decoded->heroes[0].move_spent==2 && decoded->heroes[0].attacked==1);
+    assert(decoded->monsters.tokens[0].move_spent==3 && decoded->monsters.tokens[0].run_bonus==4);
     /* Missing room text stays NULL, rather than an allocated empty list. */
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type!=EMPTY && !Pice[i].text) assert(!decoded->pieces[i].text);
     assert(game_encode(decoded,&other,&other_size)); assert(size==other_size && !memcmp(bytes,other,size)); free(other);
     for(i=0;i<5;i++) { assert(!strcmp(heroes[i].name,decoded->heroes[i].name)); assert(!memcmp(&heroes[i].kind,&decoded->heroes[i].kind,sizeof(HERO)-40)); }
+    /* Version 9 saves start in free play with fresh action allowances. */
+    {
+        size_t old_size=size-8-12*(snapshot.hero_count+snapshot.monsters.count);
+        unsigned char *old=(unsigned char*)malloc(old_size); assert(old);
+        memcpy(old,bytes,old_size); old[8]=9; version8_crc(old,old_size);
+        again=game_decode(old,old_size); assert(again);
+        assert(!again->turn_phase && !again->gm_override);
+        assert(!again->heroes[0].move_spent && !again->heroes[0].attacked);
+        assert(!again->monsters.tokens[0].move_spent && !again->monsters.tokens[0].run_bonus);
+        game_data_free(again); free(old);
+    }
     /* Version 8 keeps melee thresholds/reach and supplies standard ranged thresholds. */
-    version8_size=size-8*(snapshot.hero_count+snapshot.monsters.count); version8_bytes=(unsigned char*)malloc(version8_size); assert(version8_bytes);
+    version8_size=size-8-20*(snapshot.hero_count+snapshot.monsters.count); version8_bytes=(unsigned char*)malloc(version8_size); assert(version8_bytes);
     memcpy(version8_bytes,bytes,version8_size); version8_bytes[8]=8;
     version8_tail=version8_size-(16*snapshot.hero_count+12*snapshot.monsters.count);
     for(i=0;i<snapshot.hero_count;i++) { version8_pos=version8_tail+12*i+8; version8_bytes[version8_pos]=(unsigned char)(version8_bytes[version8_pos]==2); }
@@ -145,7 +162,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=10; assert(!game_decode(bytes,size)); bytes[8]=9;
+    bytes[8]=11; assert(!game_decode(bytes,size)); bytes[8]=10;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;

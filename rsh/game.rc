@@ -39,7 +39,7 @@ BEGIN
     PUSHBUTTON "Ranged weapon",GPRANGED,10,193,155,16
     PUSHBUTTON "Class rules",GPRULES,353,193,70,16
     PUSHBUTTON "Weapon / combat",GPCOMBAT,178,193,113,16
-    LTEXT "Editable starting suggestions. No class rules are enforced.",-1,10,216,330,12
+    LTEXT "",GPGUIDE,10,214,330,20
     LTEXT "",GPSTATUS,10,238,330,12
     DEFPUSHBUTTON "Close",IDOK,353,232,70,18
 END

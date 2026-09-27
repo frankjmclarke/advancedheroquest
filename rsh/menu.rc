@@ -65,7 +65,12 @@ MENUE MENU
         MENUITEM "&Heroes and Reserve...\tAlt+H", MGAMEPARTY
         MENUITEM "&Monsters...", MGAMEMONSTERS
         MENUITEM "&Undo Token Change", MGAMEUNDO
-        MENUITEM "Next &Turn (reset movement)", MGAMETURN
+        MENUITEM "Free play: no phase limits", MGAMEPHASESTATUS, GRAYED
+        MENUITEM "Next &Phase / Turn", MGAMETURN
+        MENUITEM "&Guided combat turns", MGAMEGUIDED
+        MENUITEM "G&M override", MGAMEOVERRIDE
+        MENUITEM "&Run selected model (D12)", MGAMERUN
+        MENUITEM "How combat turns work...", MGAMEHELP
         MENUITEM SEPARATOR
         MENUITEM "&Leave Dungeon (all to reserve)", MGAMELEAVE
         MENUITEM "&Next Dungeon with Current Party", MGAMENEXT

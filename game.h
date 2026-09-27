@@ -19,6 +19,7 @@ typedef struct {
     char profile_id[64],class_name[64],class_rules[2048];
     int fired; /* normal ranged attack used this turn */
     int moved,focus; /* focus: opposing roster index + 1, or zero */
+    int move_spent,attacked,run_bonus; /* guided combat phase state */
 } HERO;
 #define HERO_ACTIVE(h) ((h)->condition==0 && (h)->wounds>0)
 #define HERO_KO(h) ((h)->condition==1)
@@ -33,6 +34,7 @@ typedef struct {
     MELEE_PROFILE melee;
     RANGED_PROFILE ranged;
     int moved,focus; /* focus: opposing roster index + 1, or zero */
+    int move_spent,attacked,run_bonus; /* guided combat phase state */
 } MONSTER;
 typedef struct {
     int count, dead_count;
@@ -45,6 +47,8 @@ typedef struct {
     char title[160];
     int width, height, count, hero_count;
     int player_view; /* -1: legacy save with no recorded view; 0: GM; 1: player */
+    int turn_phase; /* 0 free play, 1 Hero phase, 2 GM phase */
+    int gm_override;
     HERO heroes[HERO_LIMIT];
     MONSTER_STATE monsters;
     PICE *pieces;
