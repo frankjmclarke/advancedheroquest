@@ -225,9 +225,11 @@ combat preview without changing the saved monster until Apply.
 
 Drag a hero onto a living monster in the square immediately above, below, left
 or right to open combat. Dragging a monster onto an adjacent hero works too.
-Both tokens stay in their original squares. Diagonal and distant targets now
-open ranged combat instead. Unrevealed targets and attacks through walls or
-closed doors are rejected; opened connecting doors are supported.
+Both tokens stay in their original squares. Diagonal targets open melee combat
+only when the attacker's weapon profile has Diagonal reach enabled. Other
+diagonal and distant targets open ranged combat instead. Unrevealed targets and
+attacks through walls or closed doors are rejected; opened connecting doors are
+supported.
 Dragging to an empty square still moves the token. Both GM and Player View use
 the same combat workflow and retain the selected view.
 
@@ -235,8 +237,9 @@ the same combat workflow and retain the selected view.
    buttons allow corrections in the draft before a roll is calculated.
 2. Choose **Roll attack**. It rolls the hit die, all required damage dice and
    bonus dice from twelves, then calculates the result in one action. The dice
-   and result are displayed for review. A natural 1 fumbles; a natural 12
-   grants a free attack.
+   and result are displayed for review. Each melee profile sets its critical
+   threshold (default 12), fumble threshold (default 1), and optional diagonal
+   reach. Existing profiles keep their former thresholds and orthogonal reach.
 3. **Take free attack** continues
    with the attacker after a critical, or the defender after a fumble, provided
    both remain alive. These attacks share the same preview and Undo operation.
@@ -248,17 +251,22 @@ the same combat workflow and retain the selected view.
    calculated roll and wound change.
 
 A killed monster or Henchman is removed; unique monster deaths are recorded for
-the continuing adventure. Heroes at zero Wounds retain the existing defeated
-marker for manual adjudication. **Undo Token Change** reverses the
-whole applied exchange, profiles and character death included.
+the continuing adventure. A Hero reduced exactly to zero Wounds is KO'd and
+remains on the map; the next wound kills them and removes their token. KO'd
+Heroes use WS 1 when attacked and cannot move or attack. The party roster marks
+them as KO'd or dead. Carrying and healing KO'd Heroes are not yet automated.
+**Undo Token Change** reverses the whole applied exchange, profiles and
+character death included.
 
 Combat does not enforce attack allowances per turn, class weapon restrictions,
-long-reach exceptions, ammunition or special abilities. Ranged eligibility and
+reach beyond optional diagonal adjacency, ammunition or special abilities. Ranged eligibility and
 normal orthogonal death zones are handled as described below. WS outside the
 printed table's 1–12 range requires manual adjudication. A preview is bounded to
 32 attacks and 512 damage dice per attack; further attacks can be adjudicated
 separately. Profiles persist through save/load, automatic recovery and the next
-dungeon. Version-5 saves require the updated executable.
+dungeon. Version-8 saves add KO/death state and melee weapon thresholds; older
+saves load with the former 12/1 thresholds and zero-Wound Heroes treated as
+KO'd (zero-Wound Henchmen remain dead).
 
 `tests/combat-check.py` checks printed lookup, native dialogs and drag routing in
 both views, adjacency and walls/doors, manual and generated dice, damage

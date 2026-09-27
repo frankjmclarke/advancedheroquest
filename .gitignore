@@ -28,3 +28,4 @@ dist/*setup.exe
 # Python caches and local investigation outputs
 __pycache__/
 /tmp/
+ignore/

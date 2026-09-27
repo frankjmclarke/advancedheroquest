@@ -41,7 +41,7 @@ static int death_zone(int side,int index,int x,int y)
 {
     int i;
     if(side) {
-        for(i=0;i<hero_count;i++) if(heroes[i].wounds && heroes[i].x>=0 &&
+        for(i=0;i<hero_count;i++) if(HERO_ACTIVE(&heroes[i]) && heroes[i].x>=0 &&
             (!heroes[i].focus || heroes[i].focus==index+1) && battle_edge(x,y,heroes[i].x,heroes[i].y)) return 1;
     } else {
         for(i=0;i<monsters.count;i++) if(monsters.tokens[i].wounds && monsters.tokens[i].x>=0 &&
@@ -54,7 +54,7 @@ static int entered_zone(int side,int index,int px,int py,int x,int y)
     int i,ex,ey,focus,alive;
     for(i=0;i<(side?hero_count:monsters.count);i++) {
         ex=side?heroes[i].x:monsters.tokens[i].x; ey=side?heroes[i].y:monsters.tokens[i].y;
-        focus=side?heroes[i].focus:monsters.tokens[i].focus; alive=side?heroes[i].wounds:monsters.tokens[i].wounds;
+        focus=side?heroes[i].focus:monsters.tokens[i].focus; alive=side?HERO_ACTIVE(&heroes[i]):monsters.tokens[i].wounds;
         if(alive && ex>=0 && (!focus || focus==index+1) && battle_edge(x,y,ex,ey) && !battle_edge(px,py,ex,ey)) return 1;
     }
     return 0;
@@ -64,7 +64,7 @@ static void focus_enter(int side,int index)
     int i,x=side?monsters.tokens[index].x:heroes[index].x,y=side?monsters.tokens[index].y:heroes[index].y;
     focus_prune();
     if(side) {
-        for(i=0;i<hero_count;i++) if(heroes[i].wounds && !heroes[i].focus && battle_edge(x,y,heroes[i].x,heroes[i].y)) heroes[i].focus=index+1;
+        for(i=0;i<hero_count;i++) if(HERO_ACTIVE(&heroes[i]) && !heroes[i].focus && battle_edge(x,y,heroes[i].x,heroes[i].y)) heroes[i].focus=index+1;
     } else {
         for(i=0;i<monsters.count;i++) if(monsters.tokens[i].wounds && !monsters.tokens[i].focus && battle_edge(x,y,monsters.tokens[i].x,monsters.tokens[i].y)) monsters.tokens[i].focus=index+1;
     }
@@ -104,7 +104,7 @@ static int battle_destination(int side,int index,int *tx,int *ty)
     int *parent,*queue,total=Xsize*Ysize,head=0,tail=0,i,j,n,nx,ny,start,goal,at,previous,opponents=0;
     const int dx[4]={1,-1,0,0},dy[4]={0,0,1,-1};
     if(x<0) return 1;
-    if(side) { for(i=0;i<hero_count;i++) if(heroes[i].x>=0 && heroes[i].wounds) opponents++; }
+    if(side) { for(i=0;i<hero_count;i++) if(heroes[i].x>=0 && HERO_ACTIVE(&heroes[i])) opponents++; }
     else { for(i=0;i<monsters.count;i++) if(monsters.tokens[i].x>=0 && monsters.tokens[i].wounds) opponents++; }
     if(!opponents) return 1;
     if(*tx<0 || *ty<0 || *tx>=Xsize || *ty>=Ysize || total<1) return 0;
@@ -136,7 +136,7 @@ static int ranged_band(int range) { return range<=3?0:range<=12?1:range<=24?2:ra
 static const char *ranged_eligibility(int h,int m,int side,const RANGED_PROFILE *p,int moved)
 {
     int x,y,tx,ty,d;
-    if(h<0 || h>=hero_count || m<0 || m>=monsters.count || !heroes[h].wounds || !monsters.tokens[m].wounds || heroes[h].x<0 || monsters.tokens[m].x<0) return "Both models must be alive and placed.";
+    if(h<0 || h>=hero_count || m<0 || m>=monsters.count || (side?HERO_DEAD(&heroes[h]):!HERO_ACTIVE(&heroes[h])) || !monsters.tokens[m].wounds || heroes[h].x<0 || monsters.tokens[m].x<0) return "Both models must be alive and placed.";
     x=side?monsters.tokens[m].x:heroes[h].x; y=side?monsters.tokens[m].y:heroes[h].y;
     tx=side?heroes[h].x:monsters.tokens[m].x; ty=side?heroes[h].y:monsters.tokens[m].y;
     d=abs(tx-x)+abs(ty-y);

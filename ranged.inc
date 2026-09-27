@@ -51,7 +51,7 @@ static int edit_ranged(HWND owner,RANGED_PROFILE *profile,int *moved,int kind,co
     *profile=p.profile; *moved=p.moved; return 1;
 }
 typedef struct {
-    HERO hero; MONSTER monster; int h,m,side,resolved,fumble_notified,new_wounds,old_wounds;
+    HERO hero; MONSTER monster; int h,m,side,resolved,fumble_notified,new_wounds,old_wounds,new_condition;
     char result[2600];
 } SHOT;
 static RANGED_PROFILE *shot_profile(SHOT *s) { return s->side?&s->monster.ranged:&s->hero.ranged; }
@@ -107,7 +107,8 @@ static int shot_calculate(HWND hwnd,SHOT *s)
         SetDlgItemTextA(hwnd,RSSTATUS,"Enter the initial damage dice, each from 1 to 12. Bonus dice are automatic. If rolling fails, retry."); return 0;
     }
     SetDlgItemTextA(hwnd,RSDAMAGE,dice);
-    s->old_wounds=w; s->new_wounds=damage>w?0:w-damage;
+    s->old_wounds=w; s->new_wounds=damage>w?0:w-damage; s->new_condition=s->side?s->hero.condition:0;
+    if(s->side && needs_damage && damage>=w) s->new_condition=damage>w?2:1;
     sprintf(s->result,"Hit %d vs %d: %s. %s\r\n%s: T %d; dice %s; %d wounds (%d -> %d W).",
         hit,required,hit==1?"Friendly fire":hit>=required?"Hit":"Miss",hit==12?"Critical: target Toughness halved (rounded down); no free attack.":"",
         name,t,needs_damage?dice:"none",damage,w,s->new_wounds);
@@ -126,14 +127,12 @@ static int shot_apply(SHOT *s)
     heroes[s->h].ranged=s->hero.ranged; heroes[s->h].moved=s->hero.moved;
     monsters.tokens[s->m].ranged=s->monster.ranged; monsters.tokens[s->m].moved=s->monster.moved;
     /* Friendly fire is a notice only: never apply damage to a guessed model. */
-    if(s->old_wounds) {
-        if(s->side) {
-            HERO *h=&heroes[s->h]; h->wounds=s->new_wounds;
-            if(!h->wounds && h->kind==4) h->x=h->y=-1;
-        } else {
-            victim->wounds=s->new_wounds;
-            if(!s->new_wounds) monster_kill(s->m);
-        }
+    if(s->side && (s->new_condition!=s->hero.condition || (s->old_wounds>0 && s->new_wounds!=s->old_wounds))) {
+        HERO *h=&heroes[s->h]; h->wounds=s->new_wounds; h->condition=s->new_condition;
+        if(HERO_DEAD(h)) h->x=h->y=-1;
+    } else if(s->old_wounds) {
+        victim->wounds=s->new_wounds;
+        if(!s->new_wounds) monster_kill(s->m);
     }
     if(!s->side) heroes[s->h].fired=1;
     active=1; game_changed(); return 1;
@@ -195,7 +194,7 @@ static INT_PTR CALLBACK shot_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 static void attack_open(HWND owner,int h,int m,int side)
 {
     SHOT s; int distance;
-    if(h<0 || h>=hero_count || m<0 || m>=monsters.count || !heroes[h].wounds || !monsters.tokens[m].wounds ||
+    if(h<0 || h>=hero_count || m<0 || m>=monsters.count || (side?HERO_DEAD(&heroes[h]):!HERO_ACTIVE(&heroes[h])) || !monsters.tokens[m].wounds ||
        heroes[h].x<0 || monsters.tokens[m].x<0 || hero_at(heroes[h].x,heroes[h].y,game_fog())!=h || monster_at(monsters.tokens[m].x,monsters.tokens[m].y)!=m) { MessageBeep(MB_ICONWARNING); return; }
     distance=abs(heroes[h].x-monsters.tokens[m].x)+abs(heroes[h].y-monsters.tokens[m].y);
     if(distance==1) combat_open(owner,h,m,side);

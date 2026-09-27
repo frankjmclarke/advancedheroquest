@@ -16,7 +16,7 @@ monster = (ROOT / 'tests/monster-check.py').read_text()
 screenshot = monster[monster.index('static void screenshot'):monster.index('int main(int argc', monster.index('static void screenshot'))]
 HARNESS = base[:base.index('int main(int argc')] + screenshot + r'''
 static void draft(COMBAT *c,int side) {
-    memset(c,0,sizeof(*c)); c->hero=heroes[0]; c->monster=monsters.tokens[0]; c->side=side; c->pending=-1;
+    memset(c,0,sizeof(*c)); c->hero=heroes[0]; c->monster=monsters.tokens[0]; c->side=c->opening_side=side; c->pending=-1;
 }
 static int dialog_seen,dialog_apply;
 static BOOL CALLBACK close_combat(HWND hwnd,LPARAM unused) {
@@ -34,7 +34,7 @@ static BOOL CALLBACK close_combat(HWND hwnd,LPARAM unused) {
 static void CALLBACK close_tick(HWND hwnd,UINT msg,UINT_PTR timer,DWORD time) { EnumThreadWindows(GetCurrentThreadId(),close_combat,0); }
 int main(int argc,char **argv) {
     int i,room=-1,x,y,wounds,dice,hit[12],oldx,oldy,mx,my; PICE *p,*q;
-    MELEE_PROFILE reference; COMBAT c; PROFILE_EDIT profile; HWND dialog;
+    MELEE_PROFILE reference; COMBAT c; PROFILE_EDIT profile; HWND dialog; HERO initial_hero; MONSTER initial_monster;
     GAME_DATA data,*decoded; unsigned char *bytes; size_t size; UINT_PTR timer;
     assert(mem_alloc(100,100,1000,4096)); heap_clear();
     assert(SetCurrentDirectoryA(argv[1])); assert(read_table("sonne2.tab",NULL)); generate();
@@ -55,10 +55,37 @@ int main(int argc,char **argv) {
 found:
     heroes[0].x=x; heroes[0].y=y; monsters.tokens[0].x=x+1; monsters.tokens[0].y=y;
     oldx=x; oldy=y; mx=x+1; my=y;
+    initial_hero=heroes[0]; initial_monster=monsters.tokens[0];
     assert(melee_adjacent(0,0)); monsters.tokens[0].y++; assert(!melee_adjacent(0,0)); monsters.tokens[0].y--;
     monsters.tokens[0].x++; assert(!melee_adjacent(0,0)); monsters.tokens[0].x--;
     game_fog()[room]=0; assert(!melee_adjacent(0,0)); game_fog()[room]=1;
     heroes[0].wounds=0; assert(!melee_adjacent(0,0)); heroes[0].wounds=4;
+    /* KO is survivable at zero; damage that takes a Hero below zero kills. */
+    {
+        HERO before=heroes[0];
+        heroes[0].wounds=1; heroes[0].condition=0;
+        draft(&c,1);
+        dialog=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGCOMBAT),NULL,combat_proc,(LPARAM)&c);
+        SetDlgItemInt(dialog,MCHIT,combat_required(&c),FALSE); SetDlgItemTextA(dialog,MCDAMAGE,"6 1 2");
+        assert(combat_calculate(dialog,&c));
+        assert(c.hero.wounds==0 && HERO_KO(&c.hero) && !HERO_DEAD(&c.hero));
+        assert(combat_apply(&c) && heroes[0].wounds==0 && HERO_KO(&heroes[0]));
+        DestroyWindow(dialog);
+        draft(&c,1);
+        dialog=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGCOMBAT),NULL,combat_proc,(LPARAM)&c);
+        SetDlgItemInt(dialog,MCHIT,combat_required(&c),FALSE); SetDlgItemTextA(dialog,MCDAMAGE,"6 1 2");
+        assert(combat_calculate(dialog,&c));
+        assert(c.hero.wounds==0 && HERO_DEAD(&c.hero));
+        assert(combat_apply(&c) && HERO_DEAD(&heroes[0]) && heroes[0].x==-1);
+        game_command(MGAMEUNDO); heroes[0]=before; DestroyWindow(dialog);
+        draft(&c,1); c.hero.wounds=1; c.hero.condition=0;
+        dialog=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGCOMBAT),NULL,combat_proc,(LPARAM)&c);
+        SetDlgItemInt(dialog,MCHIT,combat_required(&c),FALSE); SetDlgItemTextA(dialog,MCDAMAGE,"6 6 1");
+        assert(combat_calculate(dialog,&c));
+        assert(c.hero.wounds==0 && HERO_DEAD(&c.hero));
+        assert(combat_apply(&c) && HERO_DEAD(&heroes[0]) && heroes[0].x==-1);
+        game_command(MGAMEUNDO); heroes[0]=before; DestroyWindow(dialog);
+    }
     assert(room_melee("SKAVEN WARRIORS",&dice,hit) && dice==3 && hit[0]==2 && hit[11]==10);
     memset(&reference,0,sizeof(reference)); assert(!melee_reference("unlisted beast",&reference) && !reference.dice);
     assert(melee_damage("6 5",2,6,&wounds) && wounds==1);
@@ -123,10 +150,12 @@ found:
     heroes[0].kind=4; draft(&c,1); c.hero.wounds=0; c.steps=1; c.resolved=1;
     assert(combat_apply(&c) && heroes[0].x==-1); game_command(MGAMEUNDO); heroes[0].kind=0;
     /* Round trip equipment and printed tables; invalid profiles fail encoding. */
+    heroes[0].melee.critical=11; heroes[0].melee.fumble=2; heroes[0].melee.diagonal=1;
     assert(capture(&data)); assert(game_encode(&data,&bytes,&size)); free(data.cells);
     decoded=game_decode(bytes,size); assert(decoded);
     assert(!strcmp(decoded->heroes[0].melee.weapon,heroes[0].melee.weapon));
     assert(decoded->heroes[0].melee.dice==heroes[0].melee.dice);
+    assert(decoded->heroes[0].melee.critical==11 && decoded->heroes[0].melee.fumble==2 && decoded->heroes[0].melee.diagonal);
     assert(!memcmp(decoded->heroes[0].melee.hit,heroes[0].melee.hit,sizeof(heroes[0].melee.hit)));
     assert(!memcmp(&decoded->monsters.tokens[0].melee,&monsters.tokens[0].melee,sizeof(MELEE_PROFILE)));
     free(bytes); decoded->heroes[0].melee.hit[2]=13; assert(!game_encode(decoded,&bytes,&size)); game_data_free(decoded);
@@ -156,8 +185,10 @@ found:
     dialog=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGMELEE),NULL,profile_proc,(LPARAM)&profile); assert(dialog);
     SetDlgItemTextA(dialog,MPWEAPON,"Sword and shield"); SetDlgItemInt(dialog,MPHIT+11,13,FALSE);
     SendMessage(dialog,WM_COMMAND,IDOK,0); assert(profile.profile.hit[11]==6);
-    SetDlgItemInt(dialog,MPHIT+11,10,FALSE); screenshot(dialog,argv[3]);
+    SetDlgItemInt(dialog,MPHIT+11,10,FALSE); SetDlgItemInt(dialog,MPCRIT,11,FALSE); SetDlgItemInt(dialog,MPFUMBLE,2,FALSE);
+    CheckDlgButton(dialog,MPDIAGONAL,BST_CHECKED); screenshot(dialog,argv[3]);
     SendMessage(dialog,WM_COMMAND,IDOK,0); assert(!strcmp(profile.profile.weapon,"Sword and shield") && profile.profile.hit[11]==10);
+    assert(profile.profile.critical==11 && profile.profile.fumble==2 && profile.profile.diagonal);
     DestroyWindow(dialog);
     /* Missing hero entries are previewed from defaults without overwriting
        existing values or changing the draft on Cancel. Reset leaves WS/T alone. */
@@ -176,6 +207,7 @@ found:
     DestroyWindow(dialog);
     /* Actual drag messages route attacks in both views, leaving positions fixed.
        The timer closes only test dialogs on this thread, never another process. */
+    heroes[0]=initial_hero; monsters.tokens[0]=initial_monster;
     test_map_hwnd=CreateWindowExA(0,"STATIC","Melee test map",WS_POPUP,0,0,800,800,NULL,NULL,GetModuleHandle(NULL),NULL); assert(test_map_hwnd);
     game_attach((WINDOW_DEF*)1,0); display_zoom=4;
     test_document.xx=(oldx+1)*32-150; test_document.yy=(Ysize-oldy)*32-150;

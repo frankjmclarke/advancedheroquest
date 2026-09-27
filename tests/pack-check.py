@@ -63,6 +63,7 @@ int main(int argc,char **argv) {
     DestroyWindow(dialog);
     assert(pack_start_dungeon());
     assert(!strcmp(pack_current()->id,"sentinel")); validate_encounters();
+    for(i=0;i<pack_current()->hero_count;i++) assert(pack_current()->heroes[i].melee.critical==12 && pack_current()->heroes[i].melee.fumble==1 && !pack_current()->heroes[i].melee.diagonal);
     assert(pack_monster("Orcs")==pack_monster("Ork"));
     /* Every truncation is rejected before any active state changes. */
     pack=pack_clone(pack_current()); assert(pack);

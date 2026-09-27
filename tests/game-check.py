@@ -31,11 +31,12 @@ _BOOL error_abort(const char *fmt,...) { fprintf(stderr,"Map error: %s\n",fmt); 
 void game_loaded_title(const char *title) { }
 #undef assert
 #define assert(x) do { if(!(x)) { fprintf(stderr,"Assertion failed: %s, line %d\n",#x,__LINE__); exit(3); } } while(0)
-/* Size of the v7-only extension, for constructing authentic older layouts. */
+/* Size of the v7/v8 suffix, for constructing authentic older layouts. */
 static size_t pack_extension(const GAME_DATA *d) {
     int i; size_t n=4+(d->pack?d->pack:pack_fantasy())->size;
     for(i=0;i<d->hero_count;i++) n+=12+strlen(d->heroes[i].profile_id)+strlen(d->heroes[i].class_name)+strlen(d->heroes[i].class_rules);
     for(i=0;i<d->monsters.count;i++) n+=8+strlen(d->monsters.tokens[i].profile_id)+strlen(d->monsters.tokens[i].character_id);
+    n+=16*d->hero_count+12*d->monsters.count;
     return n;
 }
 static void generate(void) {
@@ -127,7 +128,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=8; assert(!game_decode(bytes,size)); bytes[8]=7;
+    bytes[8]=9; assert(!game_decode(bytes,size)); bytes[8]=8;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;
@@ -168,6 +169,13 @@ int main(int argc,char **argv) {
     assert(party_apply(dialog)); assert(!strcmp(heroes[0].name,"Renamed hero") && heroes[0].wounds==2);
     SendMessage(dialog,WM_COMMAND,GPRESERVE,0); assert(heroes[0].x==-1);
     game_command(MGAMEUNDO); assert(heroes[0].x>=0);
+    /* Delete is available for both map heroes and reserve members, and is undoable. */
+    SendMessage(dialog,WM_COMMAND,GPDELETE,0); assert(hero_count==4 && heroes[0].kind==1);
+    game_command(MGAMEUNDO); assert(hero_count==5 && !strcmp(heroes[0].name,"Renamed hero"));
+    party_list(dialog); party_fields(dialog);
+    SendDlgItemMessage(dialog,GPCLASS,CB_SETCURSEL,0,0); SendMessage(dialog,WM_COMMAND,GPADD,0);
+    assert(hero_count==6 && heroes[5].x==-1);
+    SendMessage(dialog,WM_COMMAND,GPDELETE,0); assert(hero_count==5);
     /* Preserve old class IDs, and add all four new classes through the UI. */
     assert(SendDlgItemMessage(dialog,GPCLASS,CB_GETCOUNT,0,0)==HERO_CLASS_COUNT);
     for(i=5;i<HERO_CLASS_COUNT;i++) {

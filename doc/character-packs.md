@@ -57,11 +57,19 @@ that could otherwise resemble a counted encounter. Profiles contain:
 | `aliases` | Explicit lowercase singular/plural encounter names; no fuzzy species matching |
 | `stats` | Nine values in WS, BS, S, T, Sp, Br, Int, W, PV order |
 | `text` | Reference text or hero class notes; does not execute rules |
-| `melee` | Weapon name, damage dice and twelve hit values, indexed by target WS |
+| `melee` | Weapon name, damage dice, twelve hit values indexed by target WS, and optional `critical`, `fumble`, `diagonal` properties |
 | `ranged` | Weapon name, kind, maximum range, damage dice and five hit values |
 | `fate` | Hero starting Fate |
 | `kind` | Existing marker/preset code 0–8; defaults to 0. Code 4 retains Henchman death removal |
 | `unique` | `1` for a named enemy whose identity and death persist; otherwise `0` |
+
+`critical` is the hit roll that grants a free attack (default 12); `fumble` is
+the hit roll or lower that grants the defender a free attack (default 1). The
+fumble threshold must be below the critical threshold. `diagonal: 1` allows
+melee attacks against a diagonally adjacent square when both connecting floor
+routes are open; the default is `0`. These settings are editable on a character's
+melee profile and persist in saved games. Existing packs and profiles retain
+their former 12/1 thresholds and orthogonal reach.
 
 Ranged kinds are 0 (none), 1 (bow), 2 (crossbow), 3 (thrown), and 4 (other,
 manual movement). Ranges use squares; the five bands are 1–3, 4–12, 13–24,
@@ -82,8 +90,9 @@ values. Encounter descriptions spell out each group, including heavy-weapon
 Guardians and Chaos Marines. Repeated reveals do not create duplicate tokens;
 repeated appearances of a living named leader do not create a second copy.
 
-No science-fiction combat rules have been added. All weapons use the existing
-critical, fumble, damage and turn behaviour. Multi-target fire, blast templates,
+No science-fiction combat rules have been added. Weapons use the existing
+damage and turn behaviour, with pack-defined melee critical/fumble thresholds
+and diagonal reach where needed. Multi-target fire, blast templates,
 jams and similar abilities on the original cards are not applied. Conversion
 Beam presets use the printed near damage (5 dice) with range 48; damage remains
 editable like other existing equipment. Generic heavy-weapon groups retain
@@ -91,13 +100,16 @@ their original generic reference profile until the player chooses equipment.
 
 ## Saves and Campaign Builder
 
-Version 7 `.hqg` files embed the complete active pack, including the definitions
+Version 8 `.hqg` files embed the complete active pack, including the definitions
 needed for unrevealed rooms, plus each party member's identity and class notes.
-Editing or removing the original resource does not change an adventure loaded
-from that save. Named enemy deaths use stable IDs even if their display names
-are edited. Manual characters retain the existing name-based identity behaviour.
+They also store KO/death state and melee weapon settings. Editing or removing the
+original resource does not change an adventure loaded from that save. Named enemy
+deaths use stable IDs even if their display names are edited. Manual characters
+retain the existing name-based identity behaviour.
 
-Versions 1–6 remain readable. They contain no pack identity, so when loading
+Versions 1–7 remain readable. They contain no KO/death state or weapon thresholds,
+so zero-Wound Heroes load as KO'd and legacy melee profiles keep 12/1 thresholds.
+Versions 1–6 also contain no pack identity, so when loading
 one the application uses the campaign pack currently selected in **Load Tables**;
 without a selected campaign it falls back to the original fantasy pack. This
 lets existing Sentinel saves load with Sentinel profiles. As before, generating

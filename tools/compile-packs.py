@@ -1,4 +1,4 @@
-"""Compile editable JSON character packs to bounded portable HQPACK1 resources.
+"""Compile editable JSON character packs to bounded portable HQPACK2 resources.
 
 No Python is needed to play. Run after editing data/packs/*.json; --check
 verifies the shipped resources and the built-in fantasy fallback.
@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def compile_pack(pack):
-    out = bytearray(b'HQPACK1\n')
+    out = bytearray(b'HQPACK2\n')
 
     def number(n, low=0, high=99):
         if type(n) is not int or not low <= n <= high:
@@ -68,6 +68,13 @@ def compile_pack(pack):
             raise ValueError('Incorrect combat row length')
         for v in m['hit']:
             number(v, 0, 12)
+        critical = m.get('critical', 12)
+        fumble = m.get('fumble', 1)
+        if type(critical) is not int or type(fumble) is not int or not 1 <= fumble < critical <= 12:
+            raise ValueError(f'Invalid melee thresholds for {p["id"]}')
+        number(critical, 1, 12)
+        number(fumble, 1, 12)
+        number(m.get('diagonal', 0), 0, 1)
         string(r['weapon'], 39)
         number(r['kind'], 0, 4)
         number(r['range'], 0, 480)

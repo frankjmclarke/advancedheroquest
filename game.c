@@ -165,7 +165,7 @@ int game_load(int recovery)
     if(d->player_view>=0) preferred_player_view=d->player_view;
     monsters=d->monsters; selected_monster=-1; attack_monster=-1;
     hero_count=d->hero_count; memcpy(heroes,d->heroes,sizeof(heroes));
-    { int i; for(i=0;i<hero_count;i++) if(heroes[i].kind==4 && !heroes[i].wounds) heroes[i].x=heroes[i].y=-1; }
+    { int i; for(i=0;i<hero_count;i++) if(HERO_DEAD(&heroes[i])) heroes[i].x=heroes[i].y=-1; }
     strcpy(session_title,d->title); game_set_fog(d->visible,d->count);
     selected=-1; move_mode=0; undo_valid=0; active=1; map_ready=1; dirty=recovery?1:0;
     if(recovery) save_path[0]=0; else strcpy(save_path,path);
@@ -232,7 +232,7 @@ static int can_move(int index,int x,int y,const unsigned char *visible)
     if(visible && !fog_visible(visible,(_WORD)(piece-Pice))) return 0;
     for(i=0;i<hero_count;i++) if(i!=index && heroes[i].x==x && heroes[i].y==y) return 0;
     if(monster_at(x,y)>=0) return 0;
-    if(index>=0 && heroes[index].kind==4 && !heroes[index].wounds) return 0;
+    if(index>=0 && !HERO_ACTIVE(&heroes[index])) return 0;
     return 1;
 }
 static int move_hero(int index,int x,int y,const unsigned char *visible)
@@ -295,7 +295,7 @@ void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,i
         HERO *h=&heroes[i]; if(h->x<0 || hero_at(h->x,h->y,visible)!=i) continue;
         x=((i==preview_hero && window==preview_window?preview_x:h->x)+1)*size-sx;
         y=(Ysize-(i==preview_hero && window==preview_window?preview_y:h->y))*size-sy;
-        marker(dc,x,y,size,h->kind,i==selected,h->wounds==0);
+        marker(dc,x,y,size,h->kind,i==selected,!HERO_ACTIVE(h));
         if(size>=24) { label.left=x-size/2; label.right=x+size+size/2; label.top=y+size; label.bottom=label.top+16;
             DrawTextA(dc,h->name,-1,&label,DT_CENTER|DT_SINGLELINE|DT_END_ELLIPSIS|DT_NOPREFIX); }
     }
@@ -355,7 +355,7 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         return 0;
     }
     if(msg==WM_MOUSEMOVE && hook->monster_drag>=0) {
-        if(map_point(hook,lp,&x,&y) && (target=hero_at(x,y,visible))>=0 && heroes[target].wounds && monsters.tokens[hook->monster_drag].wounds) {
+        if(map_point(hook,lp,&x,&y) && (target=hero_at(x,y,visible))>=0 && !HERO_DEAD(&heroes[target]) && monsters.tokens[hook->monster_drag].wounds) {
             preview_monster=-1; game_redraw(); SetCursor(LoadCursor(NULL,IDC_CROSS));
         } else if(map_point(hook,lp,&x,&y) && monster_can_move(hook->monster_drag,x,y)) {
             if(preview_monster!=hook->monster_drag || preview_x!=x || preview_y!=y) {
@@ -393,7 +393,7 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         }
     }
     if(msg==WM_MOUSEMOVE && hook->drag>=0) {
-        if(map_point(hook,lp,&x,&y) && (target=monster_at(x,y))>=0 && heroes[hook->drag].wounds && monsters.tokens[target].wounds) {
+        if(map_point(hook,lp,&x,&y) && (target=monster_at(x,y))>=0 && HERO_ACTIVE(&heroes[hook->drag]) && monsters.tokens[target].wounds) {
             preview_hero=-1; game_redraw(); SetCursor(LoadCursor(NULL,IDC_CROSS));
         } else if(map_point(hook,lp,&x,&y) && can_move(hook->drag,x,y,visible)) {
             if(preview_hero!=hook->drag || preview_x!=x || preview_y!=y) {
@@ -440,15 +440,16 @@ static void party_fields(HWND hwnd)
     EnableWindow(GetDlgItem(hwnd,GPCOMBAT),valid);
     EnableWindow(GetDlgItem(hwnd,GPRANGED),valid);
     EnableWindow(GetDlgItem(hwnd,GPNAME),valid); EnableWindow(GetDlgItem(hwnd,GPWOUNDS),valid); EnableWindow(GetDlgItem(hwnd,GPFATE),valid);
-    EnableWindow(GetDlgItem(hwnd,GPMOVE),valid && !(h->kind==4 && !h->wounds)); EnableWindow(GetDlgItem(hwnd,GPRESERVE),valid); EnableWindow(GetDlgItem(hwnd,GPAPPLY),valid);
-    if(h && h->kind==4 && !h->wounds) strcpy(status,"Dead - model removed from the map.");
+    EnableWindow(GetDlgItem(hwnd,GPMOVE),valid && HERO_ACTIVE(h)); EnableWindow(GetDlgItem(hwnd,GPRESERVE),valid); EnableWindow(GetDlgItem(hwnd,GPDELETE),valid); EnableWindow(GetDlgItem(hwnd,GPAPPLY),valid);
+    if(h && HERO_DEAD(h)) strcpy(status,"Dead - model removed from the map.");
+    else if(h && HERO_KO(h)) strcpy(status,"KO'd at zero Wounds. Another wound is fatal.");
     else if(h && h->x>=0) sprintf(status,"On map: square %d, %d",h->x+1,h->y+1); else strcpy(status,h?"In reserve - choose Place / Move to enter the dungeon.":"Choose a class and Add your first hero.");
     SetDlgItemTextA(hwnd,GPSTATUS,status); InvalidateRect(GetDlgItem(hwnd,GPPORTRAIT),NULL,TRUE);
 }
 static void party_list(HWND hwnd)
 {
     int i; char label[100]; SendDlgItemMessage(hwnd,GPLIST,LB_RESETCONTENT,0,0);
-    for(i=0;i<hero_count;i++) { sprintf(label,"%s  [%s]",heroes[i].name,heroes[i].kind==4 && !heroes[i].wounds?"dead":heroes[i].x<0?"reserve":"map"); SendDlgItemMessageA(hwnd,GPLIST,LB_ADDSTRING,0,(LPARAM)label); }
+    for(i=0;i<hero_count;i++) { sprintf(label,"%s  [%s]",heroes[i].name,HERO_DEAD(&heroes[i])?"dead":HERO_KO(&heroes[i])?"KO'd":heroes[i].x<0?"reserve":"map"); SendDlgItemMessageA(hwnd,GPLIST,LB_ADDSTRING,0,(LPARAM)label); }
     SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,party_selection,0);
 }
 static int party_apply(HWND hwnd)
@@ -463,7 +464,8 @@ static int party_apply(HWND hwnd)
         if(i<HERO_STATS) next.stats[i]=value; else if(i==HERO_STATS) next.wounds=value; else next.fate=value;
     }
     if(next.wounds>next.stats[7]) { message("Current Wounds cannot exceed Max W."); return 0; }
-    if(next.kind==4 && !next.wounds) next.x=next.y=-1;
+    next.condition=next.wounds?0:next.kind==4?2:1;
+    if(HERO_DEAD(&next)) next.x=next.y=-1;
     if(memcmp(&next,&heroes[party_selection],sizeof(next))) { remember(); heroes[party_selection]=next; active=1; game_changed(); party_list(hwnd); }
     return 1;
 }
@@ -479,7 +481,7 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     if(msg==WM_DRAWITEM && wp==GPPORTRAIT) {
         DRAWITEMSTRUCT *di=(DRAWITEMSTRUCT*)lp;
         FillRect(di->hDC,&di->rcItem,GetSysColorBrush(COLOR_BTNFACE));
-        if(party_selection>=0) marker(di->hDC,0,0,di->rcItem.bottom,heroes[party_selection].kind,0,heroes[party_selection].wounds==0);
+        if(party_selection>=0) marker(di->hDC,0,0,di->rcItem.bottom,heroes[party_selection].kind,0,!HERO_ACTIVE(&heroes[party_selection]));
         return TRUE;
     }
     if(msg==WM_CLOSE) { if(party_apply(hwnd)) EndDialog(hwnd,0); return TRUE; }
@@ -515,7 +517,7 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         }
         return TRUE;
     }
-    if(id!=GPADD && id!=GPAPPLY && id!=GPMOVE && id!=GPRESERVE && id!=IDOK && id!=IDCANCEL) return FALSE;
+    if(id!=GPADD && id!=GPAPPLY && id!=GPMOVE && id!=GPRESERVE && id!=GPDELETE && id!=IDOK && id!=IDCANCEL) return FALSE;
     if(!party_apply(hwnd)) return TRUE;
     if(id==GPADD) {
         if(hero_count==HERO_LIMIT) { message("This party already has 16 heroes, including reserve."); return TRUE; }
@@ -523,6 +525,13 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         remember(); pack_hero(&heroes[hero_count],&pack_current()->heroes[n],hero_count+1); party_selection=hero_count++; active=1; game_changed();
     } else if(id==GPRESERVE && party_selection>=0) {
         remember(); heroes[party_selection].x=heroes[party_selection].y=-1; move_mode=0; game_changed();
+    } else if(id==GPDELETE && party_selection>=0) {
+        n=party_selection; remember();
+        memmove(&heroes[n],&heroes[n+1],(size_t)(hero_count-n-1)*sizeof(heroes[0]));
+        memset(&heroes[--hero_count],0,sizeof(heroes[0]));
+        if(selected==n) selected=-1; else if(selected>n) selected--;
+        if(party_selection>=hero_count) party_selection=hero_count-1;
+        move_mode=0; active=1; game_changed();
     } else if(id==GPMOVE && party_selection>=0) {
         selected=party_selection; move_mode=1; game_redraw(); EndDialog(hwnd,1); return TRUE;
     } else if(id==IDOK || id==IDCANCEL) { EndDialog(hwnd,0); return TRUE; }

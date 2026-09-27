@@ -20,6 +20,7 @@
 #define GPAPPLY 325
 #define GPPORTRAIT 326
 #define GPRULES 327
+#define GPDELETE 355
 
 #define MGAMEMONSTERS 268
 #define FGMONSTERS 31
@@ -46,6 +47,9 @@
 #define MPT 363
 #define MPREF 364
 #define MPINFO 365
+#define MPCRIT 382
+#define MPFUMBLE 383
+#define MPDIAGONAL 384
 #define MPHIT 370
 #define FGCOMBAT 33
 #define MCINFO 400

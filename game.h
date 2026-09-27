@@ -6,18 +6,22 @@
 #define HERO_STATS 9
 #define HERO_CLASS_COUNT 9
 /* Zero values mean not configured; presets use printed or labelled suggested rows. */
-typedef struct { char weapon[40]; int dice, hit[12]; } MELEE_PROFILE;
+typedef struct { char weapon[40]; int dice, hit[12]; int critical, fumble, diagonal; } MELEE_PROFILE;
 /* kind: none, bow, crossbow, thrown, other/manual. Hit bands: 1-3,4-12,13-24,25-36,37+. */
 typedef struct { char weapon[40]; int kind,range,dice,hit[5]; } RANGED_PROFILE;
 typedef struct {
     char name[40];
     int kind, stats[HERO_STATS], wounds, fate, x, y;
+    int condition; /* 0 active, 1 KO'd at zero Wounds, 2 dead below zero */
     MELEE_PROFILE melee;
     RANGED_PROFILE ranged;
     char profile_id[64],class_name[64],class_rules[2048];
     int fired; /* normal ranged attack used this turn */
     int moved,focus; /* focus: opposing roster index + 1, or zero */
 } HERO;
+#define HERO_ACTIVE(h) ((h)->condition==0 && (h)->wounds>0)
+#define HERO_KO(h) ((h)->condition==1)
+#define HERO_DEAD(h) ((h)->condition==2 || ((h)->kind==4 && (h)->wounds==0))
 #define MONSTER_LIMIT 512
 #define CHARACTER_LIMIT 256
 #define ENCOUNTER_LIMIT 8192

@@ -28,8 +28,10 @@ void pack_free(CHARACTER_PACK *p)
 }
 CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
 {
-    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total; PACK_PROFILE *q,*prior;
-    if(!bytes || size<24 || size>PACK_BYTES_LIMIT || memcmp(bytes,"HQPACK1\n",8)) return NULL;
+    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total,format2; PACK_PROFILE *q;
+    if(!bytes || size<24 || size>PACK_BYTES_LIMIT) return NULL;
+    format2=!memcmp(bytes,"HQPACK2\n",8);
+    if(!format2 && memcmp(bytes,"HQPACK1\n",8)) return NULL;
     r.p=bytes; r.size=size; r.pos=8; r.ok=1;
     p=(CHARACTER_PACK*)calloc(1,sizeof(*p)); if(!p) return NULL;
     string(&r,p->id,sizeof(p->id)); string(&r,p->name,sizeof(p->name));
@@ -49,6 +51,11 @@ CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
         q->kind=number(&r,HERO_CLASS_COUNT-1); q->fate=number(&r,99); q->unique=number(&r,1);
         string(&r,q->melee.weapon,sizeof(q->melee.weapon)); q->melee.dice=number(&r,99);
         for(j=0;j<12;j++) q->melee.hit[j]=number(&r,12);
+        q->melee.critical=12; q->melee.fumble=1; /* Preserve legacy pack behavior. */
+        if(format2) {
+            q->melee.critical=number(&r,12); q->melee.fumble=number(&r,12); q->melee.diagonal=number(&r,1);
+            if(q->melee.critical<1 || q->melee.fumble<1 || q->melee.fumble>=q->melee.critical) goto bad;
+        }
         string(&r,q->ranged.weapon,sizeof(q->ranged.weapon)); q->ranged.kind=number(&r,4);
         q->ranged.range=number(&r,480); q->ranged.dice=number(&r,99);
         for(j=0;j<5;j++) q->ranged.hit[j]=number(&r,12);
@@ -57,7 +64,7 @@ CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
         if(i<p->hero_count && strlen(q->text)>=sizeof(((HERO*)0)->class_rules)) goto bad;
         if(strcspn(q->aliases,"|")>63) goto bad;
         for(k=0;k<i;k++) {
-            prior=k<p->hero_count?&p->heroes[k]:&p->monsters[k-p->hero_count];
+            PACK_PROFILE *prior=k<p->hero_count?&p->heroes[k]:&p->monsters[k-p->hero_count];
             if(!strcmp(q->id,prior->id)) goto bad;
         }
     }
