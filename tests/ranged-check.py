@@ -42,6 +42,7 @@ static BOOL CALLBACK cancel_attack(HWND hwnd,LPARAM unused) {
     return TRUE;
 }
 static void CALLBACK attack_tick(HWND hwnd,UINT msg,UINT_PTR timer,DWORD time) { EnumThreadWindows(GetCurrentThreadId(),cancel_attack,0); }
+static void CALLBACK menu_tick(HWND hwnd,UINT msg,UINT_PTR timer,DWORD time) { EndMenu(); }
 static void click_square(int x,int y) {
     SendMessage(test_map_hwnd,WM_LBUTTONDOWN,MK_LBUTTON,mouse_at(x,y));
     SendMessage(test_map_hwnd,WM_LBUTTONUP,0,mouse_at(x,y));
@@ -59,14 +60,15 @@ int main(int argc,char **argv) {
     {
         HWND frame=CreateWindowExA(0,"STATIC","Panel frame",WS_OVERLAPPEDWINDOW,
             0,0,900,650,NULL,NULL,GetModuleHandle(NULL),NULL);
-        RECT map_rect,frame_rect; char label[160];
+        RECT map_rect,frame_rect,bar_rect; char label[160]; HMENU popup;
         assert(frame); GlMainHwnd=frame;
         MdiClientHwnd=CreateWindowExA(0,"STATIC","Map area",WS_CHILD|WS_VISIBLE,
             0,0,900,600,frame,NULL,GetModuleHandle(NULL),NULL);
-        assert(MdiClientHwnd); panel_attach(); assert(panel_hwnd);
+        assert(MdiClientHwnd); panel_attach(); assert(panel_hwnd && toolbar_hwnd);
         ShowWindow(frame,SW_SHOW); UpdateWindow(frame);
         GetClientRect(frame,&frame_rect); GetWindowRect(MdiClientHwnd,&map_rect);
         assert(map_rect.right-map_rect.left<frame_rect.right);
+        GetWindowRect(toolbar_hwnd,&bar_rect); assert(map_rect.top>=bar_rect.bottom);
         SetWindowPos(frame,NULL,0,0,1100,700,SWP_NOMOVE|SWP_NOZORDER);
         GetClientRect(frame,&frame_rect); GetWindowRect(MdiClientHwnd,&map_rect);
         assert(map_rect.right-map_rect.left==frame_rect.right-panel_width);
@@ -75,13 +77,24 @@ int main(int argc,char **argv) {
         GetDlgItemTextA(panel_hwnd,CPPHASE,label,sizeof(label)); assert(strstr(label,"HERO PHASE") && strstr(label,"attacks used"));
         GetDlgItemTextA(panel_hwnd,CPMODEL,label,sizeof(label)); assert(strstr(label,heroes[0].name));
         screenshot(panel_hwnd,argv[3]);
+        screenshot(frame,argv[4]);
         assert(IsWindowEnabled(GetDlgItem(panel_hwnd,CPATTACK)));
-        SendMessage(panel_hwnd,WM_COMMAND,CPATTACK,0); assert(move_mode && selected==0);
+        SendMessage(frame,WM_COMMAND,CPMOVE,(LPARAM)toolbar_hwnd); assert(move_mode && selected==0);
+        SendMessage(frame,WM_COMMAND,CPSELECT,(LPARAM)toolbar_hwnd); assert(!move_mode);
+        SendMessage(frame,WM_COMMAND,CPATTACK,(LPARAM)toolbar_hwnd); assert(move_mode && selected==0);
+        popup=token_menu_build(0,0); assert(popup);
+        assert(!(GetMenuState(popup,CPMOVE,MF_BYCOMMAND)&MF_GRAYED));
+        assert(!(GetMenuState(popup,CPRUN,MF_BYCOMMAND)&MF_GRAYED)); DestroyMenu(popup);
+        popup=token_menu_build(1,0); assert(popup);
+        assert(GetMenuState(popup,CPATTACK,MF_BYCOMMAND)&MF_GRAYED); DestroyMenu(popup);
         SendMessage(panel_hwnd,WM_COMMAND,CPENDPHASE,0); assert(turn_phase==2);
         assert(!IsWindowEnabled(GetDlgItem(panel_hwnd,CPATTACK)));
+        assert(!SendMessage(toolbar_hwnd,TB_ISBUTTONENABLED,CPATTACK,0));
         selected=-1; selected_monster=0; monsters.tokens[0].stats[4]=3; panel_update();
         SendMessage(panel_hwnd,WM_COMMAND,CPMOVE,0); assert(monster_move_mode);
         SendMessage(panel_hwnd,WM_COMMAND,CPGUIDED,0); assert(!turn_phase);
+        selected=0; selected_monster=-1; assert(combat_action(CPTOKENRESERVE));
+        assert(heroes[0].x<0); game_command(MGAMEUNDO); assert(heroes[0].x==1);
         DestroyWindow(frame); GlMainHwnd=MdiClientHwnd=NULL;
         selected=-1; move_mode=0; room_fixture();
     }
@@ -321,10 +334,19 @@ int main(int argc,char **argv) {
     selected=-1; selected_monster=0; monster_move_mode=1;
     click_square(4,1); assert(monsters.tokens[0].x==4 && !monster_move_mode);
     game_command(MGAMEUNDO); assert(monsters.tokens[0].x==5);
+    {
+        UINT_PTR menu_timer=SetTimer(NULL,0,30,menu_tick); assert(menu_timer);
+        SendMessage(test_map_hwnd,WM_RBUTTONDOWN,0,mouse_at(5,1));
+        SendMessage(test_map_hwnd,WM_RBUTTONUP,0,mouse_at(5,1));
+        assert(selected_monster==0 && selected==-1);
+        KillTimer(NULL,menu_timer);
+    }
     click_square(5,1);
     SendMessage(test_map_hwnd,WM_RBUTTONDOWN,0,mouse_at(0,0));
+    SendMessage(test_map_hwnd,WM_RBUTTONUP,0,mouse_at(0,0));
     click_square(1,1); assert(ranged_dialogs==6 && selected==0);
     SendMessage(test_map_hwnd,WM_RBUTTONDOWN,0,mouse_at(0,0));
+    SendMessage(test_map_hwnd,WM_RBUTTONUP,0,mouse_at(0,0));
     monsters.tokens[0].x=2; monsters.tokens[0].y=2; click_square(1,1); click_square(2,2); assert(ranged_dialogs==7);
     monsters.tokens[0].y=1; click_square(1,1); click_square(2,1); assert(melee_dialogs==1);
     /* A checked diagonal-reach profile attacks across adjacent cells in a room. */
@@ -360,5 +382,5 @@ with tempfile.TemporaryDirectory(prefix='hq-ranged-test-') as temp:
     subprocess.run(['cl','/nologo','/D_CRT_SECURE_NO_WARNINGS','/I'+str(ROOT),'/I'+str(ROOT/'my_lib'),
                     '/I'+str(ROOT/'my_lib/windows'),'/I'+str(ROOT/'rsh'),'check.c','/Fe:check.exe',*objects,
                     str(ROOT/'obj/msvc/menu.res'),str(ROOT/'obj/msvc/grafic.res'),'user32.lib','gdi32.lib',
-                    'shell32.lib','comdlg32.lib','version.lib','winspool.lib','ole32.lib','advapi32.lib'],cwd=work,check=True)
-    subprocess.run([str(work/'check.exe'),str(ROOT/'obj/ranged-preview.bmp'),str(ROOT/'obj/ranged-profile-preview.bmp'),str(ROOT/'obj/combat-panel-preview.bmp')],cwd=work,check=True,timeout=60)
+                    'shell32.lib','comdlg32.lib','version.lib','winspool.lib','ole32.lib','advapi32.lib','comctl32.lib'],cwd=work,check=True)
+    subprocess.run([str(work/'check.exe'),str(ROOT/'obj/ranged-preview.bmp'),str(ROOT/'obj/ranged-profile-preview.bmp'),str(ROOT/'obj/combat-panel-preview.bmp'),str(ROOT/'obj/combat-toolbar-preview.bmp')],cwd=work,check=True,timeout=60)

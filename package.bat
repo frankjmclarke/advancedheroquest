@@ -2,7 +2,9 @@
 rem ===========================================================================
 rem  package.bat - build a distributable HQ-Map package
 rem
-rem  Produces dist\HQ-Map\ and dist\HQ-Map-<version>-win32.zip
+rem  Produces dist\HQ-Map\, dist\release-stage\HQ-Map\, and the zip/installer.
+rem  An existing dist\HQ-Map\ keeps its maps, tables, and profile; its EXE is
+rem  refreshed from the same build used for the release packages.
 rem
 rem  The package is portable: the program reads its profile from beside its own
 rem  executable (Profile_UseFile uses GetModuleFileName, not the working
@@ -19,6 +21,7 @@ if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
 set "DIST=%ROOT%\dist"
 set "STAGE_ROOT=%DIST%\release-stage"
 set "STAGE=%STAGE_ROOT%\HQ-Map"
+set "PLAY=%DIST%\HQ-Map"
 
 rem --- build first -----------------------------------------------------------
 call "%ROOT%\build-msvc.bat"
@@ -102,6 +105,24 @@ if errorlevel 1 (
     exit /b 1
 )
 
+rem --- refresh the local playable copy ---------------------------------------
+rem  Preserve user maps, campaigns, and settings already in dist\HQ-Map. Only
+rem  replace the executable; keep its first pre-package version as a backup.
+if not exist "%PLAY%" (
+    xcopy /e /i /q /y "%STAGE%" "%PLAY%" >nul
+    if errorlevel 1 exit /b 1
+) else (
+    if exist "%PLAY%\hq_map.exe" if not exist "%PLAY%\hq_map.prepackage.exe" (
+        copy /y "%PLAY%\hq_map.exe" "%PLAY%\hq_map.prepackage.exe" >nul
+        if errorlevel 1 exit /b 1
+    )
+    copy /y "%STAGE%\hq_map.exe" "%PLAY%\hq_map.exe" >nul
+    if errorlevel 1 (
+        echo ERROR: could not refresh dist\HQ-Map\hq_map.exe. Close the running app and retry.
+        exit /b 1
+    )
+)
+
 rem --- zip -------------------------------------------------------------------
 set "ZIP=%DIST%\HQ-Map-%VER%-win32.zip"
 if exist "%ZIP%" del /q "%ZIP%"
@@ -139,4 +160,6 @@ echo Package ready:
 for %%F in ("%ZIP%") do echo    %%~fF  (%%~zF bytes)
 if defined ISCC for %%F in ("%DIST%\HQ-Map-%VER%-setup.exe") do echo    %%~fF  (%%~zF bytes)
 echo    %STAGE%
+echo    %PLAY%
+echo To update an installed copy, run the setup EXE; packaging alone does not install it.
 exit /b 0

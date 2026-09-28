@@ -86,6 +86,7 @@ unsigned char *game_fog(void);
 void game_set_fog(const unsigned char *visible,int count);
 void game_redraw(void);
 int game_player_view(void);
+void game_toggle_view(void);
 void game_view_selected(int player);
 void game_view_pause(int pause);
 void game_restore_view(void);

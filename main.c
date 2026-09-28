@@ -1358,7 +1358,7 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		break;
 
 	case MPLAYER:
-		show_player_view(AHQ_para.name);
+		game_toggle_view();
 		break;
 
 	case MABSPEIC:

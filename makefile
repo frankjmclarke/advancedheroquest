@@ -295,7 +295,7 @@ DEP_LIBS=	$(GEMLIB)
 LIBS=		import32.lib+ole2w32.lib+cw32.lib
 !endif
 !if "$(COMPILER)"=="MSVC40"
-LIBS=		libc.lib kernel32.lib user32.lib gdi32.lib shell32.lib comdlg32.lib version.lib
+LIBS=		libc.lib kernel32.lib user32.lib gdi32.lib shell32.lib comdlg32.lib version.lib comctl32.lib
 !endif
 C0OBJ=		$(CC_LIB_DIR)\c0w32.obj
 BRC=		$(BRC32)

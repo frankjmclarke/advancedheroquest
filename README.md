@@ -29,6 +29,10 @@ button for hit, damage and calculation. Apply the result, Cancel, or Undo the ex
 The combat panel stays beside the map. Select a hero or monster to see its wounds,
 remaining movement, normal attack allowance, and the next action to take. Use its
 **Move**, **Attack**, **Run**, **End phase**, and **Undo** buttons during guided turns.
+The toolbar above the map provides Select, Move, Attack, Undo, End phase, Party,
+and Player View. Right-click a hero or monster for actions specific to that
+token, including its profile and wounds. Right-click an empty square or press
+Esc to cancel a prepared map action.
 Guided turns alternate Hero and GM phases; each model may move up to its Speed and
 make one normal attack, or run instead of attacking. The panel also reports the
 latest move, attack, or phase change. Start guided turns from the panel or the
@@ -289,8 +293,10 @@ runtime. Printed values, source variants and blank cells are preserved.
 
 ### Player view and fog of war
 
-Choose **Map → Player View (fog of war)** after generating a dungeon. The
-separate map window initially shows all corridors, stairs, and their doors.
+Choose **Map → Player View (fog of war)** or press the **Player View** toolbar
+button after generating a dungeon. Use the same command again to return to the
+GM map without fog. The toolbar button stays pressed while Player View is
+active. The separate player window initially shows all corridors, stairs, and their doors.
 Rooms stay blank until you click a visible doorway. That reveals the adjoining
 room, its map contents, and all its doors; it does not reveal further rooms.
 All doors includes secret doors adjoining a visible corridor or revealed room.

@@ -100,7 +100,7 @@ if errorlevel 1 (
 rem --- flags -----------------------------------------------------------------
 set "CFLAGS=/nologo /c /W3 /DSTDC_HEADERS=1 /DHAVE_DIRENT_H=1 /DSTRICT=1 /D_CRT_SECURE_NO_WARNINGS"
 set "CINC=/I. /Imy_lib /Imy_lib\windows /Irsh"
-set "LIBS=kernel32.lib user32.lib gdi32.lib shell32.lib comdlg32.lib version.lib winspool.lib ole32.lib advapi32.lib"
+set "LIBS=kernel32.lib user32.lib gdi32.lib shell32.lib comdlg32.lib version.lib winspool.lib ole32.lib advapi32.lib comctl32.lib"
 set "LFLAGS=/nologo /subsystem:windows /machine:X86 /STACK:1048576 /HEAP:4096"
 
 rem  Use a 1 MB stack for recursive campaign discovery. HEAP mirrors

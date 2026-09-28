@@ -45,6 +45,15 @@ static int render_checks(void) {
     GetFullPathNameA("render.hqg",MAX_PATH,recovery_path,NULL);
     assert(write_game(recovery_path,0));
     fprintf(stderr,"Render generated map\n"); show_grafic(session_title); assert(Grafik_Karte);
+    assert(toolbar_hwnd && toolbar_images && ImageList_GetImageCount(toolbar_images)==7);
+    {
+        TBBUTTON button; RECT rect;
+        assert((HIMAGELIST)SendMessage(toolbar_hwnd,TB_GETIMAGELIST,0,0)==toolbar_images);
+        assert(SendMessage(toolbar_hwnd,TB_BUTTONCOUNT,0,0)==7);
+        assert(SendMessage(toolbar_hwnd,TB_GETBUTTON,0,(LPARAM)&button) && button.iBitmap==0);
+        assert(SendMessage(toolbar_hwnd,TB_GETITEMRECT,0,(LPARAM)&rect) && rect.right-rect.left>=48 && rect.bottom-rect.top>=48);
+        fprintf(stderr,"Toolbar item width=%ld height=%ld image=%d\n",rect.right-rect.left,rect.bottom-rect.top,button.iBitmap);
+    }
     /* Repeated load closes existing windows and reopens the loaded map.
        Exercise both default and enhanced graphics and player fog rendering. */
     for(mode=0;mode<2;mode++) {
@@ -99,7 +108,7 @@ with tempfile.TemporaryDirectory(prefix="hq-render-test-") as temp:
         "check.c", "/Fe:check.exe", *objects,
         str(ROOT/"obj/msvc/menu.res"), str(ROOT/"obj/msvc/grafic.res"),
         "user32.lib", "gdi32.lib", "shell32.lib", "comdlg32.lib", "version.lib",
-        "winspool.lib", "ole32.lib", "advapi32.lib",
+        "winspool.lib", "ole32.lib", "advapi32.lib", "comctl32.lib",
     ], cwd=work, check=True)
     subprocess.run([str(work/"check.exe"), str(ROOT/"tables"), temp],
                    cwd=work, check=True, timeout=60)

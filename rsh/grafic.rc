@@ -7,6 +7,9 @@
 #include <windows.h>
 #include "grafic.rh"
 
+IDB_TOOLBAR_ICONS BITMAP "toolbar-icons.bmp"
+IDB_TOOLBAR_MASK BITMAP "toolbar-icons-mask.bmp"
+
 PASSAGEN BITMAP "passagen.bmp"
 PASSAGES BITMAP "passages.bmp"
 PASSAGEE BITMAP "passagee.bmp"

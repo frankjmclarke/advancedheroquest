@@ -186,7 +186,18 @@ static void view_checks(void) {
     assert(SetCurrentDirectoryA(table_path)); assert(read_table("sonne2.tab",NULL));
     assert(do_menu(MGAMENEXT)); assert(Grafik_Karte && !game_player_view());
     assert(do_menu(MPLAYER)); assert(game_player_view() && player_on_top());
+    assert(toolbar_hwnd && SendMessage(toolbar_hwnd,TB_ISBUTTONCHECKED,CPTOOLVIEW,0));
+    assert(GetMenuState(GetMenu(GlMainHwnd),MPLAYER,MF_BYCOMMAND)&MF_CHECKED);
+    assert(do_menu(MPLAYER)); assert(!game_player_view() && Wind_Top()==Grafik_Karte);
+    assert(!SendMessage(toolbar_hwnd,TB_ISBUTTONCHECKED,CPTOOLVIEW,0));
+    assert(!(GetMenuState(GetMenu(GlMainHwnd),MPLAYER,MF_BYCOMMAND)&MF_CHECKED));
+    SendMessage(GlMainHwnd,WM_COMMAND,MAKEWPARAM(CPTOOLVIEW,0),(LPARAM)toolbar_hwnd);
+    assert(game_player_view() && player_on_top() && SendMessage(toolbar_hwnd,TB_ISBUTTONCHECKED,CPTOOLVIEW,0));
     party_placement_checks();
+    /* Switching back also recreates a GM window closed during play. */
+    assert(!Grafik_Karte); assert(do_menu(MPLAYER));
+    assert(Grafik_Karte && !game_player_view() && Wind_Top()==Grafik_Karte);
+    assert(do_menu(MPLAYER)); assert(game_player_view() && player_on_top());
     /* The actual Next Map path, including mass close and GM bitmap creation. */
     active=0; assert(do_menu(MWEITER));
     assert(game_player_view() && player_on_top());
@@ -242,5 +253,5 @@ with tempfile.TemporaryDirectory(prefix='hq-view-test-') as temp:
     subprocess.run(['cl','/nologo','/D_CRT_SECURE_NO_WARNINGS','/I'+str(ROOT),'/I'+str(ROOT/'my_lib'),
                     '/I'+str(ROOT/'my_lib/windows'),'/I'+str(ROOT/'rsh'),'check.c','/Fe:check.exe',*objects,
                     str(ROOT/'obj/msvc/menu.res'),str(ROOT/'obj/msvc/grafic.res'),
-                    'user32.lib','gdi32.lib','shell32.lib','comdlg32.lib','version.lib','winspool.lib','ole32.lib','advapi32.lib'],cwd=work,check=True)
+                    'user32.lib','gdi32.lib','shell32.lib','comdlg32.lib','version.lib','winspool.lib','ole32.lib','advapi32.lib','comctl32.lib'],cwd=work,check=True)
     subprocess.run([str(work/'check.exe'),str(ROOT/'tables'),temp],cwd=work,check=True,timeout=60)

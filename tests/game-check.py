@@ -267,6 +267,6 @@ with tempfile.TemporaryDirectory(prefix='hq-game-test-') as temp:
     command = ['cl', '/nologo', '/D_CRT_SECURE_NO_WARNINGS', '/I'+str(ROOT),
                '/I'+str(ROOT/'my_lib'), '/I'+str(ROOT/'my_lib/windows'), '/I'+str(ROOT/'rsh'),
                'check.c', '/Fe:check.exe', *objects, str(ROOT/'obj/msvc/menu.res'), str(ROOT/'obj/msvc/grafic.res'),
-               'user32.lib', 'gdi32.lib', 'shell32.lib', 'comdlg32.lib', 'version.lib', 'winspool.lib', 'ole32.lib', 'advapi32.lib']
+               'user32.lib', 'gdi32.lib', 'shell32.lib', 'comdlg32.lib', 'version.lib', 'winspool.lib', 'ole32.lib', 'advapi32.lib', 'comctl32.lib']
     subprocess.run(command, cwd=work, check=True)
     subprocess.run([str(work/'check.exe'), str(ROOT/'tables'), str(work), str(ROOT/'obj/party-preview.bmp')], cwd=work, check=True, timeout=60)

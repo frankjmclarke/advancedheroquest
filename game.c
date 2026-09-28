@@ -5,6 +5,7 @@
 #include <string.h>
 #include <windows.h>
 #include <commdlg.h>
+#include <commctrl.h>
 #include <wincrypt.h>
 #include <shlobj.h>
 #include <openwork.h>
@@ -14,6 +15,8 @@
 #include "liste.h"
 #include "pack.h"
 #include "rsh/game.rh"
+#include "rsh/grafic.rh"
+#include "rsh/menu.rh"
 
 static MONSTER_STATE monsters,undo_monsters;
 static int selected_monster=-1,preview_monster=-1,attack_monster=-1;
@@ -31,6 +34,8 @@ static HWND panel_hwnd;
 static void panel_attach(void);
 static void panel_update(void);
 static void panel_note(const char *note);
+static int combat_action(int id);
+static void token_context_menu(HWND map,int side,int index,int screen_x,int screen_y);
 static int preferred_player_view,view_pause,recovery_checked;
 static int hero_count,undo_count,undo_valid,selected=-1,move_mode,active,dirty,ready,autosave_warned,map_ready;
 static char session_title[160],save_path[MAX_PATH],recovery_path[MAX_PATH],previous_path[MAX_PATH];
@@ -160,6 +165,14 @@ void game_initialize(void)
     }
 }
 int game_player_view(void) { return preferred_player_view; }
+void game_toggle_view(void)
+{
+    if(!map_ready) return;
+    if(preferred_player_view) {
+        if(!Grafik_Karte) show_grafic(session_title);
+        if(Grafik_Karte) Wind_On_Top(Grafik_Karte);
+    } else show_player_view(session_title);
+}
 /* Freeze focus tracking while windows are being replaced or closed together. */
 void game_view_pause(int pause)
 {
@@ -167,11 +180,20 @@ void game_view_pause(int pause)
 }
 void game_view_selected(int player)
 {
+    HMENU menu;
     player=player!=0;
     if(view_pause || preferred_player_view==player) return;
     preferred_player_view=player;
+    menu=GlMainHwnd?GetMenu(GlMainHwnd):NULL;
+    if(menu) {
+        ModifyMenuA(menu,MPLAYER,MF_BYCOMMAND|MF_STRING,MPLAYER,
+            player?"&GM Map (no fog)\tAlt+W":"&Player View (fog of war)\tAlt+W");
+        CheckMenuItem(menu,MPLAYER,MF_BYCOMMAND|(player?MF_CHECKED:MF_UNCHECKED));
+        DrawMenuBar(GlMainHwnd);
+    }
     /* Include a view-only switch in recovery even without moving a token. */
     if(ready && active && map_ready) game_changed();
+    else panel_update();
 }
 void game_restore_view(void)
 {
@@ -470,11 +492,52 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         }
         return 0;
     }
-    if((msg==WM_RBUTTONDOWN || msg==WM_RBUTTONDBLCLK) && map_point(hook,lp,&x,&y) && monster_at(x,y)>=0) {
-        attack_monster=-1; move_mode=0; ReleaseCapture(); return 0;
+    if(msg==WM_RBUTTONDOWN || msg==WM_RBUTTONDBLCLK) return 0;
+    if(msg==WM_RBUTTONUP) {
+        POINT point; int side=-1,index=-1;
+        if(GetCapture()==hwnd) ReleaseCapture();
+        hook->drag=hook->monster_drag=-1;
+        if(map_point(hook,lp,&x,&y)) {
+            index=monster_at(x,y); if(index>=0) side=1;
+            else { index=hero_at(x,y,visible); if(index>=0) side=0; }
+        }
+        if(side>=0) {
+            point.x=(short)LOWORD(lp); point.y=(short)HIWORD(lp); ClientToScreen(hwnd,&point);
+            token_context_menu(hwnd,side,index,point.x,point.y);
+        } else {
+            attack_monster=-1; monster_move_mode=move_mode=0;
+            panel_note("Action cancelled. Select a model or choose another action."); game_redraw();
+        }
+        return 0;
     }
-    if(msg==WM_RBUTTONUP && map_point(hook,lp,&x,&y) && (n=monster_at(x,y))>=0) {
-        selected_monster=n; game_monsters(); return 0;
+    if(msg==WM_CONTEXTMENU) {
+        POINT point; RECT bounds; int side=-1,index=-1;
+        if((short)LOWORD(lp)==-1 && (short)HIWORD(lp)==-1) {
+            L_GRECT doc; int square_x=-1,square_y=-1,zoom=Grafik_Zoom_Get();
+            if(selected>=0 && selected<hero_count) { side=0; index=selected; }
+            else if(selected_monster>=0 && selected_monster<monsters.count) { side=1; index=selected_monster; }
+            if(side==0) { square_x=heroes[index].x; square_y=heroes[index].y; }
+            else if(side==1) { square_x=monsters.tokens[index].x; square_y=monsters.tokens[index].y; }
+            if(square_x>=0 && zoom>0) {
+                Wind_GetDoc(hook->window,&doc);
+                point.x=(square_x+1)*8*zoom+4*zoom-(int)doc.xx;
+                point.y=(Ysize-square_y)*8*zoom+4*zoom-(int)doc.yy;
+                ClientToScreen(hwnd,&point);
+            } else {
+                GetWindowRect(hwnd,&bounds);
+                point.x=bounds.left+24; point.y=bounds.top+48;
+            }
+        } else {
+            point.x=(short)LOWORD(lp); point.y=(short)HIWORD(lp);
+            { POINT client=point; ScreenToClient(hwnd,&client);
+              if(map_point(hook,MAKELPARAM(client.x,client.y),&x,&y)) {
+                  index=monster_at(x,y); if(index>=0) side=1;
+                  else { index=hero_at(x,y,visible); if(index>=0) side=0; }
+              }
+            }
+        }
+        if(side>=0) token_context_menu(hwnd,side,index,point.x,point.y);
+        return 0;
     }
     if((msg==WM_LBUTTONDOWN || msg==WM_LBUTTONDBLCLK) && map_point(hook,lp,&x,&y)) {
         n=hero_at(x,y,visible);
@@ -510,7 +573,11 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         return 0;
     }
     if(msg==WM_CAPTURECHANGED) { preview_monster=-1; hook->monster_drag=-1; hook->drag=-1; preview_hero=-1; game_redraw(); }
-    if(msg==WM_RBUTTONDOWN && (move_mode || attack_monster>=0 || monster_move_mode)) { attack_monster=-1; monster_move_mode=0; move_mode=0; hook->drag=-1; ReleaseCapture(); game_redraw(); panel_update(); return 0; }
+    if(msg==WM_KEYDOWN && wp==VK_ESCAPE) {
+        attack_monster=-1; monster_move_mode=move_mode=0; hook->drag=hook->monster_drag=-1;
+        if(GetCapture()==hwnd) ReleaseCapture();
+        panel_note("Action cancelled. Select a model or choose another action."); game_redraw(); return 0;
+    }
     if(msg==WM_NCDESTROY) {
         WNDPROC previous=hook->previous; RemovePropA(hwnd,"HQHeroMap"); free(hook);
         return CallWindowProc(previous,hwnd,msg,wp,lp);

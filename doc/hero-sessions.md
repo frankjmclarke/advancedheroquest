@@ -178,6 +178,9 @@ monster tokens in both native GM/player graphics modes.
 The most recently selected map view is remembered. If Player View is on top,
 **Next Map** and **Next Dungeon with Current Party** reopen Player View on top
 of the new dungeon, with that dungeon's exploration reset as usual.
+The **Player View** toolbar button and **Map → Player View** command toggle
+between this fogged view and the GM map without fog. The button stays pressed
+while Player View is active.
 
 Named saves and recovery record the selected map view as well as explored rooms.
 Loading a game saved in Player View reopens it on top; a game saved in the GM
@@ -345,8 +348,14 @@ see its wounds, remaining movement, and normal attack allowance. Its **Move**
 and **Attack** buttons prepare the map for a destination or target click; tokens
 can still be dragged. **Run**, **End phase**, **Undo**, and **Start/Leave guided
 turns** use the same commands as the Party menu. The panel gives the next step
-and reports the last move, attack, run, or phase change. A right-click cancels
-a prepared map action.
+and reports the last move, attack, run, or phase change.
+
+The toolbar above the map offers **Select**, **Move**, **Attack**, **Undo**,
+**End phase**, **Party**, and **Player View**. It uses the same action limits as
+the combat panel. Right-click a token for its own Move, Attack, Run, profile,
+and wound controls; a hero also has **Send to reserve**. Right-click an empty
+square or press **Esc** to cancel a prepared action. **Shift+F10** opens the
+selected token's menu from the keyboard.
 Each placed model can move up to its Speed in orthogonal squares and make one
 normal melee or ranged attack, in either order. A miss or fumble uses that
 attack. Melee free attacks in the same combat resolution do not use another

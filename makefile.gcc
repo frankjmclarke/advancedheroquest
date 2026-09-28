@@ -106,7 +106,7 @@ LFLAGS=		$(LFLAGS32)
 TARGET=		32
 STRIP=		$(STRIP32)
 DEP_LIBS=	$(GEMLIB)
-LIBS=		-lole32
+LIBS=		-lole32 -lcomctl32
 BRC=		$(BRC32)
 
 else

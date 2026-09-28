@@ -2,27 +2,66 @@
  * and selection state, so every action still goes through the game rules. */
 static WNDPROC panel_frame_previous;
 static int panel_width;
+static HWND toolbar_hwnd;
+static HIMAGELIST toolbar_images;
+static int toolbar_height=76;
 static char panel_last_notice[200]="Select a model on the map to begin.";
 
 static void panel_layout(void)
 {
-    RECT client; int width;
+    RECT client; int width,top;
     if(!panel_hwnd || !IsWindow(panel_hwnd) || !IsWindow(GlMainHwnd) || !IsWindow(MdiClientHwnd)) return;
     GetClientRect(GlMainHwnd,&client);
     width=panel_width;
     if(width>client.right/2) width=client.right/2;
     if(width<1) return;
-    MoveWindow(MdiClientHwnd,0,0,client.right-width,client.bottom,TRUE);
-    MoveWindow(panel_hwnd,client.right-width,0,width,client.bottom,TRUE);
+    top=toolbar_hwnd?toolbar_height:0;
+    if(toolbar_hwnd) MoveWindow(toolbar_hwnd,0,0,client.right,toolbar_height,TRUE);
+    MoveWindow(MdiClientHwnd,0,top,client.right-width,client.bottom-top,TRUE);
+    MoveWindow(panel_hwnd,client.right-width,top,width,client.bottom-top,TRUE);
+}
+static const char *toolbar_tip(int id)
+{
+    int side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
+    int index=side==0?selected:selected_monster;
+    if((id==CPMOVE || id==CPATTACK) && side<0) return "Select a hero or monster on the map first.";
+    if(id==CPMOVE && side>=0 && !turn_can_move(side,index))
+        return turn_phase && turn_phase!=(side?2:1) && !gm_override?"This model acts in the other phase.":"No movement remains for this model.";
+    if(id==CPATTACK && side>=0 && turn_attack_reason(side,side?0:index,side?index:0))
+        return turn_attack_reason(side,side?0:index,side?index:0);
+    switch(id) {
+    case CPSELECT: return "Select a hero or monster on the map; cancel a prepared move or attack.";
+    case CPMOVE: return "Choose an open destination for the selected model.";
+    case CPATTACK: return "Choose a target for the selected model.";
+    case CPUNDO: return "Undo the most recent token or turn change.";
+    case CPENDPHASE: return "Finish this side's phase when its models are done.";
+    case CPTOOLPARTY: return "Open Heroes and Reserve.";
+    case CPTOOLVIEW: return game_player_view()?"Show GM map without fog of war.":"Show Player View with fog of war.";
+    default: return "";
+    }
 }
 static LRESULT CALLBACK panel_frame_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
     WNDPROC previous=panel_frame_previous;
     LRESULT result;
     if(msg==WM_NCDESTROY) {
+        if(toolbar_images) { ImageList_Destroy(toolbar_images); toolbar_images=NULL; }
         SetWindowLongPtr(hwnd,GWLP_WNDPROC,(LONG_PTR)previous);
-        panel_frame_previous=NULL; panel_hwnd=NULL;
+        panel_frame_previous=NULL; panel_hwnd=NULL; toolbar_hwnd=NULL;
         return CallWindowProc(previous,hwnd,msg,wp,lp);
+    }
+    if(msg==WM_COMMAND && (HWND)lp==toolbar_hwnd && combat_action(LOWORD(wp))) return 0;
+    if(msg==WM_NOTIFY && toolbar_hwnd && lp) {
+        NMHDR *hdr=(NMHDR*)lp;
+        if(hdr->hwndFrom==toolbar_hwnd && hdr->code==TBN_GETINFOTIPA) {
+            NMTBGETINFOTIPA *tip=(NMTBGETINFOTIPA*)lp;
+            if(tip->pszText && tip->cchTextMax>0) lstrcpynA(tip->pszText,toolbar_tip(tip->iItem),tip->cchTextMax);
+            return 0;
+        }
+        if(hdr->code==TTN_GETDISPINFOA && hdr->idFrom>=CPSELECT && hdr->idFrom<=CPTOOLVIEW) {
+            NMTTDISPINFOA *tip=(NMTTDISPINFOA*)lp;
+            tip->lpszText=(LPSTR)toolbar_tip((int)tip->hdr.idFrom); return 0;
+        }
     }
     result=CallWindowProc(previous,hwnd,msg,wp,lp);
     if(msg==WM_SIZE) panel_layout();
@@ -69,6 +108,16 @@ static void panel_update(void)
     EnableWindow(GetDlgItem(panel_hwnd,CPENDPHASE),map_ready && turn_phase);
     EnableWindow(GetDlgItem(panel_hwnd,CPUNDO),map_ready && undo_valid);
     EnableWindow(GetDlgItem(panel_hwnd,CPGUIDED),map_ready);
+    if(toolbar_hwnd) {
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPSELECT,MAKELONG(map_ready,0));
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPMOVE,MAKELONG(side>=0 && alive && turn_can_move(side,index),0));
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPATTACK,MAKELONG(side>=0 && alive && !turn_attack_reason(side,side?0:index,side?index:0),0));
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPUNDO,MAKELONG(map_ready && undo_valid,0));
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPENDPHASE,MAKELONG(map_ready && turn_phase,0));
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPTOOLPARTY,MAKELONG(map_ready,0));
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPTOOLVIEW,MAKELONG(map_ready,0));
+        SendMessage(toolbar_hwnd,TB_CHECKBUTTON,CPTOOLVIEW,MAKELONG(game_player_view(),0));
+    }
     SetDlgItemTextA(panel_hwnd,CPENDPHASE,turn_phase==1?"End Hero phase":turn_phase==2?"End GM phase":"End phase");
     SetDlgItemTextA(panel_hwnd,CPGUIDED,turn_phase?"Leave guided turns":"Start guided turns");
     if(!map_ready) next="Open or generate a dungeon to begin.";
@@ -90,28 +139,118 @@ static void panel_note(const char *note)
     panel_last_notice[sizeof(panel_last_notice)-1]=0;
     panel_update();
 }
-static INT_PTR CALLBACK panel_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
+static int combat_action(int id)
 {
-    int id=LOWORD(wp),side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
-    if(msg==WM_INITDIALOG) return TRUE;
-    if(msg!=WM_COMMAND) return FALSE;
-    if(id==CPGUIDED) game_command(MGAMEGUIDED);
+    int side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
+    int index=side==0?selected:selected_monster;
+    if(id==CPSELECT) {
+        move_mode=monster_move_mode=0; attack_monster=-1;
+        panel_note("Select a hero or monster on the map.");
+    }
+    else if(id==CPGUIDED) game_command(MGAMEGUIDED);
     else if(id==CPENDPHASE) game_command(MGAMETURN);
     else if(id==CPUNDO) game_command(MGAMEUNDO);
-    else if(id==CPRUN) game_command(MGAMERUN);
+    else if(id==CPRUN && side>=0 && turn_phase &&
+            !turn_attack_reason(side,side?0:index,side?index:0)) game_command(MGAMERUN);
     else if(id==CPMOVE && side>=0) {
-        if(!turn_can_move(side,side?selected_monster:selected)) return TRUE;
+        if(!(side?monsters.tokens[index].wounds>0 && monsters.tokens[index].x>=0:
+                  HERO_ACTIVE(&heroes[index]) && heroes[index].x>=0) || !turn_can_move(side,index)) return 1;
         attack_monster=-1; move_mode=side?0:1; monster_move_mode=side?1:0;
         panel_note(side?"Click an open square or drag the selected monster.":"Click a destination square or drag the selected hero.");
     } else if(id==CPATTACK && side>=0) {
-        int index=side?selected_monster:selected;
-        if(turn_attack_reason(side,side?0:index,side?index:0)) return TRUE;
+        if(!(side?monsters.tokens[index].wounds>0 && monsters.tokens[index].x>=0:
+                  HERO_ACTIVE(&heroes[index]) && heroes[index].x>=0) ||
+           turn_attack_reason(side,side?0:index,side?index:0)) return 1;
         monster_move_mode=0;
         if(side) { attack_monster=index; move_mode=0; }
         else { attack_monster=-1; move_mode=1; }
         panel_note(side?"Click a hero on the map to attack.":"Click an enemy on the map to attack.");
-    } else return FALSE;
-    panel_update(); game_redraw(); return TRUE;
+    } else if(id==CPTOOLPARTY) game_party();
+    else if(id==CPTOOLVIEW) game_toggle_view();
+    else if(id==CPTOKENDETAILS && side>=0) {
+        if(side) game_monsters(); else game_party();
+    } else if(id==CPTOKENWOUND && side==1) monster_damage(index);
+    else if(id==CPTOKENRESERVE && side==0 && heroes[index].x>=0) {
+        remember(); heroes[index].x=heroes[index].y=-1;
+        selected=-1; move_mode=0;
+        panel_note("Hero moved to reserve. Undo restores the placement."); game_changed();
+    } else return 0;
+    panel_update(); game_redraw(); return 1;
+}
+static INT_PTR CALLBACK panel_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
+{
+    if(msg==WM_INITDIALOG) return TRUE;
+    if(msg==WM_COMMAND) return combat_action(LOWORD(wp));
+    return FALSE;
+}
+static void toolbar_create(void)
+{
+    static const int commands[]={CPSELECT,CPMOVE,CPATTACK,CPUNDO,CPENDPHASE,CPTOOLPARTY,CPTOOLVIEW};
+    static const char labels[]="Select\0Move\0Attack\0Undo\0End phase\0Party\0Player view\0\0";
+    INITCOMMONCONTROLSEX init; TBBUTTON buttons[7]; HBITMAP strip,mask; int i,base;
+    init.dwSize=sizeof(init); init.dwICC=ICC_BAR_CLASSES;
+    if(!InitCommonControlsEx(&init)) return;
+    toolbar_hwnd=CreateWindowExA(0,TOOLBARCLASSNAMEA,"",WS_CHILD|WS_VISIBLE|TBSTYLE_FLAT|TBSTYLE_TOOLTIPS|CCS_NORESIZE|CCS_NODIVIDER,
+        0,0,100,toolbar_height,GlMainHwnd,NULL,GetModuleHandle(NULL),NULL);
+    if(!toolbar_hwnd) return;
+    SendMessage(toolbar_hwnd,TB_BUTTONSTRUCTSIZE,sizeof(TBBUTTON),0);
+    SendMessage(toolbar_hwnd,TB_SETBITMAPSIZE,0,MAKELONG(48,48));
+    strip=LoadBitmapA(GetModuleHandle(NULL),MAKEINTRESOURCEA(IDB_TOOLBAR_ICONS));
+    mask=LoadImageA(GetModuleHandle(NULL),MAKEINTRESOURCEA(IDB_TOOLBAR_MASK),IMAGE_BITMAP,0,0,LR_CREATEDIBSECTION);
+    if(strip && mask) {
+        toolbar_images=ImageList_Create(48,48,ILC_COLOR24|ILC_MASK,7,0);
+        if(toolbar_images && ImageList_Add(toolbar_images,strip,mask)==0)
+            SendMessage(toolbar_hwnd,TB_SETIMAGELIST,0,(LPARAM)toolbar_images);
+        else if(toolbar_images) { ImageList_Destroy(toolbar_images); toolbar_images=NULL; }
+    }
+    if(strip) DeleteObject(strip);
+    if(mask) DeleteObject(mask);
+    SendMessage(toolbar_hwnd,TB_SETMAXTEXTROWS,1,0);
+    base=(int)SendMessageA(toolbar_hwnd,TB_ADDSTRINGA,0,(LPARAM)labels);
+    memset(buttons,0,sizeof(buttons));
+    for(i=0;i<7;i++) {
+        buttons[i].iBitmap=toolbar_images?i:I_IMAGENONE; buttons[i].idCommand=commands[i];
+        buttons[i].fsState=TBSTATE_ENABLED; buttons[i].fsStyle=(commands[i]==CPTOOLVIEW?BTNS_CHECK:BTNS_BUTTON)|BTNS_SHOWTEXT;
+        buttons[i].iString=base+i;
+    }
+    SendMessage(toolbar_hwnd,TB_ADDBUTTONS,7,(LPARAM)buttons);
+    SendMessage(toolbar_hwnd,TB_SETBUTTONSIZE,0,MAKELONG(88,70));
+    SendMessage(toolbar_hwnd,TB_AUTOSIZE,0,0);
+}
+static HMENU token_menu_build(int side,int index)
+{
+    HMENU menu; int alive,can_move_now,can_attack_now;
+    if(side==0) {
+        if(index<0 || index>=hero_count) return NULL;
+        alive=HERO_ACTIVE(&heroes[index]) && heroes[index].x>=0;
+    } else {
+        if(index<0 || index>=monsters.count) return NULL;
+        alive=monsters.tokens[index].wounds>0 && monsters.tokens[index].x>=0;
+    }
+    can_move_now=alive && turn_can_move(side,index);
+    can_attack_now=alive && !turn_attack_reason(side,side?0:index,side?index:0);
+    menu=CreatePopupMenu(); if(!menu) return NULL;
+    AppendMenuA(menu,MF_STRING|(can_move_now?0:MF_GRAYED),CPMOVE,"Move...");
+    AppendMenuA(menu,MF_STRING|(can_attack_now?0:MF_GRAYED),CPATTACK,"Attack...");
+    AppendMenuA(menu,MF_STRING|(turn_phase && can_attack_now?0:MF_GRAYED),CPRUN,"Run (D12)");
+    AppendMenuA(menu,MF_SEPARATOR,0,NULL);
+    AppendMenuA(menu,MF_STRING,CPTOKENDETAILS,side?"Monster profile and wounds...":"Hero profile and wounds...");
+    if(side) AppendMenuA(menu,MF_STRING,CPTOKENWOUND,"Inflict 1 wound");
+    else AppendMenuA(menu,MF_STRING|(!alive?MF_GRAYED:0),CPTOKENRESERVE,"Send to reserve");
+    return menu;
+}
+static void token_context_menu(HWND map,int side,int index,int screen_x,int screen_y)
+{
+    HMENU menu=token_menu_build(side,index); int command;
+    if(!menu) return;
+    if(side) { selected=-1; selected_monster=index; }
+    else { selected=index; selected_monster=-1; }
+    move_mode=monster_move_mode=0; attack_monster=-1;
+    game_redraw(); panel_update();
+    SetForegroundWindow(GlMainHwnd);
+    command=TrackPopupMenuEx(menu,TPM_RETURNCMD|TPM_RIGHTBUTTON,screen_x,screen_y,map,NULL);
+    DestroyMenu(menu);
+    if(command) combat_action(command);
 }
 static void panel_attach(void)
 {
@@ -122,5 +261,6 @@ static void panel_attach(void)
     if(!panel_hwnd) return;
     GetWindowRect(panel_hwnd,&rect); panel_width=rect.right-rect.left;
     panel_frame_previous=(WNDPROC)SetWindowLongPtr(GlMainHwnd,GWLP_WNDPROC,(LONG_PTR)panel_frame_proc);
+    toolbar_create();
     panel_layout(); panel_update();
 }

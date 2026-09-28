@@ -271,3 +271,7 @@
 #define BOARD_PIXELS_PER_SQUARE 32
 
 #define BOARD_PORTCULLIS_TRAP 700
+
+/* Seven toolbar glyphs, in toolbar command order; source: toolbar-icons.svg. */
+#define IDB_TOOLBAR_ICONS 702
+#define IDB_TOOLBAR_MASK 703
