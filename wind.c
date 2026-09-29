@@ -443,7 +443,8 @@ LOCAL _BOOL player_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
    Wind_Redraw(window);
    game_changed();
   } else if (get_square(x / ICON_SCALE - 1, Ysize - y / ICON_SCALE, &piece) &&
-             piece != NULL && fog_visible(player_visible, (_WORD)(piece - Pice))) {
+             piece != NULL && fog_visible(player_visible, (_WORD)(piece - Pice)) &&
+             game_corridor_visible(x / ICON_SCALE - 1, Ysize - y / ICON_SCALE)) {
    show_room_contents(hit);
   }
   break;

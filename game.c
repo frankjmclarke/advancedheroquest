@@ -43,10 +43,77 @@ static int preferred_player_view,view_pause,recovery_checked;
 static int hero_count,undo_count,undo_valid,selected=-1,move_mode,active,dirty,ready,autosave_warned,map_ready;
 static char session_title[160],save_path[MAX_PATH],recovery_path[MAX_PATH],previous_path[MAX_PATH];
 static GAME_DATA *loaded_owner;
+static unsigned char undo_corridor_pieces[ENCOUNTER_LIMIT];
+static int hero_route[240*240],hero_route_count;
+static int force_explore_path;
 static WINDOW_DEF *preview_window;
 static int preview_hero=-1,preview_x,preview_y;
 extern void game_loaded_title(const char *title);
 static void message(const char *text) { MessageBoxA(GlMainHwnd,text,"HQ-Map game",MB_OK|MB_ICONINFORMATION); }
+static int corridor_type(int type) { return strchr("PELRTCOD",type)!=NULL; }
+static int floor_piece(int x,int y)
+{
+    PICE *p; int i;
+    if(!get_square((_WORD)x,(_WORD)y,&p) || !p) return -1;
+    if(p->type!=DOOR && p->type!=SECRET && p->type!=TEST && p->type!=EMPTY && p->type!=INVALID) return (int)(p-Pice);
+    for(i=0;i<MAX_PICE;i++) if(Pice[i].type!=DOOR && Pice[i].type!=SECRET && Pice[i].type!=TEST &&
+        Pice[i].type!=EMPTY && Pice[i].type!=INVALID &&
+        x>=Pice[i].x && x<Pice[i].x+Pice[i].w && y>=Pice[i].y && y<Pice[i].y+Pice[i].h) return i;
+    return -1;
+}
+static int sight_edge(int x,int y,int nx,int ny,const unsigned char *fog)
+{
+    int a,b,i,dx,dy;
+    PICE *from,*to;
+    if(abs(x-nx)+abs(y-ny)!=1 || (a=floor_piece(x,y))<0 || (b=floor_piece(nx,ny))<0) return 0;
+    get_square((_WORD)x,(_WORD)y,&from); get_square((_WORD)nx,(_WORD)ny,&to);
+    if(a==b && from->type!=DOOR && from->type!=SECRET &&
+       to->type!=DOOR && to->type!=SECRET) return 1;
+    for(i=0;i<MAX_PICE;i++) if(Pice[i].type==DOOR || Pice[i].type==SECRET) {
+        dx=Pice[i].pos==East?1:Pice[i].pos==West?-1:0;
+        dy=Pice[i].pos==North?1:Pice[i].pos==South?-1:0;
+        if((x==Pice[i].x && y==Pice[i].y && nx==x+dx && ny==y+dy) ||
+           (nx==Pice[i].x && ny==Pice[i].y && x==nx+dx && y==ny+dy)) return fog[i]!=0;
+    }
+    return a==b || (corridor_type(Pice[a].type) && corridor_type(Pice[b].type));
+}
+static int corridor_sight(int x,int y,int tx,int ty,const unsigned char *fog)
+{
+    int dx=abs(tx-x),dy=abs(ty-y),sx=tx>x?1:-1,sy=ty>y?1:-1,ix=0,iy=0,nx,ny,a,b;
+    if(floor_piece(x,y)<0 || floor_piece(tx,ty)<0) return 0;
+    while(ix<dx || iy<dy) {
+        a=(1+2*ix)*dy; b=(1+2*iy)*dx; nx=x; ny=y;
+        if(a==b) {
+            nx+=sx; ny+=sy;
+            if(!sight_edge(x,y,nx,y,fog) || !sight_edge(x,y,x,ny,fog) ||
+               !sight_edge(nx,y,nx,ny,fog) || !sight_edge(x,ny,nx,ny,fog)) return 0;
+            ix++; iy++;
+        } else if(a<b) { nx+=sx; ix++; if(!sight_edge(x,y,nx,ny,fog)) return 0; }
+        else { ny+=sy; iy++; if(!sight_edge(x,y,nx,ny,fog)) return 0; }
+        x=nx; y=ny;
+    }
+    return 1;
+}
+static void reveal_corridors(void)
+{
+    unsigned char *fog; int h,x,y,p;
+    if(!map_ready || !Pice || !(fog=game_fog())) return;
+    for(h=0;h<hero_count;h++) if(HERO_ACTIVE(&heroes[h]) && heroes[h].x>=0) {
+        for(y=0;y<Ysize;y++) for(x=0;x<Xsize;x++) {
+            if((p=floor_piece(x,y))<0 || !corridor_type(Pice[p].type) || fog[p]) continue;
+            if(corridor_sight(heroes[h].x,heroes[h].y,x,y,fog)) {
+                fog[p]=1;
+            }
+        }
+    }
+}
+int game_corridor_visible(int x,int y)
+{
+    int p; unsigned char *fog;
+    if(x<0 || y<0 || x>=Xsize || y>=Ysize || (p=floor_piece(x,y))<0) return 0;
+    if(!corridor_type(Pice[p].type)) return 1;
+    fog=game_fog(); return fog && fog[p]!=0;
+}
 /* Format from printed text every time. Unrevealed rooms preview the current
  * setting; revealed rooms keep the percentage fixed at first reveal. */
 char *game_gold_text(const PICE *piece,const char *source)
@@ -131,7 +198,13 @@ void game_difficulty_dialog(void)
         Wind_Close(Monster_Liste); show_liste(session_title);
     }
 }
-static void remember(void) { memcpy(undo_heroes,heroes,sizeof(heroes)); undo_count=hero_count; undo_monsters=monsters; undo_turn_phase=turn_phase; undo_gm_override=gm_override; undo_valid=1; }
+static void remember(void) {
+    int i; unsigned char *fog=game_fog();
+    memcpy(undo_heroes,heroes,sizeof(heroes)); undo_count=hero_count; undo_monsters=monsters;
+    undo_turn_phase=turn_phase; undo_gm_override=gm_override;
+    for(i=0;fog && i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) undo_corridor_pieces[i]=corridor_type(Pice[i].type)?fog[i]:0;
+    undo_valid=1;
+}
 static const char *turn_attack_reason(int side,int h,int m)
 {
     if(!turn_phase || gm_override) return NULL;
@@ -184,8 +257,15 @@ static void turn_menu_update(void)
         if(monsters.tokens[i].x<0 || !monsters.tokens[i].wounds) continue;
         total++; if(monsters.tokens[i].attacked) used++;
     }
-    ModifyMenuA(menu,2,MF_BYPOSITION|MF_POPUP,(UINT_PTR)GetSubMenu(menu,2),
-        turn_phase==1?"&Party - Hero phase":turn_phase==2?"&Party - GM phase":"&Party - Free play");
+    /* A maximized MDI child inserts its system menu before the app menus. */
+    for(i=0;i<GetMenuItemCount(menu);i++) {
+        HMENU submenu=GetSubMenu(menu,i);
+        if(submenu && GetMenuState(submenu,MGAMEPARTY,MF_BYCOMMAND)!=(UINT)-1) {
+            ModifyMenuA(menu,i,MF_BYPOSITION|MF_POPUP,(UINT_PTR)submenu,
+                turn_phase==1?"&Party - Hero phase":turn_phase==2?"&Party - GM phase":"&Party - Free play");
+            break;
+        }
+    }
     if(turn_phase) sprintf(status,"%s phase: %d/%d normal attacks used%s",turn_phase==1?"Hero":"GM",used,total,gm_override?" (GM override)":"");
     else strcpy(status,"Free play: no phase limits");
     ModifyMenuA(menu,MGAMEPHASESTATUS,MF_BYCOMMAND|MF_STRING|MF_GRAYED,MGAMEPHASESTATUS,status);
@@ -294,6 +374,7 @@ void game_restore_view(void)
 }
 void game_changed(void)
 {
+    reveal_corridors();
     monsters_reveal();
     focus_prune();
     turn_menu_update();
@@ -402,6 +483,10 @@ void game_new_dungeon(const char *title)
     map_ready=1; active=1;
     game_data_free(loaded_owner); loaded_owner=NULL;
     game_reset_fog();
+    {
+        unsigned char *fog=game_fog();
+        if(fog) for(i=0;i<MAX_PICE;i++) if(Pice[i].type==STAIRS_OUT) fog[i]=1;
+    }
     monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; monster_move_mode=0;
     memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct));
@@ -428,7 +513,9 @@ static int can_move(int index,int x,int y,const unsigned char *visible)
 {
     PICE *piece; int i;
     if(!get_square((_WORD)x,(_WORD)y,&piece) || !piece || piece->type==EMPTY || piece->type==TEST) return 0;
-    if(visible && !fog_visible(visible,(_WORD)(piece-Pice))) return 0;
+    if(visible && (!fog_visible(visible,(_WORD)(piece-Pice)) || !game_corridor_visible(x,y)) &&
+       !(index>=0 && heroes[index].x>=0 && abs(x-heroes[index].x)+abs(y-heroes[index].y)==1 &&
+         sight_edge(heroes[index].x,heroes[index].y,x,y,visible))) return 0;
     for(i=0;i<hero_count;i++) if(i!=index && heroes[i].x==x && heroes[i].y==y) return 0;
     if(monster_at(x,y)>=0) return 0;
     if(index>=0 && !HERO_ACTIVE(&heroes[index])) return 0;
@@ -436,12 +523,19 @@ static int can_move(int index,int x,int y,const unsigned char *visible)
 }
 static int move_hero(int index,int x,int y,const unsigned char *visible)
 {
-    int cost=0; char note[140];
+    int cost=0,i,allowed; char note[140];
     if(index<0 || index>=hero_count || !can_move(index,x,y,visible)) { MessageBeep(MB_ICONWARNING); return 0; }
     if(heroes[index].x==x && heroes[index].y==y) return 1;
-    if(!turn_can_move(0,index) || !battle_destination_cost(0,index,&x,&y,&cost)) { MessageBeep(MB_ICONWARNING); return 0; }
+    force_explore_path=visible!=NULL;
+    allowed=turn_can_move(0,index) && battle_destination_cost(0,index,&x,&y,&cost);
+    force_explore_path=0;
+    if(!allowed) { MessageBeep(MB_ICONWARNING); return 0; }
     remember(); if(heroes[index].x>=0) heroes[index].moved=1;
     if(turn_phase) heroes[index].move_spent+=cost;
+    for(i=0;i<hero_route_count;i++) {
+        heroes[index].x=hero_route[i]%Xsize; heroes[index].y=hero_route[i]/Xsize;
+        reveal_corridors();
+    }
     heroes[index].x=x; heroes[index].y=y; focus_enter(0,index);
     if(turn_phase) sprintf(note,"%s moved %d square%s; %d remaining.",heroes[index].name,cost,cost==1?"":"s",turn_move_remaining(0,index));
     else sprintf(note,"%s moved to square %d, %d.",heroes[index].name,x+1,y+1);
@@ -450,7 +544,8 @@ static int move_hero(int index,int x,int y,const unsigned char *visible)
 static int hero_at(int x,int y,const unsigned char *visible)
 {
     int i; PICE *p;
-    if(!get_square((_WORD)x,(_WORD)y,&p) || !p || (visible && !fog_visible(visible,(_WORD)(p-Pice)))) return -1;
+    if(!get_square((_WORD)x,(_WORD)y,&p) || !p ||
+       (visible && (!fog_visible(visible,(_WORD)(p-Pice)) || !game_corridor_visible(x,y)))) return -1;
     for(i=0;i<hero_count;i++) if(heroes[i].x==x && heroes[i].y==y) return i;
     return -1;
 }
@@ -504,7 +599,10 @@ void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,i
             DrawTextA(dc,h->name,-1,&label,DT_CENTER|DT_SINGLELINE|DT_END_ELLIPSIS|DT_NOPREFIX); }
     }
     for(i=0;i<monsters.count;i++) {
-        MONSTER *m=&monsters.tokens[i]; if(m->x<0 || monster_at(m->x,m->y)!=i) continue;
+        MONSTER *m=&monsters.tokens[i]; PICE *p;
+        if(m->x<0 || monster_at(m->x,m->y)!=i) continue;
+        if(visible && (!get_square((_WORD)m->x,(_WORD)m->y,&p) || !p ||
+           !fog_visible(visible,(_WORD)(p-Pice)) || !game_corridor_visible(m->x,m->y))) continue;
         x=((i==preview_monster && window==preview_window?preview_x:m->x)+1)*size-sx;
         y=(Ysize-(i==preview_monster && window==preview_window?preview_y:m->y))*size-sy; monster_draw(dc,x,y,size,i);
     }
@@ -563,7 +661,8 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     }
     visible=hook->player?game_fog():NULL;
     if(msg==WM_SETCURSOR && move_mode && LOWORD(lp)==HTCLIENT) { SetCursor(LoadCursor(NULL,IDC_CROSS)); return TRUE; }
-    if((msg==WM_LBUTTONDOWN || msg==WM_LBUTTONDBLCLK) && map_point(hook,lp,&x,&y) && (n=monster_at(x,y))>=0) {
+    if((msg==WM_LBUTTONDOWN || msg==WM_LBUTTONDBLCLK) && map_point(hook,lp,&x,&y) &&
+       (!visible || game_corridor_visible(x,y)) && (n=monster_at(x,y))>=0) {
         if(msg==WM_LBUTTONDOWN && selected>=0 && move_mode) { attack_open(hwnd,selected,n,0); return 0; }
         selected_monster=n; selected=-1; move_mode=0; monster_move_mode=0; panel_update();
         if(msg==WM_LBUTTONDBLCLK) { attack_monster=-1; hook->monster_drag=-1; ReleaseCapture(); monster_damage(n); }
@@ -596,7 +695,7 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         if(GetCapture()==hwnd) ReleaseCapture();
         hook->drag=hook->monster_drag=-1;
         if(map_point(hook,lp,&x,&y)) {
-            index=monster_at(x,y); if(index>=0) side=1;
+            index=(!visible || game_corridor_visible(x,y))?monster_at(x,y):-1; if(index>=0) side=1;
             else { index=hero_at(x,y,visible); if(index>=0) side=0; }
         }
         if(side>=0) {
@@ -629,7 +728,7 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
             point.x=(short)LOWORD(lp); point.y=(short)HIWORD(lp);
             { POINT client=point; ScreenToClient(hwnd,&client);
               if(map_point(hook,MAKELPARAM(client.x,client.y),&x,&y)) {
-                  index=monster_at(x,y); if(index>=0) side=1;
+                  index=(!visible || game_corridor_visible(x,y))?monster_at(x,y):-1; if(index>=0) side=1;
                   else { index=hero_at(x,y,visible); if(index>=0) side=0; }
               }
             }
@@ -651,7 +750,8 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         }
     }
     if(msg==WM_MOUSEMOVE && hook->drag>=0) {
-        if(map_point(hook,lp,&x,&y) && (target=monster_at(x,y))>=0 && HERO_ACTIVE(&heroes[hook->drag]) && monsters.tokens[target].wounds) {
+        if(map_point(hook,lp,&x,&y) && (!visible || game_corridor_visible(x,y)) &&
+           (target=monster_at(x,y))>=0 && HERO_ACTIVE(&heroes[hook->drag]) && monsters.tokens[target].wounds) {
             preview_hero=-1; game_redraw(); SetCursor(LoadCursor(NULL,IDC_CROSS));
         } else if(map_point(hook,lp,&x,&y) && can_move(hook->drag,x,y,visible)) {
             if(preview_hero!=hook->drag || preview_x!=x || preview_y!=y) {
@@ -664,7 +764,7 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
     if(msg==WM_LBUTTONUP && hook->drag>=0) {
         n=hook->drag; hook->drag=-1; ReleaseCapture();
         if(map_point(hook,lp,&x,&y) && (x!=hook->start_x || y!=hook->start_y)) {
-            if((target=monster_at(x,y))>=0) attack_open(hwnd,n,target,0);
+            if((!visible || game_corridor_visible(x,y)) && (target=monster_at(x,y))>=0) attack_open(hwnd,n,target,0);
             else move_hero(n,x,y,visible);
             move_mode=0;
         }
@@ -865,7 +965,10 @@ void game_command(int command)
     else if(command==MGAMELEAVE) reserve_party();
     else if(command==MGAMEUNDO && undo_valid) {
         static MONSTER_STATE monster_swap;
-        HERO swap[HERO_LIMIT]; int n=hero_count;
+        HERO swap[HERO_LIMIT]; int n=hero_count,i; unsigned char *fog=game_fog();
+        for(i=0;fog && i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) if(corridor_type(Pice[i].type)) {
+            unsigned char state=fog[i]; fog[i]=undo_corridor_pieces[i]; undo_corridor_pieces[i]=state;
+        }
         monster_swap=monsters; monsters=undo_monsters; undo_monsters=monster_swap; selected_monster=-1;
         memcpy(swap,heroes,sizeof(heroes)); memcpy(heroes,undo_heroes,sizeof(heroes)); memcpy(undo_heroes,swap,sizeof(heroes));
         { int state=turn_phase; turn_phase=undo_turn_phase; undo_turn_phase=state;

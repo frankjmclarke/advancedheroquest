@@ -127,8 +127,9 @@ LOCAL _BOOL fog_door_side(CONST PICE *door, CONST PICE *piece)
 GLOBAL _VOID fog_init(_UBYTE *visible)
 {
  _WORD i;
- for (i = 0; i < MAX_PICE; i++) visible[i] = fog_corridor(Pice[i].type);
+ for (i = 0; i < MAX_PICE; i++) visible[i] = FALSE;
 }
+
 
 GLOBAL _BOOL fog_visible(CONST _UBYTE *visible, _WORD index)
 {

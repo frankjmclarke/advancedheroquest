@@ -48,7 +48,8 @@ int main(void) {
  piece(6,EMPTY,0,0,0,0,North);
  piece(7,EMPTY,0,0,0,0,North);
  fog_init(visible);
- assert(visible[0] && !visible[1] && !visible[3]);
+ assert(!visible[0] && !visible[1] && !visible[3]);
+ visible[0]=1; /* A hero has discovered the adjoining passage. */
  assert(fog_visible(visible,2) && !fog_visible(visible,4));
  draw_map_visible(&image,visible);
  assert(drawn[0]==1 && drawn[2]==1 && drawn[1]==0 && drawn[3]==0 && drawn[4]==0);
@@ -70,10 +71,10 @@ int main(void) {
   piece(2,DOOR,10,10,1,1,(DIRECTION)dir);
   piece(3,EMPTY,0,0,0,0,North);
   piece(4,EMPTY,0,0,0,0,North);
-  fog_init(visible); assert(fog_visible(visible,2));
+  fog_init(visible); visible[0]=1; assert(fog_visible(visible,2));
   click(2); assert(visible[1]);
  }
- puts("PASS: initial corridors, hidden rooms/doors, chained reveals, secret doors, four door orientations, repeat clicks and reset.");
+ puts("PASS: hidden initial corridors, discovered passage, hidden rooms/doors, chained reveals, secret doors, four door orientations, repeat clicks and reset.");
  return 0;
 }
 '''

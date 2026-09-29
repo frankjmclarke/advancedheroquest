@@ -3,7 +3,8 @@ static int battle_floor(int x,int y)
 {
     PICE *p; unsigned char *visible=game_fog();
     if(!visible) return 0;
-    return get_square(x,y,&p) && p && p->type!=EMPTY && p->type!=TEST && fog_visible(visible,(_WORD)(p-Pice));
+    return get_square(x,y,&p) && p && p->type!=EMPTY && p->type!=TEST &&
+           fog_visible(visible,(_WORD)(p-Pice)) && game_corridor_visible(x,y);
 }
 static int battle_edge(int x,int y,int nx,int ny)
 {
@@ -112,14 +113,18 @@ static int battle_destination_cost(int side,int index,int *tx,int *ty,int *cost)
     int x=side?monsters.tokens[index].x:heroes[index].x,y=side?monsters.tokens[index].y:heroes[index].y;
     int *parent,*queue,total=Xsize*Ysize,head=0,tail=0,i,j,n,nx,ny,start,goal,at,previous,opponents=0,moved=0,remaining;
     const int dx[4]={1,-1,0,0},dy[4]={0,0,1,-1};
-    *cost=0; if(x<0) return 1;
+    *cost=0; hero_route_count=0; if(x<0) return 1;
     if(side) { for(i=0;i<hero_count;i++) if(heroes[i].x>=0 && HERO_ACTIVE(&heroes[i])) opponents++; }
     else { for(i=0;i<monsters.count;i++) if(monsters.tokens[i].x>=0 && monsters.tokens[i].wounds) opponents++; }
-    if(!opponents && !turn_phase) return 1;
+    if(!opponents && !turn_phase && !force_explore_path) return 1;
     if(*tx<0 || *ty<0 || *tx>=Xsize || *ty>=Ysize || total<1) return 0;
     if(x==*tx && y==*ty) return 1;
     remaining=turn_phase && !gm_override?turn_move_remaining(side,index):total;
     if(remaining<=0) return 0;
+    if(!side && abs(*tx-x)+abs(*ty-y)==1 && !game_corridor_visible(*tx,*ty) &&
+       sight_edge(x,y,*tx,*ty,game_fog())) {
+        *cost=1; hero_route[hero_route_count++]=*ty*Xsize+*tx; return 1;
+    }
     parent=(int*)malloc(total*sizeof(int)); queue=(int*)malloc(total*sizeof(int));
     if(!parent || !queue) { free(parent); free(queue); return 0; }
     for(i=0;i<total;i++) parent[i]=-1;
@@ -140,6 +145,7 @@ static int battle_destination_cost(int side,int index,int *tx,int *ty,int *cost)
     for(i=n-1;i>=0 && moved<remaining;i--) {
         at=queue[i];
         moved++; goal=at;
+        if(!side) hero_route[hero_route_count++]=at;
         if(entered_zone(side,index,previous%Xsize,previous/Xsize,at%Xsize,at/Xsize)) break;
         previous=at;
     }

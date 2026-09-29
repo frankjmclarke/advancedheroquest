@@ -183,6 +183,15 @@ int main(int argc,char **argv) {
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type!=EMPTY && !Pice[i].text) assert(!decoded->pieces[i].text);
     assert(game_encode(decoded,&other,&other_size)); assert(size==other_size && !memcmp(bytes,other,size)); free(other);
     for(i=0;i<5;i++) { assert(!strcmp(heroes[i].name,decoded->heroes[i].name)); assert(!memcmp(&heroes[i].kind,&decoded->heroes[i].kind,sizeof(HERO)-40)); }
+    /* Version 11 has no square mask: preserve its revealed corridor pieces. */
+    {
+        size_t old_size=size;
+        unsigned char *old=(unsigned char*)malloc(old_size); assert(old);
+        memcpy(old,bytes,old_size); old[8]=11; version8_crc(old,old_size);
+        again=game_decode(old,old_size); assert(again);
+        assert(!memcmp(again->visible,decoded->visible,(size_t)again->count));
+        game_data_free(again); free(old);
+    }
     /* Version 10 saves retain turns but start at standard difficulty. */
     {
         size_t old_size=size-8-4*snapshot.count;
@@ -216,7 +225,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=12; assert(!game_decode(bytes,size)); bytes[8]=11;
+    bytes[8]=14; assert(!game_decode(bytes,size)); bytes[8]=13;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;
@@ -224,7 +233,8 @@ int main(int argc,char **argv) {
     for(y=0;y<Ysize;y++) for(x=0;x<Xsize;x++) {
         get_square(x,y,&p);
         if(!p) assert(!can_move(0,x,y,NULL));
-        else if(!fog_visible(game_fog(),(_WORD)(p-Pice))) assert(!can_move(0,x,y,game_fog()));
+        else if(!fog_visible(game_fog(),(_WORD)(p-Pice)) &&
+                abs(x-heroes[0].x)+abs(y-heroes[0].y)>1) assert(!can_move(0,x,y,game_fog()));
     }
     mouse_checks();
     /* Movement now persists a moved-this-turn flag; recovery must retain it. */
@@ -302,6 +312,36 @@ int main(int argc,char **argv) {
     reserve_party(); for(i=0;i<hero_count;i++) assert(heroes[i].x==-1 && heroes[i].y==-1);
     old_count=hero_count; new_rand(5678); assert(makemap(52,32,26,16,North)); game_new_dungeon("Next dungeon"); assert(hero_count==old_count && heroes[0].wounds==2);
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM) assert(!game_fog()[i]);
+    /* A turn hides the next passage until a hero reaches the corner. */
+    {
+        PICE parts[3]; int cells[49];
+        memset(parts,0,sizeof(parts)); for(i=0;i<49;i++) cells[i]=-1;
+        parts[0].type=PASSAGE; parts[0].pos=North; parts[0].w=2; parts[0].h=5;
+        parts[1].type=CORNER; parts[1].pos=North; parts[1].y=5; parts[1].w=2; parts[1].h=2;
+        parts[2].type=PASSAGE; parts[2].pos=East; parts[2].x=2; parts[2].y=5; parts[2].w=5; parts[2].h=2;
+        for(y=0;y<5;y++) for(x=0;x<2;x++) cells[y*7+x]=0;
+        for(y=5;y<7;y++) for(x=0;x<2;x++) cells[y*7+x]=1;
+        for(y=5;y<7;y++) for(x=2;x<7;x++) cells[y*7+x]=2;
+        assert(map_restore(parts,3,7,7,cells)); game_new_dungeon("Corner sight test");
+        assert(!game_corridor_visible(0,0) && !game_corridor_visible(5,5));
+        heroes[0].x=0; heroes[0].y=0; reveal_corridors();
+        assert(game_corridor_visible(0,4) && !game_corridor_visible(5,5));
+        assert(game_corridor_visible(1,6)); /* Seeing part of the corner reveals its whole tile. */
+        heroes[0].x=1; heroes[0].y=5; reveal_corridors();
+        assert(game_corridor_visible(5,5));
+        assert(capture(&snapshot)); assert(game_encode(&snapshot,&other,&other_size)); free(snapshot.cells);
+        again=game_decode(other,other_size); assert(again && again->visible[2]);
+        game_data_free(again); free(other);
+        /* A v12 save with just one explored square reveals its whole tile. */
+        game_fog()[2]=0;
+        heroes[0].x=heroes[0].y=-1;
+        assert(capture(&snapshot)); assert(game_encode(&snapshot,&other,&other_size)); free(snapshot.cells);
+        other=(unsigned char*)realloc(other,other_size+49); assert(other);
+        memset(other+other_size,0,49); other[other_size+5*7+5]=1;
+        other_size+=49; other[8]=12; version8_crc(other,other_size);
+        again=game_decode(other,other_size); assert(again && again->visible[2]);
+        game_data_free(again); free(other);
+    }
     /* A discarded/failed dungeon cannot replace the valid recovery file. */
     game_discard_dungeon(); assert(!map_ready && !capture(&snapshot));
     assert(!write_game(recovery_path,1));

@@ -204,7 +204,7 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d) || (!d->pack && !pack_fantasy())) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,11); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,13); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -298,7 +298,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version<1 || version>11) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version<1 || version>13) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -389,6 +389,17 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(version>=11) {
         d->monster_omit_pct=get32(&b); d->gold_bonus_pct=get32(&b);
         for(i=0;i<d->count && b.ok;i++) { n=get32(&b); if(n<0 || n>500) goto bad; d->room_gold_bonus_pct[i]=(unsigned short)n; }
+    }
+    if(version==12) {
+        size_t count=(size_t)d->width*d->height;
+        if(!b.ok || count>b.n-b.pos) goto bad;
+        /* The experimental v12 square mask becomes whole-tile discovery. */
+        for(i=0;i<d->width*d->height;i++) {
+            if(b.p[b.pos+i]>1) goto bad;
+            n=d->cells[i];
+            if(b.p[b.pos+i] && n>=0 && n<d->count && strchr("PELRTCOD",d->pieces[n].type)) d->visible[n]=1;
+        }
+        b.pos+=count;
     }
     for(i=0;i<d->hero_count;i++) {
         if(!d->heroes[i].melee.critical) d->heroes[i].melee.critical=12;

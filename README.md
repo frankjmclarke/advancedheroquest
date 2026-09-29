@@ -28,8 +28,9 @@ button for hit, damage and calculation. Apply the result, Cancel, or Undo the ex
 
 The combat panel stays beside the map. Select a hero or monster to see its wounds,
 remaining movement, normal attack allowance, and the next action to take. Use its
-**Move**, **Attack**, **Run**, **End phase**, and **Undo** buttons during guided turns.
-The toolbar above the map provides Select, Move, Attack, Undo, End phase, Party,
+**Run**, **End phase**, and **Undo** buttons during guided turns.
+Drag models to move them; select a model and click an enemy to attack.
+The toolbar above the map provides Undo, End phase, Party,
 and Player View. Right-click a hero or monster for actions specific to that
 token, including its profile and wounds. Right-click an empty square or press
 Esc to cancel a prepared map action.
@@ -307,7 +308,11 @@ runtime. Printed values, source variants and blank cells are preserved.
 Choose **Map → Player View (fog of war)** or press the **Player View** toolbar
 button after generating a dungeon. Use the same command again to return to the
 GM map without fog. The toolbar button stays pressed while Player View is
-active. The separate player window initially shows all corridors, stairs, and their doors.
+active. The player window starts with only the entrance stairs revealed. Place
+a hero there, or place one from the GM map, to discover corridor tiles in
+the hero's line of sight. Seeing any square reveals the entire tile and its
+adjoining doors. Walls, bends, and closed doors stop sight; revealing a tile
+does not automatically reveal its neighbours. Discovered tiles stay visible.
 Rooms stay blank until you click a visible doorway. That reveals the adjoining
 room, its map contents, and all its doors; it does not reveal further rooms.
 All doors includes secret doors adjoining a visible corridor or revealed room.
@@ -316,8 +321,8 @@ Click a revealed room to read its contents. The normal graphic map remains
 fully visible for the GM. Both maps support zoom and scrolling; **Fit to Window**
 uses the active map window. Reopening Player View preserves discoveries for the
 current map, including after Close All. Generating a new map resets discoveries.
-Saved games preserve them.
-Discovery state is kept only for the current application session.
+Saved games preserve them. Older saves retain the corridors they had already
+revealed.
 
 ### Colour
 

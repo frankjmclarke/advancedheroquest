@@ -22,17 +22,7 @@ static void panel_layout(void)
 }
 static const char *toolbar_tip(int id)
 {
-    int side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
-    int index=side==0?selected:selected_monster;
-    if((id==CPMOVE || id==CPATTACK) && side<0) return "Select a hero or monster on the map first.";
-    if(id==CPMOVE && side>=0 && !turn_can_move(side,index))
-        return turn_phase && turn_phase!=(side?2:1) && !gm_override?"This model acts in the other phase.":"No movement remains for this model.";
-    if(id==CPATTACK && side>=0 && turn_attack_reason(side,side?0:index,side?index:0))
-        return turn_attack_reason(side,side?0:index,side?index:0);
     switch(id) {
-    case CPSELECT: return "Select a hero or monster on the map; cancel a prepared move or attack.";
-    case CPMOVE: return "Choose an open destination for the selected model.";
-    case CPATTACK: return "Choose a target for the selected model.";
     case CPUNDO: return "Undo the most recent token or turn change.";
     case CPENDPHASE: return "Finish this side's phase when its models are done.";
     case CPTOOLPARTY: return "Open Heroes and Reserve.";
@@ -58,7 +48,7 @@ static LRESULT CALLBACK panel_frame_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
             if(tip->pszText && tip->cchTextMax>0) lstrcpynA(tip->pszText,toolbar_tip(tip->iItem),tip->cchTextMax);
             return 0;
         }
-        if(hdr->code==TTN_GETDISPINFOA && hdr->idFrom>=CPSELECT && hdr->idFrom<=CPTOOLVIEW) {
+        if(hdr->code==TTN_GETDISPINFOA && hdr->idFrom>=CPUNDO && hdr->idFrom<=CPTOOLVIEW) {
             NMTTDISPINFOA *tip=(NMTTDISPINFOA*)lp;
             tip->lpszText=(LPSTR)toolbar_tip((int)tip->hdr.idFrom); return 0;
         }
@@ -102,16 +92,11 @@ static void panel_update(void)
     else if(!turn_phase) strcpy(line,"Normal attack: free play");
     else sprintf(line,"Normal attack: %s%s",attack_used?"used":"available",gm_override?" (GM override)":"");
     SetDlgItemTextA(panel_hwnd,CPATTACKLEFT,line);
-    EnableWindow(GetDlgItem(panel_hwnd,CPMOVE),side>=0 && alive && turn_can_move(side,index));
-    EnableWindow(GetDlgItem(panel_hwnd,CPATTACK),side>=0 && alive && !turn_attack_reason(side,side?0:index,side?index:0));
     EnableWindow(GetDlgItem(panel_hwnd,CPRUN),turn_phase && side>=0 && alive && !turn_attack_reason(side,side?0:index,side?index:0));
     EnableWindow(GetDlgItem(panel_hwnd,CPENDPHASE),map_ready && turn_phase);
     EnableWindow(GetDlgItem(panel_hwnd,CPUNDO),map_ready && undo_valid);
     EnableWindow(GetDlgItem(panel_hwnd,CPGUIDED),map_ready);
     if(toolbar_hwnd) {
-        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPSELECT,MAKELONG(map_ready,0));
-        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPMOVE,MAKELONG(side>=0 && alive && turn_can_move(side,index),0));
-        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPATTACK,MAKELONG(side>=0 && alive && !turn_attack_reason(side,side?0:index,side?index:0),0));
         SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPUNDO,MAKELONG(map_ready && undo_valid,0));
         SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPENDPHASE,MAKELONG(map_ready && turn_phase,0));
         SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPTOOLPARTY,MAKELONG(map_ready,0));
@@ -129,7 +114,7 @@ static void panel_update(void)
     else if(turn_phase && attack_used && remaining<=0 && !gm_override) next="This model is done. Select another or end the phase.";
     else if(turn_phase && attack_used && !gm_override) next="Normal attack used. Move or end the phase.";
     else if(turn_phase && remaining<=0 && !gm_override) next="Movement used. Attack or end the phase.";
-    else next=turn_phase?"Choose Move, Attack, or Run. Then use the map.":"Choose Move or Attack. Then use the map.";
+    else next="Drag a model to move. Select it, then click an enemy to attack.";
     SetDlgItemTextA(panel_hwnd,CPNEXT,next);
     SetDlgItemTextA(panel_hwnd,CPNOTICE,panel_last_notice);
 }
@@ -143,29 +128,12 @@ static int combat_action(int id)
 {
     int side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
     int index=side==0?selected:selected_monster;
-    if(id==CPSELECT) {
-        move_mode=monster_move_mode=0; attack_monster=-1;
-        panel_note("Select a hero or monster on the map.");
-    }
-    else if(id==CPGUIDED) game_command(MGAMEGUIDED);
+    if(id==CPGUIDED) game_command(MGAMEGUIDED);
     else if(id==CPENDPHASE) game_command(MGAMETURN);
     else if(id==CPUNDO) game_command(MGAMEUNDO);
     else if(id==CPRUN && side>=0 && turn_phase &&
             !turn_attack_reason(side,side?0:index,side?index:0)) game_command(MGAMERUN);
-    else if(id==CPMOVE && side>=0) {
-        if(!(side?monsters.tokens[index].wounds>0 && monsters.tokens[index].x>=0:
-                  HERO_ACTIVE(&heroes[index]) && heroes[index].x>=0) || !turn_can_move(side,index)) return 1;
-        attack_monster=-1; move_mode=side?0:1; monster_move_mode=side?1:0;
-        panel_note(side?"Click an open square or drag the selected monster.":"Click a destination square or drag the selected hero.");
-    } else if(id==CPATTACK && side>=0) {
-        if(!(side?monsters.tokens[index].wounds>0 && monsters.tokens[index].x>=0:
-                  HERO_ACTIVE(&heroes[index]) && heroes[index].x>=0) ||
-           turn_attack_reason(side,side?0:index,side?index:0)) return 1;
-        monster_move_mode=0;
-        if(side) { attack_monster=index; move_mode=0; }
-        else { attack_monster=-1; move_mode=1; }
-        panel_note(side?"Click a hero on the map to attack.":"Click an enemy on the map to attack.");
-    } else if(id==CPTOOLPARTY) game_party();
+    else if(id==CPTOOLPARTY) game_party();
     else if(id==CPTOOLVIEW) game_toggle_view();
     else if(id==CPTOKENDETAILS && side>=0) {
         if(side) game_monsters(); else game_party();
@@ -185,9 +153,10 @@ static INT_PTR CALLBACK panel_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 }
 static void toolbar_create(void)
 {
-    static const int commands[]={CPSELECT,CPMOVE,CPATTACK,CPUNDO,CPENDPHASE,CPTOOLPARTY,CPTOOLVIEW};
-    static const char labels[]="Select\0Move\0Attack\0Undo\0End phase\0Party\0Player view\0\0";
-    INITCOMMONCONTROLSEX init; TBBUTTON buttons[7]; HBITMAP strip,mask; int i,base;
+    static const int commands[]={CPUNDO,CPENDPHASE,CPTOOLPARTY,CPTOOLVIEW};
+    static const int icons[]={3,4,5,6};
+    static const char labels[]="Undo\0End phase\0Party\0Player view\0\0";
+    INITCOMMONCONTROLSEX init; TBBUTTON buttons[4]; HBITMAP strip,mask; int i,base;
     init.dwSize=sizeof(init); init.dwICC=ICC_BAR_CLASSES;
     if(!InitCommonControlsEx(&init)) return;
     toolbar_hwnd=CreateWindowExA(0,TOOLBARCLASSNAMEA,"",WS_CHILD|WS_VISIBLE|TBSTYLE_FLAT|TBSTYLE_TOOLTIPS|CCS_NORESIZE|CCS_NODIVIDER,
@@ -208,18 +177,18 @@ static void toolbar_create(void)
     SendMessage(toolbar_hwnd,TB_SETMAXTEXTROWS,1,0);
     base=(int)SendMessageA(toolbar_hwnd,TB_ADDSTRINGA,0,(LPARAM)labels);
     memset(buttons,0,sizeof(buttons));
-    for(i=0;i<7;i++) {
-        buttons[i].iBitmap=toolbar_images?i:I_IMAGENONE; buttons[i].idCommand=commands[i];
+    for(i=0;i<4;i++) {
+        buttons[i].iBitmap=toolbar_images?icons[i]:I_IMAGENONE; buttons[i].idCommand=commands[i];
         buttons[i].fsState=TBSTATE_ENABLED; buttons[i].fsStyle=(commands[i]==CPTOOLVIEW?BTNS_CHECK:BTNS_BUTTON)|BTNS_SHOWTEXT;
         buttons[i].iString=base+i;
     }
-    SendMessage(toolbar_hwnd,TB_ADDBUTTONS,7,(LPARAM)buttons);
+    SendMessage(toolbar_hwnd,TB_ADDBUTTONS,4,(LPARAM)buttons);
     SendMessage(toolbar_hwnd,TB_SETBUTTONSIZE,0,MAKELONG(88,70));
     SendMessage(toolbar_hwnd,TB_AUTOSIZE,0,0);
 }
 static HMENU token_menu_build(int side,int index)
 {
-    HMENU menu; int alive,can_move_now,can_attack_now;
+    HMENU menu; int alive,can_attack_now;
     if(side==0) {
         if(index<0 || index>=hero_count) return NULL;
         alive=HERO_ACTIVE(&heroes[index]) && heroes[index].x>=0;
@@ -227,11 +196,8 @@ static HMENU token_menu_build(int side,int index)
         if(index<0 || index>=monsters.count) return NULL;
         alive=monsters.tokens[index].wounds>0 && monsters.tokens[index].x>=0;
     }
-    can_move_now=alive && turn_can_move(side,index);
     can_attack_now=alive && !turn_attack_reason(side,side?0:index,side?index:0);
     menu=CreatePopupMenu(); if(!menu) return NULL;
-    AppendMenuA(menu,MF_STRING|(can_move_now?0:MF_GRAYED),CPMOVE,"Move...");
-    AppendMenuA(menu,MF_STRING|(can_attack_now?0:MF_GRAYED),CPATTACK,"Attack...");
     AppendMenuA(menu,MF_STRING|(turn_phase && can_attack_now?0:MF_GRAYED),CPRUN,"Run (D12)");
     AppendMenuA(menu,MF_SEPARATOR,0,NULL);
     AppendMenuA(menu,MF_STRING,CPTOKENDETAILS,side?"Monster profile and wounds...":"Hero profile and wounds...");

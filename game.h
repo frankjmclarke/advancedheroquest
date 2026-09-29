@@ -92,6 +92,7 @@ void game_set_fog(const unsigned char *visible,int count);
 unsigned char *game_prepare_fog(const unsigned char *visible,int count,int capacity);
 void game_discard_prepared_fog(unsigned char *visible,int capacity);
 void game_adopt_fog(unsigned char *visible,int capacity);
+int game_corridor_visible(int x,int y);
 void game_redraw(void);
 int game_player_view(void);
 void game_toggle_view(void);
