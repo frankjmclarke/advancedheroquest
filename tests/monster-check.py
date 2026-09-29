@@ -1,6 +1,8 @@
 """Monster integration regression. Run in the x86 MSVC developer shell after building."""
 from pathlib import Path
 import ast
+import json
+import runpy
 import subprocess
 import tempfile
 
@@ -31,6 +33,7 @@ static void screenshot(HWND dialog,const char *path) {
 int main(int argc,char **argv) {
     int room=-1,i,j,x,y,n,oldx,oldy,dx=-1,dy=-1,capacity;
     PICE *p; HWND dialog; unsigned char *bytes,*bytes2; size_t size,size2; GAME_DATA d,*decoded;
+    char error[256];
     char *encounter[]={"#42","2 Goblins, 1 Orc (20 Gold Crowns)",NULL};
     char *overflow[]={"40 Goblins",NULL}; char *alternative[]={"1 Orc or 2 Goblins",NULL};
     char *unknown[]={"  2 Strange Beasts (20 Gold Crowns)",NULL};
@@ -118,14 +121,20 @@ int main(int argc,char **argv) {
     decoded=game_decode(bytes,size); assert(decoded && decoded->player_view==-1 && decoded->monsters.count==monsters.count);
     game_data_free(decoded); free(bytes);
     /* Real version-1 layout, with no monster extension, remains readable. */
-    memset(&monsters,0,sizeof(monsters)); assert(capture(&d)); assert(game_encode(&d,&bytes,&size)); free(d.cells);
+    memset(&monsters,0,sizeof(monsters)); assert(capture(&d));
+    d.heroes[0].kind=1; /* Valid fantasy class, absent from the one-hero pack. */
+    assert(game_encode(&d,&bytes,&size)); free(d.cells);
     size-=pack_extension(&d);
     size-=4*d.hero_count;
     for(i=0;i<d.hero_count;i++) size-=44+strlen(d.heroes[i].ranged.weapon);
     for(i=0;i<d.hero_count;i++) size-=56+strlen(d.heroes[i].melee.weapon);
     size-=12+4*MAX_PICE; bytes[8]=1; crc_fix(bytes,size);
     decoded=game_decode(bytes,size); assert(decoded && decoded->monsters.count==0 && decoded->monsters.dead_count==0);
-    game_data_free(decoded); free(bytes);
+    game_data_free(decoded);
+    assert(pack_select_campaign(argv[3],error));
+    assert(pack_current()->hero_count==1);
+    assert(!game_decode(bytes,size)); /* Reject before indexing heroes[1]. */
+    free(bytes);
     /* A 100% setting omits every ordinary model once and keeps its gold
        award fixed across repeated reveals and a save round trip. */
     game_new_dungeon("Difficulty test");
@@ -152,6 +161,11 @@ int main(int argc,char **argv) {
 '''
 with tempfile.TemporaryDirectory(prefix='hq-monster-test-') as temp:
     work = Path(temp)
+    one_hero = json.loads((ROOT / 'data/packs/fantasy.json').read_text(encoding='utf-8'))
+    one_hero['heroes'] = one_hero['heroes'][:1]
+    compile_pack = runpy.run_path(str(ROOT / 'tools/compile-packs.py'))['compile_pack']
+    (work / 'one-hero.hqp').write_bytes(compile_pack(one_hero))
+    (work / 'one-hero.tab').write_text(';character-pack one-hero.hqp\n',encoding='ascii')
     (work / 'check.c').write_text(HARNESS)
     exclude = {'main.obj', 'maindm.obj', 'winddm.obj', 'game.obj'}
     objects = [str(p) for p in (ROOT / 'obj/msvc').glob('*.obj') if p.name not in exclude]
@@ -159,4 +173,4 @@ with tempfile.TemporaryDirectory(prefix='hq-monster-test-') as temp:
                     '/I'+str(ROOT/'my_lib'), '/I'+str(ROOT/'my_lib/windows'), '/I'+str(ROOT/'rsh'),
                     'check.c', '/Fe:check.exe', *objects, str(ROOT/'obj/msvc/menu.res'), str(ROOT/'obj/msvc/grafic.res'),
                     'user32.lib', 'gdi32.lib', 'shell32.lib', 'comdlg32.lib', 'version.lib', 'winspool.lib', 'ole32.lib', 'advapi32.lib', 'comctl32.lib'], cwd=work, check=True)
-    subprocess.run([str(work/'check.exe'), str(ROOT/'tables'), str(ROOT/'obj/monster-preview.bmp')], cwd=work, check=True, timeout=60)
+    subprocess.run([str(work/'check.exe'), str(ROOT/'tables'), str(ROOT/'obj/monster-preview.bmp'),str(work/'one-hero.tab')], cwd=work, check=True, timeout=60)

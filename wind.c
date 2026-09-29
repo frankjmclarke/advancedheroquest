@@ -595,6 +595,7 @@ GLOBAL _VOID show_grafic(_UBYTE *name)
 typedef struct {
 	_UBYTE *ptr;
 	size_t size;
+	size_t allocation;
 	_WORD fontsize;
 	WINDOW_DEF **window;
 	size_t zeilen;
@@ -849,12 +850,14 @@ LOCAL _BOOL make_text(WINDTXT *buf)
 		for (i = 0; i < buf->zeilen; i++)
 		{
 			buf->tab[i] = ptr;
-			len = strlen(ptr);
-			if (tab_expand(&ptr, &len, tabstop))
-				SFREE(ptr);
+			ptr = next_line(ptr, end);
+			len = strlen(buf->tab[i]);
+			{
+				_UBYTE *expanded = buf->tab[i];
+				if (tab_expand(&expanded, &len, tabstop)) SFREE(expanded);
+			}
 			if (buf->spalten < len)
 				buf->spalten = len;
-			ptr = next_line(buf->tab[i], end);
 		}
 	}
 	return TRUE;
@@ -923,7 +926,7 @@ LOCAL _BOOL text_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
 		if (ptr->window != NULL)
 			*(ptr->window) = NULL;
 		if (ptr->ptr != NULL)
-			FREE(ptr->ptr, ptr->size);
+			FREE(ptr->ptr, ptr->allocation);
 		if (ptr->tab != NULL)
 			FREE(ptr->tab, ptr->zeilen * sizeof(_UBYTE *));
 		OFREE(ptr);
@@ -968,6 +971,7 @@ GLOBAL _VOID show_text(_UBYTE *name)
 		if (buf != NULL)
 		{
 			buf->size = sizeof(_UBYTE) * (Xsize + 3) * (Ysize + 2);
+			buf->allocation = buf->size;
 			if ((buf->ptr = M0ALLOC(buf->size, "show_txt: ptr")) == NULL)
 			{
 				OFREE(buf);
@@ -995,13 +999,14 @@ GLOBAL WINDOW_DEF *show_text_file(_UBYTE *filename)
 	
 	if (F_File_Size(filename, NO_FILE, &size) != GERR_OK)
 		return NULL;
-	if ((size_t) size != size)
+	if ((size_t) size != size || (size_t)size == (size_t)-1)
 		return NULL;
 	buf = NEW(WINDTXT, "show_text_file: windtxt");
 	if (buf != NULL)
 	{
 		buf->size = (size_t)size;
-		if ((buf->ptr = MALLOC(buf->size, "show_txt: ptr")) == NULL)
+		buf->allocation = buf->size + 1;
+		if ((buf->ptr = MALLOC(buf->size + 1, "show_txt: ptr")) == NULL)
 		{
 			OFREE(buf);
 			return NULL;
@@ -1009,11 +1014,12 @@ GLOBAL WINDOW_DEF *show_text_file(_UBYTE *filename)
 		fd = fopen(filename, "rb");
 		if (fd == NULL)
 		{
-			FREE(buf->ptr, buf->size);
+			FREE(buf->ptr, buf->allocation);
 			OFREE(buf);
 			return NULL;
 		}
 		buf->size = fread(buf->ptr, 1, buf->size, fd);
+		buf->ptr[buf->size] = '\0';
 		fclose(fd);
 		buf->fontsize = FONT_SIZE_NORMAL;
 		buf->window = NULL;
@@ -1129,7 +1135,7 @@ LOCAL _BOOL liste_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
 		if (ptr->window != NULL)
 			*(ptr->window) = NULL;
 		if (ptr->ptr != NULL)
-			FREE(ptr->ptr, ptr->size);
+			FREE(ptr->ptr, ptr->allocation);
 		if (ptr->tab != NULL)
 		{
 			size_t i; for (i = 0; i < ptr->zeilen; i++) free(ptr->tab[i]);

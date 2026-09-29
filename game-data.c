@@ -366,7 +366,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
         d->pack=pack_clone(pack_legacy_save()); if(!d->pack) goto bad;
         for(i=0;i<d->hero_count;i++) {
             HERO *h=&d->heroes[i]; const PACK_PROFILE *p;
-            if(h->kind<0 || h->kind>=HERO_CLASS_COUNT) goto bad;
+            if(h->kind<0 || h->kind>=d->pack->hero_count) goto bad;
             p=&d->pack->heroes[h->kind];
             strcpy(h->profile_id,p->id); strcpy(h->class_name,p->name); strcpy(h->class_rules,p->text);
         }

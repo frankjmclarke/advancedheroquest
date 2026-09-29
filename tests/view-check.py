@@ -179,10 +179,26 @@ static void party_placement_checks(void) {
     assert(!Grafik_Karte && game_player_view() && player_on_top());
     move_mode=0; open_party_action(IDOK); assert(!Grafik_Karte && player_on_top());
 }
+static void text_file_checks(void) {
+    char path[MAX_PATH],actual[80]; const char source[]="Alpha\tone\r\nlast";
+    WINDOW_DEF *window; WINDOW_PROC proc; FILE *file,*output; size_t n;
+    sprintf(path,"%s\\unterminated.txt",save_dir);
+    file=fopen(path,"wb"); assert(file); assert(fwrite(source,1,sizeof(source)-1,file)==sizeof(source)-1); fclose(file);
+    window=show_text_file(path); assert(window);
+    proc=Wind_Proc_Ptr(window); output=tmpfile(); assert(output);
+    assert(proc(WMY_OUT,window,output)); rewind(output);
+    n=fread(actual,1,sizeof(actual)-1,output); actual[n]=0;
+    assert(!strcmp(actual,"Alpha\tone\nlast\n"));
+    fclose(output); Wind_Close(window);
+    sprintf(path,"%s\\empty.txt",save_dir);
+    file=fopen(path,"wb"); assert(file); fclose(file);
+    window=show_text_file(path); assert(window); Wind_Close(window);
+}
 static void view_checks(void) {
     GAME_DATA *d; _LONG value=0; int i;
     assert(init_icons()); assert(mem_alloc(100,100,1000,4096)); heap_clear();
     read_profile(); settings();
+    text_file_checks();
     assert(SetCurrentDirectoryA(table_path)); assert(read_table("sonne2.tab",NULL));
     assert(do_menu(MGAMENEXT)); assert(Grafik_Karte && !game_player_view());
     assert(do_menu(MPLAYER)); assert(game_player_view() && player_on_top());
