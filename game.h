@@ -5,6 +5,15 @@
 #define HERO_LIMIT 16
 #define HERO_STATS 9
 #define HERO_CLASS_COUNT 9
+#define SPELL_LIMIT 64
+#define SPELL_BOOK_LIMIT 16
+#define SPELL_COMPONENT_LIMIT 32
+/* Slots refer to the immutable pack snapshot carried by the adventure. */
+typedef struct {
+    unsigned char books[SPELL_BOOK_LIMIT],known[SPELL_LIMIT];
+    unsigned short components[SPELL_COMPONENT_LIMIT];
+    int cast_used,move_locked,setup_pending,starting_allowance;
+} CASTER_STATE;
 /* Zero values mean not configured; presets use printed or labelled suggested rows. */
 /* reach: 1 normal (edge-adjacent), 2 long (also diagonal; long-reach death zone). */
 typedef struct { char weapon[40]; int dice, hit[12]; int critical, fumble, reach; } MELEE_PROFILE;
@@ -20,6 +29,7 @@ typedef struct {
     int fired; /* normal ranged attack used this turn */
     int moved,focus; /* focus: opposing roster index + 1, or zero */
     int move_spent,attacked,run_bonus; /* guided combat phase state */
+    CASTER_STATE caster;
 } HERO;
 #define HERO_ACTIVE(h) ((h)->condition==0 && (h)->wounds>0)
 #define HERO_KO(h) ((h)->condition==1)
@@ -35,6 +45,7 @@ typedef struct {
     RANGED_PROFILE ranged;
     int moved,focus; /* focus: opposing roster index + 1, or zero */
     int move_spent,attacked,run_bonus; /* guided combat phase state */
+    CASTER_STATE caster;
 } MONSTER;
 typedef struct {
     int count, dead_count;

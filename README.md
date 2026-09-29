@@ -45,6 +45,18 @@ Space Marines in Heroes & Reserve and places its aliens when rooms are revealed,
 using the same AHQ combat rules. See [Character packs](doc/character-packs.md)
 for adding another theme, campaign copying and save compatibility.
 
+Wizards can use **Spellbook & components...** in Heroes & Reserve, and **Cast
+spell...** from the combat panel or token context menu. Packs define spellbooks,
+spells and shared ingredients. Damage/healing are automated; other spell effects
+are explicitly resolved by the GM. Casting state and stock are saved and can
+be undone. See [Spellbooks and casting](doc/spellcasting.md).
+
+Wizards can use **Spellbook & components...** in Heroes & Reserve, and **Cast
+spell...** from the combat panel or token context menu. Packs define spellbooks,
+spells and shared ingredients. Damage/healing are automated; other spell effects
+are explicitly resolved by the GM. Casting state and stock are saved and can
+be undone. See [Spellbooks and casting](doc/spellcasting.md).
+
 Writing your own adventures: **[Guide to creating and editing table
 files](doc/TABLE-GUIDE.md)**.
 

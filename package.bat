@@ -70,6 +70,8 @@ copy /y "%ROOT%\doc\hero-sessions.md" "%STAGE%\HERO-SESSIONS.md" >nul
 if errorlevel 1 exit /b 1
 copy /y "%ROOT%\doc\hero-weapons.md" "%STAGE%\HERO-WEAPONS.md" >nul
 if errorlevel 1 exit /b 1
+copy /y "%ROOT%\doc\spellcasting.md" "%STAGE%\SPELLCASTING.md" >nul
+if errorlevel 1 exit /b 1
 if exist "%ROOT%\dist\README.txt" (
     copy /y "%ROOT%\dist\README.txt" "%STAGE%\" >nul
     if errorlevel 1 exit /b 1

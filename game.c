@@ -221,6 +221,7 @@ static int turn_move_remaining(int side,int index)
 }
 static int turn_can_move(int side,int index)
 {
+    if((side?monsters.tokens[index].caster.move_locked:heroes[index].caster.move_locked) && !gm_override) return 0;
     if(!turn_phase || gm_override) return 1;
     if(turn_phase!=(side?2:1)) return 0;
     if((side?monsters.tokens[index].x:heroes[index].x)<0) return 1; /* setup placement */
@@ -230,9 +231,9 @@ static void turn_reset_side(int side)
 {
     int i;
     if(side) for(i=0;i<monsters.count;i++) {
-        MONSTER *m=&monsters.tokens[i]; m->move_spent=m->attacked=m->run_bonus=m->moved=0;
+        MONSTER *m=&monsters.tokens[i]; m->move_spent=m->attacked=m->run_bonus=m->moved=0; m->caster.cast_used=m->caster.move_locked=0;
     } else for(i=0;i<hero_count;i++) {
-        HERO *h=&heroes[i]; h->move_spent=h->attacked=h->run_bonus=h->moved=h->fired=0;
+        HERO *h=&heroes[i]; h->move_spent=h->attacked=h->run_bonus=h->moved=h->fired=0; h->caster.cast_used=h->caster.move_locked=0;
     }
 }
 static int turn_run_apply(int side,int index,int roll)
@@ -472,7 +473,7 @@ void game_discard_dungeon(void)
     int i; monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; monster_move_mode=0; map_ready=0; dirty=0; selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
     memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct));
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; }
     turn_phase=gm_override=0; turn_menu_update(); panel_update();
     game_reset_fog();
 }
@@ -491,7 +492,7 @@ void game_new_dungeon(const char *title)
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; monster_move_mode=0;
     memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct));
     strncpy(session_title,title,sizeof(session_title)-1); session_title[sizeof(session_title)-1]=0;
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; }
     turn_phase=gm_override=0; turn_menu_update(); panel_update();
     selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
     game_changed();
@@ -505,7 +506,7 @@ void game_shutdown(void)
 static void reserve_party(void)
 {
     int i; if(!hero_count) return; remember();
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; }
     move_mode=0; game_changed();
 }
 /* Keep token locations on occupied map squares, with strictly one hero each. */
@@ -584,6 +585,7 @@ static void marker(HDC dc,int x,int y,int size,int kind,int chosen,int defeated)
 #include "ranged-rules.inc"
 #include "combat.inc"
 #include "ranged.inc"
+#include "spellcasting.inc"
 
 void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,int sy)
 {
@@ -803,6 +805,7 @@ static void party_fields(HWND hwnd)
     EnableWindow(GetDlgItem(hwnd,GPCOMBAT),valid);
     EnableWindow(GetDlgItem(hwnd,GPRANGED),valid);
     EnableWindow(GetDlgItem(hwnd,GPNAME),valid); EnableWindow(GetDlgItem(hwnd,GPWOUNDS),valid); EnableWindow(GetDlgItem(hwnd,GPFATE),valid);
+    EnableWindow(GetDlgItem(hwnd,GPSPELLBOOK),valid && pack_current() && pack_current()->book_count);
     EnableWindow(GetDlgItem(hwnd,GPMOVE),valid && HERO_ACTIVE(h)); EnableWindow(GetDlgItem(hwnd,GPRESERVE),valid); EnableWindow(GetDlgItem(hwnd,GPDELETE),valid); EnableWindow(GetDlgItem(hwnd,GPAPPLY),valid);
     if(h && HERO_DEAD(h)) strcpy(status,"Dead - model removed from the map.");
     else if(h && HERO_KO(h)) strcpy(status,"KO'd at zero Wounds. Another wound is fatal.");
@@ -857,6 +860,10 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         n=(int)SendDlgItemMessage(hwnd,GPLIST,LB_GETCURSEL,0,0);
         if(!party_apply(hwnd)) { SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,party_selection,0); return TRUE; }
         party_selection=n; SendDlgItemMessage(hwnd,GPLIST,LB_SETCURSEL,n,0); party_fields(hwnd); return TRUE;
+    }
+    if(id==GPSPELLBOOK && party_selection>=0) {
+        if(!party_apply(hwnd)) return TRUE;
+        spellbook_open(hwnd,0,party_selection); party_fields(hwnd); return TRUE;
     }
     if(id==GPRANGED && party_selection>=0) {
         HERO next; if(!party_apply(hwnd)) return TRUE; next=heroes[party_selection];

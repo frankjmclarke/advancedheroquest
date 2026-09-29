@@ -24,13 +24,13 @@ static void string(PACK_READER *r,char *s,size_t cap)
 }
 void pack_free(CHARACTER_PACK *p)
 {
-    if(p) { free(p->heroes); free(p->monsters); free(p->bytes); free(p); }
+    if(p) { free(p->heroes); free(p->monsters); free(p->components); free(p->spells); free(p->books); free(p->bytes); free(p); }
 }
 CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
 {
-    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total,format2,format3; PACK_PROFILE *q;
+    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total,format2,format3,format4; PACK_PROFILE *q;
     if(!bytes || size<24 || size>PACK_BYTES_LIMIT) return NULL;
-    format3=!memcmp(bytes,"HQPACK3\n",8); format2=format3 || !memcmp(bytes,"HQPACK2\n",8);
+    format4=!memcmp(bytes,"HQPACK4\n",8); format3=format4 || !memcmp(bytes,"HQPACK3\n",8); format2=format3 || !memcmp(bytes,"HQPACK2\n",8);
     if(!format2 && memcmp(bytes,"HQPACK1\n",8)) return NULL;
     r.p=bytes; r.size=size; r.pos=8; r.ok=1;
     p=(CHARACTER_PACK*)calloc(1,sizeof(*p)); if(!p) return NULL;
@@ -71,6 +71,53 @@ CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
             if(!strcmp(q->id,prior->id)) goto bad;
         }
     }
+    if(format4 && r.ok) {
+        p->magic_offset=r.pos;
+        p->component_count=number(&r,SPELL_COMPONENT_LIMIT); p->spell_count=number(&r,SPELL_LIMIT); p->book_count=number(&r,SPELL_BOOK_LIMIT);
+        if(!r.ok) goto bad;
+        p->components=(PACK_COMPONENT*)calloc(p->component_count+1,sizeof(PACK_COMPONENT));
+        p->spells=(PACK_SPELL*)calloc(p->spell_count+1,sizeof(PACK_SPELL));
+        p->books=(PACK_SPELLBOOK*)calloc(p->book_count+1,sizeof(PACK_SPELLBOOK));
+        if(!p->components || !p->spells || !p->books) goto bad;
+        for(i=0;i<p->component_count;i++) {
+            string(&r,p->components[i].id,64); string(&r,p->components[i].name,64); p->components[i].price=number(&r,100000);
+        }
+        for(i=0;i<p->spell_count;i++) {
+            PACK_SPELL *s=&p->spells[i]; string(&r,s->id,64); string(&r,s->name,64); string(&r,s->text,sizeof(s->text));
+            s->effect=number(&r,2); s->target=number(&r,3); s->range=number(&r,480); s->dice=number(&r,99);
+            s->test=number(&r,1); s->failed_dice=number(&r,99); s->stationary=number(&r,1); s->cost=number(&r,100000);
+            k=0; for(j=0;j<p->component_count;j++) { s->components[j]=(unsigned short)number(&r,9999); k+=s->components[j]; }
+            if(k>=2 && !s->stationary) goto bad;
+            if((s->effect==SPELL_DAMAGE && (!s->dice || (s->target!=1 && s->target!=2))) || (s->effect==SPELL_HEAL && (s->target!=3 || s->test))) goto bad;
+        }
+        for(i=0;i<p->book_count;i++) {
+            PACK_SPELLBOOK *book=&p->books[i]; string(&r,book->id,64); string(&r,book->name,64);
+            for(j=0;j<p->spell_count;j++) book->spells[j]=(unsigned char)number(&r,1);
+            for(j=0;j<p->spell_count;j++) { book->starting[j]=(unsigned char)number(&r,1); if(book->starting[j] && !book->spells[j]) goto bad; }
+        }
+        /* One namespace for profiles, spells, books and components. */
+        for(i=0;i<total+p->component_count+p->spell_count+p->book_count;i++) {
+            const char *id=i<total?(i<p->hero_count?p->heroes[i].id:p->monsters[i-p->hero_count].id):
+                i<total+p->component_count?p->components[i-total].id:
+                i<total+p->component_count+p->spell_count?p->spells[i-total-p->component_count].id:p->books[i-total-p->component_count-p->spell_count].id;
+            const char *name=i<total?"profile":i<total+p->component_count?p->components[i-total].name:
+                i<total+p->component_count+p->spell_count?p->spells[i-total-p->component_count].name:p->books[i-total-p->component_count-p->spell_count].name;
+            if(!*name || strncmp(id,p->id,strlen(p->id)) || id[strlen(p->id)]!=':') goto bad;
+            for(k=0;k<i;k++) {
+                const char *prior=k<total?(k<p->hero_count?p->heroes[k].id:p->monsters[k-p->hero_count].id):
+                    k<total+p->component_count?p->components[k-total].id:
+                    k<total+p->component_count+p->spell_count?p->spells[k-total-p->component_count].id:p->books[k-total-p->component_count-p->spell_count].id;
+                if(!strcmp(id,prior)) goto bad;
+            }
+        }
+        p->profile_magic_offset=r.pos;
+        for(i=0;i<total;i++) {
+            int member=0; q=i<p->hero_count?&p->heroes[i]:&p->monsters[i-p->hero_count];
+            for(j=0;j<p->book_count;j++) { q->books[j]=(unsigned char)number(&r,1); member|=q->books[j]; }
+            q->starting_components=number(&r,9999); if(q->starting_components && !member) goto bad;
+            for(j=0;j<p->component_count;j++) { q->components[j]=(unsigned short)number(&r,9999); if(q->components[j] && !member) goto bad; }
+        }
+    }
     if(!r.ok || r.pos!=r.size) goto bad;
     p->bytes=(unsigned char*)malloc(size); if(!p->bytes) goto bad;
     memcpy(p->bytes,bytes,size); p->size=size; return p;
@@ -82,6 +129,63 @@ const CHARACTER_PACK *pack_fantasy(void)
     return fantasy;
 }
 const CHARACTER_PACK *pack_current(void) { return active_pack?active_pack:pack_fantasy(); }
+typedef struct { unsigned char *bytes; size_t size,pos; int ok; } PACK_WRITER;
+static void pack_write_number(PACK_WRITER *w,int value)
+{
+    int i; if(!w->ok || w->size-w->pos<4) { w->ok=0; return; }
+    for(i=0;i<4;i++) w->bytes[w->pos++]=(unsigned char)((unsigned int)value>>(8*i));
+}
+static void pack_write_string(PACK_WRITER *w,const char *text)
+{
+    size_t n=strlen(text); pack_write_number(w,(int)n);
+    if(!w->ok || n>w->size-w->pos) { w->ok=0; return; }
+    memcpy(w->bytes+w->pos,text,n); w->pos+=n;
+}
+static CHARACTER_PACK *pack_upgrade_profile_layout(const CHARACTER_PACK *old)
+{
+    PACK_WRITER w; CHARACTER_PACK *next; int i,j,total=old->hero_count+old->monster_count;
+    w.size=old->size+20*total; if(w.size>PACK_BYTES_LIMIT) return NULL;
+    w.bytes=(unsigned char*)malloc(w.size); if(!w.bytes) return NULL; w.pos=8; w.ok=1; memcpy(w.bytes,"HQPACK3\n",8);
+    pack_write_string(&w,old->id); pack_write_string(&w,old->name); pack_write_string(&w,old->nonmonsters);
+    pack_write_number(&w,old->legacy_references); pack_write_number(&w,old->hero_count); pack_write_number(&w,old->monster_count);
+    for(i=0;i<total;i++) {
+        const PACK_PROFILE *q=i<old->hero_count?&old->heroes[i]:&old->monsters[i-old->hero_count];
+        pack_write_string(&w,q->id); pack_write_string(&w,q->name); pack_write_string(&w,q->aliases); pack_write_string(&w,q->text);
+        for(j=0;j<HERO_STATS;j++) pack_write_number(&w,q->stats[j]);
+        pack_write_number(&w,q->kind); pack_write_number(&w,q->fate); pack_write_number(&w,q->unique);
+        pack_write_string(&w,q->melee.weapon); pack_write_number(&w,q->melee.dice); for(j=0;j<12;j++) pack_write_number(&w,q->melee.hit[j]);
+        pack_write_number(&w,q->melee.critical); pack_write_number(&w,q->melee.fumble); pack_write_number(&w,q->melee.reach?q->melee.reach:1);
+        pack_write_string(&w,q->ranged.weapon); pack_write_number(&w,q->ranged.kind); pack_write_number(&w,q->ranged.range); pack_write_number(&w,q->ranged.dice);
+        for(j=0;j<5;j++) pack_write_number(&w,q->ranged.hit[j]); pack_write_number(&w,q->ranged.critical); pack_write_number(&w,q->ranged.fumble);
+    }
+    next=w.ok?pack_decode(w.bytes,w.pos):NULL; free(w.bytes); return next;
+}
+/* Add the current spell catalogue to pre-magic fantasy snapshots, preserving
+ * every saved hero/monster definition. No ingredient stock is reconstructed. */
+CHARACTER_PACK *pack_upgrade_magic(const CHARACTER_PACK *old)
+{
+    const CHARACTER_PACK *f=pack_fantasy(); CHARACTER_PACK *next; unsigned char *bytes; size_t defs,stride,size,pos; int i,j,k;
+    if(!old || strcmp(old->id,"fantasy") || old->magic_offset || !f) return pack_clone(old);
+    if(memcmp(old->bytes,"HQPACK3\n",8)) {
+        CHARACTER_PACK *layout=pack_upgrade_profile_layout(old); if(!layout) return NULL;
+        next=pack_upgrade_magic(layout); pack_free(layout); return next;
+    }
+    defs=f->profile_magic_offset-f->magic_offset; stride=4*(f->book_count+1+f->component_count);
+    size=old->size+defs+stride*(old->hero_count+old->monster_count); if(size>PACK_BYTES_LIMIT) return NULL;
+    bytes=(unsigned char*)calloc(size,1); if(!bytes) return NULL;
+    memcpy(bytes,old->bytes,old->size); memcpy(bytes,"HQPACK4\n",8);
+    memcpy(bytes+old->size,f->bytes+f->magic_offset,defs); pos=old->size+defs;
+    for(i=0;i<old->hero_count+old->monster_count;i++,pos+=stride) {
+        const char *id=i<old->hero_count?old->heroes[i].id:old->monsters[i-old->hero_count].id;
+        for(j=0;j<f->hero_count+f->monster_count;j++) {
+            const char *match=j<f->hero_count?f->heroes[j].id:f->monsters[j-f->hero_count].id;
+            if(!strcmp(id,match)) { memcpy(bytes+pos,f->bytes+f->profile_magic_offset+j*stride,stride); break; }
+        }
+        /* Legacy monsters have unknown remaining stocks. */
+        if(i>=old->hero_count) for(k=f->book_count;k<f->book_count+1+f->component_count;k++) memset(bytes+pos+4*k,0,4);
+    }
+    next=pack_decode(bytes,size); free(bytes); return next;
+}
 const CHARACTER_PACK *pack_legacy_save(void) { return selected_pack?selected_pack:pack_fantasy(); }
 CHARACTER_PACK *pack_clone(const CHARACTER_PACK *p) { return p?pack_decode(p->bytes,p->size):NULL; }
 void pack_adopt(CHARACTER_PACK *p) { pack_free(active_pack); active_pack=p; }
@@ -204,6 +308,31 @@ void pack_hero(HERO *h,const PACK_PROFILE *p,int number)
     strcpy(h->profile_id,p->id); strcpy(h->class_name,p->name); strcpy(h->class_rules,p->text);
     memcpy(h->stats,p->stats,sizeof(h->stats)); h->melee=p->melee; h->ranged=p->ranged;
     h->wounds=h->stats[7]; h->fate=p->fate; h->x=h->y=-1;
+    pack_caster_defaults(&h->caster,p,pack_current());
+}
+void pack_caster_defaults(CASTER_STATE *s,const PACK_PROFILE *q,const CHARACTER_PACK *p)
+{
+    int i,j; memset(s,0,sizeof(*s)); if(!p || !q) return;
+    for(i=0;i<p->book_count;i++) if(q->books[i]) {
+        s->books[i]=1; for(j=0;j<p->spell_count;j++) if(p->books[i].starting[j]) s->known[j]=1;
+    }
+    memcpy(s->components,q->components,sizeof(s->components));
+    s->starting_allowance=q->starting_components; s->setup_pending=q->starting_components>0;
+}
+int pack_caster_valid(const CASTER_STATE *s,const CHARACTER_PACK *p)
+{
+    int i,j,member=0;
+    if(!p || s->cast_used<0 || s->cast_used>1 || s->move_locked<0 || s->move_locked>1 ||
+       s->setup_pending<0 || s->setup_pending>2 || s->starting_allowance<0 || s->starting_allowance>9999 ||
+       (s->move_locked && !s->cast_used) || (s->setup_pending && !s->starting_allowance)) return 0;
+    for(i=0;i<SPELL_BOOK_LIMIT;i++) { if(s->books[i]>1 || (i>=p->book_count && s->books[i])) return 0; member|=s->books[i]; }
+    for(i=0;i<SPELL_LIMIT;i++) if(s->known[i]) {
+        if(s->known[i]>1 || i>=p->spell_count) return 0;
+        for(j=0;j<p->book_count;j++) if(s->books[j] && p->books[j].spells[i]) break;
+        if(j==p->book_count) return 0;
+    }
+    for(i=0;i<SPELL_COMPONENT_LIMIT;i++) if(s->components[i]>9999 || (s->components[i] && (i>=p->component_count || !member))) return 0;
+    return member || (!s->cast_used && !s->move_locked && !s->setup_pending && !s->starting_allowance);
 }
 void pack_shutdown(void)
 {

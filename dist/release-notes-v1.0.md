@@ -8,11 +8,37 @@ Press a couple of keys and it rolls you a whole dungeon — rooms, corridors, do
 
 Written by Jürgen Albuschies in 1999. This version runs on today's Windows, in English, in colour, and fills the screen.
 
+## September 29 update: corridor discovery and simpler combat controls
+
+Corridors now start hidden in Player View. Placing or moving a hero reveals
+corridor tiles in that hero's line of sight. Seeing one square reveals the
+whole physical tile; adjoining tiles remain hidden until seen. Sight respects
+walls, closed doors and corridor bends. Movement discovers tiles along the
+route, and Undo restores the previous discovery state. Saves retain discoveries,
+including compatibility with older saves.
+
+The toolbar now provides large icons for **Undo**, **End phase**, **Party** and
+**Player View**. Player View toggles fog of war. Right-click a token for its
+available actions. The redundant Select, Move and Attack buttons have been
+removed: drag a model to move it, or select it and click an enemy to attack.
+The duplicate Party menu entry has also been corrected.
+
+Adventure difficulty can reduce monster appearances and increase encounter
+gold rewards. Easy grants 25% more gold; adjusted rewards appear in room
+contents. Weapon profiles support diagonal melee attacks where permitted,
+including across connected room and corridor boundaries. Hero knockout and
+death are distinguished, and Heroes & Reserve supports deleting characters.
+
+This build also fixes gold parsing overflow and allocation-failure handling
+for character packs and saved fog state. Native combat, fog, save migration
+and corridor-discovery checks passed; the Windows executables, portable ZIP
+and installer were rebuilt from main at commit `9041a4b`.
+
 ## September 27 update: guided turns and combat panel
 
 A combat panel now stays beside the map. Select a hero or monster to see its
 wounds, remaining movement, normal attack allowance, and what to do next.
-**Move**, **Attack**, **Run**, **End phase**, and **Undo** are available there,
+**Run**, **End phase**, and **Undo** are available there,
 along with a control to start or leave guided turns. The panel reports the
 latest movement, attack, run, or phase change.
 
@@ -113,7 +139,7 @@ zoom level and after scrolling.
 Choose **Map → Player View (fog of war)** or press **Alt+W** to open or focus
 the player map.
 
-- All corridors, stairs and their doors are visible initially; rooms are hidden.
+- The entrance is visible initially. Corridor tiles are revealed by hero line of sight; rooms stay hidden until revealed.
 - Click a visible door to reveal the adjoining room, its map contents and all
   its doors. Further rooms stay hidden until their doors are clicked.
 - All doors includes secret doors adjoining a visible corridor or revealed room.

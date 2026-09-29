@@ -181,7 +181,7 @@
         4,
         0
       ],
-      "text": "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Class abilities are handled manually during play.",
+      "text": "Editable starting suggestions for this hero type. Use your character-generation and equipment rules to adjust the profile. Starts with the first four Bright spells. Open Spellbook & components to allocate four starting components, then Cast spell to use magic. Damage and healing are automated; other effects are explicitly resolved by the GM.",
       "melee": {
         "weapon": "Dagger (Magnus / Telor)",
         "dice": 1,
@@ -217,6 +217,12 @@
         ],
         "critical": 12,
         "fumble": 1
+      },
+      "caster": {
+        "books": [
+          "fantasy:book:bright"
+        ],
+        "starting_components": 4
       }
     },
     {
@@ -1501,6 +1507,16 @@
         ],
         "critical": 12,
         "fumble": 1
+      },
+      "caster": {
+        "books": [
+          "fantasy:book:dark"
+        ],
+        "components": {
+          "fantasy:component:swamp-gas": 1,
+          "fantasy:component:daemon-statue": 1,
+          "fantasy:component:warpstone": 2
+        }
       }
     },
     {
@@ -3355,6 +3371,16 @@
         ],
         "critical": 12,
         "fumble": 1
+      },
+      "caster": {
+        "books": [
+          "fantasy:book:dark"
+        ],
+        "components": {
+          "fantasy:component:swamp-gas": 1,
+          "fantasy:component:daemon-statue": 1,
+          "fantasy:component:warpstone": 2
+        }
       }
     },
     {
@@ -4090,6 +4116,259 @@
         "critical": 12,
         "fumble": 1
       }
+    }
+  ],
+  "components": [
+    {
+      "id": "fantasy:component:red-dragon-dust",
+      "name": "Red Dragon Dust",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:silver-key",
+      "name": "Silver Key",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:fire-dust",
+      "name": "Fire Dust",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:phoenix-feather",
+      "name": "Phoenix Feather",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:dragon-tooth",
+      "name": "Dragon Tooth",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:swamp-gas",
+      "name": "Vial of Swamp Gas",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:warpstone",
+      "name": "Pinch of Warpstone",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:daemon-statue",
+      "name": "Silver Daemon Statue",
+      "price": 25
+    }
+  ],
+  "spells": [
+    {
+      "id": "fantasy:spell:dragon-armour",
+      "name": "Dragon Armour",
+      "text": "Any model in the caster's death zone gains +1 Toughness until the next exploration turn. GM resolves and tracks this temporary effect.",
+      "components": {
+        "fantasy:component:red-dragon-dust": 1
+      },
+      "effect": "manual",
+      "target": "manual"
+    },
+    {
+      "id": "fantasy:spell:open-window",
+      "name": "Open Window",
+      "text": "Spy on an unexplored area behind a door or beyond a junction without alerting its monsters. Add +3 to the Leader's surprise roll on entering. GM resolves the discovery; this cast does not reveal rooms or spawn monsters automatically.",
+      "components": {
+        "fantasy:component:silver-key": 1
+      },
+      "effect": "manual",
+      "target": "manual"
+    },
+    {
+      "id": "fantasy:spell:flames-of-death",
+      "name": "Flames of Death",
+      "text": "Place the physical fireball template within 12 squares and line of sight. Select EVERY model covered, including friends. All are hit automatically; roll 5 damage dice against each model's Toughness. Template coverage is selected by the GM.",
+      "components": {
+        "fantasy:component:fire-dust": 1
+      },
+      "effect": "damage",
+      "target": "template",
+      "range": 12,
+      "dice": 5
+    },
+    {
+      "id": "fantasy:spell:flames-of-phoenix",
+      "name": "Flames of the Phoenix",
+      "text": "Restore all lost Wounds of one living model, including a knocked-out model or the caster. The target must be the caster or in the caster's death zone. No other model may be in that zone. This spell does not resurrect the dead.",
+      "components": {
+        "fantasy:component:phoenix-feather": 1
+      },
+      "effect": "heal",
+      "target": "healing"
+    },
+    {
+      "id": "fantasy:spell:bright-key",
+      "name": "The Bright Key",
+      "text": "Place a door in any wall of the caster's section. If opened onto unexplored dungeon, roll D12: 1-4 is solid rock; otherwise generate normally. GM resolves the door and generation.",
+      "components": {
+        "fantasy:component:silver-key": 1
+      },
+      "effect": "manual",
+      "target": "manual",
+      "learning_cost": 250
+    },
+    {
+      "id": "fantasy:spell:flaming-hand",
+      "name": "Flaming Hand of Destruction",
+      "text": "In following combat turns, a successful melee hit inflicts D12 Wounds instead of conventional damage dice. Expires at the beginning of the next exploration turn. GM resolves and tracks this effect.",
+      "components": {
+        "fantasy:component:red-dragon-dust": 1
+      },
+      "effect": "manual",
+      "target": "manual",
+      "learning_cost": 175
+    },
+    {
+      "id": "fantasy:spell:flight",
+      "name": "Flight",
+      "text": "Select a model in whole or partial line of sight before it has moved. It runs in a direction chosen by the caster. GM resolves the target and forced movement.",
+      "components": {
+        "fantasy:component:red-dragon-dust": 1
+      },
+      "effect": "manual",
+      "target": "manual",
+      "learning_cost": 100
+    },
+    {
+      "id": "fantasy:spell:swift-wind",
+      "name": "Swift Wind",
+      "text": "Roll D12 and halve, rounding up. That many characters may move up to 18 squares in exploration, or double Speed in combat, for one turn. GM resolves the roll, recipients and movement.",
+      "components": {
+        "fantasy:component:fire-dust": 1
+      },
+      "effect": "manual",
+      "target": "manual",
+      "learning_cost": 150
+    },
+    {
+      "id": "fantasy:spell:power-of-phoenix",
+      "name": "Power of the Phoenix",
+      "text": "Only on the turn after death: an Intelligence test resurrects the character at full strength; failure sends the soul into oblivion. GM verifies timing and resolves resurrection. Fate may convert the test to success.",
+      "components": {
+        "fantasy:component:phoenix-feather": 1,
+        "fantasy:component:dragon-tooth": 1
+      },
+      "effect": "manual",
+      "target": "manual",
+      "intelligence_test": 1,
+      "learning_cost": 200
+    },
+    {
+      "id": "fantasy:spell:still-air",
+      "name": "Still Air",
+      "text": "For one turn, no monster in the chosen dungeon section may move or attack. The caster must have line of sight to the section. GM resolves and tracks the restriction.",
+      "components": {
+        "fantasy:component:phoenix-feather": 1
+      },
+      "effect": "manual",
+      "target": "manual",
+      "learning_cost": 150
+    },
+    {
+      "id": "fantasy:spell:inferno",
+      "name": "Inferno of Doom",
+      "text": "Place the physical fireball template within 12 squares and line of sight. Select EVERY model covered, including friends. Automatic hits: 7 damage dice each on a successful Intelligence test, 5 on failure. Fate may convert failure to success.",
+      "components": {
+        "fantasy:component:fire-dust": 1,
+        "fantasy:component:dragon-tooth": 1
+      },
+      "effect": "damage",
+      "target": "template",
+      "range": 12,
+      "dice": 7,
+      "failed_dice": 5,
+      "intelligence_test": 1,
+      "learning_cost": 200
+    },
+    {
+      "id": "fantasy:spell:courage",
+      "name": "Courage",
+      "text": "The caster or a model in their death zone has Bravery 12 until the beginning of the next exploration turn. GM resolves and tracks this effect.",
+      "components": {
+        "fantasy:component:silver-key": 1
+      },
+      "effect": "manual",
+      "target": "manual",
+      "learning_cost": 100
+    },
+    {
+      "id": "fantasy:spell:choke",
+      "name": "Choke",
+      "text": "A target in line of sight may move only one square per turn for 3 turns, then dies unless the caster was killed meanwhile. GM resolves targeting and tracks timing.",
+      "components": {
+        "fantasy:component:swamp-gas": 1
+      },
+      "effect": "manual",
+      "target": "manual"
+    },
+    {
+      "id": "fantasy:spell:fireball",
+      "name": "Fireball",
+      "text": "Place the physical fireball template within 12 squares and line of sight. Select EVERY model wholly or partly covered, including friends. All are hit automatically; roll 5 damage dice each.",
+      "components": {
+        "fantasy:component:warpstone": 1
+      },
+      "effect": "damage",
+      "target": "template",
+      "range": 12,
+      "dice": 5
+    },
+    {
+      "id": "fantasy:spell:flaming-skull",
+      "name": "Flaming Skull of Terror",
+      "text": "The caster becomes fearsome until play returns to exploration. GM resolves and tracks this effect.",
+      "components": {
+        "fantasy:component:daemon-statue": 1
+      },
+      "effect": "manual",
+      "target": "manual"
+    }
+  ],
+  "spellbooks": [
+    {
+      "id": "fantasy:book:bright",
+      "name": "Bright Wizard's Spellbook",
+      "spells": [
+        "fantasy:spell:dragon-armour",
+        "fantasy:spell:open-window",
+        "fantasy:spell:flames-of-death",
+        "fantasy:spell:flames-of-phoenix",
+        "fantasy:spell:bright-key",
+        "fantasy:spell:flaming-hand",
+        "fantasy:spell:flight",
+        "fantasy:spell:swift-wind",
+        "fantasy:spell:power-of-phoenix",
+        "fantasy:spell:still-air",
+        "fantasy:spell:inferno",
+        "fantasy:spell:courage"
+      ],
+      "starting_spells": [
+        "fantasy:spell:dragon-armour",
+        "fantasy:spell:open-window",
+        "fantasy:spell:flames-of-death",
+        "fantasy:spell:flames-of-phoenix"
+      ]
+    },
+    {
+      "id": "fantasy:book:dark",
+      "name": "Skaven Dark Magic",
+      "spells": [
+        "fantasy:spell:choke",
+        "fantasy:spell:fireball",
+        "fantasy:spell:flaming-skull"
+      ],
+      "starting_spells": [
+        "fantasy:spell:choke",
+        "fantasy:spell:fireball",
+        "fantasy:spell:flaming-skull"
+      ]
     }
   ]
 }

@@ -87,7 +87,8 @@ These remain suggestions: adjust the stats for a rolled character or another rac
 
 **Class rules** describes the selected hero's abilities and restrictions,
 including healing, trap skills, attack rerolls, optional berserker adjustments,
-and magic. Abilities are applied manually. There are no new resource counters;
+and magic. Most class abilities are applied manually. Wizards now have separate
+spellbooks and component stock; see [Spellcasting](spellcasting.md).
 Fate is not a counter for remaining healing spells or rerolls. To distinguish a
 berserker, include that in the hero's name and edit the relevant stats.
 

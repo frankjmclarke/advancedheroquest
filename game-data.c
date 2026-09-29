@@ -40,7 +40,7 @@ static int melee_blank(const MELEE_PROFILE *p)
 void hero_defaults(HERO *h,int kind,int number)
 {
     const CHARACTER_PACK *p=pack_fantasy();
-    if(p && kind>=0 && kind<p->hero_count) pack_hero(h,&p->heroes[kind],number);
+    if(p && kind>=0 && kind<p->hero_count) { pack_hero(h,&p->heroes[kind],number); pack_caster_defaults(&h->caster,&p->heroes[kind],p); }
     else { memset(h,0,sizeof(*h)); h->x=h->y=-1; }
 }
 const char *monster_identity(const MONSTER *m) { return m->character_id[0]?m->character_id:m->name; }
@@ -90,6 +90,7 @@ static int valid_data(const GAME_DATA *d)
     }
     for(i=0;i<d->monsters.count;i++) {
         const MONSTER *m=&d->monsters.tokens[i]; int cell;
+        if(!pack_caster_valid(&m->caster,d->pack?d->pack:pack_fantasy())) return 0;
         if(!memchr(m->profile_id,0,sizeof(m->profile_id)) || !memchr(m->character_id,0,sizeof(m->character_id))) return 0;
         if(!valid_ranged(&m->ranged,m->moved,m->focus,d->hero_count) || !valid_melee(&m->melee) || !memchr(m->name,0,64) || !m->name[0] || m->room<0 || m->room>=d->count ||
            m->unique<0 || m->unique>1 || m->wounds<0 || m->wounds>m->stats[7] || m->stats[7]<1) return 0;
@@ -124,6 +125,7 @@ static int valid_data(const GAME_DATA *d)
     }
     for(i=0;i<d->hero_count;i++) {
         const HERO *h=&d->heroes[i];
+        if(!pack_caster_valid(&h->caster,d->pack?d->pack:pack_fantasy())) return 0;
         if(!memchr(h->profile_id,0,sizeof(h->profile_id)) || !memchr(h->class_name,0,sizeof(h->class_name)) || !memchr(h->class_rules,0,sizeof(h->class_rules))) return 0;
         if(h->fired<0 || h->fired>1 || h->condition<0 || h->condition>2 || !valid_ranged(&h->ranged,h->moved,h->focus,d->monsters.count) || !valid_melee(&h->melee) || !memchr(h->name,0,sizeof(h->name)) || !h->name[0] || h->kind<0 || h->kind>=HERO_CLASS_COUNT || h->wounds<0 || h->wounds>h->stats[7] || h->fate<0 || h->fate>99) return 0;
         if(h->move_spent<0 || h->move_spent>1000000 || h->attacked<0 || h->attacked>1 || h->run_bonus<0 || h->run_bonus>12) return 0;
@@ -200,11 +202,27 @@ static void get_ranged(BYTES *b,RANGED_PROFILE *p,int *moved,int *focus)
     p->kind=get32(b); p->range=get32(b); p->dice=get32(b);
     for(j=0;j<5;j++) p->hit[j]=get32(b); *moved=get32(b); *focus=get32(b);
 }
+static void put_caster(BYTES *b,const CASTER_STATE *s)
+{
+    int i;
+    for(i=0;i<SPELL_BOOK_LIMIT;i++) put32(b,s->books[i]);
+    for(i=0;i<SPELL_LIMIT;i++) put32(b,s->known[i]);
+    for(i=0;i<SPELL_COMPONENT_LIMIT;i++) put32(b,s->components[i]);
+    put32(b,s->cast_used); put32(b,s->move_locked); put32(b,s->setup_pending); put32(b,s->starting_allowance);
+}
+static void get_caster(BYTES *b,CASTER_STATE *s)
+{
+    int i,n;
+    for(i=0;i<SPELL_BOOK_LIMIT;i++) { n=get32(b); if(n<0 || n>1) b->ok=0; s->books[i]=(unsigned char)n; }
+    for(i=0;i<SPELL_LIMIT;i++) { n=get32(b); if(n<0 || n>1) b->ok=0; s->known[i]=(unsigned char)n; }
+    for(i=0;i<SPELL_COMPONENT_LIMIT;i++) { n=get32(b); if(n<0 || n>9999) b->ok=0; s->components[i]=(unsigned short)n; }
+    s->cast_used=get32(b); s->move_locked=get32(b); s->setup_pending=get32(b); s->starting_allowance=get32(b);
+}
 int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d) || (!d->pack && !pack_fantasy())) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,13); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,14); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -261,6 +279,8 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
     /* Version 11 records the chosen difficulty and each revealed room's reward bonus. */
     put32(&b,d->monster_omit_pct); put32(&b,d->gold_bonus_pct);
     for(i=0;i<d->count;i++) put32(&b,d->room_gold_bonus_pct[i]);
+    for(i=0;i<d->hero_count;i++) put_caster(&b,&d->heroes[i].caster);
+    for(i=0;i<d->monsters.count;i++) put_caster(&b,&d->monsters.tokens[i].caster);
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -298,7 +318,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version<1 || version>13) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version<1 || version>14) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -400,6 +420,28 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
             if(b.p[b.pos+i] && n>=0 && n<d->count && strchr("PELRTCOD",d->pieces[n].type)) d->visible[n]=1;
         }
         b.pos+=count;
+    }
+    if(version<14) {
+        CHARACTER_PACK *upgraded=pack_upgrade_magic(d->pack); if(!upgraded) goto bad;
+        pack_free(d->pack); d->pack=upgraded;
+        for(i=0;i<d->hero_count;i++) {
+            for(j=0;j<d->pack->hero_count;j++) if(!strcmp(d->heroes[i].profile_id,d->pack->heroes[j].id)) {
+                pack_caster_defaults(&d->heroes[i].caster,&d->pack->heroes[j],d->pack);
+                memset(d->heroes[i].caster.components,0,sizeof(d->heroes[i].caster.components));
+                if(d->heroes[i].caster.setup_pending) d->heroes[i].caster.setup_pending=2; break;
+            }
+        }
+        for(i=0;i<d->monsters.count;i++) {
+            for(j=0;j<d->pack->monster_count;j++) if(!strcmp(d->monsters.tokens[i].profile_id,d->pack->monsters[j].id)) {
+                pack_caster_defaults(&d->monsters.tokens[i].caster,&d->pack->monsters[j],d->pack);
+                memset(d->monsters.tokens[i].caster.components,0,sizeof(d->monsters.tokens[i].caster.components));
+                d->monsters.tokens[i].caster.setup_pending=d->monsters.tokens[i].caster.starting_allowance=0; break;
+            }
+        }
+    }
+    if(version>=14) {
+        for(i=0;i<d->hero_count && b.ok;i++) get_caster(&b,&d->heroes[i].caster);
+        for(i=0;i<d->monsters.count && b.ok;i++) get_caster(&b,&d->monsters.tokens[i].caster);
     }
     for(i=0;i<d->hero_count;i++) {
         if(!d->heroes[i].melee.critical) d->heroes[i].melee.critical=12;

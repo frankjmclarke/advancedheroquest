@@ -140,3 +140,49 @@ on each of the five decks, actual Heroes & Reserve controls, stable named deaths
 repeated reveals, corrupt/truncated resources, loading without the source pack,
 and old-save migration while another theme is active. The remaining checks cover
 existing fantasy combat, save/recovery, fog and both map rendering modes.
+
+## Spellbooks (HQPACK4)
+
+The same theme file optionally defines `components`, `spells` and `spellbooks`.
+Every ID shares the pack namespace and must be unique. Spell component maps
+reference component IDs with positive quantities; book lists reference spell
+IDs. A book's `starting_spells` must be a subset of its `spells`. Profiles can
+supply `caster.books`, `caster.starting_components` (a player-chosen allowance)
+and `caster.components` (explicit initial stock).
+
+Spell fields: `effect` (`manual`, `damage`, `heal`), `target` (`manual`, `model`,
+`template`, `healing`), `range`, `dice`, `intelligence_test`, `failed_dice`,
+`stationary`, `learning_cost`, `text` and `components`. Healing uses `healing`
+targeting and currently cannot require an Intelligence test. Two or more
+components require stationary casting. Unsupported effect types are rejected;
+use an explicitly described `manual` effect for GM resolution.
+
+Limits are 16 books, 64 spells and 32 components per pack, with stock quantities
+from 0 to 9999. Runtime resources resolve IDs into bounded slots; saves retain
+the immutable complete pack snapshot, so slot references preserve their meaning.
+Older pack formats remain readable. Version 14 saves add personal casting state;
+older saves require explicit component setup rather than reconstructed stock.
+See [Spellbooks and casting](spellcasting.md) for the interface and current scope.
+
+## Spellbooks (HQPACK4)
+
+The same theme file optionally defines `components`, `spells` and `spellbooks`.
+Every ID shares the pack namespace and must be unique. Spell component maps
+reference component IDs with positive quantities; book lists reference spell
+IDs. A book's `starting_spells` must be a subset of its `spells`. Profiles can
+supply `caster.books`, `caster.starting_components` (a player-chosen allowance)
+and `caster.components` (explicit initial stock).
+
+Spell fields: `effect` (`manual`, `damage`, `heal`), `target` (`manual`, `model`,
+`template`, `healing`), `range`, `dice`, `intelligence_test`, `failed_dice`,
+`stationary`, `learning_cost`, `text` and `components`. Healing uses `healing`
+targeting and currently cannot require an Intelligence test. Two or more
+components require stationary casting. Unsupported effect types are rejected;
+use an explicitly described `manual` effect for GM resolution.
+
+Limits are 16 books, 64 spells and 32 components per pack, with stock quantities
+from 0 to 9999. Runtime resources resolve IDs into bounded slots; saves retain
+the immutable complete pack snapshot, so slot references preserve their meaning.
+Older pack formats remain readable. Version 14 saves add personal casting state;
+older saves require explicit component setup rather than reconstructed stock.
+See [Spellbooks and casting](spellcasting.md) for the interface and current scope.

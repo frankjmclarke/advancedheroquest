@@ -92,6 +92,13 @@ static void panel_update(void)
     else if(!turn_phase) strcpy(line,"Normal attack: free play");
     else sprintf(line,"Normal attack: %s%s",attack_used?"used":"available",gm_override?" (GM override)":"");
     SetDlgItemTextA(panel_hwnd,CPATTACKLEFT,line);
+    if(side>=0 && caster_has_book(caster_state(side,index))) {
+        CASTER_STATE *s=caster_state(side,index);
+        snprintf(line,sizeof(line),"Spell: %s%s",s->setup_pending?"component setup needed":s->cast_used?"used this turn":"ready",s->move_locked?"; no movement":"");
+    } else strcpy(line,"Spell: no spellbook");
+    SetDlgItemTextA(panel_hwnd,CPSPELLSTATUS,line);
+    EnableWindow(GetDlgItem(panel_hwnd,CPSPELLCAST),side>=0 && alive && caster_has_book(caster_state(side,index)));
+    EnableWindow(GetDlgItem(panel_hwnd,CPSPELLBOOK),side>=0 && pack_current() && pack_current()->book_count);
     EnableWindow(GetDlgItem(panel_hwnd,CPRUN),turn_phase && side>=0 && alive && !turn_attack_reason(side,side?0:index,side?index:0));
     EnableWindow(GetDlgItem(panel_hwnd,CPENDPHASE),map_ready && turn_phase);
     EnableWindow(GetDlgItem(panel_hwnd,CPUNDO),map_ready && undo_valid);
@@ -111,6 +118,7 @@ static void panel_update(void)
     else if(turn_phase && turn_phase!=(side?2:1) && !gm_override) next=side?"Hero phase: select a hero or end the phase.":"GM phase: select a monster or end the phase.";
     else if(side && monster_move_mode) next="Click an open square to move the monster.";
     else if((side?attack_monster==index:move_mode && selected==index)) next=side?"Click a hero to attack, or drag the monster to move.":"Click an enemy to attack, or click a square to move.";
+    else if(side>=0 && caster_has_book(caster_state(side,index)) && !caster_state(side,index)->cast_used && turn_phase && attack_used) next="Weapon attack used. Cast a spell or end the phase.";
     else if(turn_phase && attack_used && remaining<=0 && !gm_override) next="This model is done. Select another or end the phase.";
     else if(turn_phase && attack_used && !gm_override) next="Normal attack used. Move or end the phase.";
     else if(turn_phase && remaining<=0 && !gm_override) next="Movement used. Attack or end the phase.";
@@ -128,7 +136,9 @@ static int combat_action(int id)
 {
     int side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
     int index=side==0?selected:selected_monster;
-    if(id==CPGUIDED) game_command(MGAMEGUIDED);
+    if(id==CPSPELLCAST && side>=0) spellcast_open(GlMainHwnd,side,index);
+    else if(id==CPSPELLBOOK && side>=0) spellbook_open(GlMainHwnd,side,index);
+    else if(id==CPGUIDED) game_command(MGAMEGUIDED);
     else if(id==CPENDPHASE) game_command(MGAMETURN);
     else if(id==CPUNDO) game_command(MGAMEUNDO);
     else if(id==CPRUN && side>=0 && turn_phase &&
@@ -199,6 +209,10 @@ static HMENU token_menu_build(int side,int index)
     can_attack_now=alive && !turn_attack_reason(side,side?0:index,side?index:0);
     menu=CreatePopupMenu(); if(!menu) return NULL;
     AppendMenuA(menu,MF_STRING|(turn_phase && can_attack_now?0:MF_GRAYED),CPRUN,"Run (D12)");
+    if(pack_current() && pack_current()->book_count) {
+        AppendMenuA(menu,MF_STRING|(alive && caster_has_book(caster_state(side,index))?0:MF_GRAYED),CPSPELLCAST,"Cast spell...");
+        AppendMenuA(menu,MF_STRING,CPSPELLBOOK,"Spellbook & components...");
+    }
     AppendMenuA(menu,MF_SEPARATOR,0,NULL);
     AppendMenuA(menu,MF_STRING,CPTOKENDETAILS,side?"Monster profile and wounds...":"Hero profile and wounds...");
     if(side) AppendMenuA(menu,MF_STRING,CPTOKENWOUND,"Inflict 1 wound");
