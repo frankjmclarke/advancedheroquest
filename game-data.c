@@ -11,17 +11,17 @@
 const char *hero_class_rules(int kind)
 {
     const CHARACTER_PACK *p=pack_fantasy();
-    return kind>=0 && kind<p->hero_count?p->heroes[kind].text:"";
+    return p && kind>=0 && kind<p->hero_count?p->heroes[kind].text:"";
 }
 void hero_melee_defaults(MELEE_PROFILE *p,int kind)
 {
     const CHARACTER_PACK *pack=pack_fantasy(); memset(p,0,sizeof(*p));
-    if(kind>=0 && kind<pack->hero_count) *p=pack->heroes[kind].melee;
+    if(pack && kind>=0 && kind<pack->hero_count) *p=pack->heroes[kind].melee;
 }
 void hero_ranged_defaults(RANGED_PROFILE *p,int kind)
 {
     const CHARACTER_PACK *pack=pack_fantasy(); memset(p,0,sizeof(*p));
-    if(kind>=0 && kind<pack->hero_count) *p=pack->heroes[kind].ranged;
+    if(pack && kind>=0 && kind<pack->hero_count) *p=pack->heroes[kind].ranged;
 }
 int monster_ranged_defaults(RANGED_PROFILE *p,const char *name)
 {
@@ -40,7 +40,8 @@ static int melee_blank(const MELEE_PROFILE *p)
 void hero_defaults(HERO *h,int kind,int number)
 {
     const CHARACTER_PACK *p=pack_fantasy();
-    if(kind>=0 && kind<p->hero_count) pack_hero(h,&p->heroes[kind],number);
+    if(p && kind>=0 && kind<p->hero_count) pack_hero(h,&p->heroes[kind],number);
+    else { memset(h,0,sizeof(*h)); h->x=h->y=-1; }
 }
 const char *monster_identity(const MONSTER *m) { return m->character_id[0]?m->character_id:m->name; }
 static int valid_type(int t)
@@ -202,7 +203,7 @@ static void get_ranged(BYTES *b,RANGED_PROFILE *p,int *moved,int *focus)
 int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
-    *bytes=NULL; *size=0; if(!valid_data(d)) return 0; b.ok=1;
+    *bytes=NULL; *size=0; if(!valid_data(d) || (!d->pack && !pack_fantasy())) return 0; b.ok=1;
     put(&b,"HQGAME\r\n",8); put32(&b,11); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);

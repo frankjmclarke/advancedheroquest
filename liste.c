@@ -6,7 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "pack.h"
-#define AHQ_REFERENCE_COUNT (pack_current()->monster_count)
+#define AHQ_REFERENCE_COUNT (pack_current()?pack_current()->monster_count:0)
 #define ahq_references (pack_current()->monsters)
 
 /******************************************************************************/
@@ -337,6 +337,7 @@ int room_melee(const char *name,int *dice,int hits[12])
 {
     char *clean=room_name(name,name+strlen(name)),*end;
     const char *text=NULL,*p; size_t i; int matches=0,j,n,row[12]; long v;
+    if(!pack_current()) { free(clean); return 0; }
     if(!pack_current()->legacy_references) {
         const PACK_PROFILE *entry=pack_monster(name); free(clean);
         if(!entry || !entry->melee.dice) return 0;
@@ -370,6 +371,7 @@ int room_ranged(const char *name,int *range,int *dice,int hits[5],int *kind)
 {
     char *clean=room_name(name,name+strlen(name)),*end; const char *text=NULL,*p,*max;
     size_t i; int matches=0,j,row[5],r,d,starts[5]={1,4,13,25,37}; long v;
+    if(!pack_current()) { free(clean); return 0; }
     if(!pack_current()->legacy_references) {
         const PACK_PROFILE *entry=pack_monster(name); free(clean);
         if(!entry || !entry->ranged.kind) return 0;

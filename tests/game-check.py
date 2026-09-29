@@ -127,6 +127,10 @@ int main(int argc,char **argv) {
         assert(room>=0); gold_bonus_pct=25;
         preview=game_gold_text(&Pice[room],"5 Zombies, 1 Skeleton (50 Gold Crowns)");
         assert(preview && !strcmp(preview,"5 Zombies, 1 Skeleton (63 Gold Crowns)")); free(preview);
+        preview=game_gold_text(&Pice[room],"999999999999999999999999 Gold Crowns and 50 Gold Crowns");
+        assert(preview && !strcmp(preview,"999999999999999999999999 Gold Crowns and 63 Gold Crowns")); free(preview);
+        preview=game_gold_text(&Pice[room],"1,000,000 Gold Crowns");
+        assert(preview && !strcmp(preview,"1250000 Gold Crowns")); free(preview);
         gold_bonus_pct=0;
     }
     /* Per-model omission is applied only on first reveal, including at 100%. */
@@ -161,6 +165,16 @@ int main(int argc,char **argv) {
     assert(capture(&snapshot));
     assert(game_encode(&snapshot,&bytes,&size)); free(snapshot.cells);
     decoded=game_decode(bytes,size); assert(decoded);
+    {
+        unsigned char *before=game_fog(),*staged;
+        assert(before);
+        assert(!game_prepare_fog(decoded->visible,decoded->count,decoded->count-1));
+        assert(game_fog()==before);
+        staged=game_prepare_fog(decoded->visible,decoded->count,MAX_PICE);
+        assert(staged && !memcmp(staged,decoded->visible,(size_t)decoded->count));
+        game_discard_prepared_fog(staged,MAX_PICE);
+        assert(game_fog()==before);
+    }
     assert(decoded->turn_phase==1 && decoded->gm_override==1);
     assert(decoded->monster_omit_pct==10 && decoded->gold_bonus_pct==25 && decoded->room_gold_bonus_pct[i]==25);
     assert(decoded->heroes[0].move_spent==2 && decoded->heroes[0].attacked==1);

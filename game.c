@@ -57,18 +57,26 @@ char *game_gold_text(const PICE *piece,const char *source)
     if(!source) return NULL;
     index=piece && Pice && piece>=Pice && piece<Pice+MAX_PICE?(int)(piece-Pice):-1;
     pct=index>=0 && index<ENCOUNTER_LIMIT && monsters.seen[index]?room_gold_bonus_pct[index]:piece?gold_bonus_pct:0;
-    length=strlen(source); result=(char*)malloc(length*2+64);
+    length=strlen(source);
+    if(length>((size_t)-1-64)/2) return NULL;
+    result=(char*)malloc(length*2+64);
     if(!result) return NULL;
     p=source; out=result;
     while(*p) {
         if(isdigit((unsigned char)*p) && (p==source || !isalnum((unsigned char)p[-1]))) {
-            const char *q=p,*after; long value=0; int digits=0;
+            const char *q=p,*after; long value=0; int digits=0,too_large=0;
             while(isdigit((unsigned char)*q) || (*q==',' && isdigit((unsigned char)q[1]))) {
-                if(isdigit((unsigned char)*q)) { value=value*10+(*q-'0'); digits++; }
+                if(isdigit((unsigned char)*q)) {
+                    int digit=*q-'0'; digits++;
+                    if(!too_large) {
+                        if(value>(1000000L-digit)/10) too_large=1;
+                        else value=value*10+digit;
+                    }
+                }
                 q++;
             }
             after=q; while(*after==' ') after++;
-            if(digits && value<=1000000 && !_strnicmp(after,"Gold Crown",10) &&
+            if(digits && !too_large && !_strnicmp(after,"Gold Crown",10) &&
                (after[10]=='s' || !isalpha((unsigned char)after[10]))) {
                 out+=sprintf(out,"%ld",value+(value*pct+50)/100);
                 p=q; continue;
@@ -327,6 +335,7 @@ int game_before_replace(void)
 int game_load(int recovery)
 {
     char path[MAX_PATH]; GAME_DATA *d; CHARACTER_PACK *next_pack;
+    unsigned char *prepared_fog; int fog_capacity;
     if(!recovery) { path[0]=0; if(!choose_path(path,0)) return 0; }
     else strcpy(path,recovery_path);
     d=read_game(path);
@@ -335,8 +344,12 @@ int game_load(int recovery)
     if(recovery!=2 && !game_before_replace()) { game_data_free(d); return 0; }
     next_pack=pack_clone(d->pack);
     if(!next_pack) { game_data_free(d); message("Not enough memory for character profiles."); return 0; }
+    fog_capacity=d->count>MAX_PICE?d->count:MAX_PICE;
+    prepared_fog=game_prepare_fog(d->visible,d->count,fog_capacity);
+    if(!prepared_fog) { pack_free(next_pack); game_data_free(d); if(recovery!=2) message("Not enough memory to restore fog of war."); return 0; }
     /* map_restore allocates first, so even allocation failure preserves play. */
-    if(!map_restore(d->pieces,d->count,d->width,d->height,d->cells)) { pack_free(next_pack); game_data_free(d); if(recovery!=2) message("Not enough memory to load the game."); return 0; }
+    if(!map_restore(d->pieces,d->count,d->width,d->height,d->cells)) { game_discard_prepared_fog(prepared_fog,fog_capacity); pack_free(next_pack); game_data_free(d); if(recovery!=2) message("Not enough memory to load the game."); return 0; }
+    game_adopt_fog(prepared_fog,fog_capacity);
     pack_adopt(next_pack);
     close_all_windows(FALSE);
     game_data_free(loaded_owner); loaded_owner=d;
@@ -347,7 +360,7 @@ int game_load(int recovery)
     monster_omit_pct=d->monster_omit_pct; gold_bonus_pct=d->gold_bonus_pct;
     memcpy(room_gold_bonus_pct,d->room_gold_bonus_pct,sizeof(room_gold_bonus_pct));
     { int i; for(i=0;i<hero_count;i++) if(HERO_DEAD(&heroes[i])) heroes[i].x=heroes[i].y=-1; }
-    strcpy(session_title,d->title); game_set_fog(d->visible,d->count);
+    strcpy(session_title,d->title);
     selected=-1; move_mode=0; undo_valid=0; active=1; map_ready=1; dirty=recovery?1:0;
     if(recovery) save_path[0]=0; else strcpy(save_path,path);
     monsters_reveal(); focus_prune();
@@ -725,8 +738,10 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
     int id=LOWORD(wp),n,i;
     if(msg==WM_INITDIALOG) {
+        const CHARACTER_PACK *pack=pack_current();
+        if(!pack) { message("Not enough memory for character profiles."); EndDialog(hwnd,0); return TRUE; }
         SendDlgItemMessage(hwnd,GPCLASS,CB_SETDROPPEDWIDTH,300,0);
-        for(i=0;i<pack_current()->hero_count;i++) SendDlgItemMessageA(hwnd,GPCLASS,CB_ADDSTRING,0,(LPARAM)pack_current()->heroes[i].name);
+        for(i=0;i<pack->hero_count;i++) SendDlgItemMessageA(hwnd,GPCLASS,CB_ADDSTRING,0,(LPARAM)pack->heroes[i].name);
         SendDlgItemMessage(hwnd,GPCLASS,CB_SETCURSEL,0,0); SendDlgItemMessage(hwnd,GPNAME,EM_LIMITTEXT,39,0);
         party_selection=selected>=0?selected:hero_count?0:-1; party_list(hwnd); party_fields(hwnd); return TRUE;
     }
@@ -764,17 +779,19 @@ static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
             const HERO *h=&heroes[party_selection];
             MessageBoxA(hwnd,h->class_rules[0]?h->class_rules:hero_class_rules(h->kind),h->class_name[0]?h->class_name:hero_classes[h->kind],MB_OK|MB_ICONINFORMATION);
         } else {
+            const CHARACTER_PACK *pack=pack_current();
             n=(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0);
-            if(n>=0 && n<pack_current()->hero_count) MessageBoxA(hwnd,pack_current()->heroes[n].text,pack_current()->heroes[n].name,MB_OK|MB_ICONINFORMATION);
+            if(pack && n>=0 && n<pack->hero_count) MessageBoxA(hwnd,pack->heroes[n].text,pack->heroes[n].name,MB_OK|MB_ICONINFORMATION);
         }
         return TRUE;
     }
     if(id!=GPADD && id!=GPAPPLY && id!=GPMOVE && id!=GPRESERVE && id!=GPDELETE && id!=IDOK && id!=IDCANCEL) return FALSE;
     if(!party_apply(hwnd)) return TRUE;
     if(id==GPADD) {
+        const CHARACTER_PACK *pack=pack_current();
         if(hero_count==HERO_LIMIT) { message("This party already has 16 heroes, including reserve."); return TRUE; }
-        n=(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0); if(n<0) return TRUE;
-        remember(); pack_hero(&heroes[hero_count],&pack_current()->heroes[n],hero_count+1); party_selection=hero_count++; active=1; game_changed();
+        n=(int)SendDlgItemMessage(hwnd,GPCLASS,CB_GETCURSEL,0,0); if(!pack || n<0 || n>=pack->hero_count) return TRUE;
+        remember(); pack_hero(&heroes[hero_count],&pack->heroes[n],hero_count+1); party_selection=hero_count++; active=1; game_changed();
     } else if(id==GPRESERVE && party_selection>=0) {
         remember(); heroes[party_selection].x=heroes[party_selection].y=-1; move_mode=0; game_changed();
     } else if(id==GPDELETE && party_selection>=0) {

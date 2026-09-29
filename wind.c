@@ -1278,9 +1278,27 @@ GLOBAL unsigned char *game_fog(_VOID)
 }
 GLOBAL _VOID game_set_fog(const unsigned char *visible,int count)
 {
- unsigned char *dest;
- game_reset_fog(); dest=game_fog();
- if(dest && count<=MAX_PICE) memcpy(dest,visible,count);
+ unsigned char *prepared=game_prepare_fog(visible,count,MAX_PICE);
+ if(prepared) game_adopt_fog(prepared,MAX_PICE);
+}
+GLOBAL unsigned char *game_prepare_fog(const unsigned char *visible,int count,int capacity)
+{
+ unsigned char *prepared;
+ if(!visible || count<0 || capacity<count || capacity<1) return NULL;
+ prepared=MALLOC((size_t)capacity,"saved visibility");
+ if(!prepared) return NULL;
+ memset(prepared,0,(size_t)capacity);
+ memcpy(prepared,visible,(size_t)count);
+ return prepared;
+}
+GLOBAL _VOID game_discard_prepared_fog(unsigned char *visible,int capacity)
+{
+ if(visible) FREE(visible,(size_t)capacity);
+}
+GLOBAL _VOID game_adopt_fog(unsigned char *visible,int capacity)
+{
+ if(!visible || capacity<1) return;
+ game_reset_fog(); player_visible=visible; player_visible_size=(size_t)capacity;
 }
 GLOBAL _VOID game_redraw(_VOID)
 {

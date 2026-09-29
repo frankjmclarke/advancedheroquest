@@ -89,6 +89,9 @@ void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,i
 /* Fog belongs to the dungeon, including when its window is closed. */
 unsigned char *game_fog(void);
 void game_set_fog(const unsigned char *visible,int count);
+unsigned char *game_prepare_fog(const unsigned char *visible,int count,int capacity);
+void game_discard_prepared_fog(unsigned char *visible,int capacity);
+void game_adopt_fog(unsigned char *visible,int capacity);
 void game_redraw(void);
 int game_player_view(void);
 void game_toggle_view(void);

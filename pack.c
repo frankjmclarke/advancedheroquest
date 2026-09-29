@@ -167,7 +167,10 @@ const PACK_PROFILE *pack_find_monster(const CHARACTER_PACK *p,const char *name)
 const PACK_PROFILE *pack_monster(const char *name) { return pack_find_monster(pack_current(),name); }
 int pack_nonmonster(const char *name)
 {
-    const char *a=pack_current()->nonmonsters; size_t n;
+    const CHARACTER_PACK *p=pack_current();
+    const char *a; size_t n;
+    if(!p) return 0;
+    a=p->nonmonsters;
     while(*a) {
         n=strcspn(a,"|"); if(alias_equal(a,n,name)) return 1;
         a+=n; if(*a) a++;
@@ -177,7 +180,7 @@ int pack_nonmonster(const char *name)
 int pack_monster_stats(int index,int stats[HERO_STATS])
 {
     const CHARACTER_PACK *p=pack_current(); const char *text;
-    if(index<0 || index>=p->monster_count) return 0;
+    if(!p || index<0 || index>=p->monster_count) return 0;
     if(!p->legacy_references) {
         memcpy(stats,p->monsters[index].stats,sizeof(int)*HERO_STATS); return stats[7]>0;
     }
@@ -189,6 +192,7 @@ int pack_monster_stats(int index,int stats[HERO_STATS])
 const PACK_PROFILE *pack_profile(const char *id)
 {
     const CHARACTER_PACK *p=pack_current(); int i;
+    if(!p) return NULL;
     for(i=0;i<p->hero_count;i++) if(!strcmp(p->heroes[i].id,id)) return &p->heroes[i];
     for(i=0;i<p->monster_count;i++) if(!strcmp(p->monsters[i].id,id)) return &p->monsters[i];
     return NULL;
