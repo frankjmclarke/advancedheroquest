@@ -8,6 +8,7 @@
 #include <commctrl.h>
 #include <wincrypt.h>
 #include <shlobj.h>
+#include <random.h>
 #include <openwork.h>
 #include <wind.h>
 #include <defs.h>
@@ -30,6 +31,8 @@ static int shot_h=-1,shot_m=-1;
 static int monster_at(int x,int y);
 static HERO heroes[HERO_LIMIT], undo_heroes[HERO_LIMIT];
 static int turn_phase,gm_override,undo_turn_phase,undo_gm_override;
+static int monster_omit_pct,gold_bonus_pct;
+static unsigned short room_gold_bonus_pct[ENCOUNTER_LIMIT];
 static HWND panel_hwnd;
 static void panel_attach(void);
 static void panel_update(void);
@@ -44,6 +47,82 @@ static WINDOW_DEF *preview_window;
 static int preview_hero=-1,preview_x,preview_y;
 extern void game_loaded_title(const char *title);
 static void message(const char *text) { MessageBoxA(GlMainHwnd,text,"HQ-Map game",MB_OK|MB_ICONINFORMATION); }
+/* Format from printed text every time. Unrevealed rooms preview the current
+ * setting; revealed rooms keep the percentage fixed at first reveal. */
+char *game_gold_text(const PICE *piece,const char *source)
+{
+    char *result,*out;
+    const char *p; int index,pct;
+    size_t length;
+    if(!source) return NULL;
+    index=piece && Pice && piece>=Pice && piece<Pice+MAX_PICE?(int)(piece-Pice):-1;
+    pct=index>=0 && index<ENCOUNTER_LIMIT && monsters.seen[index]?room_gold_bonus_pct[index]:piece?gold_bonus_pct:0;
+    length=strlen(source); result=(char*)malloc(length*2+64);
+    if(!result) return NULL;
+    p=source; out=result;
+    while(*p) {
+        if(isdigit((unsigned char)*p) && (p==source || !isalnum((unsigned char)p[-1]))) {
+            const char *q=p,*after; long value=0; int digits=0;
+            while(isdigit((unsigned char)*q) || (*q==',' && isdigit((unsigned char)q[1]))) {
+                if(isdigit((unsigned char)*q)) { value=value*10+(*q-'0'); digits++; }
+                q++;
+            }
+            after=q; while(*after==' ') after++;
+            if(digits && value<=1000000 && !_strnicmp(after,"Gold Crown",10) &&
+               (after[10]=='s' || !isalpha((unsigned char)after[10]))) {
+                out+=sprintf(out,"%ld",value+(value*pct+50)/100);
+                p=q; continue;
+            }
+        }
+        *out++=*p++;
+    }
+    *out=0; return result;
+}
+char *game_room_contents(const PICE *piece)
+{
+    char *source=(char*)room_contents_text(piece?piece->text:NULL),*result;
+    if(!source) return NULL;
+    result=game_gold_text(piece,source); free(source); return result;
+}
+static INT_PTR CALLBACK difficulty_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
+{
+    int id=LOWORD(wp),omit,gold; BOOL ok1,ok2;
+    (void)lp;
+    if(msg==WM_INITDIALOG) {
+        int chosen=monster_omit_pct==0 && gold_bonus_pct==0?GDSTANDARD:
+            monster_omit_pct==10 && gold_bonus_pct==10?GDEASIER:
+            monster_omit_pct==25 && gold_bonus_pct==25?GDEASY:GDCUSTOM;
+        SetDlgItemInt(hwnd,GDOMIT,monster_omit_pct,FALSE);
+        SetDlgItemInt(hwnd,GDGOLD,gold_bonus_pct,FALSE);
+        CheckRadioButton(hwnd,GDSTANDARD,GDCUSTOM,chosen); return TRUE;
+    }
+    if(msg!=WM_COMMAND) return FALSE;
+    if(id==IDCANCEL) { EndDialog(hwnd,0); return TRUE; }
+    if(id==GDSTANDARD || id==GDEASIER || id==GDEASY) {
+        omit=gold=id==GDSTANDARD?0:id==GDEASIER?10:25;
+        SetDlgItemInt(hwnd,GDOMIT,omit,FALSE); SetDlgItemInt(hwnd,GDGOLD,gold,FALSE);
+        CheckRadioButton(hwnd,GDSTANDARD,GDCUSTOM,id); return TRUE;
+    }
+    if((id==GDOMIT || id==GDGOLD) && HIWORD(wp)==EN_CHANGE) {
+        CheckRadioButton(hwnd,GDSTANDARD,GDCUSTOM,GDCUSTOM); return TRUE;
+    }
+    if(id!=IDOK) return FALSE;
+    omit=(int)GetDlgItemInt(hwnd,GDOMIT,&ok1,FALSE);
+    gold=(int)GetDlgItemInt(hwnd,GDGOLD,&ok2,FALSE);
+    if(!ok1 || !ok2 || omit<0 || omit>100 || gold<0 || gold>500) {
+        MessageBoxA(hwnd,"Enter a monster omission chance from 0 to 100% and a gold bonus from 0 to 500%.","Adventure difficulty",MB_OK|MB_ICONWARNING);
+        return TRUE;
+    }
+    monster_omit_pct=omit; gold_bonus_pct=gold;
+    if(map_ready) { active=1; game_changed(); }
+    EndDialog(hwnd,1); return TRUE;
+}
+void game_difficulty_dialog(void)
+{
+    if(DialogBoxParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGDIFFICULTY),GlMainHwnd,difficulty_proc,0)==1 && Monster_Liste) {
+        Wind_Close(Monster_Liste); show_liste(session_title);
+    }
+}
 static void remember(void) { memcpy(undo_heroes,heroes,sizeof(heroes)); undo_count=hero_count; undo_monsters=monsters; undo_turn_phase=turn_phase; undo_gm_override=gm_override; undo_valid=1; }
 static const char *turn_attack_reason(int side,int h,int m)
 {
@@ -118,6 +197,8 @@ static int capture(GAME_DATA *d)
     d->visible=game_fog(); if(!d->visible) return 0;
     d->player_view=preferred_player_view;
     d->turn_phase=turn_phase; d->gm_override=gm_override;
+    d->monster_omit_pct=monster_omit_pct; d->gold_bonus_pct=gold_bonus_pct;
+    memcpy(d->room_gold_bonus_pct,room_gold_bonus_pct,sizeof(room_gold_bonus_pct));
     d->pack=(CHARACTER_PACK*)pack_current();
     d->monsters=monsters;
     d->hero_count=hero_count; memcpy(d->heroes,heroes,sizeof(heroes)); strcpy(d->title,session_title);
@@ -263,6 +344,8 @@ int game_load(int recovery)
     monsters=d->monsters; selected_monster=-1; attack_monster=-1; monster_move_mode=0;
     hero_count=d->hero_count; memcpy(heroes,d->heroes,sizeof(heroes));
     turn_phase=d->turn_phase; gm_override=d->gm_override;
+    monster_omit_pct=d->monster_omit_pct; gold_bonus_pct=d->gold_bonus_pct;
+    memcpy(room_gold_bonus_pct,d->room_gold_bonus_pct,sizeof(room_gold_bonus_pct));
     { int i; for(i=0;i<hero_count;i++) if(HERO_DEAD(&heroes[i])) heroes[i].x=heroes[i].y=-1; }
     strcpy(session_title,d->title); game_set_fog(d->visible,d->count);
     selected=-1; move_mode=0; undo_valid=0; active=1; map_ready=1; dirty=recovery?1:0;
@@ -294,6 +377,7 @@ void game_discard_dungeon(void)
 {
     int i; monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; monster_move_mode=0; map_ready=0; dirty=0; selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
+    memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct));
     for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
     turn_phase=gm_override=0; turn_menu_update(); panel_update();
     game_reset_fog();
@@ -307,6 +391,7 @@ void game_new_dungeon(const char *title)
     game_reset_fog();
     monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; monster_move_mode=0;
+    memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct));
     strncpy(session_title,title,sizeof(session_title)-1); session_title[sizeof(session_title)-1]=0;
     for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; }
     turn_phase=gm_override=0; turn_menu_update(); panel_update();

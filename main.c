@@ -1383,6 +1383,10 @@ LOCAL _BOOL do_menu(_WORD eintrag)
 		campaign_builder(AHQ_para.tabelle.path, AHQ_para.tabelle.filename);
 		break;
 
+	case MGAMEDIFFICULTY:
+		game_difficulty_dialog();
+		break;
+
 	case MTABELLE:
 		{
 			/*

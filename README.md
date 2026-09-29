@@ -261,6 +261,17 @@ VM to run.
 
 ### Inspecting a room
 
+Use **Options > Difficulty...** to choose Standard (printed encounters and
+gold), Easier (each ordinary monster has a 10% chance not to appear, with 10%
+more Gold Crowns), Easy (25% for both), or custom percentages. Named leaders
+and quest-room monsters always appear. The choice affects rooms first revealed after the change;
+existing rooms keep their encounter and gold bonus. Reopening a room never
+rerolls its monsters or compounds its Gold Crown amounts. Difficulty is stored
+in saved games, and older saves load at Standard. Gold is recorded in room
+descriptions rather than a party purse, so the bonus appears in the room and
+encounter-contents windows and the Monster List. Unrevealed rooms preview the
+current setting. Rewards expressed in Points are unchanged.
+
 Click a room in the graphic map to open **Room contents**, showing its room
 number and the generated encounter, treasure, and other description text.
 The window stays open while you click other rooms; move it beside the map

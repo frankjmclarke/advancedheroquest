@@ -49,6 +49,8 @@ typedef struct {
     int player_view; /* -1: legacy save with no recorded view; 0: GM; 1: player */
     int turn_phase; /* 0 free play, 1 Hero phase, 2 GM phase */
     int gm_override;
+    int monster_omit_pct, gold_bonus_pct;
+    unsigned short room_gold_bonus_pct[ENCOUNTER_LIMIT]; /* fixed at first reveal */
     HERO heroes[HERO_LIMIT];
     MONSTER_STATE monsters;
     PICE *pieces;
@@ -69,6 +71,9 @@ const char *monster_identity(const MONSTER *monster);
 void game_initialize(void);
 void game_shutdown(void);
 void game_party(void);
+void game_difficulty_dialog(void);
+char *game_room_contents(const PICE *piece);
+char *game_gold_text(const PICE *piece,const char *source);
 void game_monsters(void);
 int game_save(int save_as);
 /* 0: chosen file; 1: explicit recovery; 2: quiet automatic startup recovery. */

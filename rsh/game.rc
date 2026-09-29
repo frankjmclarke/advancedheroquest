@@ -1,4 +1,25 @@
 #include "game.rh"
+FGDIFFICULTY DIALOGEX 0,0,340,210
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Adventure difficulty"
+FONT 9,"Segoe UI"
+BEGIN
+    LTEXT "Choose how many ordinary monsters appear and how much Gold Crown treasure is shown.",-1,10,10,320,26
+    CONTROL "Standard - all monsters, printed gold",GDSTANDARD,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,41,310,17
+    CONTROL "Easier - 10% fewer monsters, 10% more gold",GDEASIER,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,61,310,17
+    CONTROL "Easy - 25% fewer monsters, 25% more gold",GDEASY,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,81,310,17
+    CONTROL "Custom",GDCUSTOM,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,101,75,17
+    LTEXT "Chance to omit each ordinary monster",-1,30,125,230,12
+    EDITTEXT GDOMIT,265,122,45,17,ES_NUMBER
+    LTEXT "%",-1,314,125,15,12
+    LTEXT "Extra Gold Crowns",-1,30,148,230,12
+    EDITTEXT GDGOLD,265,145,45,17,ES_NUMBER
+    LTEXT "%",-1,314,148,15,12
+    LTEXT "Applies to rooms first revealed after this change. Named leaders and quest-room monsters always appear.",-1,10,168,320,30
+    DEFPUSHBUTTON "Apply",IDOK,190,188,65,18
+    PUSHBUTTON "Cancel",IDCANCEL,265,188,65,18
+END
+
 FGCOMBATPANEL DIALOGEX 0,0,205,268
 STYLE DS_CONTROL | WS_CHILD | WS_VISIBLE
 FONT 9,"Segoe UI"

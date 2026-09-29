@@ -126,6 +126,25 @@ int main(int argc,char **argv) {
     size-=12+4*MAX_PICE; bytes[8]=1; crc_fix(bytes,size);
     decoded=game_decode(bytes,size); assert(decoded && decoded->monsters.count==0 && decoded->monsters.dead_count==0);
     game_data_free(decoded); free(bytes);
+    /* A 100% setting omits every ordinary model once and keeps its gold
+       award fixed across repeated reveals and a save round trip. */
+    game_new_dungeon("Difficulty test");
+    for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM) { room=i; break; }
+    assert(room>=0); Pice[room].text=encounter;
+    monster_omit_pct=100; gold_bonus_pct=25;
+    memset(game_fog(),0,MAX_PICE); game_fog()[room]=1;
+    monsters_reveal(); assert(monsters.seen[room]==1 && monsters.count==0 && room_gold_bonus_pct[room]==25);
+    { char *contents=game_room_contents(&Pice[room]); assert(contents && strstr(contents,"25 Gold Crowns")); free(contents); }
+    {
+        size_t lines=draw_monster_liste(NULL),k; _UBYTE **list=(_UBYTE**)calloc(lines,sizeof(*list)); int found=0;
+        assert(list && draw_monster_liste(list)==lines);
+        for(k=0;k<lines;k++) { if(strstr(list[k],"25 Gold Crowns")) found=1; free(list[k]); }
+        free(list); assert(found);
+    }
+    monster_omit_pct=0; gold_bonus_pct=0; monsters_reveal(); assert(monsters.count==0);
+    assert(capture(&d)); assert(game_encode(&d,&bytes,&size)); free(d.cells);
+    decoded=game_decode(bytes,size); assert(decoded && decoded->room_gold_bonus_pct[room]==25 && decoded->monsters.seen[room]==1);
+    game_data_free(decoded); free(bytes);
     game_shutdown(); mem_freeall();
     puts("PASS: roster parsing, automatic placement, ambiguity review, collisions, drag, double-click damage, deaths/Undo, editor, overflow, v3 persistence and v1/v2 compatibility.");
     return 0;

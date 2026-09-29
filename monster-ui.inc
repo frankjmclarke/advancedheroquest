@@ -108,7 +108,7 @@ static INT_PTR CALLBACK monsters_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         n=(int)SendDlgItemMessage(hwnd,GMROOM,CB_GETCURSEL,0,0);
         if(n>=0) {
             i=(int)SendDlgItemMessage(hwnd,GMROOM,CB_GETITEMDATA,n,0);
-            contents=room_contents_text(Pice[i].text);
+            contents=game_room_contents(&Pice[i]);
             if(contents) { MessageBoxA(hwnd,(char*)contents,"Encounter contents and reference profiles",MB_OK); free(contents); }
         }
     }

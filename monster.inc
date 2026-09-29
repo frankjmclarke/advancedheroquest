@@ -42,6 +42,7 @@ static void monster_add_reference(const char *name,const int *stats,int count,vo
     if(character_dead(identity)) return;
     for(i=0;i<monsters.count;i++) if(monsters.tokens[i].unique && monsters.tokens[i].wounds && !_stricmp(identity,monster_identity(&monsters.tokens[i]))) return;
     for(i=0;i<(profile && profile->unique?1:count);i++) {
+        if(!(profile && profile->unique) && Pice[room].type!=QUEST && monster_omit_pct && get_rand(100)<monster_omit_pct) continue;
         if(monsters.count==MONSTER_LIMIT) { monsters.seen[room]=2; return; }
         m=&monsters.tokens[monsters.count]; memset(m,0,sizeof(*m));
         strcpy(m->name,name);
@@ -65,6 +66,7 @@ static void monsters_reveal(void)
     for(i=0;i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) {
         if(!visible[i] || monsters.seen[i] || !strchr("SNHXAQBM",Pice[i].type)) continue;
         monsters.seen[i]=1; changed=1;
+        room_gold_bonus_pct[i]=(unsigned short)gold_bonus_pct;
         if(room_monsters(Pice[i].text,monster_add_reference,&i)) monsters.seen[i]=2;
     }
     if(changed) { active=1; dirty=1; undo_valid=0; }

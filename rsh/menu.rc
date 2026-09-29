@@ -79,6 +79,7 @@ MENUE MENU
 	{
 		MENUITEM "Load &Tables...\tCtrl+T", MTABELLE
 		MENUITEM "&Campaign Builder...", MCAMPAIGN
+		MENUITEM "&Difficulty...", MGAMEDIFFICULTY
 		MENUITEM SEPARATOR
 		MENUITEM "&Program Parameters...\tAlt+P", MPARA
 		MENUITEM SEPARATOR

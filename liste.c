@@ -18,6 +18,7 @@ GLOBAL size_t draw_monster_liste(_UBYTE **mem)
 	_WORD i;
 	size_t size = 0;
 	_UBYTE **ptr;
+	_UBYTE **first = mem;
 	PICE *pice;
 	FEATURE *titel;
 	
@@ -25,9 +26,8 @@ GLOBAL size_t draw_monster_liste(_UBYTE **mem)
 	{
 		if (mem != NULL)
 		{
-			*mem = titel->ptr.text;
-			if (*mem == NULL)
-				*mem = "";
+			*mem = game_gold_text(NULL,titel->ptr.text?titel->ptr.text:"");
+			if (*mem == NULL) goto failed;
 			mem++;
 		}
 		size++;
@@ -60,9 +60,8 @@ GLOBAL size_t draw_monster_liste(_UBYTE **mem)
 				{	
 					if (mem != NULL)
 					{
-						*mem = *ptr;
-						if (*mem == NULL)
-							*mem = "";
+						*mem = game_gold_text(pice,*ptr?*ptr:"");
+						if (*mem == NULL) goto failed;
 						mem++;
 					}
 					size++;
@@ -82,6 +81,9 @@ GLOBAL size_t draw_monster_liste(_UBYTE **mem)
 		pice++;
 	}
 	return size;
+failed:
+	while (mem > first) free(*--mem);
+	return 0;
 }
 
 /* Room reference expansion. Exact aliases are matched within encounter clauses,

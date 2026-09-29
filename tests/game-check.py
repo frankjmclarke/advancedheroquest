@@ -43,6 +43,7 @@ static size_t pack_extension(const GAME_DATA *d) {
     for(i=0;i<d->monsters.count;i++) n+=8+strlen(d->monsters.tokens[i].profile_id)+strlen(d->monsters.tokens[i].character_id);
     n+=16*d->hero_count+12*d->monsters.count+8*(d->hero_count+d->monsters.count);
     n+=8+12*(d->hero_count+d->monsters.count);
+    n+=8+4*d->count; /* v11 difficulty and revealed-room gold bonuses */
     return n;
 }
 static void generate(void) {
@@ -120,6 +121,25 @@ int main(int argc,char **argv) {
     assert(SetCurrentDirectoryA(argv[1]));
     assert(read_table("sonne2.tab",NULL));
     generate();
+    {
+        int room=-1; char *preview;
+        for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM && !monsters.seen[i]) { room=i; break; }
+        assert(room>=0); gold_bonus_pct=25;
+        preview=game_gold_text(&Pice[room],"5 Zombies, 1 Skeleton (50 Gold Crowns)");
+        assert(preview && !strcmp(preview,"5 Zombies, 1 Skeleton (63 Gold Crowns)")); free(preview);
+        gold_bonus_pct=0;
+    }
+    /* Per-model omission is applied only on first reveal, including at 100%. */
+    {
+        const PACK_PROFILE *ordinary=pack_monster("Orc");
+        int room=-1, before=monsters.count;
+        for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM) { room=i; break; }
+        assert(room>=0 && ordinary && !ordinary->unique);
+        monster_omit_pct=100;
+        monster_add_reference(ordinary->name,ordinary->stats,3,&room);
+        assert(monsters.count==before);
+        monster_omit_pct=0;
+    }
     /* Snapshot exact grid and text. Mark a room explored and modify stats. */
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type==NORMAL_ROOM || Pice[i].type==HAZARD) { game_fog()[i]=1; break; }
     monsters_reveal();
@@ -127,20 +147,40 @@ int main(int argc,char **argv) {
     heroes[0].melee.critical=11; heroes[0].melee.fumble=2; heroes[0].melee.reach=2;
     heroes[0].ranged.critical=11; heroes[0].ranged.fumble=2;
     turn_phase=1; gm_override=1; heroes[0].move_spent=2; heroes[0].attacked=1;
+    monster_omit_pct=10; gold_bonus_pct=25; room_gold_bonus_pct[i]=25;
+    {
+        char *reward[]={"10 Gold Crowns and 2 Points",NULL};
+        _UBYTE **original=Pice[i].text; char *formatted;
+        Pice[i].text=(_UBYTE**)reward;
+        formatted=game_room_contents(&Pice[i]); assert(formatted && strstr(formatted,"13 Gold Crowns") && strstr(formatted,"2 Points")); free(formatted);
+        gold_bonus_pct=50;
+        formatted=game_room_contents(&Pice[i]); assert(formatted && strstr(formatted,"13 Gold Crowns")); free(formatted);
+        Pice[i].text=original; gold_bonus_pct=25;
+    }
     monsters.tokens[0].move_spent=3; monsters.tokens[0].run_bonus=4;
     assert(capture(&snapshot));
     assert(game_encode(&snapshot,&bytes,&size)); free(snapshot.cells);
     decoded=game_decode(bytes,size); assert(decoded);
     assert(decoded->turn_phase==1 && decoded->gm_override==1);
+    assert(decoded->monster_omit_pct==10 && decoded->gold_bonus_pct==25 && decoded->room_gold_bonus_pct[i]==25);
     assert(decoded->heroes[0].move_spent==2 && decoded->heroes[0].attacked==1);
     assert(decoded->monsters.tokens[0].move_spent==3 && decoded->monsters.tokens[0].run_bonus==4);
     /* Missing room text stays NULL, rather than an allocated empty list. */
     for(i=0;i<MAX_PICE;i++) if(Pice[i].type!=EMPTY && !Pice[i].text) assert(!decoded->pieces[i].text);
     assert(game_encode(decoded,&other,&other_size)); assert(size==other_size && !memcmp(bytes,other,size)); free(other);
     for(i=0;i<5;i++) { assert(!strcmp(heroes[i].name,decoded->heroes[i].name)); assert(!memcmp(&heroes[i].kind,&decoded->heroes[i].kind,sizeof(HERO)-40)); }
+    /* Version 10 saves retain turns but start at standard difficulty. */
+    {
+        size_t old_size=size-8-4*snapshot.count;
+        unsigned char *old=(unsigned char*)malloc(old_size); assert(old);
+        memcpy(old,bytes,old_size); old[8]=10; version8_crc(old,old_size);
+        again=game_decode(old,old_size); assert(again);
+        assert(again->turn_phase==1 && !again->monster_omit_pct && !again->gold_bonus_pct);
+        game_data_free(again); free(old);
+    }
     /* Version 9 saves start in free play with fresh action allowances. */
     {
-        size_t old_size=size-8-12*(snapshot.hero_count+snapshot.monsters.count);
+        size_t old_size=size-8-4*snapshot.count-8-12*(snapshot.hero_count+snapshot.monsters.count);
         unsigned char *old=(unsigned char*)malloc(old_size); assert(old);
         memcpy(old,bytes,old_size); old[8]=9; version8_crc(old,old_size);
         again=game_decode(old,old_size); assert(again);
@@ -150,7 +190,7 @@ int main(int argc,char **argv) {
         game_data_free(again); free(old);
     }
     /* Version 8 keeps melee thresholds/reach and supplies standard ranged thresholds. */
-    version8_size=size-8-20*(snapshot.hero_count+snapshot.monsters.count); version8_bytes=(unsigned char*)malloc(version8_size); assert(version8_bytes);
+    version8_size=size-8-4*snapshot.count-8-20*(snapshot.hero_count+snapshot.monsters.count); version8_bytes=(unsigned char*)malloc(version8_size); assert(version8_bytes);
     memcpy(version8_bytes,bytes,version8_size); version8_bytes[8]=8;
     version8_tail=version8_size-(16*snapshot.hero_count+12*snapshot.monsters.count);
     for(i=0;i<snapshot.hero_count;i++) { version8_pos=version8_tail+12*i+8; version8_bytes[version8_pos]=(unsigned char)(version8_bytes[version8_pos]==2); }
@@ -162,7 +202,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=11; assert(!game_decode(bytes,size)); bytes[8]=10;
+    bytes[8]=12; assert(!game_decode(bytes,size)); bytes[8]=11;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;

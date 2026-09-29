@@ -76,11 +76,13 @@ static int valid_melee(const MELEE_PROFILE *p)
 static int valid_data(const GAME_DATA *d)
 {
     int i,j;
-    if(d->turn_phase<0 || d->turn_phase>2 || d->gm_override<0 || d->gm_override>1) return 0;
+    if(d->turn_phase<0 || d->turn_phase>2 || d->gm_override<0 || d->gm_override>1 ||
+       d->monster_omit_pct<0 || d->monster_omit_pct>100 || d->gold_bonus_pct<0 || d->gold_bonus_pct>500) return 0;
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) return 0;
     if(!d->pieces || !d->cells || !d->visible || d->player_view < -1 || d->player_view > 1) return 0;
     if(d->monsters.count<0 || d->monsters.count>MONSTER_LIMIT || d->monsters.dead_count<0 || d->monsters.dead_count>CHARACTER_LIMIT) return 0;
-    for(i=0;i<d->count;i++) if(d->monsters.seen[i]>2) return 0;
+    for(i=0;i<d->count;i++) if(d->monsters.seen[i]>2 || d->room_gold_bonus_pct[i]>500 ||
+        (!d->monsters.seen[i] && d->room_gold_bonus_pct[i])) return 0;
     for(i=0;i<d->monsters.dead_count;i++) {
         if(!memchr(d->monsters.dead[i],0,64) || !d->monsters.dead[i][0]) return 0;
         for(j=0;j<i;j++) if(!_stricmp(d->monsters.dead[i],d->monsters.dead[j])) return 0;
@@ -201,7 +203,7 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d)) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,10); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,11); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -255,6 +257,9 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
     put32(&b,d->turn_phase); put32(&b,d->gm_override);
     for(i=0;i<d->hero_count;i++) { const HERO *h=&d->heroes[i]; put32(&b,h->move_spent); put32(&b,h->attacked); put32(&b,h->run_bonus); }
     for(i=0;i<d->monsters.count;i++) { const MONSTER *m=&d->monsters.tokens[i]; put32(&b,m->move_spent); put32(&b,m->attacked); put32(&b,m->run_bonus); }
+    /* Version 11 records the chosen difficulty and each revealed room's reward bonus. */
+    put32(&b,d->monster_omit_pct); put32(&b,d->gold_bonus_pct);
+    for(i=0;i<d->count;i++) put32(&b,d->room_gold_bonus_pct[i]);
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -292,7 +297,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version<1 || version>10) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version<1 || version>11) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -379,6 +384,10 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
         d->turn_phase=get32(&b); d->gm_override=get32(&b);
         for(i=0;i<d->hero_count && b.ok;i++) { HERO *h=&d->heroes[i]; h->move_spent=get32(&b); h->attacked=get32(&b); h->run_bonus=get32(&b); }
         for(i=0;i<d->monsters.count && b.ok;i++) { MONSTER *m=&d->monsters.tokens[i]; m->move_spent=get32(&b); m->attacked=get32(&b); m->run_bonus=get32(&b); }
+    }
+    if(version>=11) {
+        d->monster_omit_pct=get32(&b); d->gold_bonus_pct=get32(&b);
+        for(i=0;i<d->count && b.ok;i++) { n=get32(&b); if(n<0 || n>500) goto bad; d->room_gold_bonus_pct[i]=(unsigned short)n; }
     }
     for(i=0;i<d->hero_count;i++) {
         if(!d->heroes[i].melee.critical) d->heroes[i].melee.critical=12;

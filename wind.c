@@ -400,7 +400,7 @@ LOCAL _VOID show_room_contents(CONST WIPR_HIT *hit)
 		Room_Contents = Dialog_Show(FROOMCONTENTS, room_contents_proc, FALSE, NULL);
 	if (Room_Contents == NULL)
 		return;
-	text = room_contents_text(piece->text);
+	text = game_room_contents(piece);
 	if (text == NULL)
 	{
 		Dialog_SetStr(Room_Contents, ROOMCONTENTSTEXT, "Not enough memory for room contents.");
@@ -1110,7 +1110,10 @@ LOCAL _BOOL liste_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
 			if (ptr->tab == NULL)
 				return FALSE;
 			if (draw_monster_liste(ptr->tab) == 0)
+			{
+				FREE(ptr->tab, ptr->zeilen * sizeof(_UBYTE *)); ptr->tab = NULL;
 				return FALSE;
+			}
 		}
 		max_spalten(buf);
 		W_GetFontSize(window, ptr->fontsize, &w, &h);
@@ -1128,7 +1131,10 @@ LOCAL _BOOL liste_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
 		if (ptr->ptr != NULL)
 			FREE(ptr->ptr, ptr->size);
 		if (ptr->tab != NULL)
+		{
+			size_t i; for (i = 0; i < ptr->zeilen; i++) free(ptr->tab[i]);
 			FREE(ptr->tab, ptr->zeilen * sizeof(_UBYTE *));
+		}
 		OFREE(ptr);
 		break;
 	case WMY_UPDATE:
