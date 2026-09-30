@@ -12,6 +12,8 @@ rem  directory), and defaults its data paths to its own folder, so it runs from
 rem  wherever it is unpacked with no configuration.
 rem
 rem  Usage:  package.bat
+rem          package.bat release-only  build release assets without refreshing
+rem                                    the local playable copy (may be running)
 rem ===========================================================================
 
 setlocal
@@ -108,6 +110,7 @@ if errorlevel 1 (
 )
 
 rem --- refresh the local playable copy ---------------------------------------
+if /i "%~1"=="release-only" goto package_zip
 rem  Preserve user maps, campaigns, and settings already in dist\HQ-Map. Only
 rem  replace the executable; keep its first pre-package version as a backup.
 if not exist "%PLAY%" (
@@ -126,6 +129,7 @@ if not exist "%PLAY%" (
 )
 
 rem --- zip -------------------------------------------------------------------
+:package_zip
 set "ZIP=%DIST%\HQ-Map-%VER%-win32.zip"
 if exist "%ZIP%" del /q "%ZIP%"
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
@@ -162,6 +166,6 @@ echo Package ready:
 for %%F in ("%ZIP%") do echo    %%~fF  (%%~zF bytes)
 if defined ISCC for %%F in ("%DIST%\HQ-Map-%VER%-setup.exe") do echo    %%~fF  (%%~zF bytes)
 echo    %STAGE%
-echo    %PLAY%
+if /i not "%~1"=="release-only" echo    %PLAY%
 echo To update an installed copy, run the setup EXE; packaging alone does not install it.
 exit /b 0

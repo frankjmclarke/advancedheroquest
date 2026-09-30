@@ -8,6 +8,40 @@ Press a couple of keys and it rolls you a whole dungeon — rooms, corridors, do
 
 Written by Jürgen Albuschies in 1999. This version runs on today's Windows, in English, in colour, and fills the screen.
 
+## September 29 update: Bright Wizard spells and map targeting
+
+Wizards now have personal spellbooks, learned spells and shared ingredient
+inventory. All twelve Bright spells have effect handlers, including damage,
+healing, temporary enchantments, forced movement, private scouting, magic doors
+and timed resurrection. Intelligence tests and Fate are supported; applying a
+spell consumes its ingredients and records casting and movement restrictions.
+
+Choose **Cast spell...** from the combat panel or a token's context menu.
+Click targets on the map, or use **Pick on map** to hide the casting window
+temporarily. Fireball templates preview their pack-defined footprint and
+automatically include covered figures, including friends. Flight selects a
+model followed by a destination. Cancel before applying spends nothing.
+
+After applying, a results window stays open until **Close**. It reports affected
+characters, actual damage or healing, remaining Wounds, knockout or death,
+temporary bonuses and expiry, ingredients consumed, remaining stock and Fate
+spent. The casting-window mouse-message freeze has been fixed.
+
+Board labels show active effects and their expiry. Corpse markers distinguish
+resurrection available now, next turn, expired, blocked squares and lost souls.
+Player View hides undiscovered corpses and effects. Zoom in to read full labels.
+
+Saves retain spellbooks, ingredients, temporary effects, turn timing, corpses,
+scouted areas and magic doors, with Undo and older-save migration. Campaign
+Builder preserves spell definitions and template dimensions with each pack.
+Bravery tests and some surprise adjudication remain GM controlled; learning and
+ingredient edits currently record inventory without deducting gold.
+
+The spellcasting implementation is merged into main at `b5ac6cd`. Build and
+native checks passed for casting, real mouse clicks, results, save migration,
+combat, fog, map rendering, Campaign Builder and all five Sentinel decks.
+The installer and portable ZIP include `SPELLCASTING.md` with the full guide.
+
 ## September 29 update: corridor discovery and simpler combat controls
 
 Corridors now start hidden in Player View. Placing or moving a hero reveals
