@@ -50,10 +50,10 @@ static int death_zone(int side,int index,int x,int y)
 {
     int i;
     if(side) {
-        for(i=0;i<hero_count;i++) if(HERO_ACTIVE(&heroes[i]) && heroes[i].x>=0 &&
+        for(i=0;i<hero_count;i++) if(HERO_ACTIVE(&heroes[i]) && !heroes[i].magic.sleep && heroes[i].x>=0 &&
             (!heroes[i].focus || heroes[i].focus==index+1) && battle_reach(x,y,heroes[i].x,heroes[i].y,heroes[i].melee.reach)) return 1;
     } else {
-        for(i=0;i<monsters.count;i++) if(monsters.tokens[i].wounds && monsters.tokens[i].x>=0 &&
+        for(i=0;i<monsters.count;i++) if(monsters.tokens[i].wounds && !monsters.tokens[i].magic.sleep && !magic.escaped[monsters.tokens[i].room] && monsters.tokens[i].x>=0 &&
             (!monsters.tokens[i].focus || monsters.tokens[i].focus==index+1) && battle_reach(x,y,monsters.tokens[i].x,monsters.tokens[i].y,monsters.tokens[i].melee.reach)) return 1;
     }
     return 0;
@@ -63,7 +63,7 @@ static int entered_zone(int side,int index,int px,int py,int x,int y)
     int i,ex,ey,focus,alive;
     for(i=0;i<(side?hero_count:monsters.count);i++) {
         ex=side?heroes[i].x:monsters.tokens[i].x; ey=side?heroes[i].y:monsters.tokens[i].y;
-        focus=side?heroes[i].focus:monsters.tokens[i].focus; alive=side?HERO_ACTIVE(&heroes[i]):monsters.tokens[i].wounds;
+        focus=side?heroes[i].focus:monsters.tokens[i].focus; alive=side?(HERO_ACTIVE(&heroes[i]) && !heroes[i].magic.sleep):(monsters.tokens[i].wounds && !monsters.tokens[i].magic.sleep && !magic.escaped[monsters.tokens[i].room]);
         { int reach=side?heroes[i].melee.reach:monsters.tokens[i].melee.reach;
           if(alive && ex>=0 && (!focus || focus==index+1) && battle_reach(x,y,ex,ey,reach) && !battle_reach(px,py,ex,ey,reach)) return 1; }
     }

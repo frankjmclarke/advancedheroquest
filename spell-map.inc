@@ -108,8 +108,12 @@ static int spell_map_click(int x,int y,const unsigned char *visible)
         panel_note("Use the GM view to select an unexplored section for Open Window."); return 1;
     }
     c->syncing=1;
-    if(sp->target==2 || sp->target==5 || sp->target==6 || sp->target==7 || (sp->effect==SPELL_FLIGHT && c->flight_destination)) {
+    if(sp->target==2 || sp->target==5 || sp->target==6 || sp->target==7 || sp->target==11 || (sp->effect==SPELL_FLIGHT && c->flight_destination)) {
         SetDlgItemInt(w,SCCENTREX,x+1,FALSE); SetDlgItemInt(w,SCCENTREY,y+1,FALSE); c->x=x; c->y=y;
+        if(sp->target==11) for(i=0;i<MAX_PICE;i++) {
+            PICE *d=&Pice[i]; int dx=d->pos==East?1:d->pos==West?-1:0,dy=d->pos==North?1:d->pos==South?-1:0;
+            if(d->type==DOOR && !game_fog()[i] && ((x==d->x && y==d->y) || (x==d->x+dx && y==d->y+dy))) { SendDlgItemMessage(w,SCDIRECTION,CB_SETCURSEL,d->pos,0); break; }
+        }
         if(sp->target==7) {
             int p=floor_piece(x,y),direction=-1;
             if(p>=0) {
@@ -153,6 +157,12 @@ static void magic_effect_text(int side,int index,char *text,size_t cap)
     MAGIC_MODEL *m=magic_model(side,index); size_t len;
     text[0]=0;
     if(m->armour) snprintf(text,cap,"Armour +1 (max 12): until exploration");
+    if(m->strength) { len=strlen(text); snprintf(text+len,cap-len,"%sStrength of Life: +1 S / WS until exploration",len?"\n":""); }
+    if(m->cloak) { len=strlen(text); snprintf(text+len,cap-len,"%sCloak: +1 T (+2 vs Undead/Daemons) until exploration",len?"\n":""); }
+    if(m->blind) { len=strlen(text); snprintf(text+len,cap-len,"%sBlinded: -1 to hit until exploration",len?"\n":""); }
+    if(m->regen) { len=strlen(text); snprintf(text+len,cap-len,"%sRegeneration: +1 W at GM phase; ends combat %d",len?"\n":"",m->regen); }
+    if(m->fear) { len=strlen(text); snprintf(text+len,cap-len,"%sFear immunity until exploration",len?"\n":""); }
+    if(m->sleep) { len=strlen(text); snprintf(text+len,cap-len,"%sAsleep: adjacent comrade must spend full turn",len?"\n":""); }
     if(m->courage) { len=strlen(text); snprintf(text+len,cap-len,"%sCourage Br12: until exploration",len?"\n":""); }
     if(m->hand) { len=strlen(text); snprintf(text+len,cap-len,"%sFlaming Hand%s: until exploration",len?"\n":"",magic_hand(m)?"":" (next combat turn)"); }
     if(m->swift) { len=strlen(text); snprintf(text+len,cap-len,"%sSwift Wind: until Turn %d",len?"\n":"",magic.turn+2); }
@@ -161,7 +171,12 @@ static void magic_effect_text(int side,int index,char *text,size_t cap)
 }
 static const char *magic_corpse_status(const MAGIC_MODEL *m)
 {
+    int i,j; const CHARACTER_PACK *p=pack_current();
     if(m->soul_lost) return "Soul lost";
+    if(!magic.combat_active && m->death_combat && (m->death_combat==magic.last_combat || (m->death_combat<0 && m->death_combat==-magic.trap_event))) {
+        for(i=0;i<hero_count;i++) for(j=0;j<p->spell_count;j++)
+            if(p->spells[j].effect==SPELL_RESTORE && !cast_reason(0,i,j)) return "Restore Life window: check caster's actions";
+    }
     if(magic.turn<m->death_turn) return "Resurrect next turn";
     if(magic.turn>m->death_turn) return "Resurrection expired";
     if(!battle_floor(m->corpse_x,m->corpse_y) || battle_occupied(m->corpse_x,m->corpse_y)) return "Resurrect now: square blocked";

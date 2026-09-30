@@ -76,6 +76,7 @@ static int valid_melee(const MELEE_PROFILE *p)
 }
 static int valid_magic_model(const MAGIC_MODEL *m,const GAME_DATA *d)
 {
+    if(m->strength<0 || m->strength>1 || m->cloak<0 || m->cloak>1 || m->blind<0 || m->blind>1 || m->fear<0 || m->fear>1 || m->sleep<0 || m->sleep>1 || m->restore_blocked<0 || m->restore_blocked>1 || m->regen<0 || m->regen>d->magic.combat+1 || m->death_combat<-d->magic.trap_event || m->death_combat>d->magic.combat) return 0;
     return m->armour>=0 && m->armour<=1 && m->courage>=0 && m->courage<=1 &&
         m->hand>=0 && m->hand<=1 && m->swift>=0 && m->swift<=1 &&
         m->hand_turn>=0 && m->hand_turn<=d->magic.turn && m->soul_lost>=0 && m->soul_lost<=1 &&
@@ -85,6 +86,8 @@ static int valid_magic_model(const MAGIC_MODEL *m,const GAME_DATA *d)
 static int valid_data(const GAME_DATA *d)
 {
     int i,j;
+    if(d->magic.trap_event<0 || d->magic.trap_event>1000000 || d->magic.combat<0 || d->magic.combat>1000000 || d->magic.last_combat<0 || d->magic.last_combat>d->magic.combat || d->magic.combat_active<0 || d->magic.combat_active>1) return 0;
+    for(i=0;i<d->count;i++) if(d->magic.venom[i]>1 || d->magic.escaped[i]>1) return 0;
     if(d->magic.turn<0 || d->magic.turn>1000000 || d->magic.exploration<0 || d->magic.exploration>1 || (d->turn_phase && d->magic.exploration)) return 0;
     if(d->turn_phase<0 || d->turn_phase>2 || d->gm_override<0 || d->gm_override>1 ||
        d->monster_omit_pct<0 || d->monster_omit_pct>100 || d->gold_bonus_pct<0 || d->gold_bonus_pct>500) return 0;
@@ -243,11 +246,31 @@ static void get_magic_model(BYTES *b,MAGIC_MODEL *m)
     m->armour=get32(b); m->courage=get32(b); m->hand=get32(b); m->hand_turn=get32(b); m->swift=get32(b);
     m->death_turn=get32(b); m->corpse_x=get32(b); m->corpse_y=get32(b); m->soul_lost=get32(b);
 }
+static void put_light_model(BYTES *b,const MAGIC_MODEL *m) {
+    put32(b,m->strength);
+    put32(b,m->cloak);
+    put32(b,m->blind);
+    put32(b,m->regen);
+    put32(b,m->fear);
+    put32(b,m->sleep);
+    put32(b,m->death_combat);
+    put32(b,m->restore_blocked);
+}
+static void get_light_model(BYTES *b,MAGIC_MODEL *m) {
+    m->strength=get32(b);
+    m->cloak=get32(b);
+    m->blind=get32(b);
+    m->regen=get32(b);
+    m->fear=get32(b);
+    m->sleep=get32(b);
+    m->death_combat=get32(b);
+    m->restore_blocked=get32(b);
+}
 int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d) || (!d->pack && !pack_fantasy())) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,15); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,16); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -311,6 +334,10 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
     for(i=0;i<d->monsters.count;i++) put_magic_model(&b,&d->monsters.tokens[i].magic);
     put(&b,d->magic.spied,d->count); put(&b,d->magic.surprise,d->count); put(&b,d->magic.doors,d->count);
     for(i=0;i<d->count;i++) put32(&b,d->magic.still_until[i]);
+    put32(&b,d->magic.combat); put32(&b,d->magic.combat_active); put32(&b,d->magic.last_combat); put32(&b,d->magic.trap_event);
+    for(i=0;i<d->hero_count;i++) put_light_model(&b,&d->heroes[i].magic);
+    for(i=0;i<d->monsters.count;i++) put_light_model(&b,&d->monsters.tokens[i].magic);
+    put(&b,d->magic.venom,d->count); put(&b,d->magic.escaped,d->count);
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -348,7 +375,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version<1 || version>15) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version<1 || version>16) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -500,6 +527,17 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
         if(!d->monsters.tokens[i].melee.reach) d->monsters.tokens[i].melee.reach=1;
         if(!d->monsters.tokens[i].ranged.critical) d->monsters.tokens[i].ranged.critical=12;
         if(!d->monsters.tokens[i].ranged.fumble) d->monsters.tokens[i].ranged.fumble=1;
+    }
+    if(version>=16) {
+        d->magic.combat=get32(&b); d->magic.combat_active=get32(&b); d->magic.last_combat=get32(&b); d->magic.trap_event=get32(&b);
+        for(i=0;i<d->hero_count && b.ok;i++) get_light_model(&b,&d->heroes[i].magic);
+        for(i=0;i<d->monsters.count && b.ok;i++) get_light_model(&b,&d->monsters.tokens[i].magic);
+        for(i=0;i<d->count && b.ok;i++) { if(b.pos>=b.n) b.ok=0; else d->magic.venom[i]=b.p[b.pos++]; }
+        for(i=0;i<d->count && b.ok;i++) { if(b.pos>=b.n) b.ok=0; else d->magic.escaped[i]=b.p[b.pos++]; }
+    }
+    {
+        CHARACTER_PACK *extended=pack_extend_light(d->pack); if(!extended) goto bad;
+        pack_free(d->pack); d->pack=extended;
     }
     if(!b.ok || b.pos!=b.n || !valid_data(d)) goto bad;
     if(version<5) {

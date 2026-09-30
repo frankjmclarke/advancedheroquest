@@ -16,6 +16,21 @@
 #define SPELL_RESURRECT 9
 #define SPELL_STILL 10
 #define SPELL_COURAGE 11
+#define SPELL_LIFE 12
+#define SPELL_STRENGTH 13
+#define SPELL_CLOAK 14
+#define SPELL_BLIND 15
+#define SPELL_REGEN 16
+#define SPELL_FEAR 17
+#define SPELL_SLEEP 18
+#define SPELL_RESTORE 19
+#define SPELL_LEARNING 20
+#define SPELL_BANISH 21
+#define SPELL_ESCAPE 22
+#define SPELL_VENOM 23
+#define TRAIT_UNDEAD 1
+#define TRAIT_LESSER_DAEMON 2
+#define TRAIT_GREATER_DAEMON 4
 typedef struct { char id[64],name[64]; int price; } PACK_COMPONENT;
 typedef struct {
     char id[64],name[64],text[2048];
@@ -37,6 +52,7 @@ typedef struct {
     unsigned char books[SPELL_BOOK_LIMIT];
     unsigned short components[SPELL_COMPONENT_LIMIT];
     int starting_components;
+    int traits;
 } PACK_PROFILE;
 typedef struct character_pack {
     char id[64],name[96];
@@ -56,6 +72,7 @@ const CHARACTER_PACK *pack_current(void);
 const CHARACTER_PACK *pack_legacy_save(void);
 CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size);
 CHARACTER_PACK *pack_clone(const CHARACTER_PACK *pack);
+CHARACTER_PACK *pack_extend_light(const CHARACTER_PACK *pack);
 void pack_free(CHARACTER_PACK *pack);
 void pack_adopt(CHARACTER_PACK *pack);
 int pack_activate(const CHARACTER_PACK *pack);

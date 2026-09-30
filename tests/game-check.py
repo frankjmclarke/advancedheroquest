@@ -36,7 +36,7 @@ static void version8_crc(unsigned char *bytes,size_t size) {
     for(i=16;i<size;i++) { crc^=bytes[i]; for(j=0;j<8;j++) crc=(crc>>1)^((crc&1)?0xedb88320UL:0); }
     crc=~crc; for(j=0;j<4;j++) bytes[12+j]=(unsigned char)(crc>>(8*j));
 }
-static size_t magic_extension(const GAME_DATA *d) { return 8+MAGIC_MODEL_BYTES*(d->hero_count+d->monsters.count)+7*d->count; }
+static size_t magic_extension(const GAME_DATA *d) { return 24+(MAGIC_MODEL_BYTES+32)*(d->hero_count+d->monsters.count)+9*d->count; }
 /* Size of the v7-v10 suffix, for constructing authentic older layouts. */
 static size_t pack_extension(const GAME_DATA *d) {
     int i; size_t n=4+(d->pack?d->pack:pack_fantasy())->size;
@@ -228,7 +228,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=16; assert(!game_decode(bytes,size)); bytes[8]=15;
+    bytes[8]=17; assert(!game_decode(bytes,size)); bytes[8]=16;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;
@@ -278,7 +278,7 @@ int main(int argc,char **argv) {
     assert(hero_count==6 && heroes[5].x==-1);
     SendMessage(dialog,WM_COMMAND,GPDELETE,0); assert(hero_count==5);
     /* Preserve old class IDs, and add all four new classes through the UI. */
-    assert(SendDlgItemMessage(dialog,GPCLASS,CB_GETCOUNT,0,0)==HERO_CLASS_COUNT);
+    assert(SendDlgItemMessage(dialog,GPCLASS,CB_GETCOUNT,0,0)==pack_current()->hero_count);
     for(i=5;i<HERO_CLASS_COUNT;i++) {
         SendDlgItemMessage(dialog,GPCLASS,CB_SETCURSEL,i,0);
         SendMessage(dialog,WM_COMMAND,GPADD,0);

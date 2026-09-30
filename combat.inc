@@ -114,7 +114,8 @@ static int damage_auto(char *text,size_t capacity,int dice,int toughness,int *wo
 {
     const char *p=text; char *end,completed[2048],part[8]; long value;
     int left=dice,count=0,roll; HCRYPTPROV provider;
-    if(dice<1 || dice>99 || toughness<0 || toughness>99 || strlen(text)>=sizeof(completed)) return 0;
+    if(toughness<0) toughness=0;
+    if(dice<1 || dice>99 || toughness>99 || strlen(text)>=sizeof(completed)) return 0;
     while(*p) {
         while(*p && (isspace((unsigned char)*p) || *p==',')) p++;
         if(!*p) break;
@@ -145,24 +146,31 @@ typedef struct {
 static int combat_can_next(const COMBAT *c)
 {
     if(!c->resolved || c->pending<0 || !c->monster.wounds || c->steps>=32) return 0;
-    return c->pending?(!HERO_DEAD(&c->hero) && (gm_override || !magic_stopped(c->m))):HERO_ACTIVE(&c->hero);
+    return c->pending?(!HERO_DEAD(&c->hero) && !c->monster.magic.sleep && (gm_override || !magic_stopped(c->m))):HERO_ACTIVE(&c->hero) && !c->hero.magic.sleep;
 }
 static int melee_adjacent(int h,int m) { return melee_reachable(h,m,0); }
+static int combat_strength(const COMBAT *c) { return c->side?(c->monster.stats[2]<12?c->monster.magic.strength:0):(c->hero.stats[2]<12?c->hero.magic.strength:0); }
+static int combat_dice(const COMBAT *c) { return (c->side?c->monster.melee.dice:c->hero.melee.dice)+combat_strength(c)+(c->side?c->hero.magic.sleep:c->monster.magic.sleep)*2; }
+static int combat_hit(const COMBAT *c,int roll) { return roll+magic_hit_modifier(c->side?&c->monster.magic:&c->hero.magic,c->side?&c->hero.magic:&c->monster.magic); }
 static int combat_required(const COMBAT *c)
 {
     const MELEE_PROFILE *p=c->side?&c->monster.melee:&c->hero.melee;
-    int ws=c->side?(HERO_KO(&c->hero)?1:c->hero.stats[0]):c->monster.stats[0];
-    return ws>=1 && ws<=12 && p->dice>0?p->hit[ws-1]:0;
+    int ws=c->side?(HERO_KO(&c->hero)?1:magic_ws(c->hero.stats[0],&c->hero.magic)):magic_ws(c->monster.stats[0],&c->monster.magic);
+    int required;
+    if(ws<1 || ws>12 || p->dice<=0 || !p->hit[ws-1]) return 0;
+    required=p->hit[ws-1]-(c->side?(c->monster.stats[0]<12?c->monster.magic.strength:0):(c->hero.stats[0]<12?c->hero.magic.strength:0));
+    return required<1?1:required;
 }
 static void combat_fields(HWND hwnd,COMBAT *c)
 {
     char text[500]; const char *attacker=c->side?c->monster.name:c->hero.name;
     const char *defender=c->side?c->hero.name:c->monster.name;
     const MELEE_PROFILE *p=c->side?&c->monster.melee:&c->hero.melee;
-    int ws=c->side?(HERO_KO(&c->hero)?1:c->hero.stats[0]):c->monster.stats[0],t=c->side?magic_toughness(c->hero.stats[3],&c->hero.magic):magic_toughness(c->monster.stats[3],&c->monster.magic);
+    int ws=c->side?(HERO_KO(&c->hero)?1:magic_ws(c->hero.stats[0],&c->hero.magic)):magic_ws(c->monster.stats[0],&c->monster.magic),t=c->side?magic_attack_toughness(c->hero.stats[3],&c->hero.magic,magic_traits(1,c->m)):magic_attack_toughness(c->monster.stats[3],&c->monster.magic,magic_traits(0,c->h));
     int required=combat_required(c),can_roll=!c->resolved && required>0;
     sprintf(text,"%s attacks %s\r\nWeapon: %s | Damage: %d D12 | Required hit: %d\r\nCritical %d+; fumble %d or less; %s reach\r\nTarget WS %d, T %d | Remaining Wounds: %s %d; %s %d",
-        attacker,defender,p->weapon[0]?p->weapon:"not configured",p->dice,required,p->critical,p->fumble,p->reach>=2?"long":"normal",ws,t,c->hero.name,c->hero.wounds,c->monster.name,c->monster.wounds);
+        attacker,defender,p->weapon[0]?p->weapon:"not configured",combat_dice(c),required,p->critical,p->fumble,p->reach>=2?"long":"normal",ws,t,c->hero.name,c->hero.wounds,c->monster.name,c->monster.wounds);
+    { size_t n=strlen(text); snprintf(text+n,sizeof(text)-n,"\r\nHit roll modifier: %+d; sleeping targets add +2 to each damage die.",magic_hit_modifier(c->side?&c->monster.magic:&c->hero.magic,c->side?&c->hero.magic:&c->monster.magic)); }
     if(magic_hand(c->side?&c->monster.magic:&c->hero.magic)) strcat(text,"\r\nFlaming Hand: successful hits cause one D12 direct Wounds.");
     SetDlgItemTextA(hwnd,MCINFO,text);
     EnableWindow(GetDlgItem(hwnd,MCHIT),!c->resolved); EnableWindow(GetDlgItem(hwnd,MCDAMAGE),!c->resolved);
@@ -185,31 +193,32 @@ static int combat_calculate(HWND hwnd,COMBAT *c)
     hit=(int)GetDlgItemInt(hwnd,MCHIT,&ok,FALSE);
     if(!ok || hit<1 || hit>12) { SetDlgItemTextA(hwnd,MCSTATUS,"Enter a hit die from 1 to 12."); return 0; }
     GetDlgItemTextA(hwnd,MCDAMAGE,dice,sizeof(dice));
-    if(hit>p->fumble && hit>=required && magic_hand(c->side?&c->monster.magic:&c->hero.magic)) {
+    if(hit>p->fumble && combat_hit(c,hit)>=required && magic_hand(c->side?&c->monster.magic:&c->hero.magic)) {
         char *end; long direct=strtol(dice,&end,10); while(*end && isspace((unsigned char)*end)) end++;
         if(end==dice || *end || direct<1 || direct>12) { SetDlgItemTextA(hwnd,MCSTATUS,"Flaming Hand: enter one D12 (direct Wounds, no Toughness or bonus dice)."); return 0; }
         damage=(int)direct;
     }
-    else if(hit>p->fumble && hit>=required && !damage_auto(dice,sizeof(dice),p->dice,c->side?magic_toughness(c->hero.stats[3],&c->hero.magic):magic_toughness(c->monster.stats[3],&c->monster.magic),&damage)) {
+    else if(hit>p->fumble && combat_hit(c,hit)>=required && !damage_auto(dice,sizeof(dice),combat_dice(c),(c->side?magic_attack_toughness(c->hero.stats[3],&c->hero.magic,magic_traits(1,c->m)):magic_attack_toughness(c->monster.stats[3],&c->monster.magic,magic_traits(0,c->h)))-(c->side?c->hero.magic.sleep:c->monster.magic.sleep)*2,&damage)) {
         SetDlgItemTextA(hwnd,MCSTATUS,"Enter the initial damage dice, each from 1 to 12. Bonus dice are automatic. If rolling fails, retry."); return 0;
     }
     SetDlgItemTextA(hwnd,MCDAMAGE,dice);
     old=c->side?c->hero.wounds:c->monster.wounds; condition=c->side?c->hero.condition:0;
     new_wounds=old;
-    { int fumble=hit<=p->fumble,critical=!fumble && hit>=required && hit>=p->critical;
-      if(!fumble && hit>=required) {
+    { int fumble=hit<=p->fumble,critical=!fumble && combat_hit(c,hit)>=required && hit>=p->critical;
+      if(!fumble && combat_hit(c,hit)>=required) {
           new_wounds=damage>old?0:old-damage;
           if(c->side && new_wounds==0) condition=damage>old?2:1;
           else if(c->side) condition=c->hero.condition;
       }
-      sprintf(line,"%s: hit %d vs %d. %s%s%s\r\nDamage dice: %s\r\n%d wounds; target %d -> %d W.%s\r\n\r\n",
-        c->side?c->monster.name:c->hero.name,hit,required,fumble?"Fumble.":hit>=required?"Hit.":"Miss.",
-        critical?" Attacker gains a free attack.":"",fumble?" Defender gains an immediate free attack.":"",
-        !fumble && hit>=required?dice:"none",damage,old,new_wounds,
+      sprintf(line,"%s: hit %d (modified %d) vs %d. %s%s%s\r\nDamage dice: %s\r\n%d wounds; target %d -> %d W.%s\r\n\r\n",
+        c->side?c->monster.name:c->hero.name,hit,combat_hit(c,hit),required,fumble?"Fumble.":combat_hit(c,hit)>=required?"Hit.":"Miss.",
+        critical?" Attacker gains a free attack.":"",fumble?(c->side?c->hero.magic.sleep:c->monster.magic.sleep)?" Sleeping defender cannot take a free attack.":" Defender gains an immediate free attack.":"",
+        !fumble && combat_hit(c,hit)>=required?dice:"none",damage,old,new_wounds,
         c->side?(condition==2?" Hero is dead (reduced below zero).":condition==1?" Hero is KO'd at zero Wounds.":""):"");
       c->pending=critical?c->side:fumble?!c->side:-1;
     }
     if(strlen(c->log)+strlen(line)>=sizeof(c->log)) { SetDlgItemTextA(hwnd,MCSTATUS,"Combat log full. Apply this preview; resolve further free attacks separately."); return 0; }
+    if(hit>p->fumble && combat_hit(c,hit)>=required) { if(c->side) c->hero.magic.sleep=0; else c->monster.magic.sleep=0; }
     if(c->side) { c->hero.wounds=new_wounds; c->hero.condition=condition; }
     else c->monster.wounds=new_wounds;
     strcat(c->log,line); c->resolved=1; c->steps++;
@@ -220,7 +229,7 @@ static int combat_apply(COMBAT *c)
     char note[160];
     if(!c->steps || turn_attack_reason(c->opening_side,c->h,c->m) || !melee_reachable(c->h,c->m,c->opening_side)) return 0;
     if(!c->monster.wounds && c->monster.unique && !character_dead(monster_identity(&c->monster)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
-    remember(); heroes[c->h]=c->hero; monsters.tokens[c->m]=c->monster;
+    remember(); magic_begin_combat(); c->hero.magic.restore_blocked=1; heroes[c->h]=c->hero; monsters.tokens[c->m]=c->monster;
     if(c->opening_side) monsters.tokens[c->m].attacked=1; else heroes[c->h].attacked=1;
     magic_hero_death(&heroes[c->h]);
     if(!c->monster.wounds) monster_kill(c->m);
@@ -254,7 +263,7 @@ static INT_PTR CALLBACK combat_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         SetDlgItemInt(hwnd,MCHIT,roll,FALSE); SetDlgItemTextA(hwnd,MCDAMAGE,"");
         dice[0]=0; count=0;
         { const MELEE_PROFILE *p=c->side?&c->monster.melee:&c->hero.melee;
-        left=roll>p->fumble && roll>=combat_required(c)?(magic_hand(c->side?&c->monster.magic:&c->hero.magic)?1:p->dice):0; }
+        left=roll>p->fumble && combat_hit(c,roll)>=combat_required(c)?(magic_hand(c->side?&c->monster.magic:&c->hero.magic)?1:combat_dice(c)):0; }
         while(left && count++<MELEE_ROLL_LIMIT) {
             if(!melee_d12(provider,&roll)) break;
             sprintf(part,"%s%d",dice[0]?" ":"",roll); strcat(dice,part);

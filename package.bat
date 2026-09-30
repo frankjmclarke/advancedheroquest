@@ -110,7 +110,10 @@ if errorlevel 1 (
 )
 
 rem --- refresh the local playable copy ---------------------------------------
-if /i "%~1"=="release-only" goto package_zip
+if /i "%~1"=="release-only" (
+    echo RELEASE ONLY: dist\HQ-Map\hq_map.exe is NOT being updated.
+    goto package_zip
+)
 rem  Preserve user maps, campaigns, and settings already in dist\HQ-Map. Only
 rem  replace the executable; keep its first pre-package version as a backup.
 if not exist "%PLAY%" (

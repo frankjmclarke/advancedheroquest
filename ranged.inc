@@ -59,10 +59,16 @@ static int edit_ranged(HWND owner,RANGED_PROFILE *profile,int *moved,int kind,co
 }
 typedef struct {
     HERO hero; MONSTER monster; int h,m,side,resolved,new_wounds,old_wounds,new_condition;
-    int fumble,friendly_index,friendly_side,ally_options;
+    int fumble,friendly_index,friendly_side,ally_options,hit_success;
     char result[2600];
 } SHOT;
 static RANGED_PROFILE *shot_profile(SHOT *s) { return s->side?&s->monster.ranged:&s->hero.ranged; }
+static int shot_hit(SHOT *s,int roll) { return roll+magic_hit_modifier(s->side?&s->monster.magic:&s->hero.magic,s->side?&s->hero.magic:&s->monster.magic); }
+static int shot_sleep(SHOT *s) {
+    if(s->fumble && s->friendly_index>=0) return magic_model(s->side?0:1,s->friendly_index)->sleep;
+    return s->side?s->hero.magic.sleep:s->monster.magic.sleep;
+}
+static int shot_dice(SHOT *s) { return shot_profile(s)->dice+shot_sleep(s)*2; }
 static int shot_critical(SHOT *s) { return shot_profile(s)->critical?shot_profile(s)->critical:12; }
 static int shot_fumble(SHOT *s) { return shot_profile(s)->fumble?shot_profile(s)->fumble:1; }
 static int shot_range(const SHOT *s) { return abs(s->hero.x-s->monster.x)+abs(s->hero.y-s->monster.y); }
@@ -116,9 +122,10 @@ static void shot_fields(HWND hwnd,SHOT *s)
     int d=shot_range(s),i; const int inputs[]={RSHIT,RSDAMAGE,RSPROFILE,RSROLL};
     sprintf(info,"%s fires at %s\r\n%s | Distance %d / range %d | Hit %d+ | Damage %d D12\r\nCritical %d+; fumble %d or less. Target T %d; %d Wounds. %s",
         s->side?s->monster.name:s->hero.name,s->side?s->hero.name:s->monster.name,
-        p->weapon[0]?p->weapon:"No ranged weapon",d,p->range,p->hit[ranged_band(d)],p->dice,
-        p->critical?p->critical:12,p->fumble?p->fumble:1,s->side?magic_toughness(s->hero.stats[3],&s->hero.magic):magic_toughness(s->monster.stats[3],&s->monster.magic),s->side?s->hero.wounds:s->monster.wounds,
+        p->weapon[0]?p->weapon:"No ranged weapon",d,p->range,p->hit[ranged_band(d)],shot_dice(s),
+        p->critical?p->critical:12,p->fumble?p->fumble:1,s->side?magic_attack_toughness(s->hero.stats[3],&s->hero.magic,magic_traits(1,s->m)):magic_attack_toughness(s->monster.stats[3],&s->monster.magic,magic_traits(0,s->h)),s->side?s->hero.wounds:s->monster.wounds,
         s->side?s->monster.moved?"Attacker moved.":"Attacker stationary.":s->hero.moved?"Attacker moved.":"Attacker stationary.");
+    { size_t n=strlen(info); snprintf(info+n,sizeof(info)-n,"\r\nHit roll modifier: %+d; sleeping targets add +2 to each damage die.",magic_hit_modifier(s->side?&s->monster.magic:&s->hero.magic,s->side?&s->hero.magic:&s->monster.magic)); }
     SetDlgItemTextA(hwnd,RSINFO,info);
     for(i=0;i<sizeof(inputs)/sizeof(inputs[0]);i++) EnableWindow(GetDlgItem(hwnd,inputs[i]),!s->resolved);
     EnableWindow(GetDlgItem(hwnd,RSROLL),!s->resolved && !blocked);
@@ -130,7 +137,7 @@ static void shot_fields(HWND hwnd,SHOT *s)
 }
 static void shot_victim(SHOT *s,int *t,int *w,const char **name)
 {
-    *t=s->side?magic_toughness(s->hero.stats[3],&s->hero.magic):magic_toughness(s->monster.stats[3],&s->monster.magic); *w=s->side?s->hero.wounds:s->monster.wounds;
+    *t=s->side?magic_attack_toughness(s->hero.stats[3],&s->hero.magic,magic_traits(1,s->m)):magic_attack_toughness(s->monster.stats[3],&s->monster.magic,magic_traits(0,s->h)); *w=s->side?s->hero.wounds:s->monster.wounds;
     *name=s->side?s->hero.name:s->monster.name;
 }
 static int shot_calculate(HWND hwnd,SHOT *s)
@@ -152,23 +159,24 @@ static int shot_calculate(HWND hwnd,SHOT *s)
     if(s->fumble && s->friendly_index<0) {
         t=0; w=0; name=shot_candidates(s)?"Defender chose no friendly victim; the missile misses":"No friendly model within two squares; the missile misses";
     } else if(s->fumble && s->friendly_side==0) {
-        t=magic_toughness(heroes[s->friendly_index].stats[3],&heroes[s->friendly_index].magic); w=heroes[s->friendly_index].wounds; name=heroes[s->friendly_index].name;
+        t=magic_attack_toughness(heroes[s->friendly_index].stats[3],&heroes[s->friendly_index].magic,magic_traits(s->side,s->side?s->m:s->h)); w=heroes[s->friendly_index].wounds; name=heroes[s->friendly_index].name;
     } else if(s->fumble) {
-        t=magic_toughness(monsters.tokens[s->friendly_index].stats[3],&monsters.tokens[s->friendly_index].magic); w=monsters.tokens[s->friendly_index].wounds; name=monsters.tokens[s->friendly_index].name;
+        t=magic_attack_toughness(monsters.tokens[s->friendly_index].stats[3],&monsters.tokens[s->friendly_index].magic,magic_traits(s->side,s->side?s->m:s->h)); w=monsters.tokens[s->friendly_index].wounds; name=monsters.tokens[s->friendly_index].name;
     } else shot_victim(s,&t,&w,&name);
     if(!s->fumble && hit>=shot_critical(s)) t=t/2;
-    needs_damage=!s->fumble && hit>=required;
+    needs_damage=!s->fumble && shot_hit(s,hit)>=required;
     if(s->fumble && s->friendly_index>=0) needs_damage=1;
+    s->hit_success=needs_damage;
     GetDlgItemTextA(hwnd,RSDAMAGE,dice,sizeof(dice));
-    if(needs_damage && !damage_auto(dice,sizeof(dice),shot_profile(s)->dice,t,&damage)) {
+    if(needs_damage && !damage_auto(dice,sizeof(dice),shot_dice(s),t-shot_sleep(s)*2,&damage)) {
         SetDlgItemTextA(hwnd,RSSTATUS,"Enter the initial damage dice, each from 1 to 12. Bonus dice are automatic. If rolling fails, retry."); return 0;
     }
     SetDlgItemTextA(hwnd,RSDAMAGE,dice);
     s->old_wounds=w; s->new_wounds=damage>w?0:w-damage;
     s->new_condition=(s->fumble && s->friendly_index>=0 && s->friendly_side==0)?heroes[s->friendly_index].condition:s->side?s->hero.condition:0;
     if((s->side || (s->fumble && s->friendly_side==0)) && needs_damage && damage>=w) s->new_condition=damage>w?2:1;
-    sprintf(s->result,"Hit %d vs %d: %s. %s\r\n%s: T %d; dice %s; %d wounds (%d -> %d W).",
-        hit,required,s->fumble?"Fumble":hit>=required?"Hit":"Miss",!s->fumble && hit>=shot_critical(s)?"Critical: target Toughness halved (rounded down); no free attack.":"",
+    sprintf(s->result,"Hit %d (modified %d) vs %d: %s. %s\r\n%s: T %d; dice %s; %d wounds (%d -> %d W).",
+        hit,shot_hit(s,hit),required,s->fumble?"Fumble":shot_hit(s,hit)>=required?"Hit":"Miss",!s->fumble && hit>=shot_critical(s)?"Critical: target Toughness halved (rounded down); no free attack.":"",
         name,t,needs_damage?dice:"none",damage,w,s->new_wounds);
     if(s->fumble && s->friendly_index<0) { damage=0; s->new_wounds=0; SetDlgItemTextA(hwnd,RSDAMAGE,""); }
     s->resolved=1; shot_fields(hwnd,s); return 1;
@@ -180,7 +188,7 @@ static int shot_apply(SHOT *s)
     if(!s->resolved || shot_blocked(s)) return 0;
     if((!s->fumble || s->friendly_index>=0) && s->friendly_side==1 && s->fumble) victim=&monsters.tokens[s->friendly_index];
     if((!s->side || (s->fumble && s->friendly_side==1)) && s->old_wounds && !s->new_wounds && victim->unique && !character_dead(monster_identity(victim)) && monsters.dead_count==CHARACTER_LIMIT) return 0;
-    remember();
+    remember(); magic_begin_combat(); if(!s->side) heroes[s->h].magic.restore_blocked=1;
     heroes[s->h].ranged=s->hero.ranged; heroes[s->h].moved=s->hero.moved;
     monsters.tokens[s->m].ranged=s->monster.ranged; monsters.tokens[s->m].moved=s->monster.moved;
     if(s->fumble && s->friendly_index<0) { /* No eligible ally: a clean miss. */ }
@@ -196,6 +204,10 @@ static int shot_apply(SHOT *s)
         victim->wounds=s->new_wounds;
         if(!s->new_wounds) monster_kill(s->m);
     }
+    if(s->hit_success) {
+        if(s->fumble && s->friendly_index>=0) magic_model(s->friendly_side,s->friendly_index)->sleep=0;
+        else magic_model(!s->side,s->side?s->h:s->m)->sleep=0;
+    }
     if(!s->side) heroes[s->h].fired=1;
     if(s->side) monsters.tokens[s->m].attacked=1; else heroes[s->h].attacked=1;
     sprintf(note,"Ranged: %s fired at %s. Attack %s.",s->side?s->monster.name:s->hero.name,
@@ -209,14 +221,16 @@ static int shot_roll_damage(HWND hwnd,SHOT *s)
     char dice[2048]="",part[8];
     hit=(int)GetDlgItemInt(hwnd,RSHIT,&ok,FALSE);
     if(!ok || hit<1 || hit>12) { SetDlgItemTextA(hwnd,RSSTATUS,"Enter or roll a hit first."); return 0; }
+    s->fumble=hit<=shot_fumble(s);
     if(hit<=shot_fumble(s)) {
         if(!shot_candidates(s)) return shot_calculate(hwnd,s);
         if(!s->ally_options) { shot_ally_options(hwnd,s); SetDlgItemTextA(hwnd,RSSTATUS,"The intended target's controller must choose a nearby friendly model."); return 0; }
         choice=(int)SendDlgItemMessage(hwnd,RSALLY,CB_GETCURSEL,0,0);
         if(choice<0) { SetDlgItemTextA(hwnd,RSSTATUS,"The intended target's controller must choose a nearby friendly model."); return 0; }
-    } else if(hit<shot_profile(s)->hit[ranged_band(shot_range(s))]) return shot_calculate(hwnd,s);
+        s->friendly_index=(int)SendDlgItemMessage(hwnd,RSALLY,CB_GETITEMDATA,choice,0);
+    } else if(shot_hit(s,hit)<shot_profile(s)->hit[ranged_band(shot_range(s))]) return shot_calculate(hwnd,s);
     if(!CryptAcquireContext(&provider,NULL,NULL,PROV_RSA_FULL,CRYPT_VERIFYCONTEXT)) { SetDlgItemTextA(hwnd,RSSTATUS,"Dice generator unavailable. Try Roll attack again."); return 0; }
-    left=shot_profile(s)->dice;
+    left=shot_dice(s);
     while(left && count++<MELEE_ROLL_LIMIT) {
         if(!melee_d12(provider,&roll)) break;
         sprintf(part,"%s%d",dice[0]?" ":"",roll); strcat(dice,part); if(roll!=12) left--;

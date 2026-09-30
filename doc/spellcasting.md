@@ -25,9 +25,10 @@ Enter the new total. The list shows carried stock and price per component; no
 gold is deducted. **Save changes** commits the whole draft; **Cancel** discards it.
 
 A new Wizard must allocate exactly four starting components. The progress
-message explains why Finish allocation and Save changes are disabled until
-the total matches. Finish allocation marks setup complete within the draft;
-Save changes commits it. Existing saves instead offer **Record remaining stock**,
+message shows the total still required to finish setup. **Save changes** always
+allows partial setup to be saved and resumed later; casting remains unavailable.
+When the total matches, **Finish allocation** marks setup complete within the
+draft, or **Save changes** finishes and commits it directly. Existing saves instead offer **Record remaining stock**,
 with no four-component requirement and no invented replenishment.
 
 ## Casting
@@ -157,11 +158,11 @@ no claim that their manual effects have been applied.
 Each theme JSON is the source of its components, spells, spellbooks and caster
 profile defaults. Compile with `python tools/compile-packs.py`. The compiler
 checks references and the runtime decoder bounds and validates the compiled
-HQPACK5 resource. HQPACK1-4 remain readable; old template spells use the original
+HQPACK6 resource. HQPACK1-5 remain readable; old template spells use the original
 2-by-2 footprint. Campaign Builder preserves the
 complete pack, so its spell definitions travel with the campaign.
 
-Version 15 saves embed the pack, temporary effects, turn clock, corpse records,
+Version 16 saves embed the pack, temporary effects, turn clock, corpse records,
 spying/surprise and magic-door states, as well as personal casting state including stock,
 learned spells, books and used/locked flags. Old saves remain readable. Older
 fantasy pack snapshots gain the supplied spell catalogue while preserving their
@@ -171,3 +172,44 @@ identities. Older deaths have no invented timing and cannot be resurrected by
 this timed spell. Pre-spellcasting heroes require component setup; remaining
 stock is not guessed. Legacy spellcasting monsters start with zero stock for
 GM correction. New Skaven sorcerers use their printed starting stock.
+
+## College of Light
+
+Choose **Light Wizard** in Heroes & Reserve. Its normal book is Light, while the
+existing Wizard retains Bright. A Light Wizard starts with Power of Life,
+Strength of Life, Cloak of Protection and Blinding Light and allocates four
+starting components through the same dialog. GM adjustment can deliberately
+override book membership. Learning and ingredient prices are reference values;
+inventory adjustments do not deduct gold.
+
+All twelve Light spells and their thirteen ingredients belong to the fantasy
+pack. Every ingredient costs 25 GC. The eight learnable spells carry the prices
+from Terror in the Dark, printed page 6. Ordinary once-per-turn casting,
+component consumption, stationary casting for Blinding Light, previews, Fate
+for Intelligence tests, results and Undo use the existing casting flow.
+
+| Spell | Implementation |
+| --- | --- |
+| Power of Life | Full healing of the caster or a model in its death zone, including KO recovery. Enemies block healing; other friendly models do not. Bright healing keeps its original stricter restriction. |
+| Strength of Life | +1 effective Strength and Weapon Skill until exploration. Melee gains one damage die and the corresponding hit-row adjustment; defending WS uses the bonus too. Characteristics cap at 12; printed stats and equipment stay unchanged. Repeated casts do not stack. |
+| Cloak of Protection | Caster receives +1 effective Toughness, or +2 against attackers whose pack profiles are Undead or Daemons. Melee, ranged, friendly ranged fumbles and spell damage consult the attacking profile. Expires at exploration; repeated Cloaks do not stack. |
+| Blinding Light | Automatically affects enemies currently in the caster's room/passage. -1 to hit applies to melee, ranged and Dagger of Banishment rolls until exploration. Figures entering afterwards are not retroactively blinded. |
+| Escape (100 GC) | Withdraws all placed living heroes to Reserve without pursuit and ends combat. Place heroes at their retreat destination using ordinary reserve placement. The escaped encounter's monsters cannot move or attack until a hero returns to that section; no monsters are removed or respawned. This abstracts the white barrier rather than placing a physical wall template. KO transport remains GM adjudicated. |
+| Restore Life (200 GC) | Select a Hero corpse from the combat just ended or the latest fatal trap incident. End combat with **Party > Start / Next exploration turn**; merely leaving guided turns switches to free play. The Wizard must not have moved, attacked or cast another spell since the incident ended. Intelligence success restores full Wounds; failure spends the component without destroying the soul. Movement and the normal attack are used for the restored Hero, matching the existing resurrection placement convention. |
+| Regeneration (150 GC) | One placed Hero receives 1 Wound at each GM phase, until the end of the next combat. Can recover KO, never the dead. No range or LOS restriction is invented. Guided Hero-to-GM phase transition triggers healing; in combat free play, Next Turn supplies that boundary. The panel reports recovered Wounds. |
+| Remove Venom (100 GC) | Records a persistent neutralised-poison marker for the current section, shown in GM view and retained in saves/Undo. Poison traps, hazards and carried weapon coatings are not modelled by the current engine: the GM applies the rule to those, including subsequently discovered hazards. Casting explicitly states this limitation. |
+| Dagger of Banishment (250 GC) | Choose an Undead/Daemon within 8 squares and LOS. Uses the caster's configured ranged hit row at that distance, independently of its weapon's maximum range. A hit destroys Undead; Lesser Daemons require Intelligence success, with Fate offered after failure. Failed Lesser/Greater banishment rolls damage dice equal to Toughness. The current digital convention does not apply weapon critical/fumble effects to this spell; its description states this, rather than borrowing unrelated weapon-specific thresholds. |
+| Light of Learning (200 GC) | Click a closed door in LOS; coordinates/orientation are available too. Privately inspects the existing room/passage beyond it without fog reveal, spawning or surprise bonuses. Shows the remaining spawned roster, or parses the generated roster before spawning, and visible board features. Raw encounter narrative, treasure amounts and concealed traps are withheld. Other unclassified visible narrative details require GM inspection. |
+| Sleep of Ages (175 GC) | One model in LOS sleeps indefinitely. It cannot move, attack, cast or project a death zone. Attacks gain +4 to hit, +2 damage dice and +2 per damage die; only unmodified twelves explode. A successful weapon blow wakes a survivor even if no Wounds were inflicted. Right-click the sleeper and choose **Wake with an adjacent comrade...**; select a comrade with a whole turn available. Waking uses its movement, normal attack and casting. |
+| Banish Fear (100 GC) | Automatically protects friendly models in the caster's death zone, including the caster, until exploration. Prevents Flight targeting. Other fear tests remain GM adjudicated, with the saved immunity visible on the board. |
+
+Light status labels show their expiry on the board. Spell results name affected
+figures and report the applied bonuses or restrictions and ingredient stock.
+New HQPACK6 resources add explicit creature traits and closed-door targeting.
+Version 16 adds Light enchantments, sleep, combat/incident timing, poison and
+escape records. Older saved state defaults these fields to zero. Older fantasy
+snapshots gain missing Light definitions by ID, appending slots rather than
+reordering saved ingredient inventories or learned spells. Existing character
+stats and Bright definitions are preserved, and no stock or spells are granted
+to existing Wizards. Unknown older corpse timing is not fabricated. Snapshots
+which already contain Light remain unchanged, including custom definitions.

@@ -220,6 +220,8 @@ static void remember(void) {
 }
 static const char *turn_attack_reason(int side,int h,int m)
 {
+    if(!gm_override && magic_model(side,side?m:h)->sleep) return "This model is asleep. An adjacent comrade can wake it using a full turn.";
+    if(side && !gm_override && magic.escaped[monsters.tokens[m].room]) return "Escape prevents attacks or pursuit until the heroes return to this encounter.";
     if(!gm_override && (side?monsters.tokens[m].move_spent:heroes[h].move_spent)==1000000) return "This model's movement and normal attack were used by a spell this turn.";
     if(side && !gm_override && magic_stopped(m)) return "Still Air: this monster cannot move or attack this turn.";
     if(!turn_phase || gm_override) return NULL;
@@ -239,6 +241,7 @@ static int turn_move_remaining(int side,int index)
 static int turn_can_move(int side,int index)
 {
     if(!gm_override && (side?monsters.tokens[index].move_spent:heroes[index].move_spent)==1000000) return 0;
+    if(!gm_override && (magic_model(side,index)->sleep || (side && magic.escaped[monsters.tokens[index].room]))) return 0;
     if(side && !gm_override && magic_stopped(index)) return 0;
     if((side?monsters.tokens[index].caster.move_locked:heroes[index].caster.move_locked) && !gm_override) return 0;
     if((!turn_phase && !magic.exploration && !magic_model(side,index)->swift) || gm_override) return 1;
@@ -551,13 +554,15 @@ static int move_hero(int index,int x,int y,const unsigned char *visible)
     allowed=turn_can_move(0,index) && battle_destination_cost(0,index,&x,&y,&cost);
     force_explore_path=0;
     if(!allowed) { MessageBeep(MB_ICONWARNING); return 0; }
-    remember(); if(heroes[index].x>=0) heroes[index].moved=1;
+    remember(); heroes[index].magic.restore_blocked=1;
+    if(heroes[index].x<0) { int section=floor_piece(x,y); if(section>=0) magic.escaped[section]=0; }
+    if(heroes[index].x>=0) heroes[index].moved=1;
     if(turn_phase || magic.exploration || heroes[index].magic.swift) heroes[index].move_spent+=cost;
     for(i=0;i<hero_route_count;i++) {
         heroes[index].x=hero_route[i]%Xsize; heroes[index].y=hero_route[i]/Xsize;
         reveal_corridors();
     }
-    heroes[index].x=x; heroes[index].y=y; focus_enter(0,index);
+    heroes[index].x=x; heroes[index].y=y; { int section=floor_piece(x,y); if(section>=0) magic.escaped[section]=0; } focus_enter(0,index);
     if(turn_phase) sprintf(note,"%s moved %d square%s; %d remaining.",heroes[index].name,cost,cost==1?"":"s",turn_move_remaining(0,index));
     else sprintf(note,"%s moved to square %d, %d.",heroes[index].name,x+1,y+1);
     panel_note(note); game_changed(); return 1;
@@ -646,6 +651,11 @@ void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,i
         label.left=(p->x+1)*size-sx; label.top=(Ysize-p->y-p->h+1)*size-sy;
         label.right=label.left+p->w*size; label.bottom=label.top+16;
         SetTextColor(dc,RGB(255,214,120)); DrawTextA(dc,note,-1,&label,DT_SINGLELINE|DT_END_ELLIPSIS|DT_NOPREFIX);
+    }
+    if(!visible) for(i=0;i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) if(magic.venom[i] || magic.escaped[i]) {
+        PICE *p=&Pice[i]; label.left=(p->x+1)*size-sx; label.top=(Ysize-p->y-p->h+1)*size-sy+16;
+        label.right=label.left+p->w*size; label.bottom=label.top+16;
+        SetTextColor(dc,RGB(120,210,255)); DrawTextA(dc,magic.venom[i]?"Poison neutralised (GM hazards/equipment)":"Escaped encounter: no pursuit",-1,&label,DT_SINGLELINE|DT_END_ELLIPSIS|DT_NOPREFIX);
     }
     spell_map_draw(dc,visible,size,sx,sy);
     RestoreDC(dc,saved);
@@ -865,8 +875,10 @@ static int party_apply(HWND hwnd)
     }
     if(next.wounds>next.stats[7]) { message("Current Wounds cannot exceed Max W."); return 0; }
     next.condition=next.wounds?0:next.kind==4?2:1;
-    magic_hero_death(&next);
-    if(memcmp(&next,&heroes[party_selection],sizeof(next))) { remember(); heroes[party_selection]=next; active=1; game_changed(); party_list(hwnd); }
+    if(memcmp(&next,&heroes[party_selection],sizeof(next))) {
+        remember(); heroes[party_selection]=next; magic_hero_death(&heroes[party_selection]);
+        active=1; game_changed(); party_list(hwnd);
+    }
     return 1;
 }
 static INT_PTR CALLBACK party_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
@@ -964,6 +976,7 @@ void game_party(void)
 }
 void game_command(int command)
 {
+    int regenerated=0;
     if(spell_map_dialog) { spell_map_resume(); MessageBeep(MB_ICONWARNING); return; }
     if(!map_ready) return;
     if(command==MGAMEHELP) {
@@ -971,7 +984,7 @@ void game_command(int command)
     }
     else if(command==MGAMEGUIDED) {
         remember(); turn_phase=turn_phase?0:1; gm_override=0;
-        if(turn_phase) { magic_next_turn(); magic.exploration=0; turn_reset_side(0); turn_reset_side(1); }
+        if(turn_phase) { magic_begin_combat(); magic_next_turn(); magic.exploration=0; turn_reset_side(0); turn_reset_side(1); }
         panel_note(turn_phase?"Hero phase started. Select a hero to move or attack.":"Guided turns ended. Free play is active.");
         turn_menu_update(); game_changed();
     }
@@ -1009,10 +1022,11 @@ void game_command(int command)
     }
     else if(command==MGAMETURN) {
         remember();
-        if(turn_phase==1) { turn_phase=2; turn_reset_side(1); }
+        if(turn_phase==1) { turn_phase=2; turn_reset_side(1); regenerated=magic_gm_phase(); }
         else if(turn_phase==2) { magic_next_turn(); turn_phase=1; turn_reset_side(0); }
-        else { if(magic.exploration) magic_exploration(); else magic_next_turn(); turn_reset_side(0); turn_reset_side(1); }
+        else { if(magic.exploration) magic_exploration(); else { magic_next_turn(); if(magic.combat_active) regenerated=magic_gm_phase(); } turn_reset_side(0); turn_reset_side(1); }
         panel_note(turn_phase==1?"Hero phase started. Choose a hero to move or attack.":turn_phase==2?"GM phase started. Choose a monster to move or attack.":"Movement and ranged shots reset.");
+        if(regenerated) { char note[160]; snprintf(note,sizeof(note),"%s Regeneration restored %d Wound(s) across the party.",turn_phase==2?"GM phase started.":"Turn advanced.",regenerated); panel_note(note); }
         turn_menu_update(); game_changed();
     }
     else if(command==MGAMELEAVE) reserve_party();

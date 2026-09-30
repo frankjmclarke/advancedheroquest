@@ -28,9 +28,9 @@ void pack_free(CHARACTER_PACK *p)
 }
 CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
 {
-    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total,format2,format3,format4,format5; PACK_PROFILE *q;
+    CHARACTER_PACK *p; PACK_READER r; int i,j,k,total,format2,format3,format4,format5,format6; PACK_PROFILE *q;
     if(!bytes || size<24 || size>PACK_BYTES_LIMIT) return NULL;
-    format5=!memcmp(bytes,"HQPACK5\n",8); format4=format5 || !memcmp(bytes,"HQPACK4\n",8); format3=format4 || !memcmp(bytes,"HQPACK3\n",8); format2=format3 || !memcmp(bytes,"HQPACK2\n",8);
+    format6=!memcmp(bytes,"HQPACK6\n",8); format5=format6 || !memcmp(bytes,"HQPACK5\n",8); format4=format5 || !memcmp(bytes,"HQPACK4\n",8); format3=format4 || !memcmp(bytes,"HQPACK3\n",8); format2=format3 || !memcmp(bytes,"HQPACK2\n",8);
     if(!format2 && memcmp(bytes,"HQPACK1\n",8)) return NULL;
     r.p=bytes; r.size=size; r.pos=8; r.ok=1;
     p=(CHARACTER_PACK*)calloc(1,sizeof(*p)); if(!p) return NULL;
@@ -84,14 +84,14 @@ CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
         }
         for(i=0;i<p->spell_count;i++) {
             PACK_SPELL *s=&p->spells[i]; string(&r,s->id,64); string(&r,s->name,64); string(&r,s->text,sizeof(s->text));
-            s->effect=number(&r,11); s->target=number(&r,10); s->range=number(&r,480); s->dice=number(&r,99);
+            s->effect=number(&r,format6?23:11); s->target=number(&r,format6?11:10); s->range=number(&r,480); s->dice=number(&r,99);
             s->test=number(&r,1); s->failed_dice=number(&r,99); s->stationary=number(&r,1); s->cost=number(&r,100000);
             if(s->target==2) s->template_width=s->template_height=2; /* original tile for HQPACK4 snapshots */
             k=0; for(j=0;j<p->component_count;j++) { s->components[j]=(unsigned short)number(&r,9999); k+=s->components[j]; }
             if(k>=2 && !s->stationary) goto bad;
-            { const int target[]={0,0,0,4,6,7,8,1,10,9,5,4};
+            { const int target[]={0,0,0,4,6,7,8,1,10,9,5,4,3,4,8,8,1,8,1,9,11,1,8,8};
               if(s->effect>=3 && s->target!=target[s->effect]) goto bad;
-              if(s->effect==SPELL_RESURRECT && !s->test) goto bad; }
+              if((s->effect==SPELL_RESURRECT || s->effect==SPELL_RESTORE) && !s->test) goto bad; }
             if((s->effect==SPELL_DAMAGE && (!s->dice || (s->target!=1 && s->target!=2))) || (s->effect==SPELL_HEAL && (s->target!=3 || s->test))) goto bad;
         }
         for(i=0;i<p->book_count;i++) {
@@ -126,6 +126,10 @@ CHARACTER_PACK *pack_decode(const unsigned char *bytes,size_t size)
         PACK_SPELL *s=&p->spells[i];
         s->template_width=number(&r,12); s->template_height=number(&r,12);
         if(s->target==2?(!s->template_width || !s->template_height):(s->template_width || s->template_height)) goto bad;
+    }
+    if(format6) for(i=0;i<total;i++) {
+        q=i<p->hero_count?&p->heroes[i]:&p->monsters[i-p->hero_count];
+        q->traits=number(&r,4); if(q->traits==3) goto bad;
     }
     if(!r.ok || r.pos!=r.size) goto bad;
     p->bytes=(unsigned char*)malloc(size); if(!p->bytes) goto bad;
@@ -177,7 +181,7 @@ static CHARACTER_PACK *pack_upgrade_bright(const CHARACTER_PACK *old,const CHARA
     char ignored[2048],id[64]; int i,j,k; CHARACTER_PACK *next; size_t size=old->size;
     const PACK_SPELL *replacement[SPELL_LIMIT]={0};
     for(i=0;i<old->spell_count;i++) if(old->spells[i].effect==SPELL_MANUAL) {
-        for(j=0;j<current->spell_count;j++) if(!strcmp(old->spells[i].id,current->spells[j].id) && current->spells[j].effect>=SPELL_ARMOUR) {
+        for(j=0;j<current->spell_count;j++) if(!strcmp(old->spells[i].id,current->spells[j].id) && current->spells[j].effect>=SPELL_ARMOUR && current->spells[j].effect<=SPELL_COURAGE) {
             replacement[i]=&current->spells[j]; size-=strlen(old->spells[i].text); size+=strlen(replacement[i]->text); break;
         }
     }
@@ -212,9 +216,9 @@ CHARACTER_PACK *pack_upgrade_magic(const CHARACTER_PACK *old)
         next=pack_upgrade_magic(layout); pack_free(layout); return next;
     }
     defs=f->profile_magic_offset-f->magic_offset; stride=4*(f->book_count+1+f->component_count);
-    size=old->size+defs+stride*(old->hero_count+old->monster_count)+8*f->spell_count; if(size>PACK_BYTES_LIMIT) return NULL;
+    size=old->size+defs+stride*(old->hero_count+old->monster_count)+8*f->spell_count+4*(old->hero_count+old->monster_count); if(size>PACK_BYTES_LIMIT) return NULL;
     bytes=(unsigned char*)calloc(size,1); if(!bytes) return NULL;
-    memcpy(bytes,old->bytes,old->size); memcpy(bytes,"HQPACK5\n",8);
+    memcpy(bytes,old->bytes,old->size); memcpy(bytes,"HQPACK6\n",8);
     memcpy(bytes+old->size,f->bytes+f->magic_offset,defs); pos=old->size+defs;
     for(i=0;i<old->hero_count+old->monster_count;i++,pos+=stride) {
         const char *id=i<old->hero_count?old->heroes[i].id:old->monsters[i-old->hero_count].id;
@@ -229,8 +233,15 @@ CHARACTER_PACK *pack_upgrade_magic(const CHARACTER_PACK *old)
         int dimensions[2]={f->spells[i].template_width,f->spells[i].template_height};
         for(j=0;j<2;j++) for(k=0;k<4;k++) bytes[pos++]=(unsigned char)((unsigned int)dimensions[j]>>(8*k));
     }
+    for(i=0;i<old->hero_count+old->monster_count;i++) {
+        const char *id=i<old->hero_count?old->heroes[i].id:old->monsters[i-old->hero_count].id;
+        int traits=0;
+        for(j=0;j<f->monster_count;j++) if(!strcmp(id,f->monsters[j].id)) traits=f->monsters[j].traits;
+        for(k=0;k<4;k++) bytes[pos++]=(unsigned char)((unsigned int)traits>>(8*k));
+    }
     next=pack_decode(bytes,size); free(bytes); return next;
 }
+#include "pack-light.inc"
 const CHARACTER_PACK *pack_legacy_save(void) { return selected_pack?selected_pack:pack_fantasy(); }
 CHARACTER_PACK *pack_clone(const CHARACTER_PACK *p) { return p?pack_decode(p->bytes,p->size):NULL; }
 void pack_adopt(CHARACTER_PACK *p) { pack_free(active_pack); active_pack=p; }
@@ -275,7 +286,16 @@ CHARACTER_PACK *pack_read_campaign(const char *quest,char error[256])
     if(fseek(fp,0,SEEK_END) || (len=ftell(fp))<24 || len>PACK_BYTES_LIMIT) { fclose(fp); strcpy(error,"Invalid character-pack size."); return NULL; }
     rewind(fp); bytes=(unsigned char*)malloc(len);
     if(bytes && fread(bytes,1,len,fp)==(size_t)len) p=pack_decode(bytes,len);
-    free(bytes); fclose(fp); if(!p) strcpy(error,"Character pack is damaged or unsupported."); return p;
+    free(bytes); fclose(fp);
+    if(!p) { strcpy(error,"Character pack is damaged or unsupported."); return NULL; }
+    /* Local packages preserve campaign files. Extend older fantasy registries
+       by stable ID so preserved campaigns expose new Light definitions too. */
+    {
+        CHARACTER_PACK *extended=pack_extend_light(p);
+        pack_free(p);
+        if(!extended) strcpy(error,"Not enough memory to upgrade character profiles.");
+        return extended;
+    }
 }
 int pack_select_campaign(const char *quest,char error[256])
 {

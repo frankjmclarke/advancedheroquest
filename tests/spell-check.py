@@ -31,7 +31,7 @@ for change in ('missing_component','missing_book','missing_spell','duplicate','u
 future=copy.deepcopy(source)
 future['spells'].append(dict(id='fantasy:spell:future',name='Future spell',text='A future harmless GM effect.',effect='manual',target='manual',components={}))
 future['spellbooks'].append(dict(id='fantasy:book:future',name='Future book',spells=['fantasy:spell:future'],starting_spells=['fantasy:spell:future']))
-assert compiler.compile_pack(future).startswith(b'HQPACK5\n')
+assert compiler.compile_pack(future).startswith(b'HQPACK6\n')
 def legacy_resource(version):
     data=compiler.compile_pack(source); pos=8; out=bytearray(f'HQPACK{version}\n'.encode())
     def take(n):
@@ -118,12 +118,13 @@ static LRESULT CALLBACK magic_board_proc(HWND w,UINT msg,WPARAM wp,LPARAM lp) {
     }
     return DefWindowProcA(w,msg,wp,lp);
 }
-static void map_spell_checks(const char *preview_path) {
+static void map_spell_checks(const char *preview_path,const char *legacy_path) {
     SPELL_CAST *c; int stock,turn,i; HWND board; HDC dc; RECT bounds; char text[512],path[MAX_PATH]; DWORD handles;
-    CHARACTER_PACK *old; unsigned char *bytes; const CHARACTER_PACK *p=pack_current(); size_t n=p->size-8*p->spell_count;
+    CHARACTER_PACK *old; unsigned char *bytes; const CHARACTER_PACK *p=pack_current(); size_t n=p->size-8*p->spell_count-4*(p->hero_count+p->monster_count);
     /* A real HQPACK4 snapshot receives a bounded 2x2 legacy footprint. */
-    bytes=(unsigned char*)malloc(p->size); assert(bytes); memcpy(bytes,p->bytes,p->size); memcpy(bytes,"HQPACK4\n",8);
-    old=pack_decode(bytes,n); assert(old && old->spells[2].template_width==2 && old->spells[2].template_height==2); pack_free(old);
+    bytes=(unsigned char*)malloc(p->size); assert(bytes);
+    { FILE *fp; long length; snprintf(path,sizeof(path),"%s/legacy4.hqp",legacy_path); fp=fopen(path,"rb"); assert(fp); fseek(fp,0,SEEK_END); length=ftell(fp); rewind(fp); assert(fread(bytes,1,length,fp)==length); fclose(fp); old=pack_decode(bytes,length); }
+     assert(old && old->spells[2].template_width==2 && old->spells[2].template_height==2); pack_free(old);
     memcpy(bytes,p->bytes,p->size); bytes[n+8*2]=13; assert(!pack_decode(bytes,p->size)); free(bytes);
     magic_fixture(); all_bright_ready(); heroes[1].x=6; heroes[1].y=2;
     stock=heroes[0].caster.components[component_index("Fire Dust")]; turn=magic.turn;
@@ -320,7 +321,7 @@ int main(int argc,char **argv) {
     static GAME_DATA d; GAME_DATA *loaded; unsigned char *bytes; size_t size,oldsize; CHARACTER_PACK *legacy,*upgraded; unsigned char *oldpack;
     INITCOMMONCONTROLSEX controls={sizeof(controls),ICC_LISTVIEW_CLASSES|ICC_TAB_CLASSES}; InitCommonControlsEx(&controls);
     assert(mem_alloc(40,40,1000,4096)); heap_clear(); magic_fixture(); p=pack_current();
-    assert(p && p->book_count==2 && p->spell_count==15 && p->component_count==8);
+    assert(p && p->book_count==3 && p->spell_count==27 && p->component_count==21);
     assert(caster_has_book(&heroes[0].caster)); assert(heroes[0].caster.setup_pending && heroes[0].caster.starting_allowance==4);
     fire=spell_index("Flames of Death"); heal=spell_index("Flames of the Phoenix"); inferno=spell_index("Inferno of Doom");
     dust=component_index("Fire Dust"); phoenix=component_index("Phoenix Feather"); tooth=component_index("Dragon Tooth");
@@ -330,7 +331,7 @@ int main(int argc,char **argv) {
     w=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGSPELLBOOK),NULL,spellbook_proc,(LPARAM)&e); assert(w);
     assert(ListView_GetItemCount(GetDlgItem(w,SBCOMPONENTS))==4);
     assert(ListView_GetItemCount(GetDlgItem(w,SBSPELLS))==12); assert(IsWindowEnabled(GetDlgItem(w,SBSPELLS)));
-    assert(!IsWindowEnabled(GetDlgItem(w,SBFINISH)) && !IsWindowEnabled(GetDlgItem(w,IDOK)));
+    assert(!IsWindowEnabled(GetDlgItem(w,SBFINISH)) && IsWindowEnabled(GetDlgItem(w,IDOK)));
     ListView_SetItemState(GetDlgItem(w,SBSPELLS),2,LVIS_SELECTED|LVIS_FOCUSED,LVIS_SELECTED|LVIS_FOCUSED);
     assert(!memcmp(&e.draft,&heroes[0].caster,sizeof(CASTER_STATE))); /* selecting does not learn */
     e.draft.components[dust]=4; book_lists(w,&e); assert(IsWindowEnabled(GetDlgItem(w,SBFINISH)));
@@ -403,8 +404,8 @@ int main(int argc,char **argv) {
     DestroyWindow(w);
     /* New save snapshots round-trip personal state exactly. */
     assert(capture(&d)); assert(game_encode(&d,&bytes,&size)); free(d.cells);
-    assert(bytes[8]==15); loaded=game_decode(bytes,size); assert(loaded);
-    assert(!memcmp(&loaded->heroes[0].caster,&heroes[0].caster,sizeof(CASTER_STATE))); assert(loaded->pack->book_count==2);
+    assert(bytes[8]==16); loaded=game_decode(bytes,size); assert(loaded);
+    assert(!memcmp(&loaded->heroes[0].caster,&heroes[0].caster,sizeof(CASTER_STATE))); assert(loaded->pack->book_count==3);
     game_data_free(loaded);
     /* Range-check quantities before narrowing them into unsigned short storage. */
     {
@@ -434,14 +435,14 @@ int main(int argc,char **argv) {
     }
     /* HQPACK3 snapshot upgrade preserves profile definitions. */
     oldpack=(unsigned char*)malloc(p->magic_offset); assert(oldpack); memcpy(oldpack,p->bytes,p->magic_offset); memcpy(oldpack,"HQPACK3\n",8);
-    legacy=pack_decode(oldpack,p->magic_offset); assert(legacy && !legacy->book_count); upgraded=pack_upgrade_magic(legacy); assert(upgraded && upgraded->book_count==2);
+    legacy=pack_decode(oldpack,p->magic_offset); assert(legacy && !legacy->book_count); upgraded=pack_upgrade_magic(legacy); assert(upgraded && upgraded->book_count==3);
     assert(!strcmp(legacy->heroes[3].text,upgraded->heroes[3].text)); pack_free(legacy); pack_free(upgraded); free(oldpack);
     for(i=1;i<=2;i++) {
         char filename[30]; FILE *fp; long length;
         sprintf(filename,"legacy%d.hqp",i); fp=fopen(filename,"rb"); assert(fp);
         fseek(fp,0,SEEK_END); length=ftell(fp); rewind(fp); oldpack=(unsigned char*)malloc(length); assert(oldpack);
         assert(fread(oldpack,1,length,fp)==length); fclose(fp);
-        legacy=pack_decode(oldpack,length); assert(legacy); upgraded=pack_upgrade_magic(legacy); assert(upgraded && upgraded->book_count==2);
+        legacy=pack_decode(oldpack,length); assert(legacy); upgraded=pack_upgrade_magic(legacy); assert(upgraded && upgraded->book_count==3);
         assert(!strcmp(upgraded->heroes[3].text,legacy->heroes[3].text)); assert(upgraded->heroes[3].stats[6]==legacy->heroes[3].stats[6]);
         pack_free(legacy); pack_free(upgraded); free(oldpack);
     }
@@ -452,7 +453,7 @@ int main(int argc,char **argv) {
     memset(&heroes[0].caster,0,sizeof(CASTER_STATE)); heroes[0].caster.books[1]=1; heroes[0].caster.known[spell_index("Fireball")]=1;
     heroes[0].caster.components[component_index("Pinch of Warpstone")]=1;
     assert(pack_caster_valid(&heroes[0].caster,p)); assert(!cast_reason(0,0,spell_index("Fireball"))); assert(cast_reason(0,0,fire));
-    bright_effect_checks(argv[1],argv[3]); map_spell_checks(argv[3]);
+    bright_effect_checks(argv[1],argv[3]); map_spell_checks(argv[3],argv[2]);
     game_shutdown(); mem_freeall(); puts("PASS: spell registries, two books, stock, damage/healing, all Bright handlers, turn timing, forced runs, magic doors/generation, spying, resurrection, native dialogs, Undo and v15/v14/v13 migration."); return 0;
 }
 
@@ -465,7 +466,7 @@ with tempfile.TemporaryDirectory(prefix='hq-spell-test-') as temp:
     for sp in old_magic['spells']:
         if sp['effect'] not in ('manual','damage','heal'):
             sp['effect']='manual'; sp['target']='manual'; sp['range']=0; sp['text']='GM resolves this effect.'
-    legacy4=bytearray(compiler.compile_pack(old_magic)[:-8*len(old_magic['spells'])])
+    legacy4=bytearray(compiler.compile_pack(old_magic)[:-(8*len(old_magic['spells'])+4*(len(old_magic['heroes'])+len(old_magic['monsters'])))])
     legacy4[:8]=b'HQPACK4\n'
     (work/'legacy4.hqp').write_bytes(legacy4)
     exclude = {'main.obj', 'maindm.obj', 'winddm.obj', 'game.obj'}

@@ -494,6 +494,69 @@
         "critical": 12,
         "fumble": 1
       }
+    },
+    {
+      "id": "fantasy:light-wizard",
+      "name": "Light Wizard",
+      "kind": 3,
+      "fate": 2,
+      "stats": [
+        4,
+        5,
+        4,
+        5,
+        8,
+        7,
+        9,
+        4,
+        0
+      ],
+      "text": "College of Light Wizard. Uses only the Light spellbook. Begins with Power of Life, Strength of Life, Cloak of Protection and Blinding Light. Allocate four starting components in Spellbook & Components.",
+      "melee": {
+        "weapon": "Dagger (Magnus / Telor)",
+        "dice": 1,
+        "hit": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "critical": 12,
+        "fumble": 1,
+        "reach": 1
+      },
+      "ranged": {
+        "weapon": "Throwing dagger (Telor)",
+        "kind": 3,
+        "range": 4,
+        "dice": 1,
+        "hit": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "critical": 12,
+        "fumble": 1
+      },
+      "caster": {
+        "books": [
+          "fantasy:book:light"
+        ],
+        "starting_components": 4
+      },
+      "aliases": [
+        "light wizard"
+      ]
     }
   ],
   "monsters": [
@@ -551,7 +614,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-sentry-1-2",
@@ -607,7 +671,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-champion-1-3",
@@ -663,7 +728,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-warlord-1-4",
@@ -719,7 +785,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-gutter-runner-1-5",
@@ -775,7 +842,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-night-runner-1-6",
@@ -831,7 +899,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-poisoned-wind-globadier-1-7",
@@ -889,7 +958,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-jezzailachis-team-1-8",
@@ -947,7 +1017,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:beastman-2-1",
@@ -1003,7 +1074,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:beastman-champion-2-2",
@@ -1059,7 +1131,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:beastman-sentry-2-3",
@@ -1115,7 +1188,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:beastman-warlord-2-4",
@@ -1171,7 +1245,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:wight-2-5",
@@ -1227,7 +1302,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:liche-2-6",
@@ -1283,7 +1361,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:ghoul-2-7",
@@ -1339,7 +1420,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:vampire-2-8",
@@ -1395,7 +1477,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:clan-mors-warlord-shaffat-3-1",
@@ -1451,7 +1536,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:clan-skryre-sorceror-tsekkaz-3-2",
@@ -1517,7 +1603,8 @@
           "fantasy:component:daemon-statue": 1,
           "fantasy:component:warpstone": 2
         }
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-beastmaster-3-3",
@@ -1573,7 +1660,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-slavemaster-3-4",
@@ -1629,7 +1717,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:rat-ogre-3-5",
@@ -1685,7 +1774,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-slave-3-6",
@@ -1741,7 +1831,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:cave-troll-3-7",
@@ -1797,7 +1888,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-gutter-runner-3-8",
@@ -1853,7 +1945,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:chaos-lord-4-1",
@@ -1909,7 +2002,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:daemonette-4-2",
@@ -1965,7 +2059,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "lesser_daemon"
+      ]
     },
     {
       "id": "fantasy:undead-champion-4-3",
@@ -2021,7 +2118,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:greater-daemon-of-tzeentch-4-4",
@@ -2077,7 +2177,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "greater_daemon"
+      ]
     },
     {
       "id": "fantasy:minotaur-lord-4-5",
@@ -2133,7 +2236,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:chaos-sorcerer-4-6",
@@ -2189,7 +2293,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:orc-warchief-4-7",
@@ -2245,7 +2350,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:ogre-chieftain-4-8",
@@ -2301,7 +2407,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:zombie-5-1",
@@ -2357,7 +2464,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:skeleton-5-2",
@@ -2413,7 +2523,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:mummy-5-3",
@@ -2469,7 +2582,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:fimir-5-4",
@@ -2525,7 +2641,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:ogre-5-5",
@@ -2581,7 +2698,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:troll-5-6",
@@ -2637,7 +2755,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:minotaur-5-7",
@@ -2693,7 +2812,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:bloodthirster-5-8",
@@ -2749,7 +2869,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "greater_daemon"
+      ]
     },
     {
       "id": "fantasy:goblin-6-1",
@@ -2805,7 +2928,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:goblin-archer-6-2",
@@ -2861,7 +2985,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:orc-6-3",
@@ -2917,7 +3042,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:orc-champion-6-4",
@@ -2973,7 +3099,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:orc-warlord-6-5",
@@ -3029,7 +3156,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:chaos-thug-6-6",
@@ -3085,7 +3213,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:chaos-warrior-6-7",
@@ -3141,7 +3270,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:chaos-champion-6-8",
@@ -3197,7 +3327,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:skaven-warpfire-thrower-team-7-1",
@@ -3255,7 +3386,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:clan-skryre-warpweaver-7-2",
@@ -3313,7 +3445,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:clan-skryre-white-skaven-sorcerer-7-3",
@@ -3381,7 +3514,8 @@
           "fantasy:component:daemon-statue": 1,
           "fantasy:component:warpstone": 2
         }
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:clan-pestilens-plague-censer-bearer-7-4",
@@ -3439,7 +3573,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:clan-pestilens-plague-monk-7-5",
@@ -3497,7 +3632,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:clan-mors-warlord-7-6",
@@ -3553,7 +3689,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:clan-eshin-assassin-7-7",
@@ -3611,7 +3748,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:praznagar-prince-of-agony-7-8",
@@ -3667,7 +3805,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:orc-sentry-8-1",
@@ -3723,7 +3862,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:chaos-thug-sentry-8-2",
@@ -3779,7 +3919,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:wight-8-3",
@@ -3835,7 +3976,10 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "fantasy:giant-rat-8-4",
@@ -3891,7 +4035,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:sorcerer-of-nurgle-8-5",
@@ -3947,7 +4092,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:wolf-8-6",
@@ -4003,7 +4149,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:ghoul-8-7",
@@ -4059,7 +4206,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     },
     {
       "id": "fantasy:giant-vampire-bat-8-8",
@@ -4115,7 +4263,8 @@
         ],
         "critical": 12,
         "fumble": 1
-      }
+      },
+      "traits": []
     }
   ],
   "components": [
@@ -4157,6 +4306,71 @@
     {
       "id": "fantasy:component:daemon-statue",
       "name": "Silver Daemon Statue",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:silver-hand",
+      "name": "Silver Hand",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:powdered-bones-of-a-large-monster",
+      "name": "Powdered Bones of a Large Monster",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:cloth-of-gold",
+      "name": "Cloth of Gold",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:glass-prism",
+      "name": "Glass Prism",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:grave-dust",
+      "name": "Grave Dust",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:lizards-tail",
+      "name": "Lizard's Tail",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:fossil-leaf",
+      "name": "Fossil Leaf",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:troll-bone-marrow",
+      "name": "Troll Bone Marrow",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:snake-tooth",
+      "name": "Snake Tooth",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:miniature-silver-dagger",
+      "name": "Miniature Silver Dagger",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:lit-lamp",
+      "name": "Lit Lamp",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:duck-down",
+      "name": "Duck Down",
+      "price": 25
+    },
+    {
+      "id": "fantasy:component:heart-of-a-lion",
+      "name": "Heart of a Lion",
       "price": 25
     }
   ],
@@ -4342,6 +4556,163 @@
       },
       "effect": "manual",
       "target": "manual"
+    },
+    {
+      "id": "fantasy:spell:power-of-life",
+      "name": "Power of Life",
+      "effect": "life",
+      "target": "healing",
+      "range": 0,
+      "learning_cost": 0,
+      "components": {
+        "fantasy:component:silver-hand": 1
+      },
+      "text": "Heal all lost Wounds of the caster or a model in its death zone. Enemies in that zone block casting; allies do not. Cannot resurrect.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:strength-of-life",
+      "name": "Strength of Life",
+      "effect": "strength",
+      "target": "touch",
+      "range": 0,
+      "learning_cost": 0,
+      "components": {
+        "fantasy:component:powdered-bones-of-a-large-monster": 1
+      },
+      "text": "Caster or one model in its death zone gains +1 Strength and +1 Weapon Skill until the next exploration turn. Does not stack.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:cloak-of-protection",
+      "name": "Cloak of Protection",
+      "effect": "cloak",
+      "target": "self",
+      "range": 0,
+      "learning_cost": 0,
+      "components": {
+        "fantasy:component:cloth-of-gold": 1
+      },
+      "text": "Caster gains +2 Toughness against Undead and Daemons, +1 against other attacks, until the next exploration turn. Does not stack with itself.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:blinding-light",
+      "name": "Blinding Light",
+      "effect": "blind",
+      "target": "self",
+      "range": 0,
+      "learning_cost": 0,
+      "components": {
+        "fantasy:component:glass-prism": 1,
+        "fantasy:component:grave-dust": 1
+      },
+      "text": "All enemies currently in the caster's room or passage suffer -1 to hit until the next exploration turn.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:escape",
+      "name": "Escape",
+      "effect": "escape",
+      "target": "self",
+      "range": 0,
+      "learning_cost": 100,
+      "components": {
+        "fantasy:component:lizards-tail": 1
+      },
+      "text": "Automatically escape this encounter without pursuit. Place the heroes in Reserve, then place them at their retreat destination. Returning to the encounter restores normal rules.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:restore-life",
+      "name": "Restore Life",
+      "effect": "restore",
+      "target": "corpse",
+      "range": 0,
+      "learning_cost": 200,
+      "components": {
+        "fantasy:component:fossil-leaf": 1
+      },
+      "text": "After combat ends, before the Wizard moves, attacks or casts anything else, restore a hero who died in that combat or the latest fatal trap incident on an Intelligence success. Failure consumes the component but does not destroy the soul.",
+      "intelligence_test": 1
+    },
+    {
+      "id": "fantasy:spell:regeneration",
+      "name": "Regeneration",
+      "effect": "regen",
+      "target": "model",
+      "range": 480,
+      "learning_cost": 150,
+      "components": {
+        "fantasy:component:troll-bone-marrow": 1
+      },
+      "text": "One Hero (including the caster) recovers one lost Wound at the beginning of each GM phase until the end of the next combat. No resurrection. No range is specified; target must be on the board.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:remove-venom",
+      "name": "Remove Venom",
+      "effect": "venom",
+      "target": "self",
+      "range": 0,
+      "learning_cost": 100,
+      "components": {
+        "fantasy:component:snake-tooth": 1
+      },
+      "text": "Permanently neutralise poison in this room or passage, including concealed traps and hazards and carried poisoned weapons. Poison hazards and equipment are GM adjudicated; the saved section marker records their neutralisation.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:dagger-of-banishment",
+      "name": "Dagger of Banishment",
+      "effect": "banish",
+      "target": "model",
+      "range": 8,
+      "learning_cost": 250,
+      "components": {
+        "fantasy:component:miniature-silver-dagger": 1
+      },
+      "text": "Ranged attack within eight squares and line of sight. A hit destroys Undead. A Lesser Daemon is destroyed on an Intelligence success, otherwise takes damage dice equal to Toughness. Greater Daemons take that damage pool. Uses the caster's configured ranged hit row, without weapon critical/fumble effects.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:light-of-learning",
+      "name": "Light of Learning",
+      "effect": "learning",
+      "target": "closed_door",
+      "range": 0,
+      "learning_cost": 200,
+      "components": {
+        "fantasy:component:lit-lamp": 1
+      },
+      "text": "Click a closed door in line of sight to inspect the section beyond it. Shows visible monsters and features only; concealed traps and secrets stay hidden. Does not reveal fog, spawn monsters or grant surprise.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:sleep-of-ages",
+      "name": "Sleep of Ages",
+      "effect": "sleep",
+      "target": "model",
+      "range": 480,
+      "learning_cost": 175,
+      "components": {
+        "fantasy:component:duck-down": 1
+      },
+      "text": "One model in line of sight sleeps until woken. An adjacent comrade must spend a whole combat turn to wake it. Attacks gain +4 to hit, +2 damage dice and +2 on each damage die; a successful blow wakes the survivor.",
+      "intelligence_test": 0
+    },
+    {
+      "id": "fantasy:spell:banish-fear",
+      "name": "Banish Fear",
+      "effect": "fear",
+      "target": "self",
+      "range": 0,
+      "learning_cost": 100,
+      "components": {
+        "fantasy:component:heart-of-a-lion": 1
+      },
+      "text": "Friendly models in the caster's death zone (including the caster) are immune to fear until the next exploration turn, including Flight. Other fear tests remain GM adjudicated.",
+      "intelligence_test": 0
     }
   ],
   "spellbooks": [
@@ -4381,6 +4752,30 @@
         "fantasy:spell:choke",
         "fantasy:spell:fireball",
         "fantasy:spell:flaming-skull"
+      ]
+    },
+    {
+      "id": "fantasy:book:light",
+      "name": "Light Wizard",
+      "spells": [
+        "fantasy:spell:power-of-life",
+        "fantasy:spell:strength-of-life",
+        "fantasy:spell:cloak-of-protection",
+        "fantasy:spell:blinding-light",
+        "fantasy:spell:escape",
+        "fantasy:spell:restore-life",
+        "fantasy:spell:regeneration",
+        "fantasy:spell:remove-venom",
+        "fantasy:spell:dagger-of-banishment",
+        "fantasy:spell:light-of-learning",
+        "fantasy:spell:sleep-of-ages",
+        "fantasy:spell:banish-fear"
+      ],
+      "starting_spells": [
+        "fantasy:spell:power-of-life",
+        "fantasy:spell:strength-of-life",
+        "fantasy:spell:cloak-of-protection",
+        "fantasy:spell:blinding-light"
       ]
     }
   ]

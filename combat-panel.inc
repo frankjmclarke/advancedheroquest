@@ -140,12 +140,14 @@ static void panel_note(const char *note)
     panel_last_notice[sizeof(panel_last_notice)-1]=0;
     panel_update();
 }
+#include "light-wake.inc"
 static int combat_action(int id)
 {
     int side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
     int index=side==0?selected:selected_monster;
     if(spell_map_dialog && id!=CPTOOLVIEW) { spell_map_resume(); MessageBeep(MB_ICONWARNING); return 1; }
-    if(id==CPSPELLCAST && side>=0) spellcast_open(GlMainHwnd,side,index);
+    if(id==CPTOKENWAKE && side>=0) light_wake_menu(side,index);
+    else if(id==CPSPELLCAST && side>=0) spellcast_open(GlMainHwnd,side,index);
     else if(id==CPSPELLBOOK && side>=0) spellbook_open(GlMainHwnd,side,index);
     else if(id==CPGUIDED) game_command(MGAMEGUIDED);
     else if(id==CPENDPHASE) game_command(MGAMETURN);
@@ -222,6 +224,7 @@ static HMENU token_menu_build(int side,int index)
         AppendMenuA(menu,MF_STRING|(alive && caster_has_book(caster_state(side,index))?0:MF_GRAYED),CPSPELLCAST,"Cast spell...");
         AppendMenuA(menu,MF_STRING,CPSPELLBOOK,"Spellbook & components...");
     }
+    if(magic_model(side,index)->sleep) AppendMenuA(menu,MF_STRING,CPTOKENWAKE,"Wake with an adjacent comrade...");
     AppendMenuA(menu,MF_SEPARATOR,0,NULL);
     AppendMenuA(menu,MF_STRING,CPTOKENDETAILS,side?"Monster profile and wounds...":"Hero profile and wounds...");
     if(side) AppendMenuA(menu,MF_STRING,CPTOKENWOUND,"Inflict 1 wound");

@@ -18,12 +18,15 @@ typedef struct {
 typedef struct {
     int armour,courage,hand,hand_turn,swift;
     int death_turn,corpse_x,corpse_y,soul_lost;
+    int strength,cloak,blind,regen,fear,sleep,death_combat,restore_blocked;
 } MAGIC_MODEL;
 #define MAGIC_MODEL_BYTES 36
 typedef struct {
     int turn,exploration;
     unsigned char spied[8192],surprise[8192],doors[8192];
     int still_until[8192];
+    int combat,combat_active,last_combat,trap_event;
+    unsigned char venom[8192],escaped[8192];
 } MAGIC_DUNGEON;
 /* Zero values mean not configured; presets use printed or labelled suggested rows. */
 /* reach: 1 normal (edge-adjacent), 2 long (also diagonal; long-reach death zone). */
