@@ -49,8 +49,8 @@ static int render_checks(void) {
     {
         TBBUTTON button; RECT rect;
         assert((HIMAGELIST)SendMessage(toolbar_hwnd,TB_GETIMAGELIST,0,0)==toolbar_images);
-        assert(SendMessage(toolbar_hwnd,TB_BUTTONCOUNT,0,0)==7);
-        assert(SendMessage(toolbar_hwnd,TB_GETBUTTON,0,(LPARAM)&button) && button.iBitmap==0);
+        assert(SendMessage(toolbar_hwnd,TB_BUTTONCOUNT,0,0)==4);
+        assert(SendMessage(toolbar_hwnd,TB_GETBUTTON,0,(LPARAM)&button) && button.iBitmap==3);
         assert(SendMessage(toolbar_hwnd,TB_GETITEMRECT,0,(LPARAM)&rect) && rect.right-rect.left>=48 && rect.bottom-rect.top>=48);
         fprintf(stderr,"Toolbar item width=%ld height=%ld image=%d\n",rect.right-rect.left,rect.bottom-rect.top,button.iBitmap);
     }

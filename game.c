@@ -1,5 +1,6 @@
 /* Native party UI, token interaction and durable session files. */
 #include <stdio.h>
+#include <stdarg.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +10,8 @@
 #include <wincrypt.h>
 #include <shlobj.h>
 #include <random.h>
+#include <rolldice.h>
+#include <makemap.h>
 #include <openwork.h>
 #include <wind.h>
 #include <defs.h>
@@ -34,6 +37,8 @@ static int turn_phase,gm_override,undo_turn_phase,undo_gm_override;
 static int monster_omit_pct,gold_bonus_pct;
 static unsigned short room_gold_bonus_pct[ENCOUNTER_LIMIT];
 static HWND panel_hwnd;
+static HWND spell_map_dialog;
+static int spell_map_picking;
 static void panel_attach(void);
 static void panel_update(void);
 static void panel_note(const char *note);
@@ -45,7 +50,11 @@ static char session_title[160],save_path[MAX_PATH],recovery_path[MAX_PATH],previ
 static GAME_DATA *loaded_owner;
 static unsigned char undo_corridor_pieces[ENCOUNTER_LIMIT];
 static int hero_route[240*240],hero_route_count;
-static int force_explore_path;
+static int force_explore_path,forced_move_budget;
+static MAGIC_DUNGEON magic,undo_magic;
+static PICE undo_pieces[ENCOUNTER_LIMIT];
+static int undo_cells[240*240];
+static unsigned short undo_gold[ENCOUNTER_LIMIT];
 static WINDOW_DEF *preview_window;
 static int preview_hero=-1,preview_x,preview_y;
 extern void game_loaded_title(const char *title);
@@ -107,6 +116,7 @@ static void reveal_corridors(void)
         }
     }
 }
+#include "magic-runtime.inc"
 int game_corridor_visible(int x,int y)
 {
     int p; unsigned char *fog;
@@ -201,12 +211,17 @@ void game_difficulty_dialog(void)
 static void remember(void) {
     int i; unsigned char *fog=game_fog();
     memcpy(undo_heroes,heroes,sizeof(heroes)); undo_count=hero_count; undo_monsters=monsters;
-    undo_turn_phase=turn_phase; undo_gm_override=gm_override;
-    for(i=0;fog && i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) undo_corridor_pieces[i]=corridor_type(Pice[i].type)?fog[i]:0;
+    undo_turn_phase=turn_phase; undo_gm_override=gm_override; undo_magic=magic;
+    memcpy(undo_gold,room_gold_bonus_pct,sizeof(undo_gold));
+    if(Pice && MAX_PICE<=ENCOUNTER_LIMIT) memcpy(undo_pieces,Pice,sizeof(PICE)*MAX_PICE);
+    for(i=0;i<Xsize*Ysize;i++) { PICE *p=NULL; get_square(i%Xsize,i/Xsize,&p); undo_cells[i]=p?(int)(p-Pice):-1; }
+    for(i=0;fog && i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) undo_corridor_pieces[i]=fog[i];
     undo_valid=1;
 }
 static const char *turn_attack_reason(int side,int h,int m)
 {
+    if(!gm_override && (side?monsters.tokens[m].move_spent:heroes[h].move_spent)==1000000) return "This model's movement and normal attack were used by a spell this turn.";
+    if(side && !gm_override && magic_stopped(m)) return "Still Air: this monster cannot move or attack this turn.";
     if(!turn_phase || gm_override) return NULL;
     if(turn_phase!=(side?2:1)) return side?"It is the Hero phase.":"It is the GM phase.";
     if(side?monsters.tokens[m].attacked:heroes[h].attacked) return "This model has already made its normal attack or run this phase.";
@@ -217,13 +232,17 @@ static int turn_move_remaining(int side,int index)
     int speed=side?monsters.tokens[index].stats[4]:heroes[index].stats[4];
     int bonus=side?monsters.tokens[index].run_bonus:heroes[index].run_bonus;
     int spent=side?monsters.tokens[index].move_spent:heroes[index].move_spent;
-    return speed+bonus-spent;
+    if(magic_model(side,index)->swift) speed=magic.exploration?18:2*speed;
+    else if(magic.exploration) speed=12;
+    return speed+bonus>spent?speed+bonus-spent:0;
 }
 static int turn_can_move(int side,int index)
 {
+    if(!gm_override && (side?monsters.tokens[index].move_spent:heroes[index].move_spent)==1000000) return 0;
+    if(side && !gm_override && magic_stopped(index)) return 0;
     if((side?monsters.tokens[index].caster.move_locked:heroes[index].caster.move_locked) && !gm_override) return 0;
-    if(!turn_phase || gm_override) return 1;
-    if(turn_phase!=(side?2:1)) return 0;
+    if((!turn_phase && !magic.exploration && !magic_model(side,index)->swift) || gm_override) return 1;
+    if(turn_phase && turn_phase!=(side?2:1)) return 0;
     if((side?monsters.tokens[index].x:heroes[index].x)<0) return 1; /* setup placement */
     return turn_move_remaining(side,index)>0;
 }
@@ -268,14 +287,14 @@ static void turn_menu_update(void)
         }
     }
     if(turn_phase) sprintf(status,"%s phase: %d/%d normal attacks used%s",turn_phase==1?"Hero":"GM",used,total,gm_override?" (GM override)":"");
-    else strcpy(status,"Free play: no phase limits");
+    else snprintf(status,sizeof(status),"%s | Turn %d",magic.exploration?"Exploration: 12 squares per model":"Free play",magic.turn+1);
     ModifyMenuA(menu,MGAMEPHASESTATUS,MF_BYCOMMAND|MF_STRING|MF_GRAYED,MGAMEPHASESTATUS,status);
     CheckMenuItem(menu,MGAMEGUIDED,MF_BYCOMMAND|(turn_phase?MF_CHECKED:MF_UNCHECKED));
     CheckMenuItem(menu,MGAMEOVERRIDE,MF_BYCOMMAND|(gm_override?MF_CHECKED:MF_UNCHECKED));
     EnableMenuItem(menu,MGAMEOVERRIDE,MF_BYCOMMAND|(turn_phase?MF_ENABLED:MF_GRAYED));
     EnableMenuItem(menu,MGAMERUN,MF_BYCOMMAND|(turn_phase?MF_ENABLED:MF_GRAYED));
     ModifyMenuA(menu,MGAMETURN,MF_BYCOMMAND|MF_STRING,MGAMETURN,
-        turn_phase==1?"End Hero phase / Start GM phase":turn_phase==2?"End GM phase / Start Hero phase":"Next Turn (reset movement)");
+        turn_phase==1?"End Hero phase / Start GM phase":turn_phase==2?"End GM phase / Start Hero phase":magic.exploration?"Next exploration turn":"Next Turn (reset movement)");
     DrawMenuBar(GlMainHwnd);
 }
 static int capture(GAME_DATA *d)
@@ -285,7 +304,7 @@ static int capture(GAME_DATA *d)
     d->pieces=Pice; d->count=MAX_PICE; d->width=Xsize; d->height=Ysize;
     d->visible=game_fog(); if(!d->visible) return 0;
     d->player_view=preferred_player_view;
-    d->turn_phase=turn_phase; d->gm_override=gm_override;
+    d->turn_phase=turn_phase; d->gm_override=gm_override; d->magic=magic;
     d->monster_omit_pct=monster_omit_pct; d->gold_bonus_pct=gold_bonus_pct;
     memcpy(d->room_gold_bonus_pct,room_gold_bonus_pct,sizeof(room_gold_bonus_pct));
     d->pack=(CHARACTER_PACK*)pack_current();
@@ -438,7 +457,7 @@ int game_load(int recovery)
     if(d->player_view>=0) preferred_player_view=d->player_view;
     monsters=d->monsters; selected_monster=-1; attack_monster=-1; monster_move_mode=0;
     hero_count=d->hero_count; memcpy(heroes,d->heroes,sizeof(heroes));
-    turn_phase=d->turn_phase; gm_override=d->gm_override;
+    turn_phase=d->turn_phase; gm_override=d->gm_override; magic=d->magic;
     monster_omit_pct=d->monster_omit_pct; gold_bonus_pct=d->gold_bonus_pct;
     memcpy(room_gold_bonus_pct,d->room_gold_bonus_pct,sizeof(room_gold_bonus_pct));
     { int i; for(i=0;i<hero_count;i++) if(HERO_DEAD(&heroes[i])) heroes[i].x=heroes[i].y=-1; }
@@ -472,8 +491,8 @@ void game_discard_dungeon(void)
 {
     int i; monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; monster_move_mode=0; map_ready=0; dirty=0; selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
-    memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct));
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; }
+    memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct)); memset(&magic,0,sizeof(magic));
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; memset(&heroes[i].magic,0,sizeof(heroes[i].magic)); }
     turn_phase=gm_override=0; turn_menu_update(); panel_update();
     game_reset_fog();
 }
@@ -490,15 +509,16 @@ void game_new_dungeon(const char *title)
     }
     monsters.count=0; memset(monsters.tokens,0,sizeof(monsters.tokens));
     memset(monsters.seen,0,sizeof(monsters.seen)); selected_monster=-1; preview_monster=-1; attack_monster=-1; monster_move_mode=0;
-    memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct));
+    memset(room_gold_bonus_pct,0,sizeof(room_gold_bonus_pct)); memset(&magic,0,sizeof(magic));
     strncpy(session_title,title,sizeof(session_title)-1); session_title[sizeof(session_title)-1]=0;
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; memset(&heroes[i].magic,0,sizeof(heroes[i].magic)); }
     turn_phase=gm_override=0; turn_menu_update(); panel_update();
     selected=-1; move_mode=0; undo_valid=0; preview_hero=-1;
     game_changed();
 }
 void game_shutdown(void)
 {
+    if(spell_map_dialog) DestroyWindow(spell_map_dialog);
     game_data_free(loaded_owner); loaded_owner=NULL;
     game_reset_fog();
     pack_shutdown();
@@ -506,7 +526,7 @@ void game_shutdown(void)
 static void reserve_party(void)
 {
     int i; if(!hero_count) return; remember();
-    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; }
+    for(i=0;i<hero_count;i++) { heroes[i].x=heroes[i].y=-1; heroes[i].fired=heroes[i].focus=heroes[i].moved=0; heroes[i].move_spent=heroes[i].attacked=heroes[i].run_bonus=0; heroes[i].caster.cast_used=heroes[i].caster.move_locked=0; memset(&heroes[i].magic,0,sizeof(heroes[i].magic)); }
     move_mode=0; game_changed();
 }
 /* Keep token locations on occupied map squares, with strictly one hero each. */
@@ -532,7 +552,7 @@ static int move_hero(int index,int x,int y,const unsigned char *visible)
     force_explore_path=0;
     if(!allowed) { MessageBeep(MB_ICONWARNING); return 0; }
     remember(); if(heroes[index].x>=0) heroes[index].moved=1;
-    if(turn_phase) heroes[index].move_spent+=cost;
+    if(turn_phase || magic.exploration || heroes[index].magic.swift) heroes[index].move_spent+=cost;
     for(i=0;i<hero_route_count;i++) {
         heroes[index].x=hero_route[i]%Xsize; heroes[index].y=hero_route[i]/Xsize;
         reveal_corridors();
@@ -585,7 +605,9 @@ static void marker(HDC dc,int x,int y,int size,int kind,int chosen,int defeated)
 #include "ranged-rules.inc"
 #include "combat.inc"
 #include "ranged.inc"
+#include "magic-map.inc"
 #include "spellcasting.inc"
+#include "spell-map.inc"
 
 void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,int sy)
 {
@@ -625,6 +647,7 @@ void game_draw(WINDOW_DEF *window,const unsigned char *visible,int zoom,int sx,i
         label.right=label.left+p->w*size; label.bottom=label.top+16;
         SetTextColor(dc,RGB(255,214,120)); DrawTextA(dc,note,-1,&label,DT_SINGLELINE|DT_END_ELLIPSIS|DT_NOPREFIX);
     }
+    spell_map_draw(dc,visible,size,sx,sy);
     RestoreDC(dc,saved);
 }
 typedef struct { WINDOW_DEF *window; WNDPROC previous; int player,drag,start_x,start_y,monster_drag; } MAP_HOOK;
@@ -634,7 +657,7 @@ static int move_monster(int index,int x,int y)
     if(index<0 || index>=monsters.count || !monster_can_move(index,x,y) || !turn_can_move(1,index) ||
        !battle_destination_cost(1,index,&x,&y,&cost)) { MessageBeep(MB_ICONWARNING); return 0; }
     remember(); m=&monsters.tokens[index]; m->moved=1; m->x=x; m->y=y;
-    if(turn_phase) m->move_spent+=cost;
+    if(turn_phase || magic.exploration || m->magic.swift) m->move_spent+=cost;
     focus_enter(1,index);
     if(turn_phase) sprintf(note,"%s moved %d square%s; %d remaining.",m->name,cost,cost==1?"":"s",turn_move_remaining(1,index));
     else sprintf(note,"%s moved to square %d, %d.",m->name,x+1,y+1);
@@ -662,6 +685,15 @@ static LRESULT CALLBACK map_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
         return activation;
     }
     visible=hook->player?game_fog():NULL;
+    if(spell_map_dialog) {
+        if(msg==WM_SETCURSOR && LOWORD(lp)==HTCLIENT) { SetCursor(LoadCursor(NULL,IDC_CROSS)); return TRUE; }
+        if(msg==WM_KEYDOWN && wp==VK_ESCAPE) { spell_map_resume(); return 0; }
+        if((msg==WM_LBUTTONDOWN || msg==WM_LBUTTONDBLCLK) && map_point(hook,lp,&x,&y)) {
+            spell_map_click(x,y,visible); return 0;
+        }
+        if(msg==WM_MOUSEMOVE && map_point(hook,lp,&x,&y)) { spell_map_hover(x,y); return 0; }
+        if(msg==WM_LBUTTONUP || msg==WM_RBUTTONDOWN || msg==WM_RBUTTONUP || msg==WM_RBUTTONDBLCLK || msg==WM_CONTEXTMENU) return 0;
+    }
     if(msg==WM_SETCURSOR && move_mode && LOWORD(lp)==HTCLIENT) { SetCursor(LoadCursor(NULL,IDC_CROSS)); return TRUE; }
     if((msg==WM_LBUTTONDOWN || msg==WM_LBUTTONDBLCLK) && map_point(hook,lp,&x,&y) &&
        (!visible || game_corridor_visible(x,y)) && (n=monster_at(x,y))>=0) {
@@ -833,7 +865,7 @@ static int party_apply(HWND hwnd)
     }
     if(next.wounds>next.stats[7]) { message("Current Wounds cannot exceed Max W."); return 0; }
     next.condition=next.wounds?0:next.kind==4?2:1;
-    if(HERO_DEAD(&next)) next.x=next.y=-1;
+    magic_hero_death(&next);
     if(memcmp(&next,&heroes[party_selection],sizeof(next))) { remember(); heroes[party_selection]=next; active=1; game_changed(); party_list(hwnd); }
     return 1;
 }
@@ -932,14 +964,28 @@ void game_party(void)
 }
 void game_command(int command)
 {
+    if(spell_map_dialog) { spell_map_resume(); MessageBeep(MB_ICONWARNING); return; }
     if(!map_ready) return;
     if(command==MGAMEHELP) {
         message("Guided combat turns: select Party > Guided combat turns to begin the Hero phase. Move each hero up to Speed by dragging it on the map; attack by selecting or dragging onto a target. Each hero gets one normal attack and may move before or after it. To run instead, select a model and choose Party > Run selected model; the D12 roll adds movement and uses its attack. When the heroes are done, choose Party > End Hero phase / Start GM phase. Do the same for monsters, then end the GM phase. The phase ends only when you choose that menu command. The Party menu shows how many normal attacks have been used. GM override bypasses limits when needed.");
     }
     else if(command==MGAMEGUIDED) {
         remember(); turn_phase=turn_phase?0:1; gm_override=0;
-        if(turn_phase) { turn_reset_side(0); turn_reset_side(1); }
+        if(turn_phase) { magic_next_turn(); magic.exploration=0; turn_reset_side(0); turn_reset_side(1); }
         panel_note(turn_phase?"Hero phase started. Select a hero to move or attack.":"Guided turns ended. Free play is active.");
+        turn_menu_update(); game_changed();
+    }
+    else if(command==MGAMESURPRISE) {
+        int i,roll; char text[300];
+        for(i=0;i<MAX_PICE && i<ENCOUNTER_LIMIT && !magic.surprise[i];i++);
+        if(i==MAX_PICE || i==ENCOUNTER_LIMIT) { message("There is no pending surprise bonus from Open Window."); return; }
+        if(!magic_die(&roll)) { message("Dice generator unavailable. The bonus remains pending."); return; }
+        snprintf(text,sizeof(text),"Section at %d, %d: Leader D12 %d + 3 (Open Window) = %d. Apply this result? Other surprise modifiers are adjudicated by the GM.",Pice[i].x+1,Pice[i].y+1,roll,roll+3);
+        if(MessageBoxA(GlMainHwnd,text,"Spied-area surprise",MB_OKCANCEL|MB_ICONINFORMATION)==IDOK) { remember(); magic.surprise[i]=0; magic.spied[i]=0; panel_note(text); game_changed(); }
+    }
+    else if(command==MGAMEEXPLORATION) {
+        remember(); turn_phase=gm_override=0; magic_exploration(); turn_reset_side(0); turn_reset_side(1);
+        panel_note("Exploration turn started: 12 squares per model. Dragon Armour, Courage and Flaming Hand have expired.");
         turn_menu_update(); game_changed();
     }
     else if(command==MGAMEOVERRIDE) {
@@ -964,8 +1010,8 @@ void game_command(int command)
     else if(command==MGAMETURN) {
         remember();
         if(turn_phase==1) { turn_phase=2; turn_reset_side(1); }
-        else if(turn_phase==2) { turn_phase=1; turn_reset_side(0); }
-        else { turn_reset_side(0); turn_reset_side(1); }
+        else if(turn_phase==2) { magic_next_turn(); turn_phase=1; turn_reset_side(0); }
+        else { if(magic.exploration) magic_exploration(); else magic_next_turn(); turn_reset_side(0); turn_reset_side(1); }
         panel_note(turn_phase==1?"Hero phase started. Choose a hero to move or attack.":turn_phase==2?"GM phase started. Choose a monster to move or attack.":"Movement and ranged shots reset.");
         turn_menu_update(); game_changed();
     }
@@ -973,7 +1019,11 @@ void game_command(int command)
     else if(command==MGAMEUNDO && undo_valid) {
         static MONSTER_STATE monster_swap;
         HERO swap[HERO_LIMIT]; int n=hero_count,i; unsigned char *fog=game_fog();
-        for(i=0;fog && i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) if(corridor_type(Pice[i].type)) {
+        for(i=0;i<Xsize*Ysize;i++) { PICE *p=NULL; int cell; get_square(i%Xsize,i/Xsize,&p); cell=p?(int)(p-Pice):-1; set_square(i%Xsize,i/Xsize,undo_cells[i]<0?NULL:&Pice[undo_cells[i]]); undo_cells[i]=cell; }
+        for(i=0;i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) { PICE p=Pice[i]; Pice[i]=undo_pieces[i]; undo_pieces[i]=p; }
+        { static MAGIC_DUNGEON swap_magic; swap_magic=magic; magic=undo_magic; undo_magic=swap_magic; }
+        for(i=0;i<ENCOUNTER_LIMIT;i++) { unsigned short pct=room_gold_bonus_pct[i]; room_gold_bonus_pct[i]=undo_gold[i]; undo_gold[i]=pct; }
+        for(i=0;fog && i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) {
             unsigned char state=fog[i]; fog[i]=undo_corridor_pieces[i]; undo_corridor_pieces[i]=state;
         }
         monster_swap=monsters; monsters=undo_monsters; undo_monsters=monster_swap; selected_monster=-1;

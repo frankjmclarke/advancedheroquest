@@ -1,5 +1,4 @@
-/* Pack-defined spellcasting. Map-changing and timed effects are GM-resolved;
- * damage/healing and all resource/action changes are committed atomically. */
+/* Pack-defined spellcasting: preview is inert; Apply commits effects and resources. */
 #define SPELL_TARGET_LIMIT (HERO_LIMIT+MONSTER_LIMIT)
 static CASTER_STATE *caster_state(int side,int index)
 {
@@ -216,32 +215,68 @@ static void spellbook_open(HWND parent,int side,int index)
 }
 typedef struct {
     int side,index,spell,x,y,resolved,test_roll,fate_used,count,test_ready,fate_offer;
+    int direction,effect_roll,dest_x,dest_y,move_cost;
+    int map_owned,syncing,flight_destination,committed;
     int targets[SPELL_TARGET_LIMIT],damage[SPELL_TARGET_LIMIT];
     char result[8192];
 } SPELL_CAST;
+static void spell_template_collect(SPELL_CAST *c);
+static int spell_template_matches(const SPELL_CAST *c);
+static void spell_map_selection(HWND w,SPELL_CAST *c);
+static void spell_keyboard_start(void);
+static void spell_keyboard_stop(void);
 static const char *spell_target_name(int id) { return id<HERO_LIMIT?heroes[id].name:monsters.tokens[id-HERO_LIMIT].name; }
 static int spell_target_x(int id) { return id<HERO_LIMIT?heroes[id].x:monsters.tokens[id-HERO_LIMIT].x; }
 static int spell_target_y(int id) { return id<HERO_LIMIT?heroes[id].y:monsters.tokens[id-HERO_LIMIT].y; }
 static const char *cast_targets_reason(const SPELL_CAST *c)
 {
-    const PACK_SPELL *sp=&pack_current()->spells[c->spell]; int i,j,id,x= c->side?monsters.tokens[c->index].x:heroes[c->index].x,y=c->side?monsters.tokens[c->index].y:heroes[c->index].y;
+    const PACK_SPELL *sp=&pack_current()->spells[c->spell];
+    int i,j,id,self=c->side?HERO_LIMIT+c->index:c->index,x=spell_target_x(self),y=spell_target_y(self);
     int reach=c->side?monsters.tokens[c->index].melee.reach:heroes[c->index].melee.reach;
     if(sp->effect==SPELL_MANUAL) return NULL;
-    if(c->count<1 || c->count>SPELL_TARGET_LIMIT || ((sp->target==1 || sp->target==3) && c->count!=1)) return "Select the required target(s). Healing and single-target spells require exactly one model.";
+    if(sp->target==7) return magic_wall_reason(c->side,c->index,c->x,c->y,c->direction);
+    if(sp->target==5 || sp->target==6) {
+        int p=floor_piece(c->x,c->y),xx,yy;
+        if(p<0 || p>=ENCOUNTER_LIMIT) return "Choose a board square inside the required dungeon section.";
+        if(sp->target==6) return game_fog()[p]?"Open Window requires an unexplored section.":NULL;
+        for(yy=Pice[p].y;yy<Pice[p].y+Pice[p].h;yy++) for(xx=Pice[p].x;xx<Pice[p].x+Pice[p].w;xx++)
+            if(ranged_los(x,y,xx,yy)) return NULL;
+        return "The selected section is outside the caster's line of sight.";
+    }
+    if(sp->target==8) return NULL;
+    if(c->count<0 || (sp->target!=2 && c->count<1) || c->count>SPELL_TARGET_LIMIT || (sp->target!=2 && sp->target!=10 && c->count!=1)) return "Select the required target(s). This spell needs exactly one model.";
+    if(sp->target==10) {
+        if(c->count>6 || (c->effect_roll && c->count>(c->effect_roll+1)/2)) return "Swift Wind: select no more than half the rolled D12, rounded up, including the caster.";
+        for(i=0;i<c->count && c->targets[i]!=self;i++); if(i==c->count) return "Swift Wind must include the caster among the selected characters.";
+    }
     if(sp->target==2 && (c->x<0 || c->y<0 || c->x>=Xsize || c->y>=Ysize || abs(x-c->x)+abs(y-c->y)>sp->range || !ranged_los(x,y,c->x,c->y)))
-        return "The template centre must be on visible floor within range and line of sight.";
+        return "The template anchor must be on visible floor within range and line of sight.";
+    if(sp->target==2 && (c->x+sp->template_width>Xsize || c->y+sp->template_height>Ysize)) return "The whole template must fit inside the board.";
+    if(sp->target==2 && !spell_template_matches(c)) return "Template targets changed. Preview again to include every covered figure.";
     for(i=0;i<c->count;i++) {
+        MAGIC_MODEL *m; int dead,tx,ty;
         id=c->targets[i];
         if(id<0 || (id<HERO_LIMIT?id>=hero_count:id-HERO_LIMIT>=monsters.count)) return "Invalid target.";
-        if(spell_target_x(id)<0 || (id<HERO_LIMIT?HERO_DEAD(&heroes[id]):monsters.tokens[id-HERO_LIMIT].wounds<=0)) return "Targets must be living models placed on the board.";
+        m=magic_model(id>=HERO_LIMIT,id>=HERO_LIMIT?id-HERO_LIMIT:id);
+        dead=id<HERO_LIMIT?HERO_DEAD(&heroes[id]):monsters.tokens[id-HERO_LIMIT].wounds<=0;
         for(j=0;j<i;j++) if(c->targets[j]==id) return "A model cannot be targeted twice by the same spell.";
-        if(sp->target==1 && (abs(x-spell_target_x(id))+abs(y-spell_target_y(id))>sp->range || !ranged_los(x,y,spell_target_x(id),spell_target_y(id)))) return "The target is outside range or line of sight.";
-        if(sp->target==3) {
-            if((id!=(c->side?HERO_LIMIT+c->index:c->index)) && !battle_reach(x,y,spell_target_x(id),spell_target_y(id),reach)) return "The healing target must be the caster or in the caster's death zone.";
-            for(j=0;j<hero_count+monsters.count;j++) {
+        if(sp->target==9) {
+            if(!dead || m->soul_lost || !m->death_turn || magic.turn!=m->death_turn) return "Resurrection requires a recorded death in the immediately previous turn, with its soul intact.";
+            if(!battle_floor(m->corpse_x,m->corpse_y) || battle_occupied(m->corpse_x,m->corpse_y)) return "The corpse square must be visible and unoccupied before resurrection.";
+            continue;
+        }
+        tx=spell_target_x(id); ty=spell_target_y(id);
+        if(tx<0 || dead) return "Targets must be living models placed on the board.";
+        if(sp->target==1 && !gm_override && (abs(x-tx)+abs(y-ty)>sp->range || !ranged_los(x,y,tx,ty))) return "The target is outside range or line of sight. GM override permits adjudicated partial visibility.";
+        if(sp->effect==SPELL_FLIGHT && !gm_override && id>=HERO_LIMIT && magic_stopped(id-HERO_LIMIT)) return "Still Air prevents this monster from making a forced run.";
+        if(sp->effect==SPELL_FLIGHT && id<HERO_LIMIT && !HERO_ACTIVE(&heroes[id])) return "A knocked-out model cannot run.";
+        if(sp->effect==SPELL_FLIGHT && (id<HERO_LIMIT?heroes[id].moved || heroes[id].caster.move_locked:monsters.tokens[id-HERO_LIMIT].moved || monsters.tokens[id-HERO_LIMIT].caster.move_locked)) return "Flight requires a model which has not moved or been locked against movement this turn.";
+        if(sp->effect==SPELL_FLIGHT && (!battle_floor(c->x,c->y) || battle_occupied(c->x,c->y))) return "Choose an unoccupied visible destination square for the forced run.";
+        if(sp->target==3 || sp->target==4) {
+            if(id!=self && !battle_reach(x,y,tx,ty,reach)) return "The target must be the caster or in the caster's death zone.";
+            if(sp->target==3) for(j=0;j<hero_count+monsters.count;j++) {
                 int other=j<hero_count?j:HERO_LIMIT+j-hero_count;
-                if(other==id || other==(c->side?HERO_LIMIT+c->index:c->index) || spell_target_x(other)<0 ||
-                    (other<HERO_LIMIT?HERO_DEAD(&heroes[other]):monsters.tokens[other-HERO_LIMIT].wounds<=0)) continue;
+                if(other==id || other==self || spell_target_x(other)<0 || (other<HERO_LIMIT?HERO_DEAD(&heroes[other]):monsters.tokens[other-HERO_LIMIT].wounds<=0)) continue;
                 if(battle_reach(x,y,spell_target_x(other),spell_target_y(other),reach)) return "Another model is in the caster's death zone; healing is blocked.";
             }
         }
@@ -268,8 +303,22 @@ static int cast_prepare(SPELL_CAST *c,int use_fate)
     int i,dice,intelligence,fate; char rolls[2048],line[2200]; size_t used;
     c->resolved=0; c->result[0]=0; c->fate_used=0; if(!c->test_ready) c->test_roll=0;
     if(reason) { snprintf(c->result,sizeof(c->result),"%s",reason); return 0; }
+    if(pack_current()->spells[c->spell].target==2) spell_template_collect(c);
     if((reason=cast_targets_reason(c))!=NULL) { snprintf(c->result,sizeof(c->result),"%s",reason); return 0; }
     sp=&pack_current()->spells[c->spell]; dice=sp->dice;
+    if((sp->effect==SPELL_SWIFT || sp->effect==SPELL_FLIGHT) && !c->effect_roll && !magic_die(&c->effect_roll)) return 0;
+    if(sp->effect==SPELL_SWIFT && c->count>(c->effect_roll+1)/2) {
+        snprintf(c->result,sizeof(c->result),"Swift Wind D12: %d. Select at most %d characters including the caster, then preview again. This roll is retained.",c->effect_roll,(c->effect_roll+1)/2); return 0;
+    }
+    if(sp->effect==SPELL_FLIGHT) {
+        int id=c->targets[0],side=id>=HERO_LIMIT,index=side?id-HERO_LIMIT:id;
+        c->dest_x=c->x; c->dest_y=c->y;
+        forced_move_budget=(side?monsters.tokens[index].stats[4]:heroes[index].stats[4])+(c->effect_roll==1?0:c->effect_roll);
+        force_explore_path=1;
+        i=battle_destination_cost(side,index,&c->dest_x,&c->dest_y,&c->move_cost);
+        forced_move_budget=force_explore_path=0;
+        if(!i) { strcpy(c->result,"No legal forced-run route to that destination. The run roll is retained; choose a different square."); return 0; }
+    }
     if(sp->test) {
         if(!c->test_ready) {
             if(!CryptAcquireContext(&provider,NULL,NULL,PROV_RSA_FULL,CRYPT_VERIFYCONTEXT)) return 0;
@@ -284,8 +333,21 @@ static int cast_prepare(SPELL_CAST *c,int use_fate)
     }
     if(sp->effect==SPELL_MANUAL) {
         used=strlen(c->result); snprintf(c->result+used,sizeof(c->result)-used,"GM resolution required: %s\r\nApply records casting and consumes components. It does not apply this effect automatically.",sp->text);
+    } else if(sp->effect>=SPELL_ARMOUR) {
+        int success=!sp->test || c->test_roll<=intelligence || c->fate_used;
+        used=strlen(c->result);
+        snprintf(c->result+used,sizeof(c->result)-used,"%s\r\n",sp->effect==SPELL_ARMOUR?"Target gains +1 Toughness, capped at 12, until the next exploration turn (does not stack).":
+            sp->effect==SPELL_COURAGE?"Target's effective Bravery becomes 12 until the next exploration turn.":
+            sp->effect==SPELL_HAND?"Flaming Hand: following combat turns use one D12 direct Wounds on a successful melee hit, until exploration.":
+            sp->effect==SPELL_SPY?"Privately inspect the selected unexplored section. It stays hidden, no monsters spawn, and entry gains +3 surprise.":
+            sp->effect==SPELL_DOOR?"Create a permanent closed door at the chosen wall. Opening toward unexplored space makes the rock test.":
+            sp->effect==SPELL_STILL?"Monsters in this section cannot move or attack until the next full turn.":
+            sp->effect==SPELL_RESURRECT?(success?"Return the dead character to its corpse square with full Wounds.":"Failed resurrection: the soul is lost permanently. Components are still consumed."):"Movement spell ready.");
+        used=strlen(c->result);
+        if(sp->effect==SPELL_SWIFT) snprintf(c->result+used,sizeof(c->result)-used,"D12 %d: up to %d characters. Selected models have %s this turn; movement already spent still counts.",c->effect_roll,(c->effect_roll+1)/2,magic.exploration?"18 squares of movement":"double Speed");
+        if(sp->effect==SPELL_FLIGHT) snprintf(c->result+used,sizeof(c->result)-used,"Run D12 %d: %s will move %d squares to %d, %d. Its normal attack and movement are used. Walls, figures and entry into enemy death zones stop the run.",c->effect_roll,spell_target_name(c->targets[0]),c->move_cost,c->dest_x+1,c->dest_y+1);
     } else for(i=0;i<c->count;i++) {
-        int id=c->targets[i],t=id<HERO_LIMIT?heroes[id].stats[3]:monsters.tokens[id-HERO_LIMIT].stats[3]; c->damage[i]=0;
+        int id=c->targets[i],t=id<HERO_LIMIT?magic_toughness(heroes[id].stats[3],&heroes[id].magic):magic_toughness(monsters.tokens[id-HERO_LIMIT].stats[3],&monsters.tokens[id-HERO_LIMIT].magic); c->damage[i]=0;
         if(sp->effect==SPELL_DAMAGE && dice) {
             rolls[0]=0; if(!spell_damage_roll(rolls,sizeof(rolls),dice,t,&c->damage[i])) { strcpy(c->result,"Dice generation failed. No changes applied."); return 0; }
             snprintf(line,sizeof(line),"%s: %d Wound(s); D12: %s\r\n",spell_target_name(id),c->damage[i],rolls);
@@ -294,9 +356,49 @@ static int cast_prepare(SPELL_CAST *c,int use_fate)
     }
     c->fate_offer=0; c->resolved=1; return 1;
 }
+static void spell_result_append(SPELL_CAST *c,const char *format,...)
+{
+    size_t len=strlen(c->result); va_list args;
+    if(len>=sizeof(c->result)-1) return;
+    va_start(args,format); vsnprintf(c->result+len,sizeof(c->result)-len,format,args); va_end(args);
+}
+static void spell_applied_result(SPELL_CAST *c,const int *before)
+{
+    const CHARACTER_PACK *p=pack_current(); const PACK_SPELL *sp=&p->spells[c->spell];
+    const CASTER_STATE *s=caster_state(c->side,c->index); int i,id,side,index,wounds; char rolls[8192];
+    memcpy(rolls,c->result,sizeof(rolls)); c->result[0]=0;
+    spell_result_append(c,"%s cast %s.\r\n\r\n",spell_target_name(c->side?HERO_LIMIT+c->index:c->index),sp->name);
+    for(i=0;i<c->count;i++) {
+        if(strlen(c->result)>sizeof(c->result)-2048) { spell_result_append(c,"...and %d more affected figures.\r\n",c->count-i); break; }
+        id=c->targets[i]; side=id>=HERO_LIMIT; index=side?id-HERO_LIMIT:id;
+        wounds=side?monsters.tokens[index].wounds:heroes[index].wounds;
+        spell_result_append(c,"%s: ",spell_target_name(id));
+        if(sp->effect==SPELL_DAMAGE) spell_result_append(c,"%d Wound(s) inflicted; %d remaining%s.\r\n",c->damage[i],wounds,
+            side?(!wounds?"; killed":""):HERO_DEAD(&heroes[index])?"; dead":HERO_KO(&heroes[index])?"; knocked out":"");
+        else if(sp->effect==SPELL_HEAL) spell_result_append(c,"%d Wound(s) restored; %d Wounds now.\r\n",wounds-before[i],wounds);
+        else if(sp->effect==SPELL_ARMOUR) spell_result_append(c,"Toughness is now %d. Dragon Armour lasts until the next exploration turn.\r\n",
+            magic_toughness(side?monsters.tokens[index].stats[3]:heroes[index].stats[3],magic_model(side,index)));
+        else if(sp->effect==SPELL_COURAGE) spell_result_append(c,"Bravery is now 12 until the next exploration turn.\r\n");
+        else if(sp->effect==SPELL_SWIFT) spell_result_append(c,"%d squares of movement remain. Swift Wind expires at Turn %d.\r\n",turn_move_remaining(side,index),magic.turn+2);
+        else if(sp->effect==SPELL_FLIGHT) spell_result_append(c,"ran %d squares to %d, %d. Movement and normal attack are used this turn.\r\n",c->move_cost,c->dest_x+1,c->dest_y+1);
+        else if(sp->effect==SPELL_RESURRECT) spell_result_append(c,wounds?"returned to life with %d Wounds. Movement and normal attack are used this turn.\r\n":"resurrection failed; the soul is permanently lost.\r\n",wounds);
+        else spell_result_append(c,"effect applied.\r\n");
+    }
+    if(sp->effect==SPELL_DAMAGE && !c->count) spell_result_append(c,"No figures were covered by the template; no damage was dealt.\r\n");
+    if(sp->effect==SPELL_HAND) spell_result_append(c,"Flaming Hand is active from the following combat turn until the next exploration turn. Successful melee hits will inflict D12 Wounds directly.\r\n");
+    if(sp->effect==SPELL_STILL) spell_result_append(c,"Still Air applied to the section at %d, %d. Its monsters cannot move or attack until Turn %d.\r\n",c->x+1,c->y+1,magic.turn+2);
+    if(sp->effect==SPELL_SPY) spell_result_append(c,"Section at %d, %d inspected privately. It remains hidden; entering it grants +3 surprise.\r\n",c->x+1,c->y+1);
+    if(sp->effect==SPELL_DOOR) spell_result_append(c,"A permanent closed door was created at %d, %d. Open it to discover what lies beyond.\r\n",c->x+1,c->y+1);
+    if(sp->effect==SPELL_MANUAL) spell_result_append(c,"GM resolution is still required: %s\r\n",sp->text);
+    spell_result_append(c,"\r\nResources spent:\r\n");
+    for(i=0;i<p->component_count;i++) if(sp->components[i]) spell_result_append(c,"%u %s consumed; %u remaining.\r\n",sp->components[i],p->components[i].name,s->components[i]);
+    if(c->fate_used) spell_result_append(c,"1 Fate spent; %d remaining.\r\n",heroes[c->index].fate);
+    spell_result_append(c,"Spell allowance used this turn.%s\r\n",sp->stationary?" The caster cannot move this turn.":"");
+    if(sp->test || sp->effect==SPELL_DAMAGE) spell_result_append(c,"\r\nRoll details:\r\n%s",rolls);
+}
 static int cast_apply(SPELL_CAST *c)
 {
-    const CHARACTER_PACK *p=pack_current(); const PACK_SPELL *sp; CASTER_STATE *s; int i,id,old,total_unique=monsters.dead_count;
+    const CHARACTER_PACK *p=pack_current(); const PACK_SPELL *sp; CASTER_STATE *s; int i,id,old,before[SPELL_TARGET_LIMIT],total_unique=monsters.dead_count;
     if(!c->resolved || cast_reason(c->side,c->index,c->spell) || cast_targets_reason(c)) return 0;
     if(c->fate_used && (c->side || heroes[c->index].fate<1)) return 0;
     sp=&p->spells[c->spell];
@@ -306,6 +408,13 @@ static int cast_apply(SPELL_CAST *c)
         if(c->damage[i]>=m->wounds && m->unique && !character_dead(monster_identity(m))) total_unique++;
     }
     if(total_unique>CHARACTER_LIMIT) return 0;
+    if(sp->effect==SPELL_FLIGHT) {
+        int side=c->targets[0]>=HERO_LIMIT,index=side?c->targets[0]-HERO_LIMIT:c->targets[0],x=c->x,y=c->y,cost,ok;
+        forced_move_budget=(side?monsters.tokens[index].stats[4]:heroes[index].stats[4])+(c->effect_roll==1?0:c->effect_roll); force_explore_path=1;
+        ok=battle_destination_cost(side,index,&x,&y,&cost); forced_move_budget=force_explore_path=0;
+        if(!ok || x!=c->dest_x || y!=c->dest_y || cost!=c->move_cost) return 0;
+    }
+    for(i=0;i<c->count;i++) before[i]=c->targets[i]<HERO_LIMIT?heroes[c->targets[i]].wounds:monsters.tokens[c->targets[i]-HERO_LIMIT].wounds;
     remember(); s=caster_state(c->side,c->index);
     for(i=0;i<p->component_count;i++) s->components[i]-=sp->components[i];
     s->cast_used=1; s->move_locked=sp->stationary; s->setup_pending=0;
@@ -315,17 +424,57 @@ static int cast_apply(SPELL_CAST *c)
         if(sp->effect==SPELL_DAMAGE && id<HERO_LIMIT) {
             HERO *h=&heroes[id]; old=h->wounds;
             h->wounds=c->damage[i]>=old?0:old-c->damage[i];
-            if(c->damage[i] && !h->wounds) { h->condition=(c->damage[i]>old || h->kind==4)?2:1; if(HERO_DEAD(h)) h->x=h->y=-1; }
+            if(c->damage[i] && !h->wounds) { h->condition=(c->damage[i]>old || h->kind==4)?2:1; magic_hero_death(h); }
         } else if(sp->effect==SPELL_DAMAGE) {
             MONSTER *m=&monsters.tokens[id-HERO_LIMIT]; m->wounds=c->damage[i]>=m->wounds?0:m->wounds-c->damage[i]; if(!m->wounds) monster_kill(id-HERO_LIMIT);
         } else if(sp->effect==SPELL_HEAL && id<HERO_LIMIT) { heroes[id].wounds=heroes[id].stats[7]; heroes[id].condition=0; }
         else if(sp->effect==SPELL_HEAL) monsters.tokens[id-HERO_LIMIT].wounds=monsters.tokens[id-HERO_LIMIT].stats[7];
     }
+    if(sp->effect==SPELL_HAND) { MAGIC_MODEL *m=magic_model(c->side,c->index); m->hand=1; m->hand_turn=magic.turn; }
+    if(sp->effect==SPELL_ARMOUR || sp->effect==SPELL_COURAGE || sp->effect==SPELL_SWIFT) for(i=0;i<c->count;i++) {
+        id=c->targets[i]; { MAGIC_MODEL *m=magic_model(id>=HERO_LIMIT,id>=HERO_LIMIT?id-HERO_LIMIT:id);
+            if(sp->effect==SPELL_ARMOUR) m->armour=1; else if(sp->effect==SPELL_COURAGE) m->courage=1; else m->swift=1; }
+    }
+    if(sp->effect==SPELL_STILL) magic.still_until[floor_piece(c->x,c->y)]=magic.turn+1;
+    if(sp->effect==SPELL_SPY) magic.spied[floor_piece(c->x,c->y)]=1;
+    if(sp->effect==SPELL_DOOR) {
+        int slot=magic_empty_slot(),dx=c->direction==East?1:c->direction==West?-1:0,dy=c->direction==North?1:c->direction==South?-1:0;
+        int p=floor_piece(c->x+dx,c->y+dy);
+        init_pice(&Pice[slot],DOOR,c->x,c->y,(DIRECTION)c->direction); game_fog()[slot]=0;
+        magic.doors[slot]=p<0 || !game_fog()[p]?1:2;
+    }
+    if(sp->effect==SPELL_FLIGHT) {
+        id=c->targets[0]; if(id<HERO_LIMIT) { HERO *h=&heroes[id]; for(i=0;i<hero_route_count;i++) { h->x=hero_route[i]%Xsize; h->y=hero_route[i]/Xsize; reveal_corridors(); } h->x=c->dest_x; h->y=c->dest_y; h->moved=h->attacked=1; h->move_spent=1000000; }
+        else { MONSTER *m=&monsters.tokens[id-HERO_LIMIT]; m->x=c->dest_x; m->y=c->dest_y; m->moved=m->attacked=1; m->move_spent=1000000; }
+        focus_enter(id>=HERO_LIMIT,id>=HERO_LIMIT?id-HERO_LIMIT:id);
+    }
+    if(sp->effect==SPELL_RESURRECT) {
+        MAGIC_MODEL *m; int success=c->test_roll<=(c->side?monsters.tokens[c->index].stats[6]:heroes[c->index].stats[6]) || c->fate_used;
+        id=c->targets[0]; m=magic_model(id>=HERO_LIMIT,id>=HERO_LIMIT?id-HERO_LIMIT:id);
+        if(!success) m->soul_lost=1;
+        else {
+            if(id<HERO_LIMIT) { HERO *h=&heroes[id]; h->wounds=h->stats[7]; h->condition=0; h->x=m->corpse_x; h->y=m->corpse_y; h->moved=h->attacked=1; }
+            else { MONSTER *v=&monsters.tokens[id-HERO_LIMIT]; v->wounds=v->stats[7]; v->x=m->corpse_x; v->y=m->corpse_y; v->moved=v->attacked=1;
+                if(v->unique) for(i=0;i<monsters.dead_count;i++) if(!_stricmp(monsters.dead[i],monster_identity(v))) { memmove(&monsters.dead[i],&monsters.dead[i+1],(monsters.dead_count-i-1)*sizeof(monsters.dead[0])); monsters.dead_count--; break; }
+            }
+            /* A restored model cannot retain a prior life's temporary spell effects,
+               run bonus or unused movement in free play. */
+            memset(m,0,sizeof(*m));
+            if(id<HERO_LIMIT) { heroes[id].move_spent=1000000; heroes[id].run_bonus=0; }
+            else { monsters.tokens[id-HERO_LIMIT].move_spent=1000000; monsters.tokens[id-HERO_LIMIT].run_bonus=0; }
+        }
+    }
     {
         char note[512]; size_t len;
-        snprintf(note,sizeof(note),"%s cast. Spell used this turn.%s",sp->name,sp->effect==SPELL_MANUAL?" GM must apply the described effect.":"");
-        for(i=0;i<p->component_count;i++) if(sp->components[i]) { len=strlen(note); snprintf(note+len,sizeof(note)-len," %s remaining: %u.",p->components[i].name,s->components[i]); }
-        c->resolved=0; active=1; focus_prune(); panel_note(note); game_changed(); return 1;
+        spell_applied_result(c,before);
+        len=strcspn(c->result,"\r\n"); if(len>=sizeof(note)) len=sizeof(note)-1;
+        memcpy(note,c->result,len); note[len]=0;
+        if(c->count) { const char *detail=strstr(c->result,"\r\n\r\n"); if(detail) {
+            size_t more; detail+=4; more=strcspn(detail,"\r\n"); if(more>sizeof(note)-len-2) more=sizeof(note)-len-2;
+            note[len++]=' '; memcpy(note+len,detail,more); note[len+more]=0;
+        } }
+        c->resolved=0; active=1; focus_prune(); panel_note(note); game_changed();
+        return 1;
     }
 }
 static void spell_dialog_refresh(HWND w,SPELL_CAST *c)
@@ -340,22 +489,31 @@ static void spell_dialog_refresh(HWND w,SPELL_CAST *c)
     }
     len=strlen(text); snprintf(text+len,sizeof(text)-len,"\r\n%s | One spell per turn. Weapon attacks have a separate allowance.",sp->stationary?"Cannot move this turn":"Movement permitted");
     reason=cast_reason(c->side,c->index,c->spell); if(reason) { len=strlen(text); snprintf(text+len,sizeof(text)-len,"\r\nUnavailable: %s",reason); }
-    SetDlgItemTextA(w,SCINFO,text); SetDlgItemTextA(w,SCRESULT,"Choose target(s), then preview. Apply commits the cast; Cancel costs nothing.");
+    SetDlgItemTextA(w,SCINFO,text); SetDlgItemTextA(w,SCRESULT,"Click targets on the map, then preview. Apply commits the cast; Cancel costs nothing.");
     for(i=0;sp->effect!=SPELL_MANUAL && i<hero_count+monsters.count;i++) {
         int id=i<hero_count?i:HERO_LIMIT+i-hero_count;
-        if(spell_target_x(id)<0 || (id<HERO_LIMIT?HERO_DEAD(&heroes[id]):monsters.tokens[id-HERO_LIMIT].wounds<=0)) continue;
+        if(sp->target==9) {
+            MAGIC_MODEL *m=magic_model(id>=HERO_LIMIT,id>=HERO_LIMIT?id-HERO_LIMIT:id);
+            if(!(id<HERO_LIMIT?HERO_DEAD(&heroes[id]):monsters.tokens[id-HERO_LIMIT].wounds<=0) || !m->death_turn || m->soul_lost) continue;
+        } else if(spell_target_x(id)<0 || (id<HERO_LIMIT?HERO_DEAD(&heroes[id]):monsters.tokens[id-HERO_LIMIT].wounds<=0)) continue;
         sprintf(label,"%s: %s [%d W] at %d, %d",id<HERO_LIMIT?"Hero":"Monster",spell_target_name(id),id<HERO_LIMIT?heroes[id].wounds:monsters.tokens[id-HERO_LIMIT].wounds,spell_target_x(id)+1,spell_target_y(id)+1);
+        if(sp->target==9) { MAGIC_MODEL *m=magic_model(id>=HERO_LIMIT,id>=HERO_LIMIT?id-HERO_LIMIT:id); snprintf(label,sizeof(label),"Dead: %s; corpse %d, %d; %s",spell_target_name(id),m->corpse_x+1,m->corpse_y+1,magic.turn==m->death_turn?"eligible this turn":"outside resurrection window"); }
         n=(int)SendDlgItemMessageA(w,SCTARGETS,LB_ADDSTRING,0,(LPARAM)label); SendDlgItemMessage(w,SCTARGETS,LB_SETITEMDATA,n,id);
     }
     SetDlgItemTextA(w,SCTARGETLABEL,sp->effect==SPELL_MANUAL?"Targeting and effects are resolved by the GM, following the description above.":
-        sp->target==2?"Select all models covered by your physical template, including friends (Ctrl-click to add).":"Select one model to receive this spell.");
-    EnableWindow(GetDlgItem(w,SCTARGETS),sp->effect!=SPELL_MANUAL);
-    ShowWindow(GetDlgItem(w,SCCENTRELABEL),sp->target==2?SW_SHOW:SW_HIDE);
-    ShowWindow(GetDlgItem(w,SCCENTREX),sp->target==2?SW_SHOW:SW_HIDE);
-    ShowWindow(GetDlgItem(w,SCCENTREY),sp->target==2?SW_SHOW:SW_HIDE);
-    EnableWindow(GetDlgItem(w,SCCENTREX),sp->target==2); EnableWindow(GetDlgItem(w,SCCENTREY),sp->target==2);
+        sp->target==2?"Click the template's lower-left square on the map. All covered figures, including friends, are selected automatically.":sp->target==10?"Click Swift Wind characters to add/remove them, including the caster. Preview rolls the limit once.":
+        sp->target==9?"Select a dead character. Resurrection is allowed only in the turn after death.":
+        sp->target==5 || sp->target==6 || sp->target==7 || sp->target==8?"Use section / wall coordinates below, or no target for a self spell.":"Select one model to receive this spell.");
+    EnableWindow(GetDlgItem(w,SCTARGETS),sp->effect!=SPELL_MANUAL && sp->target!=2 && sp->target!=5 && sp->target!=6 && sp->target!=7 && sp->target!=8);
+    EnableWindow(GetDlgItem(w,SCMAPPICK),sp->effect!=SPELL_MANUAL && sp->target!=8);
+    ShowWindow(GetDlgItem(w,SCCENTRELABEL),(sp->target==2 || sp->target==5 || sp->target==6 || sp->target==7 || sp->effect==SPELL_FLIGHT)?SW_SHOW:SW_HIDE);
+    ShowWindow(GetDlgItem(w,SCCENTREX),(sp->target==2 || sp->target==5 || sp->target==6 || sp->target==7 || sp->effect==SPELL_FLIGHT)?SW_SHOW:SW_HIDE);
+    ShowWindow(GetDlgItem(w,SCCENTREY),(sp->target==2 || sp->target==5 || sp->target==6 || sp->target==7 || sp->effect==SPELL_FLIGHT)?SW_SHOW:SW_HIDE);
+    EnableWindow(GetDlgItem(w,SCCENTREX),sp->target==2 || sp->target==5 || sp->target==6 || sp->target==7 || sp->effect==SPELL_FLIGHT); EnableWindow(GetDlgItem(w,SCCENTREY),IsWindowEnabled(GetDlgItem(w,SCCENTREX)));
+    ShowWindow(GetDlgItem(w,SCDIRECTION),sp->target==7?SW_SHOW:SW_HIDE);
+    SetDlgItemTextA(w,SCCENTRELABEL,sp->target==2?"Template lower-left square (X / Y)":sp->target==7?"Inside wall square (X / Y), outward direction":sp->effect==SPELL_FLIGHT?"Forced-run destination (X / Y)":"Square in selected section (X / Y)");
     EnableWindow(GetDlgItem(w,SCFATE),FALSE); SetDlgItemTextA(w,SCROLL,"Preview cast / roll");
-    EnableWindow(GetDlgItem(w,SCMANUAL),sp->effect==SPELL_MANUAL); CheckDlgButton(w,SCMANUAL,BST_UNCHECKED);
+    ShowWindow(GetDlgItem(w,SCMANUAL),sp->effect==SPELL_MANUAL?SW_SHOW:SW_HIDE); EnableWindow(GetDlgItem(w,SCMANUAL),sp->effect==SPELL_MANUAL); CheckDlgButton(w,SCMANUAL,BST_UNCHECKED);
     EnableWindow(GetDlgItem(w,SCROLL),!reason); EnableWindow(GetDlgItem(w,IDOK),FALSE);
 }
 static void cast_spell_list(HWND w,SPELL_CAST *c)
@@ -379,10 +537,12 @@ static const char *cast_gather(HWND w,SPELL_CAST *c)
         n=(int)SendDlgItemMessage(w,SCTARGETS,LB_GETCOUNT,0,0);
         for(i=0;i<n && c->count<SPELL_TARGET_LIMIT;i++) if(SendDlgItemMessage(w,SCTARGETS,LB_GETSEL,i,0)>0) c->targets[c->count++]=(int)SendDlgItemMessage(w,SCTARGETS,LB_GETITEMDATA,i,0);
     }
-    if(sp->target==2) {
-        c->x=(int)GetDlgItemInt(w,SCCENTREX,&ok,FALSE)-1; if(!ok) return "Enter a valid template centre X.";
-        c->y=(int)GetDlgItemInt(w,SCCENTREY,&ok,FALSE)-1; if(!ok) return "Enter a valid template centre Y.";
+    if(sp->target==2 || sp->target==5 || sp->target==6 || sp->target==7 || sp->effect==SPELL_FLIGHT) {
+        c->x=(int)GetDlgItemInt(w,SCCENTREX,&ok,FALSE)-1; if(!ok) return "Enter a valid board square X.";
+        c->y=(int)GetDlgItemInt(w,SCCENTREY,&ok,FALSE)-1; if(!ok) return "Enter a valid board square Y.";
     }
+    c->direction=(int)SendDlgItemMessage(w,SCDIRECTION,CB_GETCURSEL,0,0);
+    if(sp->target==2) spell_template_collect(c);
     return cast_targets_reason(c);
 }
 static void cast_dialog_status(HWND w,SPELL_CAST *c)
@@ -393,6 +553,7 @@ static void cast_dialog_status(HWND w,SPELL_CAST *c)
     sp=&p->spells[c->spell]; strcpy(cost,"Spends:");
     for(i=0;i<p->component_count;i++) if(sp->components[i]) { len=strlen(cost); snprintf(cost+len,sizeof(cost)-len," %u %s;",sp->components[i],p->components[i].name); }
     if(strlen(cost)==7) strcat(cost," no components;");
+    if(sp->target==2) { len=strlen(cost); snprintf(cost+len,sizeof(cost)-len," %dx%d template: %d figure(s).",sp->template_width,sp->template_height,c->count); }
     len=strlen(cost); snprintf(cost+len,sizeof(cost)-len," %s%s",sp->stationary?"No movement this turn.":"Movement permitted.",c->fate_used?" 1 Fate.":"");
     SetDlgItemTextA(w,SCCOST,cost);
     for(i=0;i<c->count;i++) if((c->targets[i]<HERO_LIMIT)==!c->side) friendly=1;
@@ -418,38 +579,100 @@ static int cast_ui_preview(HWND w,SPELL_CAST *c,int use_fate)
     }
     ok=cast_prepare(c,use_fate); SetDlgItemTextA(w,SCRESULT,c->result); cast_dialog_status(w,c); return ok;
 }
+static void cast_selection_changed(HWND w,SPELL_CAST *c)
+{
+    /* Choosing a different target must not grant another Intelligence test.
+       Changing the spell resets the test through spell_dialog_refresh. */
+    c->resolved=0; c->fate_used=0;
+    SetDlgItemTextA(w,SCROLL,c->fate_offer?"Continue with failure":"Preview cast / roll");
+    SetDlgItemTextA(w,SCRESULT,c->test_ready?
+        "Selection changed. Preview again using the original Intelligence roll; Fate may still convert failure.":
+        "Selection changed. Preview the cast before applying.");
+    cast_dialog_status(w,c);
+}
+static BOOL CALLBACK spell_result_hide_input(HWND child,LPARAM unused)
+{
+    int id=GetDlgCtrlID(child);
+    if(id!=SCRESULT && id!=IDOK) ShowWindow(child,SW_HIDE);
+    return TRUE;
+}
+static void spell_show_result(HWND w,SPELL_CAST *c)
+{
+    RECT r={10,10,540,435}; char title[160];
+    c->committed=1; spell_map_picking=0;
+    snprintf(title,sizeof(title),"Spell cast - %s",pack_current()->spells[c->spell].name); SetWindowTextA(w,title);
+    EnumChildWindows(w,spell_result_hide_input,0);
+    MapDialogRect(w,&r); MoveWindow(GetDlgItem(w,SCRESULT),r.left,r.top,r.right-r.left,r.bottom-r.top,TRUE);
+    SetDlgItemTextA(w,SCRESULT,c->result); SendDlgItemMessage(w,SCRESULT,EM_SETSEL,0,0);
+    SendDlgItemMessage(w,SCRESULT,EM_SCROLLCARET,0,0);
+    SetDlgItemTextA(w,IDOK,"Close"); EnableWindow(GetDlgItem(w,IDOK),TRUE);
+    ShowWindow(w,SW_SHOW); SetFocus(GetDlgItem(w,IDOK)); game_redraw();
+}
 static INT_PTR CALLBACK spellcast_proc(HWND w,UINT msg,WPARAM wp,LPARAM lp)
 {
     SPELL_CAST *c=(SPELL_CAST*)GetWindowLongPtr(w,DWLP_USER); int id=LOWORD(wp),n,i; BOOL ok;
     if(msg==WM_INITDIALOG) {
         c=(SPELL_CAST*)lp; SetWindowLongPtr(w,DWLP_USER,(LONG_PTR)c);
+        { const char *directions[]={"North","South","East","West"}; for(i=0;i<4;i++) SendDlgItemMessageA(w,SCDIRECTION,CB_ADDSTRING,0,(LPARAM)directions[i]); SendDlgItemMessage(w,SCDIRECTION,CB_SETCURSEL,0,0); }
         SetDlgItemInt(w,SCCENTREX,c->x+1,FALSE); SetDlgItemInt(w,SCCENTREY,c->y+1,FALSE);
         cast_spell_list(w,c); cast_dialog_status(w,c); return TRUE;
     }
-    if(msg==WM_CLOSE) { EndDialog(w,0); return TRUE; }
+    if(msg==WM_NCDESTROY && c && c->map_owned) {
+        if(spell_map_dialog==w) { spell_map_dialog=NULL; spell_map_picking=0; spell_keyboard_stop(); }
+        SetWindowLongPtr(w,DWLP_USER,0); free(c); game_redraw(); return FALSE;
+    }
+    if(msg==WM_CLOSE) { if(c && c->map_owned) DestroyWindow(w); else EndDialog(w,0); return TRUE; }
     if(msg!=WM_COMMAND || !c) return FALSE;
-    if(id==IDCANCEL) { EndDialog(w,0); return TRUE; }
+    if(c->committed) {
+        if(id==IDOK || id==IDCANCEL) { if(c->map_owned) DestroyWindow(w); else EndDialog(w,1); }
+        return TRUE;
+    }
+    if(id==IDCANCEL) { if(c->map_owned) DestroyWindow(w); else EndDialog(w,0); return TRUE; }
+    if(id==SCMAPPICK) {
+        spell_map_picking=1; ShowWindow(w,SW_HIDE);
+        panel_note("Spell targeting: click the map. Flight: first click a model, then its destination. Escape returns to the casting window.");
+        SetForegroundWindow(GlMainHwnd); game_redraw(); return TRUE;
+    }
     if(id==SCSTOCK) { spellbook_open(w,c->side,c->index); cast_spell_list(w,c); cast_dialog_status(w,c); return TRUE; }
     if(id==SCSpell && HIWORD(wp)==CBN_SELCHANGE) {
-        n=(int)SendDlgItemMessage(w,SCSpell,CB_GETCURSEL,0,0); c->spell=n<0?-1:(int)SendDlgItemMessage(w,SCSpell,CB_GETITEMDATA,n,0); spell_dialog_refresh(w,c); cast_dialog_status(w,c); return TRUE;
+        c->effect_roll=0; c->flight_destination=0; n=(int)SendDlgItemMessage(w,SCSpell,CB_GETCURSEL,0,0); c->spell=n<0?-1:(int)SendDlgItemMessage(w,SCSpell,CB_GETITEMDATA,n,0); spell_dialog_refresh(w,c); cast_dialog_status(w,c); spell_map_selection(w,c); game_redraw(); return TRUE;
     }
-    if((id==SCTARGETS && HIWORD(wp)==LBN_SELCHANGE) || ((id==SCCENTREX || id==SCCENTREY) && HIWORD(wp)==EN_CHANGE) || id==SCMANUAL) {
-        c->resolved=c->test_ready=c->fate_offer=0; c->fate_used=0;
-        EnableWindow(GetDlgItem(w,SCFATE),FALSE); SetDlgItemTextA(w,SCROLL,"Preview cast / roll");
-        SetDlgItemTextA(w,SCRESULT,"Selection changed. Preview the cast before applying."); cast_dialog_status(w,c); return TRUE;
+    if((id==SCTARGETS && HIWORD(wp)==LBN_SELCHANGE) || ((id==SCCENTREX || id==SCCENTREY) && HIWORD(wp)==EN_CHANGE) || id==SCMANUAL || (id==SCDIRECTION && HIWORD(wp)==CBN_SELCHANGE)) {
+        if(c->syncing) return TRUE;
+        cast_selection_changed(w,c); spell_map_selection(w,c); game_redraw(); return TRUE;
     }
-    if(id==SCROLL) { cast_ui_preview(w,c,0); return TRUE; }
-    if(id==SCFATE && c->fate_offer && !c->side && heroes[c->index].fate>0) { cast_ui_preview(w,c,1); return TRUE; }
+    if(id==SCROLL) { cast_ui_preview(w,c,0); game_redraw(); return TRUE; }
+    if(id==SCFATE && c->fate_offer && !c->side && heroes[c->index].fate>0) { cast_ui_preview(w,c,1); game_redraw(); return TRUE; }
     if(id==IDOK) {
-        if(cast_apply(c)) EndDialog(w,1); else SetDlgItemTextA(w,SCRESULT,"The cast cannot be applied. Check targets, components, turn restrictions and available character-death records, then preview again.");
-        return TRUE;
+        char *inspection=NULL; int spy=pack_current()->spells[c->spell].effect==SPELL_SPY;
+        if(spy) {
+            int section=floor_piece(c->x,c->y);
+            if(section<0) return TRUE;
+            if(Pice[section].text && Pice[section].text[0]) {
+                inspection=game_room_contents(&Pice[section]);
+                if(!inspection) { SetDlgItemTextA(w,SCRESULT,"Private inspection could not be prepared. No components have been spent; try again."); return TRUE; }
+            }
+        }
+        if(cast_apply(c)) {
+            if(spy) {
+                spell_result_append(c,"\r\nPrivate inspection:\r\n%s",inspection?inspection:"This section has no recorded contents. It remains unexplored.");
+            }
+            spell_show_result(w,c);
+        } else SetDlgItemTextA(w,SCRESULT,"The cast cannot be applied. Check targets, components, turn restrictions and available character-death records, then preview again.");
+        free(inspection); return TRUE;
     }
     return FALSE;
 }
 static void spellcast_open(HWND parent,int side,int index)
 {
-    SPELL_CAST c; CASTER_STATE *s=caster_state(side,index);
+    SPELL_CAST *c; CASTER_STATE *s=caster_state(side,index); HWND w;
+    if(spell_map_dialog) { ShowWindow(spell_map_dialog,SW_SHOW); SetForegroundWindow(spell_map_dialog); return; }
     if(!caster_has_book(s)) { message("This model has no spellbook. Use Spellbook & components to configure one."); return; }
-    memset(&c,0,sizeof(c)); c.side=side; c.index=index; c.x=side?monsters.tokens[index].x:heroes[index].x; c.y=side?monsters.tokens[index].y:heroes[index].y;
-    DialogBoxParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGSPELLCAST),parent,spellcast_proc,(LPARAM)&c);
+    c=(SPELL_CAST*)calloc(1,sizeof(*c)); if(!c) { message("Unable to allocate the casting window."); return; }
+    c->side=side; c->index=index; c->x=side?monsters.tokens[index].x:heroes[index].x; c->y=side?monsters.tokens[index].y:heroes[index].y;
+    /* Set ownership only after successful creation: initialization can fail. */
+    w=CreateDialogParamA(GetModuleHandle(NULL),MAKEINTRESOURCEA(FGSPELLCAST),parent,spellcast_proc,(LPARAM)c);
+    if(!w) { free(c); message("Unable to open the casting window."); return; }
+    c->map_owned=1; spell_map_dialog=w; move_mode=monster_move_mode=0; attack_monster=-1;
+    spell_keyboard_start(); spell_map_selection(w,c); ShowWindow(w,SW_SHOW); game_redraw();
 }

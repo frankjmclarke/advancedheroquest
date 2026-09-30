@@ -14,6 +14,17 @@ typedef struct {
     unsigned short components[SPELL_COMPONENT_LIMIT];
     int cast_used,move_locked,setup_pending,starting_allowance;
 } CASTER_STATE;
+/* Temporary bonuses never overwrite the character's printed characteristics. */
+typedef struct {
+    int armour,courage,hand,hand_turn,swift;
+    int death_turn,corpse_x,corpse_y,soul_lost;
+} MAGIC_MODEL;
+#define MAGIC_MODEL_BYTES 36
+typedef struct {
+    int turn,exploration;
+    unsigned char spied[8192],surprise[8192],doors[8192];
+    int still_until[8192];
+} MAGIC_DUNGEON;
 /* Zero values mean not configured; presets use printed or labelled suggested rows. */
 /* reach: 1 normal (edge-adjacent), 2 long (also diagonal; long-reach death zone). */
 typedef struct { char weapon[40]; int dice, hit[12]; int critical, fumble, reach; } MELEE_PROFILE;
@@ -30,6 +41,7 @@ typedef struct {
     int moved,focus; /* focus: opposing roster index + 1, or zero */
     int move_spent,attacked,run_bonus; /* guided combat phase state */
     CASTER_STATE caster;
+    MAGIC_MODEL magic;
 } HERO;
 #define HERO_ACTIVE(h) ((h)->condition==0 && (h)->wounds>0)
 #define HERO_KO(h) ((h)->condition==1)
@@ -46,6 +58,7 @@ typedef struct {
     int moved,focus; /* focus: opposing roster index + 1, or zero */
     int move_spent,attacked,run_bonus; /* guided combat phase state */
     CASTER_STATE caster;
+    MAGIC_MODEL magic;
 } MONSTER;
 typedef struct {
     int count, dead_count;
@@ -60,6 +73,7 @@ typedef struct {
     int player_view; /* -1: legacy save with no recorded view; 0: GM; 1: player */
     int turn_phase; /* 0 free play, 1 Hero phase, 2 GM phase */
     int gm_override;
+    MAGIC_DUNGEON magic;
     int monster_omit_pct, gold_bonus_pct;
     unsigned short room_gold_bonus_pct[ENCOUNTER_LIMIT]; /* fixed at first reveal */
     HERO heroes[HERO_LIMIT];
@@ -112,4 +126,5 @@ void game_view_pause(int pause);
 void game_restore_view(void);
 void game_reset_fog(void);
 void game_command(int command);
+int game_open_door(unsigned char *visible,int pixel_x,int pixel_y);
 #endif

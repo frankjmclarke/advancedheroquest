@@ -117,7 +117,7 @@ static void shot_fields(HWND hwnd,SHOT *s)
     sprintf(info,"%s fires at %s\r\n%s | Distance %d / range %d | Hit %d+ | Damage %d D12\r\nCritical %d+; fumble %d or less. Target T %d; %d Wounds. %s",
         s->side?s->monster.name:s->hero.name,s->side?s->hero.name:s->monster.name,
         p->weapon[0]?p->weapon:"No ranged weapon",d,p->range,p->hit[ranged_band(d)],p->dice,
-        p->critical?p->critical:12,p->fumble?p->fumble:1,s->side?s->hero.stats[3]:s->monster.stats[3],s->side?s->hero.wounds:s->monster.wounds,
+        p->critical?p->critical:12,p->fumble?p->fumble:1,s->side?magic_toughness(s->hero.stats[3],&s->hero.magic):magic_toughness(s->monster.stats[3],&s->monster.magic),s->side?s->hero.wounds:s->monster.wounds,
         s->side?s->monster.moved?"Attacker moved.":"Attacker stationary.":s->hero.moved?"Attacker moved.":"Attacker stationary.");
     SetDlgItemTextA(hwnd,RSINFO,info);
     for(i=0;i<sizeof(inputs)/sizeof(inputs[0]);i++) EnableWindow(GetDlgItem(hwnd,inputs[i]),!s->resolved);
@@ -130,7 +130,7 @@ static void shot_fields(HWND hwnd,SHOT *s)
 }
 static void shot_victim(SHOT *s,int *t,int *w,const char **name)
 {
-    *t=s->side?s->hero.stats[3]:s->monster.stats[3]; *w=s->side?s->hero.wounds:s->monster.wounds;
+    *t=s->side?magic_toughness(s->hero.stats[3],&s->hero.magic):magic_toughness(s->monster.stats[3],&s->monster.magic); *w=s->side?s->hero.wounds:s->monster.wounds;
     *name=s->side?s->hero.name:s->monster.name;
 }
 static int shot_calculate(HWND hwnd,SHOT *s)
@@ -152,9 +152,9 @@ static int shot_calculate(HWND hwnd,SHOT *s)
     if(s->fumble && s->friendly_index<0) {
         t=0; w=0; name=shot_candidates(s)?"Defender chose no friendly victim; the missile misses":"No friendly model within two squares; the missile misses";
     } else if(s->fumble && s->friendly_side==0) {
-        t=heroes[s->friendly_index].stats[3]; w=heroes[s->friendly_index].wounds; name=heroes[s->friendly_index].name;
+        t=magic_toughness(heroes[s->friendly_index].stats[3],&heroes[s->friendly_index].magic); w=heroes[s->friendly_index].wounds; name=heroes[s->friendly_index].name;
     } else if(s->fumble) {
-        t=monsters.tokens[s->friendly_index].stats[3]; w=monsters.tokens[s->friendly_index].wounds; name=monsters.tokens[s->friendly_index].name;
+        t=magic_toughness(monsters.tokens[s->friendly_index].stats[3],&monsters.tokens[s->friendly_index].magic); w=monsters.tokens[s->friendly_index].wounds; name=monsters.tokens[s->friendly_index].name;
     } else shot_victim(s,&t,&w,&name);
     if(!s->fumble && hit>=shot_critical(s)) t=t/2;
     needs_damage=!s->fumble && hit>=required;
@@ -186,12 +186,12 @@ static int shot_apply(SHOT *s)
     if(s->fumble && s->friendly_index<0) { /* No eligible ally: a clean miss. */ }
     else if(s->fumble && s->friendly_side==0) {
         HERO *h=&heroes[s->friendly_index]; h->wounds=s->new_wounds; h->condition=s->new_condition;
-        if(HERO_DEAD(h)) h->x=h->y=-1;
+        magic_hero_death(h);
     } else if(s->fumble) {
         victim->wounds=s->new_wounds; if(!s->new_wounds) monster_kill(s->friendly_index);
     } else if(s->side && (s->new_condition!=s->hero.condition || (s->old_wounds>0 && s->new_wounds!=s->old_wounds))) {
         HERO *h=&heroes[s->h]; h->wounds=s->new_wounds; h->condition=s->new_condition;
-        if(HERO_DEAD(h)) h->x=h->y=-1;
+        magic_hero_death(h);
     } else if(s->old_wounds) {
         victim->wounds=s->new_wounds;
         if(!s->new_wounds) monster_kill(s->m);

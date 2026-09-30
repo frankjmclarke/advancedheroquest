@@ -36,6 +36,7 @@ static void version8_crc(unsigned char *bytes,size_t size) {
     for(i=16;i<size;i++) { crc^=bytes[i]; for(j=0;j<8;j++) crc=(crc>>1)^((crc&1)?0xedb88320UL:0); }
     crc=~crc; for(j=0;j<4;j++) bytes[12+j]=(unsigned char)(crc>>(8*j));
 }
+static size_t magic_extension(const GAME_DATA *d) { return 8+MAGIC_MODEL_BYTES*(d->hero_count+d->monsters.count)+7*d->count; }
 /* Size of the v7-v10 suffix, for constructing authentic older layouts. */
 static size_t pack_extension(const GAME_DATA *d) {
     int i; size_t n=4+(d->pack?d->pack:pack_fantasy())->size;
@@ -44,6 +45,7 @@ static size_t pack_extension(const GAME_DATA *d) {
     n+=16*d->hero_count+12*d->monsters.count+8*(d->hero_count+d->monsters.count);
     n+=8+12*(d->hero_count+d->monsters.count);
     n+=8+4*d->count; /* v11 difficulty and revealed-room gold bonuses */
+    n+=magic_extension(d);
     n+=464*(d->hero_count+d->monsters.count); /* v14 caster state */
     return n;
 }
@@ -186,7 +188,7 @@ int main(int argc,char **argv) {
     for(i=0;i<5;i++) { assert(!strcmp(heroes[i].name,decoded->heroes[i].name)); assert(!memcmp(&heroes[i].kind,&decoded->heroes[i].kind,sizeof(HERO)-40)); }
     /* Version 11 has no square mask: preserve its revealed corridor pieces. */
     {
-        size_t old_size=size-464*(snapshot.hero_count+snapshot.monsters.count);
+        size_t old_size=size-magic_extension(&snapshot)-464*(snapshot.hero_count+snapshot.monsters.count);
         unsigned char *old=(unsigned char*)malloc(old_size); assert(old);
         memcpy(old,bytes,old_size); old[8]=11; version8_crc(old,old_size);
         again=game_decode(old,old_size); assert(again);
@@ -195,7 +197,7 @@ int main(int argc,char **argv) {
     }
     /* Version 10 saves retain turns but start at standard difficulty. */
     {
-        size_t old_size=size-464*(snapshot.hero_count+snapshot.monsters.count)-8-4*snapshot.count;
+        size_t old_size=size-magic_extension(&snapshot)-464*(snapshot.hero_count+snapshot.monsters.count)-8-4*snapshot.count;
         unsigned char *old=(unsigned char*)malloc(old_size); assert(old);
         memcpy(old,bytes,old_size); old[8]=10; version8_crc(old,old_size);
         again=game_decode(old,old_size); assert(again);
@@ -204,7 +206,7 @@ int main(int argc,char **argv) {
     }
     /* Version 9 saves start in free play with fresh action allowances. */
     {
-        size_t old_size=size-464*(snapshot.hero_count+snapshot.monsters.count)-8-4*snapshot.count-8-12*(snapshot.hero_count+snapshot.monsters.count);
+        size_t old_size=size-magic_extension(&snapshot)-464*(snapshot.hero_count+snapshot.monsters.count)-8-4*snapshot.count-8-12*(snapshot.hero_count+snapshot.monsters.count);
         unsigned char *old=(unsigned char*)malloc(old_size); assert(old);
         memcpy(old,bytes,old_size); old[8]=9; version8_crc(old,old_size);
         again=game_decode(old,old_size); assert(again);
@@ -214,7 +216,7 @@ int main(int argc,char **argv) {
         game_data_free(again); free(old);
     }
     /* Version 8 keeps melee thresholds/reach and supplies standard ranged thresholds. */
-    version8_size=size-464*(snapshot.hero_count+snapshot.monsters.count)-8-4*snapshot.count-8-20*(snapshot.hero_count+snapshot.monsters.count); version8_bytes=(unsigned char*)malloc(version8_size); assert(version8_bytes);
+    version8_size=size-magic_extension(&snapshot)-464*(snapshot.hero_count+snapshot.monsters.count)-8-4*snapshot.count-8-20*(snapshot.hero_count+snapshot.monsters.count); version8_bytes=(unsigned char*)malloc(version8_size); assert(version8_bytes);
     memcpy(version8_bytes,bytes,version8_size); version8_bytes[8]=8;
     version8_tail=version8_size-(16*snapshot.hero_count+12*snapshot.monsters.count);
     for(i=0;i<snapshot.hero_count;i++) { version8_pos=version8_tail+12*i+8; version8_bytes[version8_pos]=(unsigned char)(version8_bytes[version8_pos]==2); }
@@ -226,7 +228,7 @@ int main(int argc,char **argv) {
     /* Truncation, corruption, future version, overlap and malformed positions. */
     for(i=0;i<64;i++) assert(!game_decode(bytes,i));
     assert(!game_decode(bytes,size-1)); bytes[size-1]^=1; assert(!game_decode(bytes,size)); bytes[size-1]^=1;
-    bytes[8]=15; assert(!game_decode(bytes,size)); bytes[8]=14;
+    bytes[8]=16; assert(!game_decode(bytes,size)); bytes[8]=15;
     x=decoded->heroes[1].x; y=decoded->heroes[1].y;
     decoded->heroes[1].x=decoded->heroes[0].x; decoded->heroes[1].y=decoded->heroes[0].y;
     assert(!game_encode(decoded,&other,&other_size)); decoded->heroes[1].x=x; decoded->heroes[1].y=y;
@@ -337,7 +339,7 @@ int main(int argc,char **argv) {
         game_fog()[2]=0;
         heroes[0].x=heroes[0].y=-1;
         assert(capture(&snapshot)); assert(game_encode(&snapshot,&other,&other_size)); free(snapshot.cells);
-        other_size-=464*(snapshot.hero_count+snapshot.monsters.count);
+        other_size-=magic_extension(&snapshot)+464*(snapshot.hero_count+snapshot.monsters.count);
         other=(unsigned char*)realloc(other,other_size+49); assert(other);
         memset(other+other_size,0,49); other[other_size+5*7+5]=1;
         other_size+=49; other[8]=12; version8_crc(other,other_size);

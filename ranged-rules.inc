@@ -116,10 +116,10 @@ static int battle_destination_cost(int side,int index,int *tx,int *ty,int *cost)
     *cost=0; hero_route_count=0; if(x<0) return 1;
     if(side) { for(i=0;i<hero_count;i++) if(heroes[i].x>=0 && HERO_ACTIVE(&heroes[i])) opponents++; }
     else { for(i=0;i<monsters.count;i++) if(monsters.tokens[i].x>=0 && monsters.tokens[i].wounds) opponents++; }
-    if(!opponents && !turn_phase && !force_explore_path) return 1;
+    if(!opponents && !turn_phase && !magic.exploration && !magic_model(side,index)->swift && !force_explore_path && !forced_move_budget) return 1;
     if(*tx<0 || *ty<0 || *tx>=Xsize || *ty>=Ysize || total<1) return 0;
     if(x==*tx && y==*ty) return 1;
-    remaining=turn_phase && !gm_override?turn_move_remaining(side,index):total;
+    remaining=forced_move_budget?forced_move_budget:(turn_phase || magic.exploration || magic_model(side,index)->swift) && !gm_override?turn_move_remaining(side,index):total;
     if(remaining<=0) return 0;
     if(!side && abs(*tx-x)+abs(*ty-y)==1 && !game_corridor_visible(*tx,*ty) &&
        sight_edge(x,y,*tx,*ty,game_fog())) {

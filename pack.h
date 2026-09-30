@@ -3,17 +3,28 @@
 #include "game.h"
 #define PACK_LIMIT 256
 #define PACK_BYTES_LIMIT (2u*1024u*1024u)
-/* Effects beyond damage/healing are explicitly resolved by the GM for now. */
+/* Generic handlers, selected by the pack rather than the spell's display name. */
 #define SPELL_MANUAL 0
 #define SPELL_DAMAGE 1
 #define SPELL_HEAL 2
+#define SPELL_ARMOUR 3
+#define SPELL_SPY 4
+#define SPELL_DOOR 5
+#define SPELL_HAND 6
+#define SPELL_FLIGHT 7
+#define SPELL_SWIFT 8
+#define SPELL_RESURRECT 9
+#define SPELL_STILL 10
+#define SPELL_COURAGE 11
 typedef struct { char id[64],name[64]; int price; } PACK_COMPONENT;
 typedef struct {
     char id[64],name[64],text[2048];
     int effect,target,range,dice,test,failed_dice,stationary,cost;
+    int template_width,template_height;
     unsigned short components[SPELL_COMPONENT_LIMIT];
 } PACK_SPELL;
-/* target: 0 manual, 1 model, 2 template, 3 self-or-touch healing. */
+/* target: 0 manual, 1 model, 2 template, 3 healing, 4 touch,
+ * 5 visible section, 6 hidden section, 7 wall, 8 self, 9 corpse, 10 group. */
 typedef struct {
     char id[64],name[64];
     unsigned char spells[SPELL_LIMIT],starting[SPELL_LIMIT];

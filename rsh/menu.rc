@@ -70,6 +70,8 @@ MENUE MENU
         MENUITEM "&Guided combat turns", MGAMEGUIDED
         MENUITEM "G&M override", MGAMEOVERRIDE
         MENUITEM "&Run selected model (D12)", MGAMERUN
+        MENUITEM "Start / Next exploration turn", MGAMEEXPLORATION
+        MENUITEM "Resolve spied-area surprise...", MGAMESURPRISE
         MENUITEM "How combat turns work...", MGAMEHELP
         MENUITEM SEPARATOR
         MENUITEM "&Leave Dungeon (all to reserve)", MGAMELEAVE

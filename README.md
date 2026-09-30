@@ -45,17 +45,15 @@ Space Marines in Heroes & Reserve and places its aliens when rooms are revealed,
 using the same AHQ combat rules. See [Character packs](doc/character-packs.md)
 for adding another theme, campaign copying and save compatibility.
 
-Wizards can use **Spellbook & components...** in Heroes & Reserve, and **Cast
-spell...** from the combat panel or token context menu. Packs define spellbooks,
-spells and shared ingredients. Damage/healing are automated; other spell effects
-are explicitly resolved by the GM. Casting state and stock are saved and can
-be undone. See [Spellbooks and casting](doc/spellcasting.md).
-
-Wizards can use **Spellbook & components...** in Heroes & Reserve, and **Cast
-spell...** from the combat panel or token context menu. Packs define spellbooks,
-spells and shared ingredients. Damage/healing are automated; other spell effects
-are explicitly resolved by the GM. Casting state and stock are saved and can
-be undone. See [Spellbooks and casting](doc/spellcasting.md).
+Wizards use **Spellbook & components...** in Heroes & Reserve, and **Cast
+spell...** from the combat panel or token context menu. All twelve Bright spells
+have effect handlers, including temporary bonuses, forced runs, spying, magic
+doors and resurrection. Use **Party > Start / Next exploration turn** to advance
+exploration and expire combat-only bonuses. Effects, stock and timing are saved
+and support Undo. Click the map to select spell targets and preview pack-defined
+templates; covered figures, including friends, are included automatically.
+Board labels show active effects, expiry and resurrection eligibility. Bravery
+tests remain GM adjudicated. See [Spellbooks and casting](doc/spellcasting.md).
 
 Writing your own adventures: **[Guide to creating and editing table
 files](doc/TABLE-GUIDE.md)**.

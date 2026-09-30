@@ -1,4 +1,4 @@
-"""Compile editable JSON character packs to bounded portable HQPACK4 resources.
+"""Compile editable JSON character packs to bounded portable HQPACK5 resources.
 
 No Python is needed to play. Run after editing data/packs/*.json; --check
 verifies the shipped resources and the built-in fantasy fallback.
@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def compile_pack(pack):
-    out = bytearray(b'HQPACK4\n')
+    out = bytearray(b'HQPACK5\n')
 
     def number(n, low=0, high=99):
         if type(n) is not int or not low <= n <= high:
@@ -118,13 +118,13 @@ def compile_pack(pack):
     number(len(components), 0, 32); number(len(spells), 0, 64); number(len(books), 0, 16)
     for c in components:
         string(c['id'], 63); string(c['name'], 63); number(c.get('price', 0), 0, 100000)
-    effects = {'manual': 0, 'damage': 1, 'heal': 2}
-    targets = {'manual': 0, 'model': 1, 'template': 2, 'healing': 3}
+    effects = {'manual': 0, 'damage': 1, 'heal': 2, 'armour': 3, 'spy': 4, 'door': 5, 'hand': 6, 'flight': 7, 'swift': 8, 'resurrect': 9, 'still': 10, 'courage': 11}
+    targets = {'manual': 0, 'model': 1, 'template': 2, 'healing': 3, 'touch': 4, 'section': 5, 'hidden_section': 6, 'wall': 7, 'self': 8, 'corpse': 9, 'group': 10}
     for sp in spells:
         string(sp['id'], 63); string(sp['name'], 63); string(sp['text'], 2047)
         if sp['effect'] not in effects or sp['target'] not in targets:
             raise ValueError(f'{sp["id"]}: unsupported spell effect or target')
-        number(effects[sp['effect']], 0, 2); number(targets[sp['target']], 0, 3)
+        number(effects[sp['effect']], 0, 11); number(targets[sp['target']], 0, 10)
         number(sp.get('range', 0), 0, 480); number(sp.get('dice', 0), 0, 99)
         number(sp.get('intelligence_test', 0), 0, 1); number(sp.get('failed_dice', 0), 0, 99)
         costs = stock(sp.get('components', {}), sp['id'])
@@ -138,6 +138,11 @@ def compile_pack(pack):
             raise ValueError(f'{sp["id"]}: Intelligence-tested healing is not supported yet')
         if sp['effect'] == 'heal' and sp['target'] != 'healing':
             raise ValueError(f'{sp["id"]}: healing needs healing targeting')
+        required = {'armour':'touch','spy':'hidden_section','door':'wall','hand':'self','flight':'model','swift':'group','resurrect':'corpse','still':'section','courage':'touch'}
+        if sp['effect'] in required and sp['target'] != required[sp['effect']]:
+            raise ValueError(f'{sp["id"]}: effect requires {required[sp["effect"]]} targeting')
+        if sp['effect']=='resurrect' and not sp.get('intelligence_test'):
+            raise ValueError(f'{sp["id"]}: resurrection requires an Intelligence test')
         for qty in costs: number(qty, 0, 9999)
     for book in books:
         string(book['id'], 63); string(book['name'], 63)
@@ -158,6 +163,17 @@ def compile_pack(pack):
         if not membership and (any(quantities) or caster.get('starting_components', 0)):
             raise ValueError(f'{profile["id"]}: ingredients without a spellbook')
         for qty in quantities: number(qty, 0, 9999)
+    for sp in spells:
+        template = sp.get('template', {})
+        if not isinstance(template, dict) or set(template) - {'width', 'height'}:
+            raise ValueError(f'{sp["id"]}: template must contain width and height only')
+        if sp['target'] == 'template':
+            number(template.get('width', 2), 1, 12)
+            number(template.get('height', 2), 1, 12)
+        else:
+            if template:
+                raise ValueError(f'{sp["id"]}: template geometry requires template targeting')
+            number(0, 0, 0); number(0, 0, 0)
     return bytes(out)
 
 

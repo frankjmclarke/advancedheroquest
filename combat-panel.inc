@@ -34,6 +34,10 @@ static LRESULT CALLBACK panel_frame_proc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
     WNDPROC previous=panel_frame_previous;
     LRESULT result;
+    if(msg==WM_COMMAND && spell_map_dialog && LOWORD(wp)!=CPTOOLVIEW &&
+       !(LOWORD(wp)>=MZOOMIN && LOWORD(wp)<=MZOOMFIT)) {
+        spell_map_resume(); MessageBeep(MB_ICONWARNING); return 0;
+    }
     if(msg==WM_NCDESTROY) {
         if(toolbar_images) { ImageList_Destroy(toolbar_images); toolbar_images=NULL; }
         SetWindowLongPtr(hwnd,GWLP_WNDPROC,(LONG_PTR)previous);
@@ -79,13 +83,16 @@ static void panel_update(void)
     }
     if(!map_ready) strcpy(line,"No dungeon open");
     else if(turn_phase) sprintf(line,"%s PHASE | %d/%d attacks used%s",turn_phase==1?"HERO":"GM",used,total,gm_override?" | GM override":"");
-    else strcpy(line,"FREE PLAY");
+    else snprintf(line,sizeof(line),"%s | Turn %d",magic.exploration?"EXPLORATION":"FREE PLAY",magic.turn+1);
     SetDlgItemTextA(panel_hwnd,CPPHASE,line);
     sprintf(line,"Selected: %s",name); SetDlgItemTextA(panel_hwnd,CPMODEL,line);
-    if(side>=0) sprintf(line,"Wounds: %d / %d",wounds,max_wounds); else strcpy(line,"Wounds: -");
+    if(side>=0) {
+        const int *stats=side?monsters.tokens[index].stats:heroes[index].stats; MAGIC_MODEL *m=magic_model(side,index);
+        snprintf(line,sizeof(line),"Wounds %d/%d | T %d | Br %d",wounds,max_wounds,magic_toughness(stats[3],m),magic_bravery(stats[5],m));
+    } else strcpy(line,"Wounds: -");
     SetDlgItemTextA(panel_hwnd,CPWOUNDS,line);
     if(side<0) strcpy(line,"Movement: -");
-    else if(!turn_phase) strcpy(line,"Movement: free play");
+    else if(!turn_phase && !magic.exploration && !magic_model(side,index)->swift) strcpy(line,"Movement: free play");
     else sprintf(line,"Movement: %d squares remaining",remaining>0?remaining:0);
     SetDlgItemTextA(panel_hwnd,CPMOVELEFT,line);
     if(side<0) strcpy(line,"Normal attack: -");
@@ -100,22 +107,23 @@ static void panel_update(void)
     EnableWindow(GetDlgItem(panel_hwnd,CPSPELLCAST),side>=0 && alive && caster_has_book(caster_state(side,index)));
     EnableWindow(GetDlgItem(panel_hwnd,CPSPELLBOOK),side>=0 && pack_current() && pack_current()->book_count);
     EnableWindow(GetDlgItem(panel_hwnd,CPRUN),turn_phase && side>=0 && alive && !turn_attack_reason(side,side?0:index,side?index:0));
-    EnableWindow(GetDlgItem(panel_hwnd,CPENDPHASE),map_ready && turn_phase);
+    EnableWindow(GetDlgItem(panel_hwnd,CPENDPHASE),map_ready && (turn_phase || magic.exploration));
     EnableWindow(GetDlgItem(panel_hwnd,CPUNDO),map_ready && undo_valid);
     EnableWindow(GetDlgItem(panel_hwnd,CPGUIDED),map_ready);
     if(toolbar_hwnd) {
         SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPUNDO,MAKELONG(map_ready && undo_valid,0));
-        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPENDPHASE,MAKELONG(map_ready && turn_phase,0));
+        SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPENDPHASE,MAKELONG(map_ready && (turn_phase || magic.exploration),0));
         SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPTOOLPARTY,MAKELONG(map_ready,0));
         SendMessage(toolbar_hwnd,TB_ENABLEBUTTON,CPTOOLVIEW,MAKELONG(map_ready,0));
         SendMessage(toolbar_hwnd,TB_CHECKBUTTON,CPTOOLVIEW,MAKELONG(game_player_view(),0));
     }
-    SetDlgItemTextA(panel_hwnd,CPENDPHASE,turn_phase==1?"End Hero phase":turn_phase==2?"End GM phase":"End phase");
+    SetDlgItemTextA(panel_hwnd,CPENDPHASE,turn_phase==1?"End Hero phase":turn_phase==2?"End GM phase":magic.exploration?"Next exploration turn":"End phase");
     SetDlgItemTextA(panel_hwnd,CPGUIDED,turn_phase?"Leave guided turns":"Start guided turns");
     if(!map_ready) next="Open or generate a dungeon to begin.";
     else if(side<0) next=turn_phase==2?"Select a monster on the map.":"Select a hero on the map.";
     else if(!alive) next="This model cannot act. Select another model.";
     else if(turn_phase && turn_phase!=(side?2:1) && !gm_override) next=side?"Hero phase: select a hero or end the phase.":"GM phase: select a monster or end the phase.";
+    else if(side==1 && !gm_override && magic_stopped(index)) next="Still Air: this monster cannot move or attack until the next full turn.";
     else if(side && monster_move_mode) next="Click an open square to move the monster.";
     else if((side?attack_monster==index:move_mode && selected==index)) next=side?"Click a hero to attack, or drag the monster to move.":"Click an enemy to attack, or click a square to move.";
     else if(side>=0 && caster_has_book(caster_state(side,index)) && !caster_state(side,index)->cast_used && turn_phase && attack_used) next="Weapon attack used. Cast a spell or end the phase.";
@@ -136,6 +144,7 @@ static int combat_action(int id)
 {
     int side=selected>=0 && selected<hero_count?0:selected_monster>=0 && selected_monster<monsters.count?1:-1;
     int index=side==0?selected:selected_monster;
+    if(spell_map_dialog && id!=CPTOOLVIEW) { spell_map_resume(); MessageBeep(MB_ICONWARNING); return 1; }
     if(id==CPSPELLCAST && side>=0) spellcast_open(GlMainHwnd,side,index);
     else if(id==CPSPELLBOOK && side>=0) spellbook_open(GlMainHwnd,side,index);
     else if(id==CPGUIDED) game_command(MGAMEGUIDED);

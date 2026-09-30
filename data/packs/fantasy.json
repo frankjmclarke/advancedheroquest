@@ -4164,34 +4164,38 @@
     {
       "id": "fantasy:spell:dragon-armour",
       "name": "Dragon Armour",
-      "text": "Any model in the caster's death zone gains +1 Toughness until the next exploration turn. GM resolves and tracks this temporary effect.",
+      "text": "A model in the caster's death zone gains +1 Toughness until the next exploration turn. Select the caster or an adjacent model; this temporary bonus does not stack.",
       "components": {
         "fantasy:component:red-dragon-dust": 1
       },
-      "effect": "manual",
-      "target": "manual"
+      "effect": "armour",
+      "target": "touch"
     },
     {
       "id": "fantasy:spell:open-window",
       "name": "Open Window",
-      "text": "Spy on an unexplored area behind a door or beyond a junction without alerting its monsters. Add +3 to the Leader's surprise roll on entering. GM resolves the discovery; this cast does not reveal rooms or spawn monsters automatically.",
+      "text": "Privately inspect an unexplored section behind a door or beyond a junction without alerting its monsters. Choose a square in that section. It stays hidden and no monsters spawn until discovery. Entering records +3 to the Leader's surprise roll.",
       "components": {
         "fantasy:component:silver-key": 1
       },
-      "effect": "manual",
-      "target": "manual"
+      "effect": "spy",
+      "target": "hidden_section"
     },
     {
       "id": "fantasy:spell:flames-of-death",
       "name": "Flames of Death",
-      "text": "Place the physical fireball template within 12 squares and line of sight. Select EVERY model covered, including friends. All are hit automatically; roll 5 damage dice against each model's Toughness. Template coverage is selected by the GM.",
+      "text": "Place the 2 by 2 fireball template within 12 squares and line of sight. Click its lower-left square; every covered figure is included automatically, including friends. All are hit automatically; roll 5 damage dice against each model's Toughness. The displayed grid footprint determines coverage.",
       "components": {
         "fantasy:component:fire-dust": 1
       },
       "effect": "damage",
       "target": "template",
       "range": 12,
-      "dice": 5
+      "dice": 5,
+      "template": {
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "id": "fantasy:spell:flames-of-phoenix",
@@ -4206,75 +4210,76 @@
     {
       "id": "fantasy:spell:bright-key",
       "name": "The Bright Key",
-      "text": "Place a door in any wall of the caster's section. If opened onto unexplored dungeon, roll D12: 1-4 is solid rock; otherwise generate normally. GM resolves the door and generation.",
+      "text": "Place a permanent closed door in any wall of the caster's section. Choose an inside wall square and outward direction. Opening toward unexplored space rolls D12: 1-4 means solid rock; otherwise reveal or generate the dungeon using the campaign tables.",
       "components": {
         "fantasy:component:silver-key": 1
       },
-      "effect": "manual",
-      "target": "manual",
+      "effect": "door",
+      "target": "wall",
       "learning_cost": 250
     },
     {
       "id": "fantasy:spell:flaming-hand",
       "name": "Flaming Hand of Destruction",
-      "text": "In following combat turns, a successful melee hit inflicts D12 Wounds instead of conventional damage dice. Expires at the beginning of the next exploration turn. GM resolves and tracks this effect.",
+      "text": "In following combat turns, a successful melee hit inflicts D12 Wounds instead of conventional damage dice. Expires at the beginning of the next exploration turn. The effect expires at the next exploration turn.",
       "components": {
         "fantasy:component:red-dragon-dust": 1
       },
-      "effect": "manual",
-      "target": "manual",
+      "effect": "hand",
+      "target": "self",
       "learning_cost": 175
     },
     {
       "id": "fantasy:spell:flight",
       "name": "Flight",
-      "text": "Select a model in whole or partial line of sight before it has moved. It runs in a direction chosen by the caster. GM resolves the target and forced movement.",
+      "text": "Select one model in whole or partial line of sight before it has moved (an earlier attack does not prevent targeting). Choose a destination for its forced run. The program rolls the run, follows a legal route, and uses the model's movement and normal attack. GM override permits adjudicated partial visibility.",
       "components": {
         "fantasy:component:red-dragon-dust": 1
       },
-      "effect": "manual",
-      "target": "manual",
-      "learning_cost": 100
+      "effect": "flight",
+      "target": "model",
+      "learning_cost": 100,
+      "range": 480
     },
     {
       "id": "fantasy:spell:swift-wind",
       "name": "Swift Wind",
-      "text": "Roll D12 and halve, rounding up. That many characters may move up to 18 squares in exploration, or double Speed in combat, for one turn. GM resolves the roll, recipients and movement.",
+      "text": "Roll D12 and halve, rounding up. Select up to that many characters including the caster. They have up to 18 squares in exploration or double Speed in combat this turn. Movement already spent still counts; the roll is retained when selection changes.",
       "components": {
         "fantasy:component:fire-dust": 1
       },
-      "effect": "manual",
-      "target": "manual",
+      "effect": "swift",
+      "target": "group",
       "learning_cost": 150
     },
     {
       "id": "fantasy:spell:power-of-phoenix",
       "name": "Power of the Phoenix",
-      "text": "Only on the turn after death: an Intelligence test resurrects the character at full strength; failure sends the soul into oblivion. GM verifies timing and resolves resurrection. Fate may convert the test to success.",
+      "text": "Only on the turn after death: an Intelligence test resurrects the character at full strength; failure sends the soul into oblivion. Death timing and corpse placement are checked automatically. Fate may convert the test to success.",
       "components": {
         "fantasy:component:phoenix-feather": 1,
         "fantasy:component:dragon-tooth": 1
       },
-      "effect": "manual",
-      "target": "manual",
+      "effect": "resurrect",
+      "target": "corpse",
       "intelligence_test": 1,
       "learning_cost": 200
     },
     {
       "id": "fantasy:spell:still-air",
       "name": "Still Air",
-      "text": "For one turn, no monster in the chosen dungeon section may move or attack. The caster must have line of sight to the section. GM resolves and tracks the restriction.",
+      "text": "For one turn, no monster in the chosen dungeon section may move or attack. The caster must have line of sight to the section. The restriction is tracked until the next full turn.",
       "components": {
         "fantasy:component:phoenix-feather": 1
       },
-      "effect": "manual",
-      "target": "manual",
+      "effect": "still",
+      "target": "section",
       "learning_cost": 150
     },
     {
       "id": "fantasy:spell:inferno",
       "name": "Inferno of Doom",
-      "text": "Place the physical fireball template within 12 squares and line of sight. Select EVERY model covered, including friends. Automatic hits: 7 damage dice each on a successful Intelligence test, 5 on failure. Fate may convert failure to success.",
+      "text": "Place the 2 by 2 fireball template within 12 squares and line of sight. Click its lower-left square; every covered figure is included automatically, including friends. Automatic hits: 7 damage dice each on a successful Intelligence test, 5 on failure. Fate may convert failure to success.",
       "components": {
         "fantasy:component:fire-dust": 1,
         "fantasy:component:dragon-tooth": 1
@@ -4285,17 +4290,21 @@
       "dice": 7,
       "failed_dice": 5,
       "intelligence_test": 1,
-      "learning_cost": 200
+      "learning_cost": 200,
+      "template": {
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "id": "fantasy:spell:courage",
       "name": "Courage",
-      "text": "The caster or a model in their death zone has Bravery 12 until the beginning of the next exploration turn. GM resolves and tracks this effect.",
+      "text": "The caster or a model in their death zone has Bravery 12 until the beginning of the next exploration turn. The effect expires at the next exploration turn.",
       "components": {
         "fantasy:component:silver-key": 1
       },
-      "effect": "manual",
-      "target": "manual",
+      "effect": "courage",
+      "target": "touch",
       "learning_cost": 100
     },
     {
@@ -4311,14 +4320,18 @@
     {
       "id": "fantasy:spell:fireball",
       "name": "Fireball",
-      "text": "Place the physical fireball template within 12 squares and line of sight. Select EVERY model wholly or partly covered, including friends. All are hit automatically; roll 5 damage dice each.",
+      "text": "Place the 2 by 2 fireball template within 12 squares and line of sight. Click its lower-left square; every covered figure is included automatically, including friends. All are hit automatically; roll 5 damage dice each.",
       "components": {
         "fantasy:component:warpstone": 1
       },
       "effect": "damage",
       "target": "template",
       "range": 12,
-      "dice": 5
+      "dice": 5,
+      "template": {
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "id": "fantasy:spell:flaming-skull",

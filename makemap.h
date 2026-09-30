@@ -9,5 +9,7 @@
 #endif
 
 _BOOL makemap(_WORD x_size, _WORD y_size, _WORD x_start, _WORD y_start, DIRECTION pos);
+/* Continue normal campaign generation from an already placed magic section. */
+_BOOL makemap_extend(PICE *section);
 
 #endif /* __MAKEMAP_H__ */

@@ -385,3 +385,19 @@ GLOBAL _BOOL makemap(_WORD x_size, _WORD y_size, _WORD x_start, _WORD y_start, D
 		}
 	}
 }
+
+GLOBAL _BOOL makemap_extend(PICE *section)
+{
+    PICE last; _BOOL abort;
+    if (!init_queues()) return FALSE;
+    if (section->type == PASSAGE) {
+        if (!push_passage(section)) return FALSE;
+    } else if (!push_room(section)) return FALSE;
+    for (;;) {
+        if (pop_passage(&last)) {
+            if (!do_passage(&last, passage_length(), passage_end(), passage_feature(), &abort) && abort) return FALSE;
+        } else if (pop_room(&last)) {
+            if (!do_room(&last, room_doors())) return FALSE;
+        } else return TRUE;
+    }
+}

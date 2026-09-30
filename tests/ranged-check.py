@@ -72,7 +72,7 @@ int main(int argc,char **argv) {
         SetWindowPos(frame,NULL,0,0,1100,700,SWP_NOMOVE|SWP_NOZORDER);
         GetClientRect(frame,&frame_rect); GetWindowRect(MdiClientHwnd,&map_rect);
         assert(map_rect.right-map_rect.left==frame_rect.right-panel_width);
-        GetDlgItemTextA(panel_hwnd,CPPHASE,label,sizeof(label)); assert(!strcmp(label,"FREE PLAY"));
+        GetDlgItemTextA(panel_hwnd,CPPHASE,label,sizeof(label)); assert(!strncmp(label,"FREE PLAY",9));
         game_command(MGAMEGUIDED); selected=0; panel_update();
         GetDlgItemTextA(panel_hwnd,CPPHASE,label,sizeof(label)); assert(strstr(label,"HERO PHASE") && strstr(label,"attacks used"));
         GetDlgItemTextA(panel_hwnd,CPMODEL,label,sizeof(label)); assert(strstr(label,heroes[0].name));

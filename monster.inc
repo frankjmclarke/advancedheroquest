@@ -64,23 +64,24 @@ static void monsters_reveal(void)
     visible=game_fog(); if(!visible) return;
     /* Initial corridor visibility is not a room reveal. A new map stays empty. */
     for(i=0;i<MAX_PICE && i<ENCOUNTER_LIMIT;i++) {
-        if(!visible[i] || monsters.seen[i] || !strchr("SNHXAQBM",Pice[i].type)) continue;
+        if(!visible[i] || monsters.seen[i] || (!strchr("SNHXAQBM",Pice[i].type) && !(magic.spied[i] && corridor_type(Pice[i].type)))) continue;
         monsters.seen[i]=1; changed=1;
+        if(magic.spied[i]) { magic.surprise[i]=1; panel_note("Spied section entered: +3 to the Leader's surprise roll. Party > Resolve spied-area surprise applies the bonus."); }
         room_gold_bonus_pct[i]=(unsigned short)gold_bonus_pct;
         if(room_monsters(Pice[i].text,monster_add_reference,&i)) monsters.seen[i]=2;
     }
-    if(changed) { active=1; dirty=1; undo_valid=0; }
+    if(changed) { active=1; dirty=1;  }
 }
 static void monster_kill(int index)
 {
     MONSTER *m=&monsters.tokens[index]; int i;
     if(!m->wounds) {
-        m->x=m->y=-1;
+        magic_monster_death(m);
         if(m->unique && !character_dead(monster_identity(m))) {
             strcpy(monsters.dead[monsters.dead_count++],monster_identity(m));
             /* The same unique character cannot remain alive elsewhere. */
             for(i=0;i<monsters.count;i++) if(!_stricmp(monster_identity(m),monster_identity(&monsters.tokens[i]))) {
-                monsters.tokens[i].wounds=0; monsters.tokens[i].x=monsters.tokens[i].y=-1;
+                monsters.tokens[i].wounds=0; magic_monster_death(&monsters.tokens[i]);
             }
         }
     }

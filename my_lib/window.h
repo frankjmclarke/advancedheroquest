@@ -173,5 +173,9 @@ _VOID Wind_Arrow(WINDOW_DEF *wr, _WORD arrow, _LONG amount, CONST GRECT *redraw,
 
 typedef _BOOL (*MENU_FUNC)(_WORD menue_nr);
 _VOID Evnt_Multi(MENU_FUNC fu_event_menu, _WORD menue_id);
+/* Optional native message preprocessing, invoked after message retrieval. */
+typedef _BOOL (*WIND_MESSAGE_FILTER)(_VOID *message);
+_VOID Wind_SetMessageFilter(WIND_MESSAGE_FILTER filter);
+_BOOL Wind_FilterMessage(_VOID *message);
 
 #endif /* __WINDOW_H__ */

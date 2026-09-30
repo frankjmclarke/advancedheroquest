@@ -60,7 +60,7 @@ that could otherwise resemble a counted encounter. Profiles contain:
 | `melee` | Weapon name, damage dice, twelve hit values indexed by target WS, and optional `critical`, `fumble`, `reach` properties |
 | `ranged` | Weapon name, kind, maximum range, damage dice, five hit values, and optional `critical`, `fumble` properties |
 | `fate` | Hero starting Fate |
-| `kind` | Existing marker/preset code 0–8; defaults to 0. Code 4 retains Henchman death removal |
+| `kind` | Existing marker/preset code 0â€“8; defaults to 0. Code 4 retains Henchman death removal |
 | `unique` | `1` for a named enemy whose identity and death persist; otherwise `0` |
 
 `critical` is the hit roll that grants a free attack (default 12); `fumble` is
@@ -75,9 +75,9 @@ These settings are editable and persist in saved games. Older packs and saves
 retain their former 12/1 thresholds and orthogonal reach.
 
 Ranged kinds are 0 (none), 1 (bow), 2 (crossbow), 3 (thrown), and 4 (other,
-manual movement). Ranges use squares; the five bands are 1–3, 4–12, 13–24,
-25–36 and 37+. A zero hit value means unconfigured/unavailable. Characteristics
-and damage dice are 0–99; monster PV can reach 9999. Hero reference notes are
+manual movement). Ranges use squares; the five bands are 1â€“3, 4â€“12, 13â€“24,
+25â€“36 and 37+. A zero hit value means unconfigured/unavailable. Characteristics
+and damage dice are 0â€“99; monster PV can reach 9999. Hero reference notes are
 limited to 2047 bytes, monster reference text to 4095. Resources use Windows
 CP1252, matching the native application. A pack supports up to 256 hero presets
 and 256 monster profiles; the existing live-party and token limits are unchanged.
@@ -110,9 +110,9 @@ original resource does not change an adventure loaded from that save. Named enem
 deaths use stable IDs even if their display names are edited. Manual characters
 retain the existing name-based identity behaviour.
 
-Versions 1–7 remain readable. They contain no KO/death state or weapon thresholds,
+Versions 1â€“7 remain readable. They contain no KO/death state or weapon thresholds,
 so zero-Wound Heroes load as KO'd and legacy melee profiles keep 12/1 thresholds.
-Versions 1–6 also contain no pack identity, so when loading
+Versions 1â€“6 also contain no pack identity, so when loading
 one the application uses the campaign pack currently selected in **Load Tables**;
 without a selected campaign it falls back to the original fantasy pack. This
 lets existing Sentinel saves load with Sentinel profiles. As before, generating
@@ -141,48 +141,46 @@ repeated reveals, corrupt/truncated resources, loading without the source pack,
 and old-save migration while another theme is active. The remaining checks cover
 existing fantasy combat, save/recovery, fog and both map rendering modes.
 
-## Spellbooks (HQPACK4)
+## Spellbooks (HQPACK5)
 
-The same theme file optionally defines `components`, `spells` and `spellbooks`.
-Every ID shares the pack namespace and must be unique. Spell component maps
-reference component IDs with positive quantities; book lists reference spell
-IDs. A book's `starting_spells` must be a subset of its `spells`. Profiles can
-supply `caster.books`, `caster.starting_components` (a player-chosen allowance)
-and `caster.components` (explicit initial stock).
+The theme file optionally defines `components`, `spells` and `spellbooks`.
+All IDs share the pack namespace and must be unique. Component maps reference
+component IDs; books reference spell IDs. `starting_spells` is a subset of the
+book's spells. Profiles specify `caster.books`, `caster.starting_components`
+(player-chosen stock allowance) and/or explicit `caster.components`.
 
-Spell fields: `effect` (`manual`, `damage`, `heal`), `target` (`manual`, `model`,
-`template`, `healing`), `range`, `dice`, `intelligence_test`, `failed_dice`,
-`stationary`, `learning_cost`, `text` and `components`. Healing uses `healing`
-targeting and currently cannot require an Intelligence test. Two or more
-components require stationary casting. Unsupported effect types are rejected;
-use an explicitly described `manual` effect for GM resolution.
+Spell fields are `effect`, `target`, `range`, `dice`, `intelligence_test`,
+`failed_dice`, `stationary`, `learning_cost`, `text` and `components`.
+Template spells also define `template: {"width": 2, "height": 2}`. Both dimensions
+are 1 to 12 squares. Non-template spells cannot define geometry. The compiled
+pack and saved snapshot preserve this footprint; automatic coverage uses its
+grid-aligned rectangle, including friendly models. HQPACK4 template spells
+receive a 2-by-2 legacy footprint.
 
-Limits are 16 books, 64 spells and 32 components per pack, with stock quantities
-from 0 to 9999. Runtime resources resolve IDs into bounded slots; saves retain
-the immutable complete pack snapshot, so slot references preserve their meaning.
-Older pack formats remain readable. Version 14 saves add personal casting state;
-older saves require explicit component setup rather than reconstructed stock.
-See [Spellbooks and casting](spellcasting.md) for the interface and current scope.
+| Effect | Required target |
+| --- | --- |
+| `manual` | `manual` (GM resolution) |
+| `damage` | `model` or `template`; requires damage dice |
+| `heal` | `healing`; no Intelligence test |
+| `armour`, `courage` | `touch` |
+| `spy` | `hidden_section` |
+| `door` | `wall` |
+| `hand` | `self` |
+| `flight` | `model` |
+| `swift` | `group` |
+| `resurrect` | `corpse`; requires Intelligence test |
+| `still` | `section` |
 
-## Spellbooks (HQPACK4)
+Both compiler and runtime reject inconsistent effect/target pairs and unknown
+effects. Two or more components require stationary casting. Limits: 16 books,
+64 spells, 32 components and stock quantities 0–9999. These generic handlers
+can be reused by future spellbooks; the current handler amounts/durations follow
+the Bright rules. Different amounts or durations need a future format extension.
 
-The same theme file optionally defines `components`, `spells` and `spellbooks`.
-Every ID shares the pack namespace and must be unique. Spell component maps
-reference component IDs with positive quantities; book lists reference spell
-IDs. A book's `starting_spells` must be a subset of its `spells`. Profiles can
-supply `caster.books`, `caster.starting_components` (a player-chosen allowance)
-and `caster.components` (explicit initial stock).
-
-Spell fields: `effect` (`manual`, `damage`, `heal`), `target` (`manual`, `model`,
-`template`, `healing`), `range`, `dice`, `intelligence_test`, `failed_dice`,
-`stationary`, `learning_cost`, `text` and `components`. Healing uses `healing`
-targeting and currently cannot require an Intelligence test. Two or more
-components require stationary casting. Unsupported effect types are rejected;
-use an explicitly described `manual` effect for GM resolution.
-
-Limits are 16 books, 64 spells and 32 components per pack, with stock quantities
-from 0 to 9999. Runtime resources resolve IDs into bounded slots; saves retain
-the immutable complete pack snapshot, so slot references preserve their meaning.
-Older pack formats remain readable. Version 14 saves add personal casting state;
-older saves require explicit component setup rather than reconstructed stock.
-See [Spellbooks and casting](spellcasting.md) for the interface and current scope.
+Version 15 saves retain the complete pack snapshot, bounded slot identities,
+personal casting state, temporary bonuses, timing and map effects. Formats
+HQPACK1–4 remain readable. Pre-spellcasting saves require explicit component
+setup; v14 stock is retained and previously manual built-in Bright handlers
+are upgraded. Campaign Builder copies the complete compiled pack, including
+these spell definitions, using its existing dependency-preserving workflow.
+See [Spellbooks and casting](spellcasting.md) for controls and rule interpretations.

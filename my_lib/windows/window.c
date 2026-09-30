@@ -20,6 +20,9 @@
 #include <keycode.h>
 
 #define MAXTITLE 80
+static WIND_MESSAGE_FILTER native_message_filter;
+_VOID Wind_SetMessageFilter(WIND_MESSAGE_FILTER filter) { native_message_filter=filter; }
+_BOOL Wind_FilterMessage(_VOID *message) { return native_message_filter?native_message_filter(message):FALSE; }
 #define WI_MIN_SIZE 75
 
 #define MAX_USE_WIND 100
@@ -2910,6 +2913,10 @@ GLOBAL _VOID Evnt_Multi(MENU_FUNC fu_event_menu, _WORD menue_id)
 	{
 		if (!GetMessage(&MainMsg, NULL, 0, 0))
 			break;
+		/* Modeless dialogs preprocess here, never from a GetMessage hook:
+		   native button/list tracking must receive its own mouse-up messages. */
+		if (Wind_FilterMessage(&MainMsg))
+			continue;
 
 		found = FALSE;
 

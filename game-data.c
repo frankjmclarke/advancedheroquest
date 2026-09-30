@@ -74,14 +74,27 @@ static int valid_melee(const MELEE_PROFILE *p)
     for(i=0;i<12;i++) if(p->hit[i]<0 || p->hit[i]>12) return 0;
     return 1;
 }
+static int valid_magic_model(const MAGIC_MODEL *m,const GAME_DATA *d)
+{
+    return m->armour>=0 && m->armour<=1 && m->courage>=0 && m->courage<=1 &&
+        m->hand>=0 && m->hand<=1 && m->swift>=0 && m->swift<=1 &&
+        m->hand_turn>=0 && m->hand_turn<=d->magic.turn && m->soul_lost>=0 && m->soul_lost<=1 &&
+        m->death_turn>=0 && m->death_turn<=d->magic.turn+1 &&
+        (!m->death_turn || (m->corpse_x>=0 && m->corpse_y>=0 && m->corpse_x<d->width && m->corpse_y<d->height));
+}
 static int valid_data(const GAME_DATA *d)
 {
     int i,j;
+    if(d->magic.turn<0 || d->magic.turn>1000000 || d->magic.exploration<0 || d->magic.exploration>1 || (d->turn_phase && d->magic.exploration)) return 0;
     if(d->turn_phase<0 || d->turn_phase>2 || d->gm_override<0 || d->gm_override>1 ||
        d->monster_omit_pct<0 || d->monster_omit_pct>100 || d->gold_bonus_pct<0 || d->gold_bonus_pct>500) return 0;
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) return 0;
     if(!d->pieces || !d->cells || !d->visible || d->player_view < -1 || d->player_view > 1) return 0;
     if(d->monsters.count<0 || d->monsters.count>MONSTER_LIMIT || d->monsters.dead_count<0 || d->monsters.dead_count>CHARACTER_LIMIT) return 0;
+    for(i=0;i<d->count;i++) if(d->magic.spied[i]>1 || d->magic.surprise[i]>1 || d->magic.doors[i]>3 ||
+        d->magic.still_until[i]<0 || d->magic.still_until[i]>d->magic.turn+1 ||
+        (d->magic.doors[i] && d->pieces[i].type!=DOOR) ||
+        ((d->magic.spied[i] || d->magic.surprise[i] || d->magic.still_until[i]) && !strchr("PELRTCODSNHXAQBM",d->pieces[i].type))) return 0;
     for(i=0;i<d->count;i++) if(d->monsters.seen[i]>2 || d->room_gold_bonus_pct[i]>500 ||
         (!d->monsters.seen[i] && d->room_gold_bonus_pct[i])) return 0;
     for(i=0;i<d->monsters.dead_count;i++) {
@@ -90,6 +103,7 @@ static int valid_data(const GAME_DATA *d)
     }
     for(i=0;i<d->monsters.count;i++) {
         const MONSTER *m=&d->monsters.tokens[i]; int cell;
+        if(!valid_magic_model(&m->magic,d)) return 0;
         if(!pack_caster_valid(&m->caster,d->pack?d->pack:pack_fantasy())) return 0;
         if(!memchr(m->profile_id,0,sizeof(m->profile_id)) || !memchr(m->character_id,0,sizeof(m->character_id))) return 0;
         if(!valid_ranged(&m->ranged,m->moved,m->focus,d->hero_count) || !valid_melee(&m->melee) || !memchr(m->name,0,64) || !m->name[0] || m->room<0 || m->room>=d->count ||
@@ -125,6 +139,7 @@ static int valid_data(const GAME_DATA *d)
     }
     for(i=0;i<d->hero_count;i++) {
         const HERO *h=&d->heroes[i];
+        if(!valid_magic_model(&h->magic,d)) return 0;
         if(!pack_caster_valid(&h->caster,d->pack?d->pack:pack_fantasy())) return 0;
         if(!memchr(h->profile_id,0,sizeof(h->profile_id)) || !memchr(h->class_name,0,sizeof(h->class_name)) || !memchr(h->class_rules,0,sizeof(h->class_rules))) return 0;
         if(h->fired<0 || h->fired>1 || h->condition<0 || h->condition>2 || !valid_ranged(&h->ranged,h->moved,h->focus,d->monsters.count) || !valid_melee(&h->melee) || !memchr(h->name,0,sizeof(h->name)) || !h->name[0] || h->kind<0 || h->kind>=HERO_CLASS_COUNT || h->wounds<0 || h->wounds>h->stats[7] || h->fate<0 || h->fate>99) return 0;
@@ -218,11 +233,21 @@ static void get_caster(BYTES *b,CASTER_STATE *s)
     for(i=0;i<SPELL_COMPONENT_LIMIT;i++) { n=get32(b); if(n<0 || n>9999) b->ok=0; s->components[i]=(unsigned short)n; }
     s->cast_used=get32(b); s->move_locked=get32(b); s->setup_pending=get32(b); s->starting_allowance=get32(b);
 }
+static void put_magic_model(BYTES *b,const MAGIC_MODEL *m)
+{
+    put32(b,m->armour); put32(b,m->courage); put32(b,m->hand); put32(b,m->hand_turn); put32(b,m->swift);
+    put32(b,m->death_turn); put32(b,m->corpse_x); put32(b,m->corpse_y); put32(b,m->soul_lost);
+}
+static void get_magic_model(BYTES *b,MAGIC_MODEL *m)
+{
+    m->armour=get32(b); m->courage=get32(b); m->hand=get32(b); m->hand_turn=get32(b); m->swift=get32(b);
+    m->death_turn=get32(b); m->corpse_x=get32(b); m->corpse_y=get32(b); m->soul_lost=get32(b);
+}
 int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
 {
     BYTES b={0}; int i,j,n; uint32_t crc;
     *bytes=NULL; *size=0; if(!valid_data(d) || (!d->pack && !pack_fantasy())) return 0; b.ok=1;
-    put(&b,"HQGAME\r\n",8); put32(&b,14); put32(&b,0);
+    put(&b,"HQGAME\r\n",8); put32(&b,15); put32(&b,0);
     put32(&b,d->width); put32(&b,d->height); put32(&b,d->count); put32(&b,d->hero_count);
     put_string(&b,d->title,159);
     for(i=0;i<d->hero_count;i++) {
@@ -281,6 +306,11 @@ int game_encode(const GAME_DATA *d,unsigned char **bytes,size_t *size)
     for(i=0;i<d->count;i++) put32(&b,d->room_gold_bonus_pct[i]);
     for(i=0;i<d->hero_count;i++) put_caster(&b,&d->heroes[i].caster);
     for(i=0;i<d->monsters.count;i++) put_caster(&b,&d->monsters.tokens[i].caster);
+    put32(&b,d->magic.turn); put32(&b,d->magic.exploration);
+    for(i=0;i<d->hero_count;i++) put_magic_model(&b,&d->heroes[i].magic);
+    for(i=0;i<d->monsters.count;i++) put_magic_model(&b,&d->monsters.tokens[i].magic);
+    put(&b,d->magic.spied,d->count); put(&b,d->magic.surprise,d->count); put(&b,d->magic.doors,d->count);
+    for(i=0;i<d->count;i++) put32(&b,d->magic.still_until[i]);
     if(!b.ok) { free(b.p); return 0; }
     crc=checksum(b.p+16,b.n-16); for(i=0;i<4;i++) b.p[12+i]=(unsigned char)(crc>>(8*i));
     *bytes=b.p; *size=b.n; return 1;
@@ -318,7 +348,7 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
     if(size<32 || size>MAX_SAVE || memcmp(bytes,"HQGAME\r\n",8)) return NULL;
     b.p=(unsigned char*)bytes; b.n=size; b.pos=8; b.ok=1;
     version=get32(&b);
-    if((version<1 || version>14) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
+    if((version<1 || version>15) || (uint32_t)get32(&b)!=checksum(bytes+16,size-16)) return NULL;
     d=(GAME_DATA*)calloc(1,sizeof(*d)); if(!d) return NULL;
     d->width=get32(&b); d->height=get32(&b); d->count=get32(&b); d->hero_count=get32(&b);
     if(d->width<1 || d->height<1 || d->width>240 || d->height>240 || d->count<1 || d->count>8192 || d->hero_count<0 || d->hero_count>HERO_LIMIT) { free(d); return NULL; }
@@ -443,6 +473,20 @@ GAME_DATA *game_decode(const unsigned char *bytes,size_t size)
         for(i=0;i<d->hero_count && b.ok;i++) get_caster(&b,&d->heroes[i].caster);
         for(i=0;i<d->monsters.count && b.ok;i++) get_caster(&b,&d->monsters.tokens[i].caster);
     }
+    if(version==14) {
+        CHARACTER_PACK *upgraded=pack_upgrade_magic(d->pack); if(!upgraded) goto bad;
+        pack_free(d->pack); d->pack=upgraded;
+    }
+    if(version>=15) {
+        d->magic.turn=get32(&b); d->magic.exploration=get32(&b);
+        for(i=0;i<d->hero_count && b.ok;i++) get_magic_model(&b,&d->heroes[i].magic);
+        for(i=0;i<d->monsters.count && b.ok;i++) get_magic_model(&b,&d->monsters.tokens[i].magic);
+        for(i=0;i<d->count && b.ok;i++) { if(b.pos>=b.n) b.ok=0; else d->magic.spied[i]=b.p[b.pos++]; }
+        for(i=0;i<d->count && b.ok;i++) { if(b.pos>=b.n) b.ok=0; else d->magic.surprise[i]=b.p[b.pos++]; }
+        for(i=0;i<d->count && b.ok;i++) { if(b.pos>=b.n) b.ok=0; else d->magic.doors[i]=b.p[b.pos++]; }
+        for(i=0;i<d->count && b.ok;i++) d->magic.still_until[i]=get32(&b);
+    }
+
     for(i=0;i<d->hero_count;i++) {
         if(!d->heroes[i].melee.critical) d->heroes[i].melee.critical=12;
         if(!d->heroes[i].melee.fumble) d->heroes[i].melee.fumble=1;

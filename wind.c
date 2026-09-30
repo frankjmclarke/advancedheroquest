@@ -437,7 +437,7 @@ LOCAL _BOOL player_proc(WIND_MESSAGE msg, WINDOW_DEF *window, _VOID *buf)
   if (display_zoom < 1 || hit->xx < 0 || hit->yy < 0) break;
   x = hit->xx / display_zoom;
   y = hit->yy / display_zoom;
-  if (fog_open_door(player_visible, x, y)) {
+  if (game_open_door(player_visible, x, y)) {
    image = Wind_Buf_Ptr(window);
    draw_player_map(image, player_visible);
    Wind_Redraw(window);
@@ -1303,6 +1303,6 @@ GLOBAL _VOID game_adopt_fog(unsigned char *visible,int capacity)
 }
 GLOBAL _VOID game_redraw(_VOID)
 {
- if(Grafik_Karte) Wind_Redraw(Grafik_Karte);
- if(Player_View) Wind_Redraw(Player_View);
+ if(Grafik_Karte) { draw_img_map(Wind_Buf_Ptr(Grafik_Karte)); Wind_Redraw(Grafik_Karte); }
+ if(Player_View) { draw_player_map(Wind_Buf_Ptr(Player_View),game_fog()); Wind_Redraw(Player_View); }
 }
